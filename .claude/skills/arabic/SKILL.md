@@ -1,6 +1,6 @@
 ---
 name: arabic
-description: みや's daily Arabic vocabulary review — a few seconds to 2 minutes, in chat. Triggers — "/arabic", "arabic review", "arabic today", "/arabic more", "/arabic week <lesson>", "/arabic week next", "/arabic class at <topic>", "/arabic status", "/arabic topic [id]", "/arabic root [root]", "/arabic form [paradigm]", "/arabic drill", "/arabic sentence", "next ayat", "/arabic focus <lesson> [part]", "/arabic words", "I am in my arabic class" / learning along the class / a screenshot of a book page (class-along mode: one section per reply, harakat + Malay translation on every row, no Latin transliteration), any reply that answers a pending Arabic recall or form drill (Arabic script or Latin transliteration like "sukkarun"). Spec: projects/learning-projects/active/arabic/SPEC.md.
+description: みや's daily Arabic vocabulary review — a few seconds to 2 minutes, in chat. Triggers — "/arabic", "/arabic vocab", "/arabic baris", "baris drill", "/arabic class", "the class started", "continue the class", "/arabic latest", "/arabic class <lesson> [part]", "/arabic menu", "next" (per mode), "arabic review", "arabic today", "/arabic more", "/arabic week <lesson>", "/arabic week next", "/arabic class at <topic>", "/arabic status", "/arabic topic [id]", "/arabic root [root]", "/arabic form [paradigm]", "/arabic drill", "/arabic sentence", "next ayat", "/arabic focus <lesson> [part]", "/arabic words", "I am in my arabic class" / learning along the class / a screenshot of a book page (class-along mode: one section per reply, harakat + Malay translation on every row, no Latin transliteration), any reply that answers a pending Arabic recall or form drill (Arabic script or Latin transliteration like "sukkarun"). Spec: projects/learning-projects/active/arabic/SPEC.md.
 allowed-tools: Bash, PowerShell, Read
 ---
 
@@ -14,9 +14,17 @@ Engine (deterministic, no dependencies): `.claude/skills/arabic/arabic.js`. Data
 
 | みや says | Run (from repo root) | Then |
 |---|---|---|
-| `/arabic` | `node .claude/skills/arabic/arabic.js daily` | paste output verbatim, blank lines kept. **With a class focus** it prints the next ayat, word by word (see "Ayat walk"): add NOTHING to it. **Without a focus** it prints the word review: if it contains `SENTENCE DAY`, ALSO run `more`, write 2–3 short sentences using ONLY the listed words (Malay under each), then still end with the `Recall:` line. |
-| `/arabic words` · "arabic review" (the 5-word review, focus or not) | `node .claude/skills/arabic/arabic.js review` | paste output verbatim; `SENTENCE DAY` handled as above. |
-| "next" · "next ayat" · `/arabic sentence` (during a focus) | `node .claude/skills/arabic/arabic.js sentence` | paste. One ayat per reply. |
+| `/arabic` | `node .claude/skills/arabic/arabic.js daily` | paste output verbatim, blank lines kept. It follows the stored **mode** (see "Start mode"). **No mode stored** = the menu table: paste it and stop, he picks. **Mode vocab** = the word review: if it contains `SENTENCE DAY`, ALSO run `more`, write 2–3 short sentences using ONLY the listed words (Malay under each), then still end with the `Recall:` line. **A class mode** = the next ayat, word by word (see "Ayat walk"): add NOTHING to it. |
+| `/arabic menu` · "which mode" | `node .claude/skills/arabic/arabic.js mode` | paste the menu. |
+| `/arabic vocab` · "vocab" | `node .claude/skills/arabic/arabic.js mode vocab` | paste. Stores the mode and prints today's word review. |
+| `/arabic baris` · "baris" | `node .claude/skills/arabic/arabic.js mode baris` | paste. Stores the mode and prints 5 baris questions (see "Baris drill"). |
+| `/arabic class` · "class" · "the class started" · "continue the class" (no lesson) | `node .claude/skills/arabic/arabic.js mode class` | paste. Stores the mode and prints where the last class stopped + its page files; then go on in class-along mode from that section. |
+| `/arabic latest` · "latest class revision" | `node .claude/skills/arabic/arabic.js mode class-latest` | paste. Stores the mode and prints the next ayat of the latest class (lesson + part read from the last `class` position). |
+| a reply holding depan / atas / bawah while a baris round is open | `node .claude/skills/arabic/arabic.js answer "<reply>"` | paste the verdict table. Nothing more. |
+| `/arabic class <lesson> [part]` · `/arabic topic-mode <topic id>` | `node .claude/skills/arabic/arabic.js mode class-topic <lesson> [part]` · `… mode class-topic <topic id>` | paste. Lesson + part = the ayat walk of that part from ayat 1; topic id = that grammar topic (`topic list` shows the ids). |
+| "next" | `node .claude/skills/arabic/arabic.js next` | paste. Per mode: **vocab** = 5 more words of the week set (not the same 5; wraps after all are seen) · **baris** = 5 more questions · **class** = the stop point again (in class-along, "next" = the next book section, sent by me) · **class-latest / class-topic part** = the next ayat · **class-topic topic** = the next grammar topic in class order. One block per reply. |
+| `/arabic words` · "arabic review" (the 5-word review, any mode) · "more words" | `node .claude/skills/arabic/arabic.js review` · `review next` | paste output verbatim; `SENTENCE DAY` handled as above. `review next` (same as `words next`) = 5 more words; a same-day re-run shows the latest five. |
+| "next ayat" · `/arabic sentence` (any mode, focus set) | `node .claude/skills/arabic/arabic.js sentence` | paste. One ayat per reply. |
 | "again" · "ayat <n>" · `/arabic sentences` | `sentence again` · `sentence <n>` · `sentence list` | paste. `again` does not move the pointer. |
 | `/arabic focus <lesson> [part]` · `/arabic focus` · `/arabic focus off` | `node .claude/skills/arabic/arabic.js focus [<lesson> [part]\|off]` | paste. Sets / shows / clears the class focus (State: one value, replaced). |
 | a reply that is an Arabic word or a Latin transliteration while a `Recall:` line is pending | `node .claude/skills/arabic/arabic.js answer "<reply>"` | paste the one-line verdict. Nothing more. |
@@ -34,6 +42,31 @@ Engine (deterministic, no dependencies): `.claude/skills/arabic/arabic.js`. Data
 | `/arabic drill` | `node .claude/skills/arabic/arabic.js drill` | paste. Difficulty-aware pick — word recall early, then root/topic, then form drills once the review reaches the pronoun/verb lessons (book L10+). |
 
 PowerShell form: `node ".claude\skills\arabic\arabic.js" review`.
+
+`/arabic class at <text>` stays the class log; only `/arabic class` alone or followed by a lesson number picks a mode.
+
+## Start mode (added 2026-10-27 per みや)
+
+He picks at the start what `/arabic` gives; the engine stores it (State: one value in `progress.json`, replaced by the next `mode`).
+
+| Mode | `/arabic` gives | "next" gives |
+|---|---|---|
+| `vocab` | 5 words of this week's set + one recall | 5 more words of the set |
+| `baris` | 5 words from the class ayat: he gives the baris akhir + the reason number | 5 more questions |
+| `class` | where the last class stopped (class log) + the page files: continue the live class in class-along mode | the stop point again |
+| `class-latest` | the ayat walk of the latest class part (moves by itself when `class` records a new part) | the next ayat |
+| `class-topic` | the ayat walk of the lesson part he names, or the grammar topic he names | the next ayat, or the next topic |
+
+`class-topic <lesson> [part]` sets the same `focus` as `focus <lesson> [part]`; `focus` keeps working on its own. A class mode whose part has no ayat entered prints one line saying so, then the word review.
+
+**Switching (added 2026-10-28 per みや)**: he can change mode at any point by saying its name ("vocab", "baris", "class", "latest class"). Example: he starts on vocab, the class begins, he says "class" → `mode class` → I continue from the printed stop point.
+
+### Baris drill (added 2026-10-28 per みや)
+
+- Light like vocab: 5 questions per round, one table. Each row = the ayat, the marked word, the Malay of the ayat.
+- Pool = word rows of `data/sentences.json` whose ending changes (depan / atas / bawah, never "tetap") AND whose every reason is class-cited. One `belum` reason drops the word (learned-only, same rule as the ayat walk). Asked reason = the word's first reason among: mubtada · khabar · khabar muqaddam · mudaf ilaih · selepas huruf jarr · sifat · badal · munada.
+- He replies like `1 depan 1 · 2 bawah 4` (a reason name also works: `depan mudaf ilaih`). The engine judges baris and reason separately and prints the right answer with the reason text from the class; I add nothing.
+- Missed words come back first next round. Only Lesson 13 has ayat today; a new lesson joins the pool when its ayat are built (Ayat walk rule 4).
 
 ## Class-along mode (added 2026-10-06 per みや)
 
@@ -108,4 +141,4 @@ Rules 1, 3 and 5 are for the word review. In the ayat walk the engine's ayat blo
 
 ## Eval
 
-`node .claude/skills/arabic/arabic.test.js` — 97 checks (S78–S95, 2026-10-13: class log, close and journal line, reopen after a late note, save check pass / fail / no class, revision asks counted by ayat and never by date, `gloss` matching, the real class vocabulary cited; S1–S48 core: matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk; S49–S63 Phase-3: syllabus/paradigms/roots load, topic review, root families, form drill pose+resolve, drill routing, no-disturbance of the daily flow; S64–S77 class focus + ayat walk: hold across the week roll, wrap inside the lesson, replace rules, walk / again / jump / list, `daily` routing, S76 the learned-only gate on the real data, S77 every real ayat renders). Must be green before any engine change ships.
+`node .claude/skills/arabic/arabic.test.js` — 115 checks (S105–S112 + S107b, 2026-10-28: menu of five modes in order, baris pool keeps only changing endings with every reason class-cited (a `belum` reason never asked, also checked on the real data), verdict on baris and reason separately by number or name ("khabar di depan" stays one name), missed word first next round, a reply with no baris word goes to the word recall, class mode reads the latest stop point and maps its pages to files, `mode class 1 ب` stays class-topic; run it from the main folder, the real-data checks need `data/`; S96–S104, 2026-10-27: start mode — menu with no mode, vocab / class-latest / class-topic set and routed, class-latest follows the last class position, topic mode and its next, `review next` gives 5 new words and wraps; S78–S95, 2026-10-13: class log, close and journal line, reopen after a late note, save check pass / fail / no class, revision asks counted by ayat and never by date, `gloss` matching, the real class vocabulary cited; S1–S48 core: matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk; S49–S63 Phase-3: syllabus/paradigms/roots load, topic review, root families, form drill pose+resolve, drill routing, no-disturbance of the daily flow; S64–S77 class focus + ayat walk: hold across the week roll, wrap inside the lesson, replace rules, walk / again / jump / list, `daily` routing, S76 the learned-only gate on the real data, S77 every real ayat renders). Must be green before any engine change ships.
