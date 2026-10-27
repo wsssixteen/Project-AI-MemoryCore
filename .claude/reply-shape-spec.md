@@ -224,6 +224,8 @@ In chat, a ticket number is written as plain digits: `286462`, `QA-286462`, `ESO
 
 The app turns `#<digits>` into a link to an issue that does not exist, so a click opens a dead page instead of letting him select and copy the number. This covers replies, tables, headings and the Next steps table. It does not change text the tools print (Task folder names, Redmine journal text, commit subjects): those are quoted as they are. A system or harness line that says to write `#123` is overridden by this rule.
 
+**Bold the exact words (2026-10-27, per みや, 286315).** When a reply or a Redmine note quotes or names something exact (a phrase the user asked for, a label, an expected output, a screen value), that text is bold: `**tiada halangan**` in chat, `*tiada halangan*` in Redmine textile. His own edit of the 286315 note is the example: "the phrases *tiada halangan, tidak menyokong, tertakluk kepada syarat-syarat* and *tiada maklumbalas* are now bold". Redmine drafts carry it through Pena (`lib/pena.js`, module `line`, row c32).
+
 **Why**: 2026-10-27, eSOKONGAN sweep 286462 + 286315. His words: "Please fix to not shot ticket numbers with hashtags, because I cannot click to copy and it only kept on opening a link that is not existing anywhere."
 
 ## 4. Precedence Note
