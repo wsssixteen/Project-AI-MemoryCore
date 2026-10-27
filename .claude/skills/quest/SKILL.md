@@ -290,7 +290,8 @@ The moment the Rubric says the fix belongs to another team, the hand-over reply 
 | 2 | The bare hand-off file: file-name header + `Line N (BEFORE)` / `Line N (AFTER)` markers + code only, per `feedback_cross_module_handoff_artifact` | Task folder `2. Fix\` (or the latest `N. Rework\`), full path in the reply |
 | 3 | The Redmine tab: the ticket's edit form opened in Edge (Claude in Chrome), Assignee + Notes + Root Cause (DEV) + Solutions filled, file attached, **stopped before Submit** so he approves it | browser, then one line naming the tab |
 
-**Banned**: a hand-over note with no file and no prefilled tab · asking him to "copy this into Redmine". **Why**: 286462, he had to ask "Where is the handover tab for me to approve and the file?"
+**Every file attached to Redmine is first saved in the cycle folder** (`2. Fix\` or the latest `N. Rework\` root), named `<n>. <what it shows>.<ext>`, and uploaded from there, BA screenshots included, so people can fact-check what was uploaded (2026-10-27 per みや; enforced by `domain/redmine-upload-path`, PreToolUse BLOCK on the browser upload).
+**Banned**: a hand-over note with no file and no prefilled tab · asking him to "copy this into Redmine" · uploading a file from `1. Brief\` or any folder outside the cycle folder. **Why**: 286462, he had to ask "Where is the handover tab for me to approve and the file?"
 
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 
