@@ -179,9 +179,19 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
    - First instances: `domain/kpi/kpi.js` (born with it) · `lib/adhoc-save-audit.js` (the earlier shape).
    - **Banned**: reporting success without reading the output back · an audit that only checks a file exists · skipping the fix loop because a check is "advisory".
 
+17. **🚨 Diagram at birth: every part ships with its own picture, kept beside it in git** (HARD RULE, added 2026-10-28 per みや: *"a mandatory diagram creation for each of anything we've built. It will be included inside the git of this project as reference"*).
+   - **Goal**: any part can be brought up and explained at once next time, from its own picture.
+   - **What**: a Feature, Skill, Tool or Workflow that is born or refined carries a diagram of how it works: the HTML source (drawn with the `explain-diagram` skill) and the PNG (rendered by `node lib/diagram-render.js <html> --out <png>`), committed with the part.
+   - **Where**: Feature `domain/<name>/diagram.html` + `diagram.png` · Skill `.claude/skills/<name>/diagram.*` · one-file Tool `<dir>/<name>.diagram.html` + `.png` (e.g. `quest/requirement-index.diagram.png`).
+   - **Done only when**: `node lib/diagram-census.js --check <part>` exits 0 (both files, a real drawing, a real PNG of 5 KB or more, PNG not older than its HTML). A new Feature README names it with a `diagram:` line (`component-birth-gate` blocks without it).
+   - **Backlog**: `node lib/diagram-census.js --missing` lists every part with none; an existing part gains its diagram when it is next refined (same scope as Rule 16).
+   - **Banned**: a part born or refined with no diagram · a diagram left only in the scratchpad or only in chat · a PNG that was never Read and looked at.
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 3.5 — 2026-10-28. Rule 17 added per みや: diagram at birth, kept beside the part in git; checked by `lib/diagram-census.js` (eval 26/26), `diagram:` README key enforced by `component-birth-gate` (eval 11/11); first instances `quest/requirement-index.diagram.png` and `lib/diagram-census.diagram.png`. Spec-preservation: Rules 6–16 untouched; additive.*
 
 *Version 3.4 — 2026-10-23. Rule 16 added per みや (KPI Feature build, popup answer): self-audit on every run, checked against the part's goal, fix loop before the reply, `self_audit:` README key enforced by `component-birth-gate` (eval 10/10), first instance `domain/kpi/`. Spec-preservation: Rules 6–15, the trinity diagram and the INSTALLED table are untouched; additive.*
 

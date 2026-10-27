@@ -46,3 +46,18 @@
 {"ts":"2026-10-20T04:08:43.340Z","decision":"pass","checked":0}
 {"ts":"2026-10-20T04:08:44.837Z","decision":"block","paths":["C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
 {"ts":"2026-10-20T04:08:46.819Z","decision":"block","paths":["C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-27T09:45:55.449Z","decision":"pass","checked":0}
+{"ts":"2026-10-27T09:45:55.651Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:56.087Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:56.299Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:56.700Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:56.802Z","decision":"bypassed","token":"[skip-spawn-task-folder-guard: the task only reads the tracked lib folder]"}
+{"ts":"2026-10-27T09:45:57.423Z","decision":"block","paths":["C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\melaka-requirements-index-123431\\domain\\spawn-task-folder-guard\\_eval-untracked-32340 (untracked (no file under it is in git))"]}
+{"ts":"2026-10-27T09:45:57.681Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:58.142Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:58.372Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:58.589Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:45:59.361Z","decision":"pass","checked":2}
+{"ts":"2026-10-27T09:45:59.475Z","decision":"pass","checked":0}
+{"ts":"2026-10-27T09:45:59.693Z","decision":"pass","checked":1}
+{"ts":"2026-10-27T09:46:00.268Z","decision":"pass","checked":2}

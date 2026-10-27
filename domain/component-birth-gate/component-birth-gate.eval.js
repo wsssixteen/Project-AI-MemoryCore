@@ -35,7 +35,9 @@ check('F4d README with goal+retention but no footprint BLOCKED (Rule 7)', r.stat
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\nfootprint: on-demand: 1 node process while running, <50 MB\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F4e README with goal+retention+footprint but no self_audit BLOCKED (Rule 16)', r.status === 2 && /self_audit:/.test(r.stderr) && /against the goal/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\nfootprint: on-demand: 1 node process while running, <50 MB\nself_audit: the script re-reads its output and checks it against the goal\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
-check('F4c README with goal+retention+footprint+self_audit passes', r.status === 0, 'exit=' + r.status);
+check('F4f README with every key but diagram: BLOCKED (Rule 17)', r.status === 2 && /diagram:/.test(r.stderr) && /diagram-census/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\nfootprint: on-demand: 1 node process while running, <50 MB\nself_audit: the script re-reads its output and checks it against the goal\ndiagram: diagram.png\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
+check('F4c README with goal+retention+footprint+self_audit+diagram passes', r.status === 0, 'exit=' + r.status);
 
 
 // F5: forge's own birth (FORGE_BIRTH=1) → pass

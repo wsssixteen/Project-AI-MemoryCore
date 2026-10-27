@@ -18,6 +18,7 @@
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
 - [workflow-name-runs-stale-copy](feedback_workflow_name_runs_stale_copy.md) — a workflow file edited in-session is launched by `scriptPath`, never by `name:`; check the first agent's label
+- [session-revive-handover](feedback_session_revive_handover.md) — reviving or redirecting a session = full handover: every misrouted message verbatim, what was done with it, the state and rules it needs; never just the one command he named
 
 ## System design (skills: system-rules, system-design)
 - [system-design-rules](feedback_inventory_first.md) — inventory first, universal + mechanical rules, top-down apps, RAM footprint

@@ -205,11 +205,10 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
   const plan = (existing && existing.plan) || [], adhoc = (existing && existing.adhoc) || [];
   const onDay = new Set([...plan, ...adhoc].flatMap(e => ticketsIn(e.name)));
   const addPlan = [], addAdhoc = [];
-  // the plan holds at most KPI tickets: a worked ticket of his is added only while the day has fewer; finished ones first
-  let planCount = plan.length;
+  // every ticket he worked gets its line; the KPI of 3 limits morning planning only (miya 2026-10-28: "I did more than 3 tickets")
   for (const w of [...worked].sort((a, b) => (b.done ? 1 : 0) - (a.done ? 1 : 0))) {
     if (onDay.has(String(w.id))) continue;
-    if (w.own) { if (w.touched === false || planCount >= KPI) continue; addPlan.push(String(w.id)); planCount++; }
+    if (w.own) { if (w.touched === false) continue; addPlan.push(w.pct ? `${w.id} - ${w.pct}%` : String(w.id)); }
     else addAdhoc.push(w.title || `${w.id} - Assist`);
     onDay.add(String(w.id));
   }
@@ -220,8 +219,8 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     if (ticketsIn(line).length && ticketsIn(line).every(t => onDay.has(t))) continue;
     addAdhoc.push(line);
   }
-  // a PLAN ticket stays only when it moved in Redmine that day (miya 2026-10-22: no Redmine progress = not touched)
-  const workedIds = new Set(worked.filter(w => w.touched !== false).map(w => String(w.id)));
+  // remove ONLY a ticket with no progress at all that day (miya 2026-10-28): a Redmine entry or 2+ turns of ours both keep it
+  const workedIds = new Set(worked.map(w => String(w.id)));
   const remove = canRemove
     ? plan.filter(e => mine(e) && e.status === 'PENDING' && /^\d{6}$/.test(e.name) && !workedIds.has(e.name)).map(e => ({ id: e.id, name: e.name }))
     : [];
@@ -391,7 +390,8 @@ function ledgerDay(day) {
     for (const line of text.split('\n')) {
       if (!line || line.indexOf(day.slice(0, 7)) < 0 && line.indexOf(iso(new Date(atNoon(day).getTime() - 864e5)).slice(0, 7)) < 0) continue;
       let r; try { r = JSON.parse(line); } catch (_) { continue; }
-      if (!r.qa || r.qa_source === 'top-active' || !r.closed_ts) continue;
+      // only turns that named the ticket count: "top-active" is a fallback label, "tools" a relabel from file paths (2026-10-28: 265109 got 121 turns of unrelated work)
+      if (!r.qa || r.qa_source === 'top-active' || r.qa_source === 'tools' || !r.closed_ts) continue;
       if (iso(new Date(r.closed_ts)) !== day) continue;
       const k = r.turn_id || r.closed_ts + '|' + r.session_id;
       if (seen.has(k)) continue;
@@ -612,7 +612,7 @@ async function main() {
     const ad = adhocsOfDay(d, ledger[d].adhocIds, blocks);
     if (ad.untitled.length) notes.push(`${d}: adhoc with no title, not written: ${ad.untitled.join(', ')}`);
     const titleOf = id => { const b = blocks.find(x => x.qa === 'QA-' + id && x.title); return b ? protimeLine(b) : null; };
-    const worked = red.ok ? red.worked[d].map(w => { const own = ownerOfDay({ commits: ticketCommits(w.id), delegatedTo: (blocks.find(x => x.qa === 'QA-' + w.id) || {}).delegated_to, patchToday: patchOnDay(w.id, d), day: d }) === 'PLAN'; return { ...w, own, title: own ? null : titleOf(w.id) }; }) : [];
+    const worked = red.ok ? red.worked[d].map(w => { const own = !!w.showedWork || ownerOfDay({ commits: ticketCommits(w.id), delegatedTo: (blocks.find(x => x.qa === 'QA-' + w.id) || {}).delegated_to, patchToday: patchOnDay(w.id, d), day: d }) === 'PLAN'; return { ...w, own, title: own ? null : titleOf(w.id) }; }) : [];
     workedByDay[d] = worked;
     waitingByDay[d] = adhocsOfDay(d, ledger[d].adhocIds, blocks.filter(b => /^(hold|blocked|delegated)$/i.test(b.status || '') || /\b(owner infra|waiting|awaiting|menunggu)\b/i.test(b.issue_one_liner || ''))).lines;
     const approvedDay = approvedDays.has(d);

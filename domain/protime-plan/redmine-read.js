@@ -39,6 +39,14 @@ async function redmineDays(days, extraIds) {
   const me = await rget('/users/current.json');
   if (!me || !me.user) return { ok: false, error: 'redmine unreachable' };
   const myId = me.user.id, since = [...days].sort()[0];
+  // people whose role closes our part: a ticket handed to a BA / QA / TSO = we answered, our part is done (miya 2026-10-28)
+  const closers = new Set();
+  for (let offset = 0; offset < 2000; offset += 100) {
+    const j = await rget(`/projects/${REDMINE.project}/memberships.json?limit=100&offset=${offset}`);
+    if (!j || !Array.isArray(j.memberships)) break;
+    for (const m of j.memberships) if (m.user && (m.roles || []).some(r => /Business Analyst|Quality Assurance|TSO/i.test(r.name))) closers.add(String(m.user.id));
+    if (offset + 100 >= (j.total_count || 0)) break;
+  }
   const cand = new Set(extraIds.map(String));
   for (const base of [`/issues.json?status_id=*&assigned_to_id=me`, `/projects/${REDMINE.project}/issues.json?status_id=*`]) {
     for (let offset = 0; offset < 600; offset += 100) {
@@ -58,7 +66,20 @@ async function redmineDays(days, extraIds) {
     // resolve facts (miya 2026-10-14): he passed it on that day, or wrote on it that day and it now sits with someone else
     const handedOn = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (jr.details || []).some(det => det.name === 'assigned_to_id' && String(det.old_value) === String(myId)));
     const withOther = !!(is.assigned_to && is.assigned_to.id !== myId);
-    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, touched: wrote.has(d), done: handedOn(d) || (wrote.has(d) && withOther) });
+    // his entry that day shows the work (miya 2026-10-28): root cause or solution filled, files attached,
+    // status changed, or handed on with a written note -> his work (PLAN), even on another developer's ticket
+    const showedWork = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (
+      (jr.details || []).some(det => det.property === 'attachment' || (det.property === 'cf' && ['94', '2'].includes(String(det.name)) && String(det.new_value || '').trim()) || (det.property === 'attr' && det.name === 'status_id')) ||
+      (String(jr.notes || '').trim().length >= 80 && (jr.details || []).some(det => det.name === 'assigned_to_id'))));
+    // handed to another developer to finish (miya 2026-10-28, #286462) -> "<n> - <his done %>"; handed to a BA/QA/TSO -> plain number
+    const pctOn = d => {
+      const mine = journals.filter(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d);
+      const to = mine.flatMap(jr => jr.details || []).filter(det => det.name === 'assigned_to_id').map(det => String(det.new_value)).pop();
+      if (!to || to === String(myId) || closers.has(to)) return null;
+      const pct = mine.flatMap(jr => jr.details || []).filter(det => det.name === 'done_ratio').map(det => Number(det.new_value)).pop();
+      return pct > 0 && pct < 100 ? pct : null;
+    };
+    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, touched: wrote.has(d), showedWork: showedWork(d), pct: pctOn(d), done: handedOn(d) || (wrote.has(d) && withOther) });
   }
   return { ok: true, worked, candidates: cand.size };
 }
