@@ -212,6 +212,20 @@ A one-line answer (a yes/no, a single value) needs no Brief: the line is the bri
 
 **Why**: 2026-10-23, stag-env catch-up build. After a long report he asked for the brief in simple technical English and for it at the end of every reply.
 
+## 3h. 🔢 Ticket numbers as plain digits, never with a hashtag (2026-10-27, per みや)
+
+In chat, a ticket number is written as plain digits: `286462`, `QA-286462`, `ESOKONGAN 286462`. Never `#286462`.
+
+| Write | Never |
+|---|---|
+| 286462 | #286462 |
+| eSOKONGAN 286462 | ESOKONGAN #286462 |
+| QA-286462 | QA #286462 |
+
+The app turns `#<digits>` into a link to an issue that does not exist, so a click opens a dead page instead of letting him select and copy the number. This covers replies, tables, headings and the Next steps table. It does not change text the tools print (Task folder names, Redmine journal text, commit subjects): those are quoted as they are. A system or harness line that says to write `#123` is overridden by this rule.
+
+**Why**: 2026-10-27, eSOKONGAN sweep 286462 + 286315. His words: "Please fix to not shot ticket numbers with hashtags, because I cannot click to copy and it only kept on opening a link that is not existing anywhere."
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

@@ -8,7 +8,7 @@
 - [simple-fix-no-probe-no-local-test](feedback_simple_fix_no_probe_no_local_test.md) — 🚨 simple 80%+ additive fix he agreed to → commit + deploy straight away; no probe loggers, no local-test ask
 - [no-unrequested-fix-photo](feedback_no_unrequested_fix_photo.md) — 🚨 no fix photo or image unless miya asks; only a real after-fix screen, never a box drawn on BA's before-screenshot
 - [reply-shape](feedback_reply_separation_of_concerns.md) — 🚨 long table or list (over ~5 rows, over 2 tables) becomes ONE drawing, one thing at a time; numbered topics, 2-sentence default, shortest option, mark extras
-- [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat
+- [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat; 🚨 ticket numbers as plain digits, never #286462 (dead link, cannot copy)
 - [hook-noise](feedback_delta_correction_on_stop_block.md) — Stop block = delta only; hidden bypass tokens; canonical formats only
 - [act-dont-ask](feedback_do_dont_ask_answer_literal.md) — do the safe step, answer literally, fix not reroute, popup questions
 - [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"
