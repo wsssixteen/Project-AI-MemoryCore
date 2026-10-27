@@ -1395,3 +1395,5 @@
 {"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
 {"ts":"2026-10-27T07:44:32.592Z","category":"reask/redundant"}
 {"ts":"2026-10-27T12:26:59.228Z","category":"build-missed-requirement"}
+{"ts":"2026-10-27T13:31:03.198Z","category":"build-missed-requirement"}
+{"ts":"2026-10-27T17:13:25.674Z","category":"build-missed-requirement"}

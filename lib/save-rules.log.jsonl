@@ -156,3 +156,7 @@
 {"ts":"2026-10-20T10:51:36.190Z","parts":20,"pass":80,"fail":0,"unruled":1,"skip":0,"dur_ms":4649,"partial":false}
 {"ts":"2026-10-20T10:59:21.511Z","parts":18,"pass":76,"fail":0,"unruled":0,"skip":0,"dur_ms":1758,"partial":false}
 {"ts":"2026-10-21T08:39:24.049Z","parts":8,"pass":29,"fail":0,"unruled":1,"skip":0,"dur_ms":1594,"partial":false}
+{"ts":"2026-10-27T09:31:20.201Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":32,"partial":true}
+{"ts":"2026-10-27T09:31:20.330Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":27,"partial":true}
+{"ts":"2026-10-27T09:41:42.471Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":32,"partial":true}
+{"ts":"2026-10-27T09:41:42.610Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":33,"partial":true}
