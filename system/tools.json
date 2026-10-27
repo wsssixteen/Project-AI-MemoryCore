@@ -411,6 +411,22 @@
       "status": "unused"
     },
     {
+      "id": "diagram-census",
+      "answers": "Does this part have its own checked diagram beside it, and which parts still have none",
+      "call": "node lib/diagram-census.js --check <part> · node lib/diagram-census.js --missing",
+      "home": "lib/diagram-census.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "state-agnostic",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "diagram-render",
       "answers": "Is this diagram-design picture valid, and what does it look like as a PNG to send",
       "call": "node lib/diagram-render.js <diagram.html> [--out <png>]",

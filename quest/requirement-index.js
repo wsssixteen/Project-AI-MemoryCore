@@ -5,9 +5,13 @@
  * symptom: 2026-10-27 miya: "search through Redmine for Melaka Requirements ... creating an index of it.
  *          So that we can use in our Quest step during Phase 0 ... to confirm whether certain requests
  *          from TSO aligns with the original requirement of a skrin/feature/function."
- * goal: at Phase 0 every ticket names the Requirement ticket(s) that first specified its screen or
- *       feature, so a TSO ask is checked against the original requirement before it is built.
- * goal_signal: the Phase 0 hand-back carries a `REQUIREMENT-MATCH:` line for the ticket.
+ * goal (2026-10-28 miya, corrected): it is an INDEX, never a full load. It narrows a ticket to the
+ *       probable Requirement(s) fast; then that requirement itself is opened and the TSO ask is checked
+ *       against it (by then we know exactly what to search for). It also answers "what is the
+ *       requirement for X" at once, instead of a long search with no idea where to look. A "Semua Urusan"
+ *       hit is a right pointer: it says read the shared spec, then each urusan's own requirement.
+ * goal_signal: the Phase 0 hand-back carries a `REQUIREMENT-MATCH:` line naming the requirement that was
+ *       opened and compared; the right requirement sits in the top 3 (blind key: 151 of 174 on 2026-10-28).
  * retention: regenerate (both index files are rebuilt from Redmine; nothing is hand-edited) ·
  *            keep (quest/requirement-index.log.jsonl, git-ignored, local: one small row per call, the usage + self-audit record).
  * footprint: on demand; a rebuild is ~21 Redmine list calls, run at most once a week by itself.
