@@ -23,9 +23,11 @@ runHook({ name: 'component-birth-gate', event: 'PreToolUse' }, (input) => {
     // system-rules Rule 7 (2026-09-29): footprint: <trigger class>: <processes, RAM>
     const KEY = { goal: /^\s*\**goal\**\s*:\s*\S/mi, retention: /^\s*\**retention\**\s*:\s*\S/mi, footprint: /^\s*\**footprint\**\s*:\s*(per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none)\b/mi,
       // system-design Rule 16 (2026-10-23): how each run checks its own output against the goal
-      self_audit: /^\s*\**self_audit\**\s*:\s*\S/mi };
-    const missing = ['goal', 'retention', 'footprint', 'self_audit'].filter(k => !KEY[k].test(content));
-    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rules 13 + 16 / system-rules Rules 6-7; self_audit: = how each run checks its own output against the goal; footprint: starts with per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none). Add the machine-readable lines at the top, or let core/forge.js write them.' };
+      self_audit: /^\s*\**self_audit\**\s*:\s*\S/mi,
+      // system-design Rule 17 (2026-10-28): the Feature's own picture, checked by lib/diagram-census.js
+      diagram: /^\s*\**diagram\**\s*:\s*\S/mi };
+    const missing = ['goal', 'retention', 'footprint', 'self_audit', 'diagram'].filter(k => !KEY[k].test(content));
+    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rules 13 + 16 + 17 / system-rules Rules 6-7; self_audit: = how each run checks its own output against the goal; footprint: starts with per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none; diagram: = diagram.png in the Feature folder, checked by node lib/diagram-census.js --check domain/<name>). Add the machine-readable lines at the top, or let core/forge.js write them.' };
     return { fired: false };
   }
   if (!isComponent) return { fired: false };
