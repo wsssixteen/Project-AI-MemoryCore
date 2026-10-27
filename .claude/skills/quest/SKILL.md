@@ -290,6 +290,12 @@ The moment the Rubric says the fix belongs to another team, the hand-over reply 
 | 2 | The bare hand-off file: file-name header + `Line N (BEFORE)` / `Line N (AFTER)` markers + code only, per `feedback_cross_module_handoff_artifact` | Task folder `2. Fix\` (or the latest `N. Rework\`), full path in the reply |
 | 3 | The Redmine tab: the ticket's edit form opened in Edge (Claude in Chrome), Assignee + Notes + Root Cause (DEV) + Solutions filled, **% Done = 50** (a hand-over to another team is half done, 2026-10-27 per みや), file attached, **stopped before Submit** so he approves it | browser, then one line naming the tab |
 
+**🚨 Before the note is shown: `node lib/handover-check.js --brief "<Task folder>\1. Brief" --draft <note.txt>` MUST exit 0 (2026-10-27 per みや, 286462).** Paste its `EXPECTED SOURCE` line and its `HANDOVER-CHECK:` line under the draft. The check names who wrote the Expected (BA, or a TSO or QA report) and flags:
+- every expected row the ticket's Expected does not ask for;
+- every line number given without its file and branch.
+
+A flagged row is never "fixed" by guessing. Keep today's output for that row, or put it to the BA as a question. **Banned**: an Expected/Sepatutnya row built from my own reading · calling a TSO or QA Description "the requirement" · bare line numbers. **Why**: 286462, the note promised Lot and PT changes nobody asked for (the only Expected was a TSO report: "Papar Plot 3 pada dokumen"), so Fatin had to ask which requirement and where the line numbers came from.
+
 **Every file attached to Redmine is first saved in the cycle folder** (`2. Fix\` or the latest `N. Rework\` root), named `<n>. <what it shows>.<ext>`, and uploaded from there, BA screenshots included, so people can fact-check what was uploaded (2026-10-27 per みや; enforced by `domain/redmine-upload-path`, PreToolUse BLOCK on the browser upload).
 **Banned**: a hand-over note with no file and no prefilled tab · asking him to "copy this into Redmine" · uploading a file from `1. Brief\` or any folder outside the cycle folder. **Why**: 286462, he had to ask "Where is the handover tab for me to approve and the file?"
 
