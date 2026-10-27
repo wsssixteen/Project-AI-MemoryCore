@@ -63,6 +63,15 @@ main/current-session.md.bak
 *-PJNBRidhwan.md
 *-PJNBRidhwan.json
 *-PJNBRidhwan.txt
+# 2026-10-28: the one-digit rule above missed -miyazaki-63 and every -PJNBRidhwan-NN copy; DE staged 127 shards (6 GB).
+*-miyazaki-[0-9]*.jsonl
+*-miyazaki-[0-9]*.md
+*-miyazaki-[0-9]*.json
+*-miyazaki-[0-9]*.txt
+*-PJNBRidhwan-[0-9]*.jsonl
+*-PJNBRidhwan-[0-9]*.md
+*-PJNBRidhwan-[0-9]*.json
+*-PJNBRidhwan-[0-9]*.txt
 
 # Written by RecursiveLoopDetector on EVERY tool call — same churn class as hook-fires.jsonl.
 # Moved meta/ -> system/ in a4516fd, so the old ignore rule no longer covered it.

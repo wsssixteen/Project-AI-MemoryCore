@@ -4,3 +4,9 @@
 {"ts":"2026-10-27T12:19:02.063Z","num":"285768","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/esokongan/285768"],"dur_ms":8706}
 {"ts":"2026-10-27T12:19:24.545Z","num":"285768","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":7228}
 {"ts":"2026-10-27T13:29:44.347Z","num":"264355","branches":2,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":2607}
+{"ts":"2026-10-27T06:27:31.698Z","num":"264355","branches":2,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":2841}
+{"ts":"2026-10-27T12:14:21.054Z","num":"286462","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":15926}
+{"ts":"2026-10-27T12:14:34.687Z","num":"286315","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/esokongan/286315"],"dur_ms":11811}
+{"ts":"2026-10-27T12:15:15.081Z","num":"286462","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":6530}
+{"ts":"2026-10-27T12:15:23.722Z","num":"286315","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":8248}
+{"ts":"2026-10-27T13:38:44.174Z","num":"264355","branches":2,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":1553}
