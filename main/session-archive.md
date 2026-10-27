@@ -4,6 +4,20 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-27 → 28, worktree "rustdesk-software-visibility-e047d5", RustDesk blank apps)
+- Symptom: Sourcetree and Notepad++ blank or unclickable over RustDesk on PJNBRidhwan. Proven: blank on the PC itself (local GDI capture + PrintWindow), so not RustDesk; GPU drawing path (Direct2D/Direct3D) fails, GDI works (Notepad++ DirectWrite A/B in a fresh copy).
+- Applied (permanent, per app): Notepad++ `writeTechnologyEngine="0"` (backup `config.xml.bak-directwrite`); WPF `HKCU\Software\Microsoft\Avalon.Graphics\DisableHWAcceleration` = 1. NOT tested on screen yet: miya reopens both apps and reports.
+- Open: why the GPU path fails (leads: Parsec Virtual Display Adapter 0.45, AMD driver 31.0.21921.1000). Note `library-items/remote-desktop/rustdesk-elevated-app-control.md`. Slip assume-not-verify logged.
+**Last Activity**: 2026-10-27 20:14 — session `esokongan-ticket-selection-cad51f` (246964 Verified by BA; 261986 briefed, fix not started), closed by its own Domain Expansion.
+
+**Last Activity**: 2026-10-21 16:40 — session `vibrant-solomon-cd24c1` (#285871 Minit Bebas Tolak Ringkas, from ADHOC-PT-2026-13), Phase 1 closed, closed by its own Domain Expansion (bullet below).
+
+- **SESSION vibrant-solomon-cd24c1 (#285871), 2026-10-21 10:27 → 16:40.** BA Mira opened Internal Issue #285871 for yesterday's adhoc ADHOC-PT-2026-13 (A69 promoted → TICKETED). Full quest re-run: one sonnet adversarial review found 2 gaps in the adhoc fix: B1 PPD → PTNH path (no KPPD Semakan; 3 PROD Pengesahan rows) left an empty KPPD section; B2 Minit Bebas made before deploy lost both sign blocks (fill list from the classpath template, `TemplateConfig.readAllContentControl():747`). Fixed in `PelupusanTemplateUtil`: `isPerakuanMinitBebasTanpaSemakanKppd` (wrapper `blokSemakanMinitBebasKPPD` removed at PMB unless previous tugasan = SMB by KPPD) + `addMinitBebasKppdTagLama` (old docs keep old tags). Offline doc-sim 4 flows PASS. Scope check: only TemplateMinitBebasKPPD.docx locked the sentence. Commit 2026-10-21 14:52 `66422b3ddf` on `mlk/internal-issues/285871` (+56/0, compile green), merged `mlk/int-env` 14:53 `e30e4206cb`. miya deployed + tested internal PLPS/2026/48; screenshot `2. Fix\1. Ayat boleh kemaskini.png`; Redmine Resolved to Mira. Quest Phase 1 closed (archive waits Redmine Closed). Wrong-fix row 1. Open: planned-release list; staging not merged; optional hide outer box label; ADHOC-PT-2026-13 archive save (brief-first, background). Slip `reask/verbose` (commit subject described the effect).
+**Last Activity**: 2026-10-22 19:00 — PymTime roadmap phase 1 (design) DONE: A with a left rail, every pick in DESIGN.md · new Phase P (the ProTime weekly plan moves into PymTime, handover from the ProTime plan session 2026-10-20) · its architecture explained to miya, his decisions next
+**Last Activity**: 2026-10-27 20:15 — worktree `esokongan-quest-sweep-2bce09` (286315 + 286462), Domain Expansion.
+
+**Last Activity**: 2026-10-27 21:30 — worktree `melaka-prod-adhoc-permohonan-f52ca5` (Melaka adhoc day session), Domain Expansion.
+
 ## Session Recap (2026-10-27, worktree "melaka-prod-adhoc-permohonan-f52ca5", Melaka adhoc day + end-of-day close-out)
 - ADHOC-PT-2026-15 (PROD PT `PTMLK/02/L/PT/2026/9` at PRMMKNPDT, advised alter to KKMMKN): saved, status hold + archive_hold, waits BA confirmation or a Redmine ticket (promote with `adhoc-lifecycle.js promote --row A75 --ticket QA-<n>`).
 - 264355: deployed AWAM fix `mlk/qa/264355v2` (Awam) is the whole ticket, BA Mira Verified 2026-10-27; Pelupusan `mlk/qa/264355` (Pelupusan) notifikasi stays HELD by miya since 2026-10-01, do NOT merge. Built `lib/quest-branches.js` (+eval 8/8) and quest save list item 5 / close-phase 1d "Branches table" (2fc2c809); ticket-close-block labels each branch (Awam)/(Pelupusan).
@@ -6720,6 +6734,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
