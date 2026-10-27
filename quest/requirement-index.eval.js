@@ -212,6 +212,10 @@ t('Q4 screenHint reads the tugasan line and the menu path, not the email or gree
   const h = R.screenHint(d);
   return (/Penyediaan Risalat MMKN - PDT/.test(h) && /Kemaskini Ulasan Jabatan Teknikal/.test(h) && !/melaka\.gov|Hi team/.test(h)) || h;
 });
+t('Q6 screenHint reads the numbered list under "Tugasan involved"', () => {
+  const h = R.screenHint('ID Permohonan: PTMLK/03/L/PLTP/2026/4\n\nTugasan involved\n1. Kemasukkan/Semakan/Perakuan Keputusan MMKN\n2. Penyediaan/Semakan/Perakuan Surat Keputusan dan Borang Notis 5A\n\nIssue:\nLangkah Maklumat Tanah missing panel');
+  return (/Keputusan MMKN/.test(h) && /Notis 5A/.test(h) && !/Issue/.test(h)) || JSON.stringify(h);
+});
 t('Q5 screenHint reads "Tugasan Semasa: <screen>" (the PDTMT template)', () => {
   const h = R.screenHint('PDTMT\nUser ID: sanarimah@melaka.gov.my\nTugasan Semasa: Semakan Risalat MMKN - PDT\nUrusan : PLPS - Permohonan Lesen Pendudukan Sementara');
   return /^Semakan Risalat MMKN - PDT$/.test(h) || JSON.stringify(h);
