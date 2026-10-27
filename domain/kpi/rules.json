@@ -1,0 +1,29 @@
+{
+  "_about": "Rules the kpi script and its self-audit read. Competencies = Pymsoft appraisal form 2026, Part B and Part C (Developer).",
+  "competencies": {
+    "B1": "Technical & Domain Knowledge",
+    "B2": "Quality of Work",
+    "B3": "Delivery & Planning",
+    "B4": "Ownership & Initiative",
+    "B5": "Communication",
+    "B6": "Teamwork & Collaboration",
+    "C1": "Code Quality & Engineering Practice",
+    "C2": "Problem Solving & Production Support"
+  },
+  "what_max_chars": 220,
+  "coverage_days": 90,
+  "self_names": [
+    "Ahmad Ridhwan Anuar",
+    "Ahmad Ridhwan bin Anuar"
+  ],
+  "evidence_shapes": [
+    "\\b(?=[0-9a-f]*\\d)(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b",
+    "#\\d{4,7}",
+    "\\bet_[a-z0-9_]+\\.[a-z0-9_]+",
+    "\\.sql\\b",
+    "\\.[a-z]{2,5}:\\d+",
+    "[\\\\/][^\\s]+\\.(md|java|xhtml|xml|docx|json|js|txt|pdf|jrxml)\\b",
+    "https?://\\S+"
+  ],
+  "pending_stale_days": 30
+}

@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 147 hook registrations across 6 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 149 hook registrations across 6 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -61,6 +61,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | SessionStart | — | `boot-load-verification.js` | ✓ |
 | SessionStart | — | `claude-md-watch.check.hook.js` | ✓ |
 | SessionStart | — | `hook-syntax-check.hook.js` | ✓ |
+| SessionStart | — | `kpi-pending.check.hook.js` | ✓ |
 | SessionStart | compact|resume | `project-load.resume.hook.js` | ✓ |
 | SessionStart | — | `system-audit.js` | ✓ |
 | SessionStart | — | `worktree-cleanup-boot.hook.js` | ✓ |
@@ -135,6 +136,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
+| PreToolUse | Bash|PowerShell | `prod-alter-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
 | PreToolUse | AskUserQuestion | `question-self-contained.check.hook.js` | ✓ |
@@ -144,7 +146,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `release-mlk-plp-scope-gate.check.hook.js` | ✓ |
 | PreToolUse | mcp__ccd_session__spawn_task | `spawn-task-folder-guard.check.hook.js` | ✓ |
-| PreToolUse | mcp__postgres-mlkstg1-pg__.* | `stg1-block.check.hook.js` | ✓ |
+| PreToolUse | mcp__postgres-mlkstg1?-pg__.* | `stg1-block.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `system-edit-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PostToolUse | Edit|Write | `bpmn-check.check.hook.js` | ✓ |
 | PostToolUse | Grep | `grep-rubric-gate.js` | ✓ |

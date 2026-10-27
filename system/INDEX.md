@@ -99,6 +99,7 @@ A system change = any change to a Rule, Workflow, Feature or Kernel part in the 
 | The decision and who made it | "Structure rulings" above, or the owning skill | when ruled |
 | Session narrative (what, why, state, next) | `main/current-session.md` · the day's `daily-diary/current/<date>.md` · an open effort's `main/handoff-<date>-<topic>.md` | same turn, not at session end |
 | Open work | `main/todo.md` | same turn |
+| An appraisal (KPI) moment: a colleague's commit found as the cause, a fix never shipped, a wrong patch caught, cross-team help, own rework (added 2026-10-23 per みや) | `node domain/kpi/kpi.js add` → `main/kpi-moments.jsonl`; page `main/kpi-tracker.md` is generated (skill `kpi`, Feature `domain/kpi/`) | the moment it happens; Phase 2 Step 2 adds any missed one |
 | A Project changed (its code, its plan, its state) | that project's own folder: a `VERSIONS.md` row with the commit · `PROJECT.md` state and its `Last updated:` line · `ROADMAP.md` status (added 2026-10-08 per みや) · in shape 2 also `START.md` state and next step, a `DECISIONS.md` row per decision (`domain/project-load/project.js decide`) and, for a delegated session, its `reports\<session-name>.md` (added 2026-10-17, the project system) | same turn as the change; `lib/save-rules.js` fails Domain Expansion when the project's repo moved and these did not, when START.md lacks a section, or when a delegated report is older than its session's last change |
 | The picture | the artifact for that area, republished to the same URL | same turn |
 

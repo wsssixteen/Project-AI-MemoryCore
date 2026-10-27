@@ -1118,7 +1118,7 @@ Format (the `## Fastest Path` block):
 
 **Banned**: closing a quest that took >1 wrong turn with only the fix recorded and no Fastest-Path block. The wrong turns ARE the signal — name them so they're never re-walked.
 
-**Step 2 — KPI entry (HIGH-BAR — only-if-significant rule, added 2026-06-01 per みや)** — append to `main/kpi-tracker.md` ONLY IF the quest produced something **significant AND stands out, ESPECIALLY out-of-scope + critical**. Default: SKIP. Rare-by-design — most quests close without a KPI entry. **When to add**: extras you solved beyond ticket scope that have real business value (caught a sibling-urusan bug, found + reported a deferred-critical issue, surfaced an architectural gap), a fix whose blast-radius reached unexpectedly far, or a meta-discovery the team would value at the next upward report. **When NOT to add**: routine bug fix that did exactly what the ticket asked, refactor inside scope, normal-cadence work. **Why** (みや 2026-06-01): the prior "rows as many as feel meaningful, no minimum" rule produced KPI noise — every quest got logged whether or not anything stood out → the tracker stopped being scannable AS a highlight reel. New shape: a row in `kpi-tracker.md` should be a banner moment, not a checkbox. The post-Phase-2 weekend KPI review (`feedback_personal_expression` 2026-05-07 personal todo) only works if the entries ARE the standouts. Format when emitting: 2-column scannable per `kpi-tracker.md` (Column 1 = grep-able identifiers; Column 2 = plain English what we learnt). If skipping: emit one line in chat at Phase 2 — `KPI: skip — routine ticket-scope work, no standout`.
+**Step 2 — KPI moments (`kpi` skill, `domain/kpi/`; 2026-10-23 per みや)** — moments are recorded WHEN they happen (`→ Skill: kpi`, the quest skill's phase table) and checked at EVERY quest save (the quest skill's save list, item 4: `node domain/kpi/kpi.js list --ticket <num>`, add any missed moment, settle a pending row whose BA verdict is in). Phase 2 starts from a save, so this step pastes that save's line: `KPI: <n> rows · <m> pending — <added CODE | no new moment>`. `main/kpi-tracker.md` is GENERATED from `main/kpi-moments.jsonl`: never hand-edit it.
 
 **Step 3 — REMOVED (2026-06-08 per みや).** The per-ticket Post-Mortem META was restating the slip-log; its process-learning is already captured by Step 1 (Faster-finding) + Step 1b (Fastest Path). Cross-ticket pattern synthesis (its only unique value) moves to a **weekly slip-log pattern-pass**: a 5-minute review that reads `system/slip-log.md` running-count and acts ONLY on patterns at ≥3 recurrences (promote to a structural rule/hook). Not a per-quest emit.
 
@@ -1174,7 +1174,7 @@ When a single external trigger requires changes across N living docs (today's ex
 | Action | Details | Source |
 |---|---|---|
 | Redmine status update | Set to Resolved + comment with commit SHA(s) | active.txt v?_commit field |
-| Upward KPI report fields | Ticket #, closure type, time spent, extras, business value | main/kpi-tracker.md latest entry |
+| Upward KPI report fields | Ticket #, competency, what happened, evidence | `node domain/kpi/kpi.js list --ticket <num>` (page: main/kpi-tracker.md) |
 | Anything else | Notes, branch deletions, manual touches | session context |
 
 みや scans the table, knows exactly what's on his plate.
@@ -1409,6 +1409,10 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.10 — 2026-10-23 (Phase 2 Step 2: the KPI check runs at every quest save, not only at Phase 2, per みや; Step 2 pastes the save's KPI line. Spec kept: the step is never silent.).*
+
+*Protocol version: 3.9 — 2026-10-23 (Phase 2 Step 2 KPI: the high-bar hand entry into main/kpi-tracker.md is replaced by the kpi Feature (domain/kpi/): moments recorded when they happen, competency-tagged, self-audited; Phase 2 lists the ticket rows and adds any missed one; kpi-tracker.md is generated. Spec kept: the skip line, a never-silent step. Changed and named: "default SKIP, rare-by-design, banner moments only" becomes "any appraisal moment with evidence", per みや 2026-10-23 ("take note anything that might help with our KPI or assessment for an increment"); the upward-report row now reads the ledger.).*
 
 *Protocol version: 3.8 — 2026-06-08 (Phase 2 simplification, committed `0052bfb` — version stamp omitted at commit time, paid as DEBT 1 this session. Changes: **Step 3 (Post-Mortem META) REMOVED** → cross-ticket pattern synthesis moves to a weekly `system/slip-log.md` pass acting only on ≥3-recurrence patterns; **Step 4 → "Refine receipt" (1 line)** — the autonomous hook/`auto-skill-on-mistake` loop refines in real time, the step just reports (`Refine — QA-X: <changed>` / `none`); Phase 2 step-tracker line 6→5 steps; **KPI** high-bar only-if-significant (default skip). **`delegated` status redefined**: Task folder + active.txt block archived immediately, per-quest `QA-NNN.md` stays live in `active/` with `## Delegated Resolution` + `learning_marker=`, **EXCLUDED from cadence/KPI counts** — run `quest/delegate-quest.js <QA>`; working-memory-discipline + verbal-trigger rows updated to match. Root category for the omission: best-practices-not-consulted / version-bump discipline skip.).*
 

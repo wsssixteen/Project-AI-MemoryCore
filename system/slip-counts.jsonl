@@ -1363,3 +1363,8 @@
 {"ts":"2026-10-20T10:48:40.393Z","category":"A1"}
 {"ts":"2026-10-20T10:48:41.024Z","category":"A4"}
 {"ts":"2026-10-20T10:48:42.408Z","category":"A2"}
+{"ts":"2026-10-27T04:06:28.661Z","category":"reask/verbose"}
+{"ts":"2026-10-27T04:48:48.955Z","category":"reask/ambiguous"}
+{"ts":"2026-10-27T04:50:45.108Z","category":"handoff/upload-not-in-task-folder"}
+{"ts":"2026-10-27T04:57:09.218Z","category":"reask/wrong-expected"}
+{"ts":"2026-10-27T05:02:36.277Z","category":"attachment/partial-video-read"}

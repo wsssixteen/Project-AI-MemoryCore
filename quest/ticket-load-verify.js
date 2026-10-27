@@ -35,6 +35,12 @@
  *      Issue / Expected list. A name outside the roster prints "role unknown". Preserved:
  *      A/C/D/D2/E/F text, the ECHO CONTRACT counts, exit codes, --json keys (two added).
  *
+ * v1.5 (2026-10-23, #262027, miya: "Why the fuck are you not making this mechanical?"): section C
+ *      lists BA files in every "<N>. Rework\Brief" too (they were shown as ours), and prints every
+ *      annotation of every BA PDF (page, colour, the text it sits on, the comment) via
+ *      quest/pdf-annotations.py. An unreadable PDF is an integrity problem (exit 2). --json adds
+ *      pdfAnnotations. Preserved: A/B/B2/D/D2/E/F text, exit codes, every other --json key.
+ *
  * Exit 0 = manifest printed. Exit 1 = ticket folder not found / sync missing.
  * Exit 2 = integrity problem (journal names an attachment absent from disk,
  *          or History.txt is older than the Redmine `Last updated` it records).
@@ -182,6 +188,28 @@ const relationLines = headerText.split(/\r?\n/)
     .filter(l => /^\s{3}\w+\s+→\s+#\d+/.test(l)).map(l => l.trim());
 const fieldsSynced = /TICKET FIELDS|🔗 RELATIONS/.test(headerText);
 const briefFiles = walk(briefDir, briefDir).filter(f => !/^(History|Description)\.txt$/i.test(f.rel));
+// BA's later files land in "<N>. Rework\Brief\" (task-folder shape 2026-09-30). v1.5: they are BA's too,
+// never "ours"; #262027 cycle 2 listed BA's newest PDF as ours and its annotations went unread.
+for (const e of fs.readdirSync(folder, { withFileTypes: true })) {
+    if (!e.isDirectory() || !/^\d+\.\s*(Rework|New)\b/i.test(e.name)) continue;
+    const cycleBrief = path.join(folder, e.name, 'Brief');
+    walk(cycleBrief, cycleBrief).forEach(f => briefFiles.push({ rel: path.join(e.name, 'Brief', f.rel), size: f.size }));
+}
+
+// ---- PDF annotations (v1.5, 2026-10-23, #262027) ----
+// The manifest reads every annotation of every BA PDF itself, so the comments are on screen at every resume.
+// A PDF that cannot be read is an integrity problem (exit 2), never a silent skip.
+const pdfNotes = new Map();
+const pdfFiles = briefFiles.filter(f => /\.pdf$/i.test(f.rel));
+if (pdfFiles.length) {
+    const brief = f => (f.rel.includes(path.sep + 'Brief' + path.sep) ? folder : briefDir);
+    const run = require('child_process').spawnSync(process.env.TLV_PYTHON || 'python',
+        ['-I', path.join(__dirname, 'pdf-annotations.py'), ...pdfFiles.map(f => path.join(brief(f), f.rel))],
+        { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+    let parsed = null;
+    try { parsed = JSON.parse(run.stdout); } catch (_) { /* reported below */ }
+    pdfFiles.forEach((f, i) => pdfNotes.set(f.rel, parsed ? parsed[i] : { error: (run.stderr || run.error || 'no output').toString().trim().split(/\r?\n/).pop() }));
+}
 
 // ---- CYCLE (added 2026-09-14, #278699) ----
 // The ticket was returned to Rework twice and only one "3. Rework" folder existed; /quest
@@ -227,6 +255,7 @@ const cycleLine = `CYCLE: status=${redmineStatus} · folders=${cycleDirs.length 
 // numbered subfolder. Scoping the check to 0. Brief/ made every upload of ours a false
 // integrity failure (2026-08-06, #273461: patch-273461.sql + the test mp4).
 const problems = [];
+for (const [rel, n] of pdfNotes) if (n.error) problems.push(`annotations of ${rel} could not be read (${n.error})`);
 const allFiles = walk(folder, folder);
 const onDisk = new Map(allFiles.map(f => [path.basename(f.rel), f.rel]));
 const namedInJournals = [...new Set(journals.flatMap(j => j.attachments))];
@@ -262,7 +291,8 @@ const qaDoc = qaDocCandidates.find(p => fs.existsSync(p)) || null;
 if (asJson) {
     console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
         descriptionBy: { author: descAuthor, role: descRole ? descRole.cls : 'unknown' }, specSource: [specJson('issue'), specJson('expected')],
-        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine } }, null, 2));
+        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine },
+        pdfAnnotations: Object.fromEntries(pdfNotes) }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
 
@@ -296,7 +326,14 @@ for (const kind of ['issue', 'expected']) {
 L.push('   Only a BA-written list is the spec. A TSO, Developer or role-unknown list is a report.');
 L.push('');
 L.push(`C. ATTACHMENTS / BRIEF FILES \u2014 ${briefFiles.length}. Echo content per file (image = what is visible, pdf = annotation count).`);
-briefFiles.forEach((f, i) => L.push(`   C${i + 1}. ${f.rel}  (${f.size} bytes)`));
+briefFiles.forEach((f, i) => {
+    L.push(`   C${i + 1}. ${f.rel}  (${f.size} bytes)`);
+    const n = pdfNotes.get(f.rel);
+    if (!n) return;
+    if (n.error) { L.push(`        ⛔ annotations NOT read: ${n.error}`); return; }
+    L.push(`        ${n.pages} page(s) · ${n.annotations.length} annotation(s)${n.annotations.length ? ' — echo every one:' : ' (none)'}`);
+    n.annotations.forEach(a => L.push(`        p${a.page} ${a.type} ${a.colour} | on: "${a.text}"${a.comment ? ` | comment: "${a.comment}"` : ''}`));
+});
 if (!briefFiles.length) L.push('   (none)');
 const elsewhere = namedInJournals.filter(a => onDisk.has(a) && !briefFiles.some(f => path.basename(f.rel) === a));
 if (elsewhere.length) {
