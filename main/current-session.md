@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 01:05 — session "System Upgrade 23/9/2026" (born 2026-09-23 in worktree `session-naming-format-b88025`, revived 2026-10-27 by a PymTime handover), Domain Expansion, then archived.
+
+## Session Recap (2026-09-23 → 2026-10-28, "System Upgrade 23/9/2026", session naming)
+- Built Feature **session-name** (`domain/session-name/`): his first typed message of a new session → one line telling me to rename the session `<D/M/YYYY> - <ticket or 2-4 keywords>` via `set_session_title` self. Format ruled 2026-10-28 ("<date> - <title keyword/ticket number>"), popup "First message only". Child of the `upsm-mode` bundle (no new process), eval 26/26, live fire from main. GitHub `88839abb`, main folder `f038dc1c` via land-on-main.
+- Remote Control on for this session (switched from the PymTime session 10:27, 2026-10-27).
+- Relayed and NOT acted on: ProTime weekly-plan screen inside PymTime (his PymTime build rule needs his go; belongs to the PymTime project).
+- Found: `lib/land-on-main.js` derives main only from an in-tree worktree path, so a build worktree outside OneDrive (the memory rule) points at itself unless `--main` is passed; forge registers a new prompt check standalone although system-rules Rule 7 wants a bundle. Both logged as proposals.
+
 **Last Activity**: 2026-10-28 00:40 — worktree `arabic-command-b8399a` (/arabic: class-along, baris drill + class mode), Domain Expansion.
 
 ## Session Recap (2026-10-27 → 28, worktree "arabic-command-b8399a", /arabic)
@@ -24,11 +32,3 @@
 **Last Activity**: 2026-10-27 20:15 — worktree `esokongan-quest-sweep-2bce09` (286315 + 286462), Domain Expansion.
 
 **Last Activity**: 2026-10-27 21:30 — worktree `melaka-prod-adhoc-permohonan-f52ca5` (Melaka adhoc day session), Domain Expansion.
-
-## Session Recap (2026-10-27, worktree "melaka-prod-adhoc-permohonan-f52ca5", Melaka adhoc day + end-of-day close-out)
-- ADHOC-PT-2026-15 (PROD PT `PTMLK/02/L/PT/2026/9` at PRMMKNPDT, advised alter to KKMMKN): saved, status hold + archive_hold, waits BA confirmation or a Redmine ticket (promote with `adhoc-lifecycle.js promote --row A75 --ticket QA-<n>`).
-- 264355: deployed AWAM fix `mlk/qa/264355v2` (Awam) is the whole ticket, BA Mira Verified 2026-10-27; Pelupusan `mlk/qa/264355` (Pelupusan) notifikasi stays HELD by miya since 2026-10-01, do NOT merge. Built `lib/quest-branches.js` (+eval 8/8) and quest save list item 5 / close-phase 1d "Branches table" (2fc2c809); ticket-close-block labels each branch (Awam)/(Pelupusan).
-- End-of-day close-out for miya: Sweep, Extra tickets, Tickets ran DE and are ARCHIVED. Requirement Documentation (30-ticket blind test decision; `.git/worktrees/base2fc` prune Permission denied) and Surat Tawaran (Perak ADHOC-PRBB-2026-17 fix order) still NEED MIYA and stay open. Excluded by miya: RustDesk, PymTime, 286650 (+ its audit child), System Upgrade 23/9.
-- Working-memory cleanup: quest/active.txt 77 → 27 blocks (25 closed tickets via `active-trim.js --apply`, 25 adhocs started before 2026-10-13 archived block-only; Task folders and videos untouched; backups `quest/active.txt.bak_2026-10-27_pre_trim` + `_pre_adhoc_sweep`).
-- Memory-system plan: every memory item consolidated into `main/todo.md` section "🧠 MEMORY SYSTEM UPGRADE" M1-M14 (b7779ffe). The 2026-05-28 "Memory System Audit" session was unarchived but needs miya's workspace trust approval to take messages; its plan file and transcript are gone (M13).
-- Lesson (slip `bloated-reply`, memory `reply-shape` 2026-10-27 block): a multi-session close-out = wait silently, then ONE table Session | Result.

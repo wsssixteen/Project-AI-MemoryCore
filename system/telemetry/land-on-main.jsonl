@@ -49,3 +49,4 @@
 {"ts":"2026-10-27T05:40:01.043Z","commit":"f92e41ce","outcome":"REFUSED","exit":2,"dur_ms":761}
 {"ts":"2026-10-27T07:58:18.021Z","commit":"ba068b2c","outcome":"REFUSED","exit":2,"dur_ms":535}
 {"ts":"2026-10-27T07:58:37.001Z","commit":"ba068b2c","outcome":"LANDED","exit":0,"dur_ms":11344}
+{"ts":"2026-10-27T16:36:44.176Z","commit":"88839abb","outcome":"LANDED","exit":1,"dur_ms":6746}
