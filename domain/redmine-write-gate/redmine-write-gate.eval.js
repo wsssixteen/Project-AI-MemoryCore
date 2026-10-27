@@ -205,6 +205,18 @@ r = run({ tool_name: PANE_JS, tool_input: { action: 'javascript_exec', text: "fe
 check('F68 built-in browser pane fetch PUT to redmine → BLOCK even with "post it"', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user("I don't approve current send yet")]) }, STAGE);
 check('F69 negated approval "I don\'t approve current send" → BLOCK', blocked(r), r.out.slice(0, 200));
+// 2026-10-27 (#246964): words sent while I work arrive as queued_command attachments; every go-word form counts.
+const queued = t => JSON.stringify({ type: 'attachment', attachment: { type: 'queued_command', prompt: t, origin: { kind: 'human' } } });
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('Salam Mira, ... Thankss.'), toolResult(), queued('Go'), queued('Submit'), queued('send'), queued('pass'), queued('Nex tticket please.'), toolResult()]) }, STAGE);
+check('F91 the 246964 replay: Go / Submit / send / pass sent mid-turn, then "Nex tticket please." → Submit allowed', !blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('draft it'), toolResult(), queued('Nex tticket please.'), toolResult()]) }, STAGE);
+check('F92 mid-turn message with no go-word → BLOCK', blocked(r), r.out.slice(0, 200));
+for (const [id, w] of [['F93', 'submitted'], ['F94', 'send it'], ['F95', 'pass'], ['F96', 'hantarkan'], ['F97', 'ok'], ['F98', 'go']]) {
+  r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user(w)]) }, STAGE);
+  check(`${id} go-word variation "${w}" → Submit allowed`, !blocked(r), r.out.slice(0, 200));
+}
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('wait, do not send yet')]) }, STAGE);
+check('F99 "wait, do not send yet" → BLOCK', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.querySelector('.attributes').innerText" }, transcript_path: transcript([user('check the ticket')]) }, STAGE);
 check('F70 DOM read of the issue page → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "fetch('https://example.com/api/x.json')" }, transcript_path: transcript([user('x')]) }, STAGE);

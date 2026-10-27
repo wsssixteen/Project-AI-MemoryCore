@@ -62,7 +62,10 @@ const stageOnly = () => new Date().toISOString().slice(0, 10) < STAGE_ONLY_UNTIL
 const VIEW_FIRST = /\b(?:let me (?:see|check|view|review)|(?:view|see|check|review|prepare) (?:it |them |this )?first|show me (?:it )?first|in the same page|stage (?:it|first|only)|stop at staging)\b/i;
 // Submit on the staged form needs miya's explicit send approval in his LAST message.
 // 2026-10-19 per miya (#285252, "I have to confirm it many times"): plain go-words also approve a staged submit.
-const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post it|post now|yes,? post|\[redmine-post-ok\]|I approve|approved?\b[^.\n]{0,20}\b(?:send|post|submit|update)|submit it|go (?:ahead and )?submit|proceed|go ahead|submit|confirm(?:ed)?|yes|ok(?:ay)?,? (?:submit|proceed|go)|hantar)\b/i;
+// 2026-10-27 per miya (#246964, "add all and its variations"): every go-word and its forms, alone or in a sentence.
+const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan)\b/i;
+// A no-word anywhere before a go-word in the same sentence voids it ("I don't approve current send").
+const SUBMIT_DENIAL = /\b(?:don'?t|do not|jangan|never|not yet|wait|hold on|stop)\b[^.\n]{0,40}\b(?:approve|submit|send|post|pass|go|proceed|hantar)/i;
 // Browser JS: any network call to Redmine (the .json API pops a basic-auth password box; a PUT/POST posts) is banned —
 // read the open page's DOM instead. Form submit via JS needs SUBMIT_APPROVAL.
 const BROWSER_NET = /\b(?:fetch|XMLHttpRequest|\$\.(?:ajax|get|post|getJSON)|axios)\b/;
@@ -125,14 +128,21 @@ function lastUserText(transcriptPath) {
     fs.readSync(fd, buf, 0, buf.length, Math.max(0, size - buf.length)); fs.closeSync(fd);
     tail = buf.toString('utf8');
   } catch (_) { return ''; }
-  const lines = tail.split('\n').filter(l => /"type"\s*:\s*"user"/.test(l));
+  // A message miya sends while I work is a queued_command attachment, not a user line (2026-10-27, #246964):
+  // every such message after his last prompt counts, together with that prompt.
+  const lines = tail.split('\n').filter(l => /"type"\s*:\s*"user"|"type"\s*:\s*"queued_command"/.test(l));
+  const queued = [];
+  const withQueued = t => queued.length ? [t, ...queued.reverse()].join('\n') : t;
   for (let i = lines.length - 1; i >= 0; i--) {
     let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }
+    const a = obj && obj.attachment;
+    if (a && a.type === 'queued_command' && typeof a.prompt === 'string' && (!a.origin || a.origin.kind === 'human')) { queued.push(a.prompt); continue; }
+    if (!obj || obj.type !== 'user') continue;
     const c = obj && obj.message && obj.message.content;
-    if (typeof c === 'string') return c;                       // plain user text
+    if (typeof c === 'string') return withQueued(c);           // plain user text
     if (Array.isArray(c)) {
       const texts = c.filter(x => x && x.type === 'text').map(x => x.text);
-      if (texts.length) return texts.join('\n');               // user text blocks (tool_result-only turns are skipped)
+      if (texts.length) return withQueued(texts.join('\n'));   // user text blocks (tool_result-only turns are skipped)
       for (const x of c) {                                      // except a popup answer, which IS miya's reply
         if (!x || x.type !== 'tool_result') continue;
         const t = typeof x.content === 'string' ? x.content
@@ -164,7 +174,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
         '   Read the OPEN page\'s DOM instead (form fields, .attributes, #history), or run node quest/redmine-sync.js <num>.',
       ].join('\n') };
     }
-    if (SUBMIT_APPROVAL.test(lastB) || BYPASS.test(lastB)) {
+    if ((SUBMIT_APPROVAL.test(lastB) && !SUBMIT_DENIAL.test(lastB)) || BYPASS.test(lastB)) {
       logRow({ outcome: 'allowed', surface: 'browser-submit', approval: (lastB.match(SUBMIT_APPROVAL) || ['bypass'])[0] });
       return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${(lastB.match(SUBMIT_APPROVAL) || ['bypass'])[0]}")\n` };
     }

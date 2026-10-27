@@ -39,7 +39,7 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
   return { fired: true, blocked: false, contextOut: [
     '📐 pre-reply-contract v2-blend (permanent — compose RIGHT the first time):',
     '   · First line = the answer in plain words. No preamble, recap, closers.',
-    '   · Break everything into SHORT bullets/numbered steps — one fact per line, ≤5 per list. Tables for data; story diagram for flows.',
+    '   · Break everything into SHORT bullets/numbered steps — one fact per line, ≤5 per list. Tables for data; flows of 3+ boxes as a picture (explain-diagram skill → lib/diagram-render.js).',
     '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
     '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line.',

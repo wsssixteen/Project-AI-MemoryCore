@@ -147,7 +147,7 @@ His words: "You were not clear WHAT & WHICH event you're referring to … clear,
 | Name it first | First line names the thing in plain words ("the guard that stops my pushes") and the event with its date. | "the gate", "the rebuild", "v6", a hook or file name he has not been told. |
 | Current only | State what is true NOW and what I will do next. | History, how I found it, what I tried, unless he asks. |
 | Four rows | For "what is this / what did you change": the existing thing · what changed · what I am changing now · what stays. One short sentence per cell. | A paragraph, or more than four rows. |
-| Flow diagram | A short story diagram, top to bottom, with the ONE changed step marked. | A diagram with no marked step; a fix described with no flow. |
+| Flow diagram | A short diagram, top to bottom, with the ONE changed step marked: a diagram-design picture for 3+ boxes (explain-diagram skill, 2026-10-27), a chat story diagram only for a 2-box line or a failed render. | A diagram with no marked step; a fix described with no flow. |
 | Step tables on ask | "What does each step check" = one small table per step: check · passes when · else. | One wide table for all steps. |
 | Answer the question asked | A one-line question gets one line. | Adding the background he did not ask for. |
 
@@ -227,6 +227,22 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 **Bold the exact words (2026-10-27, per みや, 286315).** When a reply or a Redmine note quotes or names something exact (a phrase the user asked for, a label, an expected output, a screen value), that text is bold: `**tiada halangan**` in chat, `*tiada halangan*` in Redmine textile. His own edit of the 286315 note is the example: "the phrases *tiada halangan, tidak menyokong, tertakluk kepada syarat-syarat* and *tiada maklumbalas* are now bold". Redmine drafts carry it through Pena (`lib/pena.js`, module `line`, row c32).
 
 **Why**: 2026-10-27, eSOKONGAN sweep 286462 + 286315. His words: "Please fix to not shot ticket numbers with hashtags, because I cannot click to copy and it only kept on opening a link that is not existing anywhere."
+
+## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
+
+**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. Each changed part gets its own heading, written as its place in the hierarchy (`system/INDEX.md`): System › kind › parent, if any › name (new or changed). Under the heading come one diagram or table and one short sentence. No bullet lists.
+
+| Kind | Where it lives | Example heading |
+|---|---|---|
+| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## System › Rule › Reply spec › 3i title (changed)` |
+| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## System › Workflow › Quest › Hand-over step (changed)` |
+| Feature | `domain/<name>/` (a check or gate: hook + eval + log) | `## System › Feature › handover-check-gate (new)` |
+| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## System › Tool › handover-check.js (new)` |
+| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` · `domain/pena/` style data | `## System › Memory › People list › kak Yati (changed)` |
+| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## System › Kernel › forge (changed)` |
+| Project | `projects/coding-projects/active/<Name>/` | `## System › Project › PymTime (changed)` |
+
+**Banned**: a system change reported with no breadcrumb heading · one heading that lumps several parts · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
 
 ## 4. Precedence Note
 
