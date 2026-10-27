@@ -58,7 +58,12 @@ async function redmineDays(days, extraIds) {
     // resolve facts (miya 2026-10-14): he passed it on that day, or wrote on it that day and it now sits with someone else
     const handedOn = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (jr.details || []).some(det => det.name === 'assigned_to_id' && String(det.old_value) === String(myId)));
     const withOther = !!(is.assigned_to && is.assigned_to.id !== myId);
-    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, touched: wrote.has(d), done: handedOn(d) || (wrote.has(d) && withOther) });
+    // his entry that day shows the work (miya 2026-10-28): root cause or solution filled, files attached,
+    // status changed, or handed on with a written note -> his work (PLAN), even on another developer's ticket
+    const showedWork = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (
+      (jr.details || []).some(det => det.property === 'attachment' || (det.property === 'cf' && ['94', '2'].includes(String(det.name)) && String(det.new_value || '').trim()) || (det.property === 'attr' && det.name === 'status_id')) ||
+      (String(jr.notes || '').trim().length >= 80 && (jr.details || []).some(det => det.name === 'assigned_to_id'))));
+    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, touched: wrote.has(d), showedWork: showedWork(d), done: handedOn(d) || (wrote.has(d) && withOther) });
   }
   return { ok: true, worked, candidates: cand.size };
 }
