@@ -228,6 +228,22 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 
 **Why**: 2026-10-27, eSOKONGAN sweep 286462 + 286315. His words: "Please fix to not shot ticket numbers with hashtags, because I cannot click to copy and it only kept on opening a link that is not existing anywhere."
 
+## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
+
+Every reply that reports creating or changing a part of the system gives each part its own heading. The heading opens with the kind of part in brackets, the seven kinds of `system/INDEX.md`, then new or changed, then the part's name.
+
+| Kind | Where it lives | Example heading |
+|---|---|---|
+| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## [Rule · changed] Reply spec 3i: kind in the title` |
+| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## [Workflow · changed] Quest hand-over step` |
+| Feature | `domain/<name>/` (a gate or a check) | `## [Feature · new] handover-check-gate` |
+| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## [Tool · new] handover-check.js` |
+| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` | `## [Memory · changed] People list: kak Yati` |
+| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## [Kernel · changed] forge` |
+| Project | `projects/coding-projects/active/<Name>/` | `## [Project · changed] PymTime` |
+
+Under the heading, one plain line says what it does now. **Banned**: a system change reported with no bracketed kind · one heading that lumps several parts · a kind that is not one of the seven. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle). **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.
