@@ -87,8 +87,11 @@ function rowFromIssue(i) {
 // ---- search ----
 // The urusan code a subject names: the first capital code that is not a role or office word
 // ("PPTPB > ...", "[SPOC] PLPS - ...", "PT - ..."). Used for a bonus, never a filter.
-const NOT_URUSAN = new Set(['spoc', 'awam', 'apps', 'ptg', 'ptd', 'pdt', 'mmkn', 'fat', 'uat', 'pat', 'prod', 'mlkuat', 'internal', 'issue', 'id', 'tugasan', 'template', 'flow', 'integrasi', 'es', 'esokongan']);
+const NOT_URUSAN = new Set(['spoc', 'awam', 'apps', 'ptg', 'ptd', 'pdt', 'mmkn', 'fat', 'uat', 'pat', 'prod', 'mlkuat', 'internal', 'issue', 'id', 'tugasan', 'template', 'flow', 'integrasi', 'es', 'esokongan',
+  'staging', 'stg', 'stg1', 'stg2', 'mlit', 'mcot', 'sit', 'plp']);
+// A "Semua Urusan" ask has no one urusan: a capital code in it is a role ("peranan PT"), not the urusan (264006).
 function urusanOf(subject) {
+  if (/semua\s+urusan/i.test(String(subject || ''))) return null;
   const codes = (String(subject || '').match(/\b[A-Z][A-Z0-9]{1,6}\b/g) || []).map(s => s.toLowerCase());
   return codes.find(c => !NOT_URUSAN.has(c)) || null;
 }
@@ -122,6 +125,7 @@ function search(rows, query, opts) {
   const qHint = [...new Set(tokenize(q.hint))].filter(w => !qSubj.includes(w));
   const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w) && !qHint.includes(w));
   const urusan = urusanOf(q.subject);
+  const qAll = /semua\s+urusan/i.test(String(q.subject || ''));
   const wanted = String(o.module || '').toLowerCase();
   const exclude = new Set((o.exclude || []).map(Number));
   if (!qSubj.length && !qBody.length && !qHint.length) return [];
@@ -147,7 +151,7 @@ function search(rows, query, opts) {
       else if (d.body.has(w)) { score += 0.2 * prep.idf(w); hits.push(w); }
     }
     if (!score) continue;
-    if (urusan && (d.codes.has(urusan) || d.allUrusan)) score *= 1.5;
+    if ((urusan && (d.codes.has(urusan) || d.allUrusan)) || (qAll && d.allUrusan)) score *= 1.5;
     if (wanted && d.r.module.toLowerCase() === wanted) score *= 1.3;
     // A cancelled requirement is history, not the spec.
     if (/cancel|not applicable/i.test(d.r.status)) score *= 0.5;
