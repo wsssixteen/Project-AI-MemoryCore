@@ -37,3 +37,5 @@
 {"ts":"2026-10-21T02:50:33.725Z","commit":"77bd45b64573c9c955fa53bf8effb9bcee4b9e31","outcome":"LANDED","exit":0,"dur_ms":6049}
 {"ts":"2026-10-27T04:15:53.715Z","commit":"3774d230","outcome":"LANDED","exit":0,"dur_ms":5549}
 {"ts":"2026-10-27T04:16:04.708Z","commit":"2b36f4c3","outcome":"LANDED","exit":0,"dur_ms":10869}
+{"ts":"2026-10-27T05:36:52.173Z","commit":"1c8b4672","outcome":"LANDED","exit":0,"dur_ms":3138}
+{"ts":"2026-10-27T05:40:01.043Z","commit":"f92e41ce","outcome":"REFUSED","exit":2,"dur_ms":761}
