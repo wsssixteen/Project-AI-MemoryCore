@@ -411,6 +411,22 @@
       "status": "unused"
     },
     {
+      "id": "diagram-render",
+      "answers": "Is this diagram-design picture valid, and what does it look like as a PNG to send",
+      "call": "node lib/diagram-render.js <diagram.html> [--out <png>]",
+      "home": "lib/diagram-render.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "redmine-board",
       "answers": "The open ticket board",
       "call": "node quest/redmine-board.js",

@@ -9,7 +9,7 @@
  *       feature, so a TSO ask is checked against the original requirement before it is built.
  * goal_signal: the Phase 0 hand-back carries a `REQUIREMENT-MATCH:` line for the ticket.
  * retention: regenerate (both index files are rebuilt from Redmine; nothing is hand-edited) ·
- *            keep (quest/requirement-index.log.jsonl: one small row per call, the usage + self-audit record).
+ *            keep (quest/requirement-index.log.jsonl, git-ignored, local: one small row per call, the usage + self-audit record).
  * footprint: on demand; a rebuild is ~21 Redmine list calls, run at most once a week by itself.
  * self_audit: --build reads both files back and checks the row count against Redmine's total_count
  *             (exit 1 on a mismatch); every call logs {ts, mode, ticket, outcome, top, dur_ms}.
@@ -85,43 +85,68 @@ function rowFromIssue(i) {
 }
 
 // ---- search ----
+// The urusan code a subject names: the first capital code that is not a role or office word
+// ("PPTPB > ...", "[SPOC] PLPS - ...", "PT - ..."). Used for a bonus, never a filter.
+const NOT_URUSAN = new Set(['spoc', 'awam', 'apps', 'ptg', 'ptd', 'pdt', 'mmkn', 'fat', 'uat', 'pat', 'prod', 'mlkuat', 'internal', 'issue', 'id', 'tugasan', 'template', 'flow', 'integrasi', 'es', 'esokongan']);
+function urusanOf(subject) {
+  const codes = (String(subject || '').match(/\b[A-Z][A-Z0-9]{1,6}\b/g) || []).map(s => s.toLowerCase());
+  return codes.find(c => !NOT_URUSAN.has(c)) || null;
+}
+
 function prepare(rows) {
   const df = new Map();
+  let subjTotal = 0;
   const docs = rows.map(r => {
     const subj = new Set(tokenize(r.subject));
     const body = new Set(tokenize(r.snippet + ' ' + r.module));
-    const all = new Set([...subj, ...body]);
-    for (const w of all) df.set(w, (df.get(w) || 0) + 1);
-    return { r, subj, body };
+    const codes = codesOf(r.subject);
+    subjTotal += subj.size;
+    for (const w of new Set([...subj, ...body])) df.set(w, (df.get(w) || 0) + 1);
+    return { r, subj, body, codes };
   });
   const n = rows.length || 1;
   const idf = w => Math.log(1 + n / (df.get(w) || 0.5));
-  return { docs, idf };
+  return { docs, idf, avgSubj: subjTotal / n || 1 };
 }
 
+// query = a string (searched as a subject) or { subject, body }. The subject carries the meaning;
+// the body only breaks ties, so a long journal cannot outvote it.
+// Each hit carries `match`: strong · possible · none, from how much of the query subject it covers and its score.
 function search(rows, query, opts) {
   const o = opts || {};
   const prep = o.prep || prepare(rows);
-  const qWords = [...new Set(tokenize(query))];
-  const codes = codesOf(query);
+  const q = typeof query === 'string' ? { subject: query, body: '' } : (query || {});
+  const qSubj = [...new Set(tokenize(q.subject))];
+  const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w));
+  const urusan = urusanOf(q.subject);
   const wanted = String(o.module || '').toLowerCase();
   const exclude = new Set((o.exclude || []).map(Number));
-  if (!qWords.length) return [];
+  if (!qSubj.length && !qBody.length) return [];
+  const qTotal = qSubj.reduce((s, w) => s + prep.idf(w), 0) || 1;
   const out = [];
   for (const d of prep.docs) {
     if (exclude.has(d.r.id)) continue;
-    let score = 0;
+    // A long subject collects words by chance: weigh a subject hit down by its length (BM25-style).
+    const lenNorm = 0.5 + 0.5 * (d.subj.size / prep.avgSubj);
+    let score = 0, covered = 0;
     const hits = [];
-    for (const w of qWords) {
-      const boost = codes.has(w) ? 2 : 1;
-      if (d.subj.has(w)) { score += 3 * prep.idf(w) * boost; hits.push(w); }
-      else if (d.body.has(w)) { score += prep.idf(w) * boost; hits.push(w); }
+    for (const w of qSubj) {
+      if (d.subj.has(w)) { score += 3 * prep.idf(w) / lenNorm; covered += prep.idf(w); hits.push(w); }
+      else if (d.body.has(w)) { score += prep.idf(w); covered += 0.3 * prep.idf(w); hits.push(w); }
+    }
+    for (const w of qBody) {
+      if (d.subj.has(w)) { score += 0.6 * prep.idf(w) / lenNorm; hits.push(w); }
+      else if (d.body.has(w)) { score += 0.2 * prep.idf(w); hits.push(w); }
     }
     if (!score) continue;
+    if (urusan && d.codes.has(urusan)) score *= 1.5;
     if (wanted && d.r.module.toLowerCase() === wanted) score *= 1.3;
     // A cancelled requirement is history, not the spec.
     if (/cancel|not applicable/i.test(d.r.status)) score *= 0.5;
-    out.push({ row: d.r, score: Math.round(score * 10) / 10, hits });
+    const cover = covered / qTotal;
+    // Cut points from the 2026-10-27 blind test (30 tickets): every right top-1 scored >= 29; cover alone did not separate right from none.
+    const match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 ? 'strong' : 'possible';
+    out.push({ row: d.r, score: Math.round(score * 10) / 10, cover: Math.round(cover * 100) / 100, match, hits });
   }
   out.sort((a, b) => b.score - a.score || b.row.id - a.row.id);
   return out.slice(0, o.top || 8);
@@ -173,11 +198,12 @@ function renderMd(rows, meta) {
     L.push('');
     L.push(`## ${k} (${list.length})`);
     L.push('');
-    L.push('| # | Subject | Status | Parent | Author | Created |');
-    L.push('|---|---|---|---|---|---|');
+    // Slim on purpose (id · subject · status · parent id): the eye-list, not the data. Author and dates live in the JSONL.
+    L.push('| # | Subject | Status | Parent |');
+    L.push('|---|---|---|---|');
     for (const r of list) {
-      const p = r.parent ? (byId.has(r.parent) ? `#${r.parent} ${cell(byId.get(r.parent).subject).slice(0, 60)}` : `#${r.parent}`) : '';
-      L.push(`| ${r.id} | ${cell(r.subject)} | ${cell(r.status)} | ${cell(p)} | ${cell(r.author)} | ${r.created} |`);
+      const p = r.parent ? `${r.parent}${byId.has(r.parent) ? '' : ' (not a requirement)'}` : '';
+      L.push(`| ${r.id} | ${cell(r.subject)} | ${cell(r.status)} | ${p} |`);
     }
   }
   return L.join('\n') + '\n';
@@ -227,12 +253,19 @@ async function build(stateKey) {
   return { rows, meta, total, audit };
 }
 
-// Load; rebuild when missing or older than STALE_DAYS. A failed rebuild keeps the old index and says so.
+// Load. A missing index is built now (nothing to answer from); a stale one is answered from as it is
+// while a detached `--build` refreshes it, so Phase 0 never waits on ~21 Redmine calls.
 async function ensure(stateKey, { refresh = true } = {}) {
   let idx = load(stateKey);
-  if (refresh && (idx.missing || idx.ageDays > STALE_DAYS) && REQ_PROJECTS[stateKey]) {
+  if (!refresh || !REQ_PROJECTS[stateKey]) return idx;
+  if (idx.missing) {
     try { await build(stateKey); idx = load(stateKey); idx.rebuilt = true; }
     catch (e) { idx.rebuildError = e.message; }
+  } else if (idx.ageDays > STALE_DAYS) {
+    try {
+      require('child_process').spawn(process.execPath, [__filename, '--build', '--state', stateKey], { detached: true, stdio: 'ignore', windowsHide: true }).unref();
+      idx.refreshing = true;
+    } catch (e) { idx.rebuildError = e.message; }
   }
   return idx;
 }
@@ -272,8 +305,15 @@ function localTicket(num) {
   for (const b of ['1. Brief', '0. Brief']) {
     let text;
     try { text = fs.readFileSync(path.join(folder, b, 'Description.txt'), 'utf8'); } catch (_) { continue; }
-    const subject = (text.match(/^Subject:\s*(.+)$/m) || [])[1] || path.basename(folder).replace(/^\d+\.\s*/, '');
-    const body = text.replace(/^[\s\S]*?^Author:.*$/m, '').trim();
+    const subject = (text.match(/^Subject:\s*(.+)$/m) || [])[1]
+      || path.basename(folder).replace(/^\d+\.\s*/, '').replace(/^[A-Z]{2,4}\s*#?\d{5,7}\s*-\s*/, '');
+    // redmine-sync's header: a date line, "Ticket issue description:", then Env/Ticket/Subject/Author lines
+    // (older syncs have no Author line). None of it is the ticket's own words.
+    const lines = text.split(/\r?\n/);
+    let i = 0;
+    while (i < lines.length && i < 12 && (/^\s*$/.test(lines[i]) || /^\d{4}-\d{2}-\d{2}\s*$/.test(lines[i])
+      || /^Ticket issue description:/i.test(lines[i]) || /^(Env|Ticket|Subject|Author|Tracker|Status|Priority):/i.test(lines[i]))) i++;
+    const body = lines.slice(i).join('\n').trim();
     return { id: Number(num), subject: subject.trim(), description: body, module: '', parent: null, source: 'Task folder' };
   }
   return null;
@@ -291,13 +331,22 @@ function roleTag(name, stateKey) {
   try { return R.tag(R.roleOf(name, { state: stateKey })); } catch (_) { return 'role unknown'; }
 }
 
+// An alter / patch / cancel ask moves data or a flow; no requirement specified it.
+function requestKind(subject) {
+  const s = String(subject || '');
+  if (/\balter\b/i.test(s)) return 'alter';
+  if (/\bpatch\b/i.test(s)) return 'patch';
+  if (/\bbatal(kan)?\s+id\b|tamat\s*\/\s*batal/i.test(s)) return 'cancel';
+  return null;
+}
+
 function fmtHit(h, n, stateKey) {
   const r = h.row;
-  return `  ${n}. #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · score ${h.score} · ${REDMINE_BASE}/issues/${r.id}`;
+  return `  ${n}. #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · ${h.match || 'match'} ${h.score} · ${REDMINE_BASE}/issues/${r.id}`;
 }
 
 function idxLine(idx) {
-  const age = idx.missing ? 'missing' : `built ${String(idx.built).slice(0, 10)}${idx.rebuilt ? ' (rebuilt now)' : ''}`;
+  const age = idx.missing ? 'missing' : `built ${String(idx.built).slice(0, 10)}${idx.rebuilt ? ' (rebuilt now)' : idx.refreshing ? ' (older than a week, refreshing in the background)' : ''}`;
   return `index ${idx.rows.length} rows, ${age}${idx.rebuildError ? ` ⚠ rebuild failed: ${idx.rebuildError} (using the old index)` : ''}`;
 }
 
@@ -348,7 +397,8 @@ async function main(argv, log) {
 
   // --ticket: the ticket's own subject + description are the query; its parent chain is listed first.
   const byId = new Map(idx.rows.map(r => [r.id, r]));
-  let issue = byId.has(Number(ticket)) ? { ...byId.get(Number(ticket)), description: byId.get(Number(ticket)).snippet, source: 'index' } : localTicket(ticket);
+  const self = byId.has(Number(ticket));
+  let issue = self ? { ...byId.get(Number(ticket)), description: byId.get(Number(ticket)).snippet, source: 'index' } : localTicket(ticket);
   if (!issue) {
     try {
       const i = (await get(`/issues/${encodeURIComponent(ticket)}.json`)).issue;
@@ -364,19 +414,26 @@ async function main(argv, log) {
     chain.push(r);
     p = r.parent;
   }
-  const query = `${issue.subject}\n${String(issue.description || '').slice(0, 600)}`;
+  const query = { subject: issue.subject, body: String(issue.description || '').slice(0, 600) };
   const hits = search(idx.rows, query, { module, top, exclude: [issue.id, ...chain.map(r => r.id)] });
-  Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
-  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, parents: chain, hits }, null, 1)); return 0; }
+  const kind = requestKind(issue.subject);
+  Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: kind ? 'request' : self ? 'self' : hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
+  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, kind, self, parents: chain, hits }, null, 1)); return 0; }
   console.log(`REQUIREMENT-MATCH #${issue.id} (${module || 'module not read'}) "${issue.subject}" [read from ${issue.source}] — ${idxLine(idx)}`);
+  if (kind) {
+    console.log(`  ⓘ this is a ${kind} request (moves data or a flow, not a feature change): write REQUIREMENT-MATCH: not needed — ${kind} request.`);
+    return 0;
+  }
+  if (self) console.log(`  ⓘ this ticket is itself Requirement #${issue.id}: it is the original spec. Compare it with its parent and the rows below only for overlap.`);
   chain.forEach(r => console.log(`  parent: #${r.id} ${r.status} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · ${REDMINE_BASE}/issues/${r.id}`));
   hits.forEach((h, n) => console.log(fmtHit(h, n + 1, stateKey)));
   if (!hits.length && !chain.length) console.log('  no match — say "no original requirement found" in the hand-back, then try --find with the screen or tab name');
-  console.log('  Next: open the closest match (node quest/redmine-sync.js <id> or the link) and compare its ask with this ticket\'s; write the verdict as REQUIREMENT-MATCH: aligned | extends | contradicts | none found.');
+  else if (!chain.length && !self && hits[0].match === 'none') console.log('  ⚠ top match is weak on the subject — likely no requirement for this exact ask; say "none found" unless a row above clearly fits, or try --find with the screen or tab name');
+  console.log('  Next: open the closest match (node quest/redmine-sync.js <id> or the link) and compare its ask with this ticket\'s; write the verdict as REQUIREMENT-MATCH: aligned | extends | contradicts | none found | not needed.');
   return 0;
 }
 
-module.exports = { tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
+module.exports = { requestKind, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {
   const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket)$/.test(a)) || 'usage' };
