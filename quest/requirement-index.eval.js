@@ -161,6 +161,49 @@ t(`B1 blind key: right requirement in the top 3 for 16+ of 21, and 9+ of 11 "non
   return (found >= 16 && quiet >= 9) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 
+// Rounds 2-5 of the 2026-10-27 kink hunt: 80 more tickets, each set keyed blind by its own Sonnet reader.
+const BLIND2 = [
+  [282924, [212157, 212115]], [277706, [277706]], [246964, [237883, 223348]], [282721, 'none'], [282723, 'none'], [282442, [218968]],
+  [274461, [220611, 216013]], [282555, 'none'], [281423, [214484]], [282198, 'none'], [282061, [220564, 234424]], [281712, [220178, 233340]],
+  [281650, 'none'], [281638, [212115]], [256334, [279554]], [281656, 'none'], [281568, 'none'], [281567, [242031]], [281482, 'none'],
+  [281319, [212115]], [281392, [218976, 218455]], [244600, 'none'], [264355, [248290, 218233]], [280895, [218968]], [280614, 'none'], [280265, 'none'],
+  [280540, [220411, 230088]], [280099, 'none'], [280132, [220410, 242553]], [280166, 'none'], [280176, [218976]], [280191, [215476]],
+  [280029, [218966]], [279882, 'none'], [279787, [218455, 218459]], [279793, 'none'], [274323, [221204, 221211]], [279615, [218968]],
+  [279711, [220611]], [269704, [224859, 225802]], [279391, 'none'], [279404, [218455, 228495]], [279411, [215482]], [275043, [240903]],
+  [278930, [218966, 224440]], [274266, [221967]], [276997, [221159, 221183]], [278699, [242031, 220611]], [278580, 'none'], [278585, [220410]],
+  [278109, 'none'], [278218, 'none'], [277442, 'none'], [275847, 'none'], [278304, 'none'], [277926, 'none'], [277346, [221307]], [277697, 'none'],
+  [277295, [221204]], [277370, [220371]], [277532, 'none'], [277115, 'none'], [277439, 'none'], [277147, [218967]], [277309, [220395, 224440]],
+  [276654, [219294, 227712]], [276504, 'none'], [276539, [218966]], [276584, [221204, 221211, 212157]], [276549, [216991, 212157]],
+  [276182, [219929, 219930]], [276349, [222650]], [276422, [220373]], [276436, [228654, 219379]], [276181, [219929, 219930]], [276074, [266474]],
+  [275475, 'none'], [275501, [221307, 221309]], [275505, [219929, 219930]], [275587, [218455, 218459]]];
+t(`B2 rounds 2-5 key: right requirement in the top 3 for 41+ of 51, and 28+ of 29 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  if (!REAL) return true;
+  let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
+  for (const [num, ok] of BLIND2) {
+    const r = runReal(['--ticket', String(num), '--no-refresh', '--top', '3', '--json']);
+    let j; try { j = JSON.parse(r.stdout); } catch (_) { miss.push(num + ' no JSON'); continue; }
+    if (ok === 'none') { none++; if (j.kind || !j.hits[0] || j.hits[0].match !== 'strong') quiet++; else miss.push(num + ' strong'); continue; }
+    want++;
+    if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
+  }
+  return (found >= 41 && quiet >= 28) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
+});
+t('Q2 a "Semua Urusan" requirement earns the urusan bonus (it beats a same-words PLTP row)', () => {
+  const rows = [row(1, 'PLTP - Template Risalat', 'Pelupusan'), row(2, 'Pelupusan Semua Urusan - Butang Jana Semula Dokumen', 'Pelupusan'), row(3, 'PRBB - Butang Jana Semula Dokumen', 'Pelupusan')];
+  const id = R.search(rows, 'PLTP - versi dokumen bila klik butang Jana Semula')[0].row.id;
+  return id === 2 || 'top ' + id;
+});
+t('Q3 a short generic subject that covers itself is "possible", not "strong", under score 30', () => {
+  const rows = [row(1, 'Perampasan - Klik hantar papar ralat', 'Perampasan'), ...Array.from({ length: 40 }, (_, i) => row(10 + i, 'PT - Tugasan ' + i + ' hantar papar', 'Pelupusan'))];
+  const h = R.search(rows, 'Klik hantar papar ralat')[0];
+  return (h.score < 30 ? h.match === 'possible' : true) || `score ${h.score} match ${h.match}`;
+});
+t('Q4 screenHint reads the tugasan line and the menu path, not the email or greeting lines', () => {
+  const d = 'PDTJ Hi team, mohon semak\nnurhafizah@melaka.gov.my\nPT - Permohonan Pemberimilikan\n*Penyediaan Risalat MMKN - PDT*\nPTMLK/02/L/PT/2026/6\nUser pergi ke Menu Pelupusan &gt; Kemaskini Ulasan Jabatan Teknikal';
+  const h = R.screenHint(d);
+  return (/Penyediaan Risalat MMKN - PDT/.test(h) && /Kemaskini Ulasan Jabatan Teknikal/.test(h) && !/melaka\.gov|Hi team/.test(h)) || h;
+});
+
 // --- render
 t('R1 MD has one table row per requirement and a heading per module', () => {
   const md = R.renderMd(ROWS, { label: 'Melaka', project: 'e-tanah-melaka', built: '2026-10-27T00:00:00Z' });
