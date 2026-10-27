@@ -153,6 +153,8 @@
 {"ts":"2026-10-20T10:52:57.237Z","parts":17,"pass":78,"fail":0,"unruled":0,"skip":0,"dur_ms":2103,"partial":false}
 {"ts":"2026-10-20T10:59:21.511Z","parts":18,"pass":76,"fail":0,"unruled":0,"skip":0,"dur_ms":1758,"partial":false}
 {"ts":"2026-10-21T08:39:24.049Z","parts":8,"pass":29,"fail":0,"unruled":1,"skip":0,"dur_ms":1594,"partial":false}
+{"ts":"2026-10-27T12:24:36.277Z","parts":11,"pass":36,"fail":0,"unruled":1,"skip":0,"dur_ms":7668,"partial":false}
+{"ts":"2026-10-27T12:24:55.346Z","parts":11,"pass":36,"fail":0,"unruled":1,"skip":0,"dur_ms":5964,"partial":false}
 {"ts":"2026-10-27T12:22:11.096Z","parts":12,"pass":39,"fail":0,"unruled":1,"skip":0,"dur_ms":22125,"partial":false}
 {"ts":"2026-10-27T12:19:57.976Z","parts":11,"pass":34,"fail":2,"unruled":1,"skip":0,"dur_ms":3053,"partial":false}
 {"ts":"2026-10-27T12:20:15.659Z","parts":11,"pass":35,"fail":1,"unruled":1,"skip":0,"dur_ms":4156,"partial":false}

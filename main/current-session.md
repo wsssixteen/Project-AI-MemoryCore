@@ -33,7 +33,8 @@
 ## Session Recap (2026-10-27, worktree "redmine-ticket-review-764ebb", 285768)
 - 285768 UPP Surat Makluman Pembatalan: common fix released in 1.10.17-MLK.beta.patch1 (template identical to ours). Pelupusan `mlk/int-env` pinned to it, commit `7c0287d3ef` "Ref #285768 - Verify common 1.10.17-MLK.beta.patch1", pushed, compile green.
 - Redmine BA note submitted by miya: Resolved, assignee Nurul Amani (QA). Quest stage: Verify-on-internal.
-- Open: internal deploy run (deploy-pelupusan.sh, mlk/int-env) not confirmed; after Amani verifies, Haikal merges common master; falsifier rows 1-2 close on her run.
+- Redmine note 27/10 11:57 says "have deployed fixes to internal" (read live 20:15): the internal deploy ran. Ticket sits with Amani. Next: after she verifies, pass back to Haikal to merge common master; falsifier rows 1-2 close on her run.
+- Also: prefill skill Step 7 (close the tabs after his submit); memory rule: confidential data stays local, say why first (public GitHub repo, company OneDrive). Slip `confidential-commit-not-justified`. Session ended by miya 20:15, no more tickets.
 - Built this session: commit-subject-gate "Verify common <ver>" for beta/patch pins (eval 65/65); Pena five closings by judgement + --closing flag (eval 50/50). Both on main.
 - Board 2026-10-27: 0 PROD, 0 eSOKONGAN; open 274323 · 281324 · 262027 · 261986 · 246964. 286315 with BA, 286462 with Reports.
 

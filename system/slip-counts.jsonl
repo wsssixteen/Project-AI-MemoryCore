@@ -1371,6 +1371,7 @@
 {"ts":"2026-10-27T04:50:45.108Z","category":"handoff/upload-not-in-task-folder"}
 {"ts":"2026-10-27T04:57:09.218Z","category":"reask/wrong-expected"}
 {"ts":"2026-10-27T05:02:36.277Z","category":"attachment/partial-video-read"}
+{"ts":"2026-10-27T05:39:54.319Z","category":"confidential-commit-not-justified"}
 {"ts":"2026-10-27T07:27:41.764Z","category":"backtrack-own-decision"}
 {"ts":"2026-10-27T07:44:46.053Z","category":"assume-not-verify"}
 {"ts":"2026-10-27T07:44:46.262Z","category":"reask/verbose"}
@@ -1399,6 +1400,9 @@
 {"ts":"2026-10-27T03:35:09.260Z","category":"commit-message"}
 {"ts":"2026-10-27T05:36:48.687Z","category":"gate-missed-approval"}
 {"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
+{"ts":"2026-10-27T12:20:58.862Z","category":"ask-back-searchable-fact"}
+{"ts":"2026-10-27T12:23:01.108Z","category":"A1"}
+{"ts":"2026-10-27T12:24:27.640Z","category":"A2"}
 {"ts":"2026-10-27T12:20:58.338Z","category":"A1"}
 {"ts":"2026-10-27T12:20:58.759Z","category":"A2"}
 {"ts":"2026-10-27T12:20:59.282Z","category":"A3"}
