@@ -1,6 +1,6 @@
 ---
 name: explain-diagram
-description: Explain with ONE small drawing, no bloat. ALWAYS invoke when miya says "draw", "diagram", "draw it", "draw it simply", "visualise", "show me", "use the diagram skill", "picture of", or when a reply is about to explain a flow, a structure, a comparison or a choice between options. Picks table vs chat story diagram vs diagram-design picture, keeps the fewest boxes, marks his one step, checks the picture before sending.
+description: Explain with ONE small drawing, no bloat. ALWAYS invoke when miya says "draw", "diagram", "draw it", "draw it simply", "visualise", "show me", "use the diagram skill", "picture of", or when a reply is about to explain a flow, a structure, a comparison or a choice between options (a story diagram included). Picks table vs diagram-design picture (the default for any flow of 3+ boxes) vs a 2-box chat line, keeps the fewest boxes, marks his one step, checks the picture before sending.
 ---
 
 # explain-diagram
@@ -12,8 +12,8 @@ One sentence of answer, then one drawing. Nothing he did not ask for.
 | The thing to show | Use |
 |---|---|
 | Values side by side, no order between them | a table, not a drawing |
-| A flow or structure of up to 8 boxes, in a chat reply | a **chat story diagram**: boxes `┌─┐│└─┘` and arrows, top to bottom, in a code block |
-| He says picture / diagram skill / draw it, or there are several actors handing work to each other, or more than 8 boxes | a **picture** with the `diagram-design` plugin (section 3) |
+| **A flow or structure of 3 or more boxes: the picture is the default** (2026-10-27 per みや: "integrate using this diagram into our workflows ... starting with replacing the current story diagram") | a **picture** with the `diagram-design` plugin (section 3), rendered by `node lib/diagram-render.js` |
+| A chain of 2 boxes or one line (`A → B`), or the picture route failed this turn | a **chat story diagram**: boxes `┌─┐│└─┘` and arrows, top to bottom, in a code block. A failed render is said in one line, with the FAIL text |
 | Options he must choose between | one drawing of the options side by side (CLAUDE.md 0a) |
 
 ## 2. Content rules (both sizes)
@@ -33,9 +33,9 @@ For explaining a change to an existing part, the four rows + flow with the one c
 
 1. Skill file: the `diagram-design` skill when loaded; in a session started before its install, read `%USERPROFILE%\.claude\plugins\cache\diagram-design\diagram-design\<version>\skills\diagram-design\SKILL.md` and its type reference by hand. Not installed at all → install it first (`.claude/auto-memory/project_installed_skills.md` has the command).
 2. Type: the skill's §3 table (swimlane = who does what with handoffs · flowchart = decisions · sequence = messages in time). Copy its `assets/example-<type>.html`.
-3. Style: default colours, unless the work is inside a `/project` with its own brand (`.claude/skills/project/SKILL.md` section 7).
+3. Style: default colours, unless the work is inside a `/project` with its own brand (`.claude/skills/project/SKILL.md` section 7). **Fonts: `'Segoe UI', Arial` for text, `Consolas` for code labels; delete the example's Google Fonts `<link>` and every `Instrument Serif` / `Geist` reference** (2026-10-27 per みや: a picture that goes to another team must not look made by Claude). **Padding inside `.frame`** (about 28px 32px, `box-sizing: content-box`): the renderer crops at `.frame`, so with no padding the drawing touches the PNG edge.
 4. Write the file to the scratchpad, never into the repo or a Task folder unless he asks.
-5. Check: `python <skill-dir>\scripts\self_check.py <file>` must print OK; then render a PNG with headless Edge (Playwright from `E:\Dev\scripts\attendance\node_modules`) and LOOK at it: no overlaps, no text on lines, nothing cut off.
+5. Check + render in one call: `node lib/diagram-render.js <file.html>` (self-check, then a PNG from headless Edge; prints `DIAGRAM-RENDER: OK <png>` or `FAIL <why>`). Fix every FAIL and re-run. Then Read the PNG and LOOK at it: no overlaps, no text on lines, nothing cut off.
 6. Send the PNG with `SendUserFile` (display `render`); the HTML only if he asks.
 
 ## 4. The reply
@@ -53,3 +53,5 @@ goal: every explanation that a drawing can carry arrives as one small drawing wi
 goal_signal: the reply's first line is one sentence and the next block is a diagram (story diagram or a sent picture) with at most 9 boxes
 retention: keep
 footprint: on-demand: no process; a picture run starts one python self-check and one headless Edge, both exit
+
+*2026-10-27 — the picture is the default for any flow or structure of 3+ boxes, per みや after the first Phase 0 picture ("Beautiful, that is really really helpful ... starting with replacing the current story diagram"); the chat story diagram stays for a 2-box line and for a failed render. Check + render is one Tool, `lib/diagram-render.js` (eval `node lib/diagram-render.eval.js`). Changed and named: the old "up to 8 boxes → chat story diagram" row is retired; the 9-box / 12-arrow budget and every content rule are unchanged.*

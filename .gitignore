@@ -105,3 +105,4 @@ domain/*/cache.json
 # worktree-cleanup-boot v2.0 background run — last report + per-checkout lock (runtime state, regenerate)
 .claude/state/worktree-cleanup-last.json
 .claude/state/worktree-cleanup-*.lock
+quest/requirement-index.log.jsonl

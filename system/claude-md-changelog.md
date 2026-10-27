@@ -10,6 +10,21 @@
 
 ---
 
+## v1.93 — 2026-10-27 (per みや, pictures replace story diagrams)
+
+His words: *"Beautiful, that is really really helpful. I would like to integrate using this diagram into our workflows, I guess we're starting with replacing the current story diagram."* · then *"Yes, update the three story-diagram mentions in CLAUDE.md to point at the picture default, through the CLAUDE.md change pipeline."*
+
+| Place | Before | After |
+|---|---|---|
+| §Disposition 0a | "a worked example drawn as a story diagram" | "drawn as a diagram (a picture by default, explain-diagram skill)" |
+| §Explanation NAME THE THING | "a short story diagram of the flow" | "a short diagram of the flow (a picture by default)" |
+| §Explanation PILLAR | "tables + story diagrams carry the load" | "tables + diagrams carry the load (a flow or structure of 3+ boxes is a diagram-design picture by default … a chat story diagram only for a 2-box line or a failed render)" |
+
+- Paired, same day: `.claude/skills/explain-diagram/SKILL.md` (picture row is the default), `domain/pre-reply-contract` text, `.claude/reply-shape-spec.md` §3d row, new Tool `lib/diagram-render.js` (eval 8/8).
+- Spec preservation: every spec kept: diagram first, fewer words not fewer lines, the one changed step marked, the 9-box budget, a choice shown not told. Changed and named: the medium for a 3+ box flow is a picture instead of chat box-art; the chat story diagram is narrowed to a 2-box line or a failed render.
+
+---
+
 ## v1.92 — 2026-10-23 (per みや, brief at the end of every reply)
 
 His words: *"use simple technical english to brief me (Add this into claude.md if needed on every end of reply aside from the next steps)"*

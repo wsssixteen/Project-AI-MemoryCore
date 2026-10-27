@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
       if (req.method === 'GET') {
         if (t.garbage) { res.writeHead(200); return res.end('<html>login</html>'); }
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ issue: { id: Number(num), status: t.status, done_ratio: t.pct || 0, assigned_to: t.assignee || undefined } }));
+        return res.end(JSON.stringify({ issue: { id: Number(num), status: t.status, done_ratio: t.pct || 0, assigned_to: t.assignee || undefined, custom_fields: [{ name: 'Module', value: t.module || 'Pelupusan' }] } }));
       }
       if (t.put === 'refuse') { res.writeHead(422, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ errors: ['Status is not allowed'] })); }
       if (t.put !== 'ignore') { try { const sent = JSON.parse(body).issue; if (sent.status_id === 2) t.status = { id: 2, name: 'In Progress' }; if (typeof sent.done_ratio === 'number' && !t.keepPct) t.pct = sent.done_ratio; } catch (_) { /* leave as is */ } }
@@ -213,7 +213,7 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   const lit = name => { const m = gate.match(new RegExp('const ' + name + ' = /(.+)/([a-z]*);')); return m ? new RegExp(m[1], m[2]) : null; };
   const NON_STATUS = lit('CLAIM_FORBIDDEN'), REF = lit('REDMINE_REF');
   const src = read('lib/quest-start-claim.js');
-  check('F26 the script sends status + 20 percent only: no note / assignee / journal / upload key anywhere in it', !!NON_STATUS && !NON_STATUS.test(src) && (src.match(/'PUT'/g) || []).length === 1 && /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/.test(src) && /const START_PERCENT = 20;/.test(src), NON_STATUS ? String(src.match(NON_STATUS)) : 'gate regex not found');
+  check('F26 the script sends status + 20 percent only: no note / assignee / journal / upload key anywhere in it', !!NON_STATUS && !NON_STATUS.test(src) && (src.match(/'PUT'/g) || []).length === 1 && /const payload = \{ status_id: IN_PROGRESS_ID \};/.test(src) && /payload\.done_ratio = START_PERCENT;/.test(src) && /\{ issue: payload \}/.test(src) && /const START_PERCENT = 20;/.test(src), NON_STATUS ? String(src.match(NON_STATUS)) : 'gate regex not found');
   check('F27 active-cli.js carries no ticket-server host or key text (else the write gate would block every quest state write)', !!REF && !REF.test(cli), REF ? String(cli.match(REF)) : 'gate regex not found');
 
   tickets[900028] = { status: NEW(), assignee: mine() };
@@ -223,6 +223,14 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   tickets[900036] = { status: NEW(), assignee: mine(), keepPct: true };
   x = await claim('900036', started(900036));
   check('F36 Redmine takes the status but keeps its own % → set, and the line prints the % Redmine shows', x.log[0].outcome === 'set' && x.log[0].pct === 0 && /New → In Progress, 0% \(set\)/.test(x.res.out), x.res.out);
+
+  tickets[900039] = { status: NEW(), assignee: mine(), module: 'Pendaftaran' };
+  x = await claim('900039', started(900039));
+  const w39 = writes(900039);
+  check('F39 REPLAY 286650: Module Pendaftaran → status only, % never sent, the line says so', x.log[0].outcome === 'set' && w39.length === 1 && JSON.stringify(JSON.parse(w39[0].body)) === '{"issue":{"status_id":2}}' && /% left as is \(Module Pendaftaran is not ours\)/.test(x.res.out), w39.map(s => s.body).join(' | ') + ' ' + x.res.out);
+  tickets[900040] = { status: NEW(), assignee: mine(), module: 'Awam' };
+  x = await claim('900040', started(900040));
+  check('F40 Module Awam is ours → status + 20 percent', writes(900040).length === 1 && JSON.stringify(JSON.parse(writes(900040)[0].body)) === '{"issue":{"status_id":2,"done_ratio":20}}', x.res.out);
 
   const { shouldClaim } = require(CLI);
   check('F29 shouldClaim: active + stamp + number only', shouldClaim('QA-900001', ['qa=QA-900001', 'status=active', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=hold', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=active']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=active', 'quest_start=']) && !shouldClaim('ADHOC-PT-2026-1', ['status=active', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['status=delegated', 'quest_start=2026-10-07']));
