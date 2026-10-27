@@ -350,22 +350,39 @@ function downloadFileOnce(contentUrl, destPath, expectedSize) {
 
 // ─── JOURNAL / COMMENT FETCH (Q1 todo 2026-05-07 — added 2026-05-11) ─────────
 
-function fetchIssueJournals(id) {
+// v11 (2026-10-27, miya, 286650): a failed fetch returned [] and read as "no journals", so the
+// first --create wrote no History.txt while 4 journals existed. Now: 3 tries, then null = FAILED.
+function fetchIssueJournalsOnce(id) {
     return new Promise(resolve => {
         const options = {
             hostname: '172.16.90.169',
             path: `/redmine/issues/${id}.json?include=journals`,
-            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY },
+            timeout: 30000
         };
-        http.get(options, res => {
+        const req = http.get(options, res => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
-                try { resolve(JSON.parse(data).issue?.journals || []); }
-                catch (e) { resolve([]); }
+                try {
+                    const issue = JSON.parse(data).issue;
+                    resolve(issue ? (issue.journals || []) : null);
+                } catch (e) { resolve(null); }
             });
-        }).on('error', () => resolve([]));
+        });
+        req.on('timeout', () => req.destroy());
+        req.on('error', () => resolve(null));
     });
+}
+
+async function fetchIssueJournals(id) {
+    for (let i = 0; i < 3; i++) {
+        const journals = await fetchIssueJournalsOnce(id);
+        if (journals) return journals;
+    }
+    console.log(`    ⛔ #${id}: journal fetch FAILED 3 times. History.txt NOT written. Re-run: node quest/redmine-sync.js ${id}`);
+    process.exitCode = 2;
+    return null;
 }
 
 // ─── TICKET FIELDS: custom_fields + relations (added 2026-08-07) ──────────────
@@ -555,6 +572,7 @@ async function updateExistingTicketHistory(issue) {
     const briefFolder = TF.briefDir(path.join(taskBaseFor(issue), issue._existing));
     if (!fs.existsSync(briefFolder)) return 0;
     const journals = await fetchIssueJournals(issue.id);
+    if (!journals) return 0;
     const fields = await fetchIssueFields(issue.id);
     writeHistoryFile(briefFolder, journals, {
         prefix:    issue._parsed.prefix,
@@ -957,7 +975,7 @@ async function runWithCreate() {
             // for "New"-status tickets (e.g. assignment notes from leads). 2026-05-12 fix: prior
             // behavior only wrote History.txt on re-sync (existing path), leaving net-new tickets
             // without their already-present journal context.
-            if (journals.length) {
+            if (journals) {
                 writeHistoryFile(TF.briefDir(folder), journals, {
                     prefix:    issue._parsed.prefix,
                     number:    issue._parsed.number,
@@ -1043,7 +1061,7 @@ async function runSingle(id) {
             const journals = await fetchIssueJournals(it.id);
             const assignedDate = extractAssignedToMeDate(journals, it);
             appendActiveBlock(it, it._parsed, folder, assignedDate);
-            if (journals.length) {
+            if (journals) {
                 writeHistoryFile(TF.briefDir(folder), journals, {
                     prefix: it._parsed.prefix, number: it._parsed.number,
                     subject: it.subject, status: it._status, updated_on: it.updated_on, author: it.author,

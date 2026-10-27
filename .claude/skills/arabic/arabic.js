@@ -20,7 +20,11 @@
  *   node arabic.js nudge                          one boot line or nothing
  *   node arabic.js focus [<lesson> [part]|off]    class focus: the Week Set and the ayat walk stay on that class until replaced
  *   node arabic.js sentence [again|<n>|list]      next ayat of the class focus, word by word (data/sentences.json)
- *   node arabic.js daily                          `sentence` when a class focus has ayat, else `review`
+ *   node arabic.js review next | words next       5 more words of this week's set (not the same 5 again)
+ *   node arabic.js mode [vocab|baris|class|class-latest|class-topic <lesson> [part]|<topic id>]   pick what `daily` gives; no arg = the menu
+ *   node arabic.js baris [next]                   baris drill: 5 class-ayat words, which baris and why (class-cited reasons only)
+ *   node arabic.js daily                          follows the stored mode (no mode = the menu)
+ *   node arabic.js next                           per mode: 5 more words · next ayat · next grammar topic
  * Env: ARABIC_DATA_DIR overrides the data folder (used by tests).
  */
 'use strict';
@@ -198,11 +202,29 @@ function table(five) {
 }
 
 // ---------- commands ----------
-function cmdReview(date) {
+// next = 5 more words of the Week Set not yet shown today (wraps when all are seen); the day stays one review, its recall moves to the
+// new five, and a same-day re-run shows the latest five.
+function moreBlock(p, words, set, r, wrap) {
+  const five = r.more[r.more.length - 1].map(id => words.find(w => w.id === id)); const recall = words.find(w => w.id === r.recall_id);
+  return [`${header(p, set, r.n)} · words ${r.more.length + 1}/${Math.ceil(set.ids.length / S.words)}${wrap || ''}`, table(five), `Recall: '${recall.malay}' → Arabic?`].join('\n');
+}
+function cmdReview(date, next) {
   const words = loadWords(); const p = loadProgress();
   const set = rollIfNeeded(p, words, date);
   const existing = reviewsThisWeek(p).find(r => r.date === date);
   let n, five, recall, mode;
+  if (existing && next) {
+    if (!existing.more) existing.more = [];
+    const today = new Set([...existing.shown, ...existing.more.flat()]);
+    let pool = { ids: set.ids.filter(id => !today.has(id)) }; let wrap = '';
+    if (!pool.ids.length) { pool = set; existing.more = []; wrap = ` · all ${set.ids.length} words seen today, starting again`; }
+    five = pickFive(p, words, pool); recall = pickRecall(p, five, date + ':' + existing.more.length);
+    for (const w of five) stats(p, w.id).shown++;
+    existing.more.push(five.map(w => w.id)); existing.recall_id = recall.id; existing.result = 'skip'; delete existing.answer;
+    writeJson(PROGRESS, p);
+    return moreBlock(p, words, set, existing, wrap);
+  }
+  if (existing && existing.more && existing.more.length) return moreBlock(p, words, set, existing);
   if (existing) {
     n = existing.n; mode = existing.mode; five = existing.shown.map(id => words.find(w => w.id === id)); recall = words.find(w => w.id === existing.recall_id);
   } else {
@@ -221,6 +243,7 @@ function cmdReview(date) {
 function cmdAnswer(text, date) {
   const p = loadProgress();
   if (p.form_pending) return resolveForm(p, text);   // a form drill is awaiting its answer
+  if (p.baris && p.baris.pending && barisGroups(text).length) return resolveBaris(p, text);   // a baris round is awaiting its answer
   const words = loadWords();
   const r = reviewsThisWeek(p).find(x => x.date === date);
   if (!r) return 'No review today yet — run `/arabic` first.';
@@ -356,10 +379,205 @@ function cmdSentence(arg, date) {
   }
   return out;
 }
+// ---------- start mode (v1.4, 2026-10-27): みや picks what `/arabic` gives — words, the latest class, or a part / topic he names ----------
+// mode = State: ONE value in progress.json (vocab | class-latest | class-topic), replaced by the next `mode`. class-topic keeps
+// its lesson + part in `focus`, or a grammar topic id in `mode_topic`.
+const MODES = ['vocab', 'baris', 'class', 'class-latest', 'class-topic'];
+const CMD = 'node .claude/skills/arabic/arabic.js';
+// The latest class = the lesson + part of the last class position ("Lesson 13 ج Exercise 1 ..."). null when it names none.
+function latestClass(p) {
+  const m = p.class_position && /lesson\s+(\d+)(?:\s+([ء-ي])(?![ء-ي]))?/i.exec(p.class_position.text || '');
+  return m ? { lesson: Number(m[1]), part: m[2] || null } : null;
+}
+function cmdMode(args, date) {
+  const p = loadProgress(); let [a, b, c] = args;
+  if (a === 'class' && b) a = 'class-topic';   // bare `mode class` = continue the live class
+  else if (a && !MODES.includes(a)) { c = b; b = a; a = 'class-topic'; }   // `mode <topic id>` / `mode <lesson> [part]`
+  if (!a) return modeMenu(p);
+  let head;
+  if (a === 'class-topic') {
+    if (!b) return `class-topic needs a lesson or a topic id: \`${CMD} mode class-topic <lesson> [part]\` · \`${CMD} mode class-topic <topic id>\` (\`topic list\`).`;
+    if (/^\d+$/.test(b)) {
+      const f = cmdFocus(b, c, date); if (!f.startsWith('Focus →')) return f;
+      const q = loadProgress(); q.mode = a; q.mode_topic = null; writeJson(PROGRESS, q); head = `Mode → class-topic · ${f}`;
+    } else {
+      const syll = loadSyllabus(); if (!syll || !syll[b]) return `No topic "${b}". \`${CMD} topic list\` shows the ids.`;
+      p.mode = a; p.mode_topic = b; writeJson(PROGRESS, p); head = `Mode → class-topic · topic ${b}.`;
+    }
+  } else {
+    p.mode = a; p.mode_topic = null; writeJson(PROGRESS, p); head = `Mode → ${a}.`;
+  }
+  return head + '\n\n' + cmdDaily(date);
+}
+function modeMenu(p) {
+  const S2 = loadSentences(); const lc = latestClass(p);
+  const cur = m => (p.mode === m ? '▶' : '');
+  const topicCell = p.mode === 'class-topic' ? (p.mode_topic ? 'topic ' + p.mode_topic : p.focus ? 'Lesson ' + p.focus.lesson : '') : '';
+  const live = lastClassStop();
+  const rows = [
+    `| ${cur('vocab') || 1} | vocab | 5 words of this week's set · "next" = 5 more | ${p.focus ? 'Lesson ' + p.focus.lesson : ''} | | \`${CMD} mode vocab\` |`,
+    `| ${cur('baris') || 2} | baris | 5 words from the class ayat: which baris, and why · "next" = 5 more | ${barisPool(S2).lessons.map(l => 'Lesson ' + l).join(', ') || 'no ayat'} | | \`${CMD} mode baris\` |`,
+    `| ${cur('class') || 3} | class | continue the live class from where it stopped | ${live ? live.stop.replace(/\s*[,(]?\s*(hlm|pages?|halaman)\b.*$/i, '').replace(/\|/g, '/') : 'no class yet'} | | \`${CMD} mode class\` |`,
+    `| ${cur('class-latest') || 4} | class-latest | the latest class, ayat by ayat · "next" = next ayat | ${lc ? 'Lesson ' + lc.lesson : 'no class yet'} | ${lc && lc.part ? lc.part : ''} | \`${CMD} mode class-latest\` |`,
+    `| ${cur('class-topic') || 5} | class-topic | a lesson part (ayat walk) or a grammar topic you pick · "next" = next ayat or topic | ${topicCell} | ${p.mode === 'class-topic' && !p.mode_topic && p.focus && p.focus.part ? p.focus.part : ''} | \`${CMD} mode class-topic <lesson> [part]\` · \`${CMD} mode class-topic <topic id>\` |`
+  ];
+  return [`Arabic: pick a mode (current: ${p.mode || 'none'})`, '',
+    '| # | Mode | What you get | On | Part | Command |', '|---|---|---|---|---|---|', ...rows, '',
+    `Lessons with ayat: ${S2 && Array.isArray(S2.sentences) ? [...new Set(S2.sentences.map(s => s.lesson))].join(', ') : 'none'} · topic ids: \`${CMD} topic list\``].join('\n');
+}
+// class-latest follows the last class position: a new class part replaces the focus (pointer from ayat 1), the same part keeps it.
+function syncLatest(p, date) {
+  const lc = latestClass(p); if (!lc) return;
+  if (p.focus && p.focus.lesson === lc.lesson && (p.focus.part || null) === lc.part) return;
+  const S2 = loadSentences();
+  if (S2 && Array.isArray(S2.sentences) && S2.sentences.some(s => s.lesson === lc.lesson && (!lc.part || s.part === lc.part))) cmdFocus(String(lc.lesson), lc.part, date);
+}
 function cmdDaily(date) {
   const p = loadProgress();
-  if (p.focus && focusSentences(p, loadSentences()).length) return cmdSentence(null, date);
-  return cmdReview(date);
+  if (!p.mode) return modeMenu(p);
+  if (p.mode === 'vocab') return cmdReview(date);
+  if (p.mode === 'baris') return cmdBaris(date);
+  if (p.mode === 'class') return cmdLive(date);
+  if (p.mode === 'class-topic' && p.mode_topic) return cmdTopic(p.mode_topic, date);
+  if (p.mode === 'class-latest') syncLatest(p, date);
+  const q = loadProgress();
+  if (q.focus && focusSentences(q, loadSentences()).length) return cmdSentence(null, date);
+  return `No ayat entered for ${q.focus ? 'Lesson ' + q.focus.lesson : 'this class'} yet: the word review instead.\n\n` + cmdReview(date);
+}
+// "next" follows the mode: 5 more words · the next ayat · the next grammar topic in class order.
+function cmdNext(date) {
+  const p = loadProgress();
+  if (!p.mode) return modeMenu(p);
+  if (p.mode === 'vocab') return cmdReview(date, true);
+  if (p.mode === 'baris') return cmdBaris(date, 'next');
+  if (p.mode === 'class-topic' && p.mode_topic) {
+    const syll = loadSyllabus(); const list = Object.values(syll || {}).sort((a, b) => a.order - b.order);
+    const i = list.findIndex(t => t.id === p.mode_topic); if (i < 0) return cmdTopic(p.mode_topic, date);
+    p.mode_topic = list[(i + 1) % list.length].id; writeJson(PROGRESS, p); return cmdTopic(p.mode_topic, date);
+  }
+  return cmdDaily(date);
+}
+// ---------- baris drill (v1.5, 2026-10-28): which baris, and why — only reasons the class taught ----------
+// A question = one word of a class ayat whose ending changes (depan / atas / bawah, never "tetap") and whose reasons are all
+// class-cited. The asked reason = its first sebab key in BARIS_ROLES. Round = 5 questions; state in progress.json `baris`.
+const BARIS_ROLES = [['mubtada', 'mubtada'], ['khabar', 'khabar'], ['khabar-depan', 'khabar muqaddam (khabar dibawa ke hadapan)'], ['mudaf-ilaih', 'mudaf ilaih'], ['majrur', 'selepas huruf jarr'], ['sifat', 'sifat (ikut mawsuf)'], ['badal', 'badal'], ['munada-depan', 'munada (yang dipanggil)']];
+const ROLE_ALIAS = { mubtada: /^mubtada/, khabar: /^khabar$/, 'khabar-depan': /^khabar(di)?(depan|muqaddam)/, 'mudaf-ilaih': /^mu[dz]h?af(un)?ilaih/, majrur: /^(majrur|jarr?|hurufjarr?|selepashurufjarr?)/, sifat: /^sifat/, badal: /^badal/, 'munada-depan': /^munada/ };
+const BARIS_WORDS = { depan: /^(depan|dhammah?|dammah?|dommah?)$/, atas: /^(atas|fathah?|fatha)$/, bawah: /^(bawah|kasrah?|kasra)$/ };
+function barisOf(s) { const b = (s || '').toLowerCase(); if (/tetap|hujung|tiada|mati|wau/.test(b)) return null; for (const k of ['depan', 'atas', 'bawah']) if (b.startsWith(k)) return k; return null; }
+function barisPool(S2) {
+  if (!S2 || !Array.isArray(S2.sentences) || !S2.sebab) return { items: [], roles: [], lessons: [] };
+  const roleKeys = BARIS_ROLES.map(r => r[0]); const per = [];
+  for (const s of S2.sentences) {
+    const mine = [];
+    s.words.forEach((w, wi) => {
+      const b = barisOf(w.baris); if (!b) return;
+      if (!w.sebab.every(k => S2.sebab[k] && S2.sebab[k].cite)) return;   // learned-only: one uncited reason drops the word
+      const role = w.sebab.find(k => roleKeys.includes(k)); if (!role) return;
+      mine.push({ key: `${s.id}#${wi}`, s, w, baris: b, role });
+    });
+    per.push(mine);
+  }
+  const items = []; for (let r = 0; per.some(m => m.length > r); r++) for (const m of per) if (m[r]) items.push(m[r]);   // round-robin: spread the ayat
+  return { items, roles: BARIS_ROLES.filter(r => items.some(i => i.role === r[0])), lessons: [...new Set(items.map(i => i.s.lesson))] };
+}
+function cmdBaris(date, arg) {
+  const S2 = loadSentences(); const pool = barisPool(S2);
+  if (!pool.items.length) return 'No baris questions: no class ayat with a class-cited reason yet.';
+  const p = loadProgress(); const b = p.baris || (p.baris = { ptr: 0, round: 1, stats: {}, pending: null });
+  if (arg && arg !== 'next') return 'Use: baris · baris next.';
+  if (!(b.pending && b.pending.date === date && arg !== 'next')) {
+    const st = k => b.stats[k] || { hit: 0, miss: 0 };
+    const missed = pool.items.filter(i => st(i.key).miss > st(i.key).hit).slice(0, 2);
+    const pick = [...missed];
+    while (pick.length < Math.min(5, pool.items.length)) {
+      const it = pool.items[b.ptr % pool.items.length]; b.ptr++;
+      if (b.ptr >= pool.items.length) { b.ptr = 0; b.round++; }
+      if (!pick.includes(it)) pick.push(it);
+    }
+    b.pending = { date, keys: pick.map(i => i.key), round: b.round };
+    writeJson(PROGRESS, p);
+  }
+  const byKey = Object.fromEntries(pool.items.map(i => [i.key, i]));
+  const qs = b.pending.keys.map(k => byKey[k]).filter(Boolean);
+  return [`Baris drill · Lesson ${pool.lessons.join(', ')} · ${pool.items.length} words in the pool${b.pending.round > 1 ? ' · pusingan ' + b.pending.round : ''}`, '',
+    '| # | Ayat | Kalimah | Makna ayat |', '|---|---|---|---|', ...qs.map((q, i) => `| ${i + 1} | ${q.s.ar} | ${q.w.ar} | ${q.s.ms} |`), '',
+    '| No | Sebab |', '|---|---|', ...pool.roles.map((r, i) => `| ${i + 1} | ${r[1]} |`), '',
+    'Jawab: baris (depan · atas · bawah) + no sebab, ikut nombor soalan. Contoh: 1 depan 1 · 2 bawah 4'].join('\n');
+}
+// Reply → groups {q, b, r}: each baris word anchors one answer; a number just before it = the question, a number (or a reason name) after it = the reason.
+function barisGroups(text) {
+  const toks = (text || '').toLowerCase().match(/[a-z]+|\d+/g) || []; const out = []; let free = null;
+  const bw = t => Object.keys(BARIS_WORDS).find(k => BARIS_WORDS[k].test(t));
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (/^\d+$/.test(t)) { free = Number(t); continue; }
+    const b = bw(t); if (!b) continue;
+    let r = null; const name = [];
+    if (i + 1 < toks.length && /^\d+$/.test(toks[i + 1])) { r = Number(toks[i + 1]); i++; }
+    else {
+      let j = i + 1;
+      while (j < toks.length && !/^\d+$/.test(toks[j]) && (!bw(toks[j]) || (toks[j - 1] === 'di' && name.length))) name.push(toks[j++]);   // "khabar di depan" is one name
+      if (name.length) { r = name.join(' '); i = j - 1; }
+    }
+    out.push({ q: free, b, r }); free = null;
+  }
+  return out;
+}
+function resolveBaris(p, text) {
+  const S2 = loadSentences(); const pool = barisPool(S2); const byKey = Object.fromEntries(pool.items.map(i => [i.key, i]));
+  const b = p.baris; const qs = b.pending.keys.map(k => byKey[k]).filter(Boolean);
+  const groups = barisGroups(text); const ans = new Array(qs.length).fill(null);
+  for (const g of groups) if (g.q && g.q >= 1 && g.q <= qs.length && !ans[g.q - 1]) ans[g.q - 1] = g;
+  for (const g of groups) if (!(g.q && g.q >= 1 && g.q <= qs.length && ans[g.q - 1] === g)) { const k = ans.indexOf(null); if (k >= 0) ans[k] = g; }
+  const roleOf = r => typeof r === 'number' ? (pool.roles[r - 1] || [])[0] : r ? Object.keys(ROLE_ALIAS).find(k => ROLE_ALIAS[k].test(r.replace(/\s/g, ''))) : null;
+  let nb = 0, nr = 0; const rows = [];
+  qs.forEach((q, i) => {
+    const a = ans[i]; const label = BARIS_ROLES.find(r => r[0] === q.role)[1];
+    if (!a) { rows.push(`| ${i + 1} | ${q.w.ar} | ${q.baris} · ${label} | ${S2.sebab[q.role].t} | tiada jawapan |`); return; }
+    const st = b.stats[q.key] || (b.stats[q.key] = { hit: 0, miss: 0 });
+    const okB = a.b === q.baris, okR = roleOf(a.r) === q.role; if (okB) nb++; if (okR) nr++;
+    if (okB && okR) st.hit++; else st.miss++;
+    const you = `${a.b}${okB ? ' ✓' : ' ✗'} · ${a.r == null ? 'tiada sebab' : typeof a.r === 'number' ? 'no ' + a.r : a.r}${okR ? ' ✓' : ' ✗'}`;
+    rows.push(`| ${i + 1} | ${q.w.ar} | ${q.baris} · ${label} | ${S2.sebab[q.role].t} | ${you} |`);
+  });
+  b.pending = null; writeJson(PROGRESS, p);
+  return [`Baris ${nb}/${qs.length} · sebab ${nr}/${qs.length}`, '', '| # | Kalimah | Jawapan | Sebab (dari kelas) | Kamu |', '|---|---|---|---|---|', ...rows, '', '"next" = 5 lagi.'].join('\n');
+}
+// ---------- live class (v1.5): continue where the class stopped ----------
+// Stop point = the last position of the latest class day in the class log. Page files come from the lesson tables of
+// source/ANALYSIS-book-*.md (a printed page maps to a file only inside a range whose file and printed spans match).
+function lastClassStop() {
+  const c = loadClass(); const ses = c.sessions.filter(s => s.positions && s.positions.length).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+  const s = ses[ses.length - 1]; return s ? { date: s.date, stop: s.positions[s.positions.length - 1], closed: !!s.closed, notes: s.notes || [] } : null;
+}
+const SOURCE = process.env.ARABIC_SOURCE_DIR || path.join(DATA_DIR, '..', 'source');
+function pageFiles(printed) {
+  const ranges = [];
+  try {
+    for (const f of fs.readdirSync(SOURCE).filter(n => /^ANALYSIS-book.*\.md$/.test(n))) {
+      const t = fs.readFileSync(path.join(SOURCE, f), 'utf8');
+      for (const m of t.matchAll(/\|\s*p(\d{3})(?:\s*[-–]\s*p(\d{3}))?\s*\|\s*(\d+)(?:\s*[-–]\s*(\d+))?\s*\|/g)) {
+        const fa = Number(m[1]), fb = Number(m[2] || m[1]), pa = Number(m[3]), pb = Number(m[4] || m[3]);
+        if (fb - fa === pb - pa) ranges.push({ fa, pa, pb });
+      }
+    }
+  } catch { return []; }
+  return printed.map(n => { const r = ranges.find(x => n >= x.pa && n <= x.pb); return r ? `p${String(r.fa + n - r.pa).padStart(3, '0')}.png` : null; });
+}
+function cmdLive(date) {
+  const last = lastClassStop();
+  if (!last) return 'No class recorded yet. When the class starts, say where it is and it is kept with `class "<lesson + part + section, pages>"`.';
+  const m = /(?:hlm\.?|pages?|halaman)\s*(\d+)(?:\s*[-–]\s*(\d+))?/i.exec(last.stop);
+  const printed = m ? Array.from({ length: Number(m[2] || m[1]) - Number(m[1]) + 1 }, (_, i) => Number(m[1]) + i) : [];
+  const files = pageFiles(printed);
+  const pagesCell = printed.length ? `${printed.join(', ')} · ${files.map((f, i) => f ? 'source/pages/' + f : `page ${printed[i]}: no file mapped`).join(' · ')}` : 'not named in the stop point';
+  const note = last.notes.filter(n => !/[؀-ۿ]/.test(n)).pop();
+  return ['Class: continue where the class stopped', '', '| | |', '|---|---|',
+    `| Class | ${last.date}${last.date === date ? ' (today)' : ''} · ${last.closed ? 'closed' : 'open'} |`,
+    `| Stopped at | ${last.stop.replace(/\|/g, '/')} |`,
+    `| Pages | ${pagesCell} |`,
+    ...(note ? [`| Last note | ${note.replace(/\|/g, '/')} |`] : []), '',
+    'Class-along: start from that section, one section per "next"; keep each section with `class "<lesson + part + section, pages>"`.'].join('\n');
 }
 function cmdNudge(date) {
   const words = readJson(WORDS, null); const p = readJson(PROGRESS, null);
@@ -604,7 +822,9 @@ function main(argv) {
   const cmd = args[0] || 'review';
   const t0 = Date.now(); let out;
   switch (cmd) {
-    case 'review': out = cmdReview(date); break;
+    case 'review': case 'words': out = cmdReview(date, args[1] === 'next'); break;
+    case 'mode': out = cmdMode(args.slice(1), date); break;
+    case 'next': out = cmdNext(date); break;
     case 'answer': out = cmdAnswer(args.slice(1).join(' '), date); break;
     case 'more': out = cmdMore(); break;
     case 'week': out = cmdWeek(args[1], date); break;
@@ -625,6 +845,7 @@ function main(argv) {
     case 'focus': out = cmdFocus(args[1], args[2], date); break;
     case 'sentence': out = cmdSentence(args[1], date); break;
     case 'daily': out = cmdDaily(date); break;
+    case 'baris': out = cmdBaris(date, args[1]); break;
     default: out = `Unknown command ${cmd}`;
   }
   if (cmd !== 'nudge') logRow({ cmd, date, arg: args.slice(1).join(' ') || undefined, outcome: (out || '').split('\n')[0].slice(0, 80), dur_ms: Date.now() - t0 });

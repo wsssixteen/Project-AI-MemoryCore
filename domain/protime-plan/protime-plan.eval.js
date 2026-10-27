@@ -178,8 +178,10 @@ eq('S108 an approved day is left alone: settle adds no adhoc there', settle({ ex
 
 // ---- the 3-ticket KPI at night (miya 2026-10-14: 284831 should not have been added to a day already holding 4) ----
 const FULL = { plan: [E(1, '284544'), E(2, '284775'), E(3, '240907'), E(4, '283960')], adhoc: [] };
-eq('S110 a day already at the KPI gets no more plan tickets', settle({ existing: FULL, worked: [{ id: '284831', own: true, done: false }] }).addPlan, []);
-eq('S111 a day with 1 plan ticket gets finished ones first, up to 3', settle({ existing: { plan: [E(1, '111111')], adhoc: [] }, worked: [{ id: '222222', own: true, done: false }, { id: '333333', own: true, done: true }, { id: '444444', own: true, done: true }] }).addPlan, ['333333', '444444']);
+eq('S110 a day already at the KPI still gets every worked ticket (2026-10-28)', settle({ existing: FULL, worked: [{ id: '284831', own: true, done: false }] }).addPlan, ['284831']);
+eq('S111 a day with 1 plan ticket gets all 3 worked tickets, finished ones first', settle({ existing: { plan: [E(1, '111111')], adhoc: [] }, worked: [{ id: '222222', own: true, done: false }, { id: '333333', own: true, done: true }, { id: '444444', own: true, done: true }] }).addPlan, ['333333', '444444', '222222']);
+eq('S113 the 2026-10-27 case: a script-placed line worked only in our turns (no Redmine entry) is kept', settle({ existing: { plan: [E(9, '261986')], adhoc: [] }, worked: [{ id: '261986', own: true, touched: false }], mine: () => true }).remove, []);
+eq('S114 a script-placed line with no progress at all is removed', settle({ existing: { plan: [E(9, '261986')], adhoc: [] }, worked: [], mine: () => true }).remove.map(r => r.name), ['261986']);
 eq('S112 assists still go to adhoc on a full day', settle({ existing: FULL, worked: [{ id: '283345', own: false }] }).addAdhoc, ['283345 - Assist']);
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

@@ -185,6 +185,16 @@ bump in the catch-up means staging needs that common built/available too, or the
 can hit an `avalonTemplate parse error` (int-env precedent `fa1fb3aea2`). To be built into the
 release/deploy tooling.
 
+**Common pin at the catch-up (verified 2026-10-23, #246964; miya: "just use the latest common version")**
+
+| Fact | Evidence |
+|---|---|
+| A clean catch-up merge KEEPS the env branch's own common pin | stag-env + `mlk/master` (1.8.4) merged clean; pom stayed `1.10.3-MLK.beta.patch5` while 1.8.4 pins `1.10.8-MLK` |
+| So the catch-up must also set the pin to the RELEASE's own common, in its own commit (`Ref #<num> - Up common to <ver>`) | otherwise staging runs 1.8.4 code on a different common than the BA tested |
+| Beta and release common lines can diverge: neither contains the other | etanah-common `git merge-base --is-ancestor` 3dec618e00 (beta.patch5) vs 6955479ac9 (1.10.8-MLK): false both ways |
+| A common version tagged in git is not always published | `1.10.17-MLK` on common `origin/mlk/master` 2026-10-22, absent from nexus; build: `Could not find artifact my.gov.etanah:etanah-common:jar:classes:1.10.17-MLK`. Published list: `http://172.16.90.169/nexus/content/groups/public/my/gov/etanah/etanah-common/maven-metadata.xml` |
+| "Latest common" at a catch-up = the release's own pin, never the newest number in nexus | 1.10.16-MLK was picked by mistake: unrelated to release 1.8.4 and to the ticket |
+
 ---
 
 ## 8. Hotfix — a PROD break after a release

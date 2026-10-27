@@ -57,3 +57,4 @@
 {"ts":"2026-10-14T15:25:50.625Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
 {"ts":"2026-10-14T15:25:50.725Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
 {"ts":"2026-10-14T15:25:50.827Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-21T02:37:14.498Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":482}

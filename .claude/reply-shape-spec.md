@@ -228,6 +228,22 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 
 **Why**: 2026-10-27, eSOKONGAN sweep 286462 + 286315. His words: "Please fix to not shot ticket numbers with hashtags, because I cannot click to copy and it only kept on opening a link that is not existing anywhere."
 
+## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
+
+**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. Each changed part gets its own heading, written as its place in the hierarchy (`system/INDEX.md`): System › kind › parent, if any › name (new or changed). Under the heading come one diagram or table and one short sentence. No bullet lists.
+
+| Kind | Where it lives | Example heading |
+|---|---|---|
+| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## System › Rule › Reply spec › 3i title (changed)` |
+| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## System › Workflow › Quest › Hand-over step (changed)` |
+| Feature | `domain/<name>/` (a check or gate: hook + eval + log) | `## System › Feature › handover-check-gate (new)` |
+| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## System › Tool › handover-check.js (new)` |
+| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` · `domain/pena/` style data | `## System › Memory › People list › kak Yati (changed)` |
+| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## System › Kernel › forge (changed)` |
+| Project | `projects/coding-projects/active/<Name>/` | `## System › Project › PymTime (changed)` |
+
+**Banned**: a system change reported with no breadcrumb heading · one heading that lumps several parts · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.
