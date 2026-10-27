@@ -394,6 +394,23 @@
       "status": "live"
     },
     {
+      "id": "requirement-index",
+      "answers": "Which Requirement ticket first specified this screen or feature, and does the ticket's ask fit it",
+      "call": "node quest/requirement-index.js --ticket <num> · --find \"<words>\"",
+      "home": "quest/requirement-index.js",
+      "groups": [
+        "tickets",
+        "knowledge"
+      ],
+      "state_scope": "per state project (REQ_PROJECTS; Melaka only today)",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "redmine-board",
       "answers": "The open ticket board",
       "call": "node quest/redmine-board.js",
