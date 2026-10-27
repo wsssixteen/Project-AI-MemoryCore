@@ -340,13 +340,13 @@ function roleTag(name, stateKey) {
   try { return R.tag(R.roleOf(name, { state: stateKey })); } catch (_) { return 'role unknown'; }
 }
 
-// The BA template names the screen on its own line ("Penyediaan Risalat MMKN - PDT", "Tugasan : ...")
+// The BA template names the screen on its own line ("Penyediaan Risalat MMKN - PDT", "Tugasan : ...", "Tugasan Semasa: ...")
 // or as a menu path ("Menu Pelupusan > Kemaskini Ulasan Jabatan Teknikal / JPPH"); only the first lines are read.
 function screenHint(description) {
   const lines = String(description || '').replace(/&gt;/g, '>').split(/\r?\n/).map(l => l.replace(/^[*\s]+|[*\s]+$/g, '')).filter(Boolean).slice(0, 14);
   const tugasan = [], menu = [];
   for (const l of lines) {
-    const t = l.replace(/^tugasan\s*:\s*/i, '');
+    const t = l.replace(/^tugasan(\s+semasa)?\s*:\s*/i, '');
     if (t.length <= 90 && /^(penyediaan|semakan|pengesahan|kemasukan|kemaskini|cetakan|penerimaan|arahan|pendaftaran|pengeluaran)\b/i.test(t)) tugasan.push(t);
     const m = l.match(/\bmenu\s+(.{3,120})/i);
     if (m) menu.push(m[1]);

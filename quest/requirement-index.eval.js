@@ -161,7 +161,7 @@ t(`B1 blind key: right requirement in the top 3 for 16+ of 21, and 9+ of 11 "non
   return (found >= 16 && quiet >= 9) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 
-// Rounds 2-5 of the 2026-10-27 kink hunt: 80 more tickets, each set keyed blind by its own Sonnet reader.
+// Rounds 2-7 of the 2026-10-27 kink hunt: 120 more tickets, each set keyed blind by its own Sonnet reader.
 const BLIND2 = [
   [282924, [212157, 212115]], [277706, [277706]], [246964, [237883, 223348]], [282721, 'none'], [282723, 'none'], [282442, [218968]],
   [274461, [220611, 216013]], [282555, 'none'], [281423, [214484]], [282198, 'none'], [282061, [220564, 234424]], [281712, [220178, 233340]],
@@ -175,8 +175,17 @@ const BLIND2 = [
   [277295, [221204]], [277370, [220371]], [277532, 'none'], [277115, 'none'], [277439, 'none'], [277147, [218967]], [277309, [220395, 224440]],
   [276654, [219294, 227712]], [276504, 'none'], [276539, [218966]], [276584, [221204, 221211, 212157]], [276549, [216991, 212157]],
   [276182, [219929, 219930]], [276349, [222650]], [276422, [220373]], [276436, [228654, 219379]], [276181, [219929, 219930]], [276074, [266474]],
-  [275475, 'none'], [275501, [221307, 221309]], [275505, [219929, 219930]], [275587, [218455, 218459]]];
-t(`B2 rounds 2-5 key: right requirement in the top 3 for 41+ of 51, and 28+ of 29 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  [275475, 'none'], [275501, [221307, 221309]], [275505, [219929, 219930]], [275587, [218455, 218459]],
+  // rounds 6-7
+  [275456, [213454, 219379]], [275500, [221963, 246494, 220369]], [275319, 'none'], [275009, [215523, 220611]], [275152, 'none'],
+  [274740, [224440, 219387]], [274745, [266472, 220373]], [274914, [219926, 219927]], [274532, [242036, 224440]], [274510, 'none'], [273707, 'none'],
+  [273956, 'none'], [274182, [218971, 215517]], [274318, [218967]], [273837, 'none'], [274046, 'none'], [274136, [216044, 248930]],
+  [273621, [218455, 218459, 218976]], [273919, [222650]], [273921, 'none'], [273625, [242036]], [273455, [216013, 216044, 220373]], [273460, [215488]],
+  [273461, [218971, 215517]], [273465, [216044]], [273201, [219646]], [273294, [220395, 220373]], [273300, [221211, 212157]],
+  [272867, [220178, 220369]], [272881, [215488]], [272943, [222698, 224440]], [272982, [216044, 220803]], [272574, [215508, 215583]],
+  [272329, [216991]], [272378, [222695]], [272499, [218968]], [272527, 'none'], [272127, [230723, 219625, 221204]], [272096, [242036]],
+  [271985, [218455, 228495]]];
+t(`B2 rounds 2-7 key: right requirement in the top 3 for 67+ of 82, and 36+ of 38 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
   if (!REAL) return true;
   let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
   for (const [num, ok] of BLIND2) {
@@ -186,7 +195,7 @@ t(`B2 rounds 2-5 key: right requirement in the top 3 for 41+ of 51, and 28+ of 2
     want++;
     if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
   }
-  return (found >= 41 && quiet >= 28) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
+  return (found >= 67 && quiet >= 36) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 t('Q2 a "Semua Urusan" requirement earns the urusan bonus (it beats a same-words PLTP row)', () => {
   const rows = [row(1, 'PLTP - Template Risalat', 'Pelupusan'), row(2, 'Pelupusan Semua Urusan - Butang Jana Semula Dokumen', 'Pelupusan'), row(3, 'PRBB - Butang Jana Semula Dokumen', 'Pelupusan')];
@@ -202,6 +211,10 @@ t('Q4 screenHint reads the tugasan line and the menu path, not the email or gree
   const d = 'PDTJ Hi team, mohon semak\nnurhafizah@melaka.gov.my\nPT - Permohonan Pemberimilikan\n*Penyediaan Risalat MMKN - PDT*\nPTMLK/02/L/PT/2026/6\nUser pergi ke Menu Pelupusan &gt; Kemaskini Ulasan Jabatan Teknikal';
   const h = R.screenHint(d);
   return (/Penyediaan Risalat MMKN - PDT/.test(h) && /Kemaskini Ulasan Jabatan Teknikal/.test(h) && !/melaka\.gov|Hi team/.test(h)) || h;
+});
+t('Q5 screenHint reads "Tugasan Semasa: <screen>" (the PDTMT template)', () => {
+  const h = R.screenHint('PDTMT\nUser ID: sanarimah@melaka.gov.my\nTugasan Semasa: Semakan Risalat MMKN - PDT\nUrusan : PLPS - Permohonan Lesen Pendudukan Sementara');
+  return /^Semakan Risalat MMKN - PDT$/.test(h) || JSON.stringify(h);
 });
 
 // --- render
