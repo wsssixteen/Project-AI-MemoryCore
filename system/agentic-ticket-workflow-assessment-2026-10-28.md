@@ -34,7 +34,6 @@
 
 
 # Improvement sweep — 2026-10-28 (worktree melaka-requirements-index-123431, "Requirement Documentation")
-
 | Axis | Instance this session | Verdict | Proposal |
 |---|---|---|---|
 | A1 agentic system | `lib/audit-briefing.js` lists TurnChecklistGate, auto-skill-trigger, RecursiveLoopDetector, ask-back-gate, claude-md-edit-guard, multi-dim-evidence-gate as "never fired in 7 d"; all fired visibly in this session | the briefing's NOT WORKING list is partly false (bundle children not counted) | count bundle-dispatched children as fires (logged, eval case named) |
@@ -43,3 +42,10 @@
 | A3 debugging | 11 blind rounds scored on exact top-1 hit, while the goal is narrow-then-read | goal corrected; B2 key kept in eval | the blind harness (build-set, key, all.js) lives in the scratchpad; move it beside the Tool so a round is one command (logged) |
 | A4 etanah | ticket 265109's fee requirement (219690, PKS Penyelenggaraan Fi) lives in Sokongan, not Pelupusan | guessed module bonus kept small (×1.1) for this | a "Semua Urusan" hit also lists the urusan's own requirement for the same screen (logged, eval: 259428 shows 224440 and a PLTP row) |
 | A5 sweep | diagram census: Features 0/97, Skills 0/81, Tools 2/13 | Rule 17 fills it on next refine | `diagram-census --missing` sorted by use count, so the most used parts get pictures first (logged) |
+# Improvement sweep — 2026-10-28 (worktree protime-weekly-plan-changes-d89526, ProTime weekly plan)
+| A1 agentic system | `node lib/audit-briefing.js --days 7` run from the worktree printed "0 hook fires · 0 turns" and listed every registered hook as never fired: telemetry lives only in the MAIN checkout | false NOT WORKING list; re-run from main; 2nd instance today (the 286650 session found it too) | audit-briefing resolves telemetry from the main checkout, or refuses with one line when it reads 0 turns (logged, eval case named) |
+| A1 agentic system | night run sees only adhocs saved as blocks; asks he never saved as adhoc appear only via `--sessions` | gap, open since 2026-10-14 | night run lists the day's untitled asks in its toast + log notes (logged, eval case named) |
+| A2 quest workflow | ⏭ no ticket worked in the revive; ProTime plan work is not a quest | — | — |
+| A3 debugging | ⏭ no debugging this session (revive only) | — | — |
+| A4 etanah | ⏭ no etanah work | — | — |
+| A5 sweep | ⏭ no sweep run | — | — |
