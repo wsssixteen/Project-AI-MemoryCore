@@ -305,6 +305,7 @@ Issues resolved:
 
 Thank you.
 ```
+**Closing line = judgement (2026-10-27 per みや, #285768)**: `Thank you.` is the default; pick `Thank you very much.` for a large ticket (3+ fixes, a PROD patch, a long review or rework), `Thank you <short name>.` when the reader did extra for us, `Thanks.` for a one-line developer hand-over, `Terima kasih.` for a Malay note. Set it with `--closing "<line>"`; rules in `domain/pena/modules.json` greet.
 Rules: English, like miya's own notes · greet the LIVE assignee (re-sync Redmine first) · one fix per line, no code names · Root cause + Solution rows and the field set (Resolved · Assignee = BA · 100% · Resolved By Ahmad Ridhwan Anuar) go in their own fields, not in the note. **Banned**: a Malay rewrite · a test-data block or restated expected behaviour (miya cut both on #279411) · pointing at a memory file instead of printing the template. **Why**: #282061, the template lived only in `feedback_ticket_writing_style` memory and the deploy skill pointed at it by name; the note came out in my own shape.
 
 ### 🗣️ Plain first — DEFAULT for every quest briefing and explanation (added 2026-09-29 per みや, #282061)
