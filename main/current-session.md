@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 01:50 — session "27/10/2026 - Requirement Documentation" (worktree `melaka-requirements-index-123431`), Domain Expansion, then archive.
+
+## Session Recap (2026-10-27 → 28, "Requirement Documentation", requirement-index)
+- Tool `quest/requirement-index.js` (2,083 Melaka Requirement tickets): 11 blind rounds, 196 tickets, each keyed by a Sonnet reader that never saw the tool. All rounds: top-1 135/174, top-3 151/174, "none" kept quiet 55/56. Eval 50/50.
+- Kinks fixed: alter/patch/cancel = not needed · ticket that is itself a requirement · Semua Urusan rows earn the urusan bonus · screen hint from "Tugasan Semasa:" and the "Tugasan involved" list · STAGING-style tags never the urusan · a ticket with no module takes its urusan's module (×1.1; a read module stays ×1.3, 265109's fee spec lives in Sokongan).
+- miya corrected the goal (2026-10-28): it is an INDEX: narrow to the likely requirement, then open it and check the ask; also answers "what is the requirement for X" at once; a Semua Urusan hit is a right pointer. Written into the tool header; slip `build-missed-requirement` logged in detail.
+- Built **system-design Rule 17 diagram at birth**: Tool `lib/diagram-census.js` (`--check <part>`, `--missing`; eval 26/26), `component-birth-gate` needs `diagram:` in a new Feature README (eval 11/11), `explain-diagram` step 4 exception. First diagrams in git: `quest/requirement-index.diagram.png`, `lib/diagram-census.diagram.png`. Census: Features 0/97 · Skills 0/81 · Tools 2/13.
+- Open (miya: later): tugasan codes not expanded (257569 "KKMMKN" misses 221967/220410) · NUKE-MARKER for requirement-index (miya: log only) · no unused Task-folder tickets left for another blind round.
+
 **Last Activity**: 2026-10-28 01:25 — worktree `ticket-286650-quest-188daf` (eSOKONGAN 286650, PROD SPI Dokumen Verifikasi NPE), Domain Expansion, then archived.
 
 ## Session Recap (2026-10-27 → 28, worktree "ticket-286650-quest-188daf", 286650)
@@ -17,12 +26,3 @@
 - Found: `lib/land-on-main.js` derives main only from an in-tree worktree path, so a build worktree outside OneDrive (the memory rule) points at itself unless `--main` is passed; forge registers a new prompt check standalone although system-rules Rule 7 wants a bundle. Both logged as proposals.
 
 **Last Activity**: 2026-10-28 00:40 — worktree `arabic-command-b8399a` (/arabic: class-along, baris drill + class mode), Domain Expansion.
-
-## Session Recap (2026-10-27 → 28, worktree "arabic-command-b8399a", /arabic)
-- Live class 2026-10-27 walked with miya (Lesson 13 ج Exercises 2-4, page 81 ذهب table, Lesson 14 dialogue). Class closed; **next class starts at Lesson 14 · Exercise 1 (answering questions), pages 83-84**. `save-check` PASS.
-- Class-word fix: فلاح = petani (not peladang); a child session checked every class-vocab row against all recordings and fixed 4 more (فتاة, زميل, درس, نافذة). Data files only (untracked), VERIFY-LOG rows written.
-- Built (miya asked for it here, child session stopped and archived unused): **baris drill mode** (5 class-ayat words; he answers baris + reason number; engine judges both; only class-cited reasons, a `belum` reason never asked) + **class mode** (continue the live class from the class-log stop point, pages mapped to files) + menu of 5 modes, switch by saying a mode name. The 2026-10-27 start-menu merge had never become a commit on main (code sat uncommitted); landed together on main `49cf06b1`, eval 115/115 run in main on real data.
-- DE found: main folder held 127 telemetry conflict-copy shards (6 GB) that `git add -A` staged; `.gitignore` rule only matched a one-digit suffix. Widened to `-miyazaki-NN` / `-PJNBRidhwan-NN`; nothing large committed.
-- Open: teacher's 2 extra plurals of ضعيف (miya to say them) · Lesson 14 ayat not built (baris and latest-class modes have Lesson 13 only) · `lib/diagram-render.js` looks for Playwright on E: (not connected); worked with `DIAGRAM_PLAYWRIGHT` = npm-cache playwright-core.
-
-**Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
