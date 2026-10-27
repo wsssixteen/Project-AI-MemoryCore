@@ -230,19 +230,19 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 
 ## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
 
-Every reply that reports creating or changing a part of the system gives each part its own heading. The heading opens with the kind of part in brackets, the seven kinds of `system/INDEX.md`, then new or changed, then the part's name.
+**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. Each changed part gets its own heading, written as its place in the hierarchy (`system/INDEX.md`): System › kind › parent, if any › name (new or changed). Under the heading come one diagram or table and one short sentence. No bullet lists.
 
 | Kind | Where it lives | Example heading |
 |---|---|---|
-| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## [Rule · changed] Reply spec 3i: kind in the title` |
-| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## [Workflow · changed] Quest hand-over step` |
-| Feature | `domain/<name>/` (a gate or a check) | `## [Feature · new] handover-check-gate` |
-| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## [Tool · new] handover-check.js` |
-| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` | `## [Memory · changed] People list: kak Yati` |
-| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## [Kernel · changed] forge` |
-| Project | `projects/coding-projects/active/<Name>/` | `## [Project · changed] PymTime` |
+| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## System › Rule › Reply spec › 3i title (changed)` |
+| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## System › Workflow › Quest › Hand-over step (changed)` |
+| Feature | `domain/<name>/` (a check or gate: hook + eval + log) | `## System › Feature › handover-check-gate (new)` |
+| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## System › Tool › handover-check.js (new)` |
+| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` · `domain/pena/` style data | `## System › Memory › People list › kak Yati (changed)` |
+| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## System › Kernel › forge (changed)` |
+| Project | `projects/coding-projects/active/<Name>/` | `## System › Project › PymTime (changed)` |
 
-Under the heading, one plain line says what it does now. **Banned**: a system change reported with no bracketed kind · one heading that lumps several parts · a kind that is not one of the seven. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle). **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
+**Banned**: a system change reported with no breadcrumb heading · one heading that lumps several parts · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
 
 ## 4. Precedence Note
 
