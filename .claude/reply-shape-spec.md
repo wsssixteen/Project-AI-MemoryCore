@@ -147,7 +147,7 @@ His words: "You were not clear WHAT & WHICH event you're referring to … clear,
 | Name it first | First line names the thing in plain words ("the guard that stops my pushes") and the event with its date. | "the gate", "the rebuild", "v6", a hook or file name he has not been told. |
 | Current only | State what is true NOW and what I will do next. | History, how I found it, what I tried, unless he asks. |
 | Four rows | For "what is this / what did you change": the existing thing · what changed · what I am changing now · what stays. One short sentence per cell. | A paragraph, or more than four rows. |
-| Flow diagram | A short story diagram, top to bottom, with the ONE changed step marked. | A diagram with no marked step; a fix described with no flow. |
+| Flow diagram | A short diagram, top to bottom, with the ONE changed step marked: a diagram-design picture for 3+ boxes (explain-diagram skill, 2026-10-27), a chat story diagram only for a 2-box line or a failed render. | A diagram with no marked step; a fix described with no flow. |
 | Step tables on ask | "What does each step check" = one small table per step: check · passes when · else. | One wide table for all steps. |
 | Answer the question asked | A one-line question gets one line. | Adding the background he did not ask for. |
 
