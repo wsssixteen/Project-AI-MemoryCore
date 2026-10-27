@@ -100,9 +100,11 @@ function prepare(rows) {
     const subj = new Set(tokenize(r.subject));
     const body = new Set(tokenize(r.snippet + ' ' + r.module));
     const codes = codesOf(r.subject);
+    // A "Semua Urusan" requirement specifies every urusan, so it earns any urusan's bonus.
+    const allUrusan = /semua\s+urusan/i.test(r.subject);
     subjTotal += subj.size;
     for (const w of new Set([...subj, ...body])) df.set(w, (df.get(w) || 0) + 1);
-    return { r, subj, body, codes };
+    return { r, subj, body, codes, allUrusan };
   });
   const n = rows.length || 1;
   const idf = w => Math.log(1 + n / (df.get(w) || 0.5));
@@ -117,11 +119,12 @@ function search(rows, query, opts) {
   const prep = o.prep || prepare(rows);
   const q = typeof query === 'string' ? { subject: query, body: '' } : (query || {});
   const qSubj = [...new Set(tokenize(q.subject))];
-  const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w));
+  const qHint = [...new Set(tokenize(q.hint))].filter(w => !qSubj.includes(w));
+  const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w) && !qHint.includes(w));
   const urusan = urusanOf(q.subject);
   const wanted = String(o.module || '').toLowerCase();
   const exclude = new Set((o.exclude || []).map(Number));
-  if (!qSubj.length && !qBody.length) return [];
+  if (!qSubj.length && !qBody.length && !qHint.length) return [];
   const qTotal = qSubj.reduce((s, w) => s + prep.idf(w), 0) || 1;
   const out = [];
   for (const d of prep.docs) {
@@ -134,18 +137,24 @@ function search(rows, query, opts) {
       if (d.subj.has(w)) { score += 3 * prep.idf(w) / lenNorm; covered += prep.idf(w); hits.push(w); }
       else if (d.body.has(w)) { score += prep.idf(w); covered += 0.3 * prep.idf(w); hits.push(w); }
     }
+    // The tugasan / menu line of the description names the screen: nearly as strong as the subject, not counted in cover.
+    for (const w of qHint) {
+      if (d.subj.has(w)) { score += 2 * prep.idf(w) / lenNorm; hits.push(w); }
+      else if (d.body.has(w)) { score += 0.5 * prep.idf(w); hits.push(w); }
+    }
     for (const w of qBody) {
       if (d.subj.has(w)) { score += 0.6 * prep.idf(w) / lenNorm; hits.push(w); }
       else if (d.body.has(w)) { score += 0.2 * prep.idf(w); hits.push(w); }
     }
     if (!score) continue;
-    if (urusan && d.codes.has(urusan)) score *= 1.5;
+    if (urusan && (d.codes.has(urusan) || d.allUrusan)) score *= 1.5;
     if (wanted && d.r.module.toLowerCase() === wanted) score *= 1.3;
     // A cancelled requirement is history, not the spec.
     if (/cancel|not applicable/i.test(d.r.status)) score *= 0.5;
     const cover = covered / qTotal;
     // Cut points from the 2026-10-27 blind test (30 tickets): every right top-1 scored >= 29; cover alone did not separate right from none.
-    const match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 ? 'strong' : 'possible';
+    // Strong also needs score >= 30: a short generic subject ("klik hantar papar ralat") covers itself cheaply.
+    const match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 && score >= 30 ? 'strong' : 'possible';
     out.push({ row: d.r, score: Math.round(score * 10) / 10, cover: Math.round(cover * 100) / 100, match, hits });
   }
   out.sort((a, b) => b.score - a.score || b.row.id - a.row.id);
@@ -331,6 +340,21 @@ function roleTag(name, stateKey) {
   try { return R.tag(R.roleOf(name, { state: stateKey })); } catch (_) { return 'role unknown'; }
 }
 
+// The BA template names the screen on its own line ("Penyediaan Risalat MMKN - PDT", "Tugasan : ...")
+// or as a menu path ("Menu Pelupusan > Kemaskini Ulasan Jabatan Teknikal / JPPH"); only the first lines are read.
+function screenHint(description) {
+  const lines = String(description || '').replace(/&gt;/g, '>').split(/\r?\n/).map(l => l.replace(/^[*\s]+|[*\s]+$/g, '')).filter(Boolean).slice(0, 14);
+  const tugasan = [], menu = [];
+  for (const l of lines) {
+    const t = l.replace(/^tugasan\s*:\s*/i, '');
+    if (t.length <= 90 && /^(penyediaan|semakan|pengesahan|kemasukan|kemaskini|cetakan|penerimaan|arahan|pendaftaran|pengeluaran)\b/i.test(t)) tugasan.push(t);
+    const m = l.match(/\bmenu\s+(.{3,120})/i);
+    if (m) menu.push(m[1]);
+  }
+  // Three or more tugasan lines are a list of flow steps (265109), not the screen the ticket is on.
+  return [...(tugasan.length <= 2 ? tugasan : []), ...menu].join(' ');
+}
+
 // An alter / patch / cancel ask moves data or a flow; no requirement specified it.
 function requestKind(subject) {
   const s = String(subject || '');
@@ -414,7 +438,7 @@ async function main(argv, log) {
     chain.push(r);
     p = r.parent;
   }
-  const query = { subject: issue.subject, body: String(issue.description || '').slice(0, 600) };
+  const query = { subject: issue.subject, hint: screenHint(issue.description), body: String(issue.description || '').slice(0, 600) };
   const hits = search(idx.rows, query, { module, top, exclude: [issue.id, ...chain.map(r => r.id)] });
   const kind = requestKind(issue.subject);
   Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: kind ? 'request' : self ? 'self' : hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
@@ -433,7 +457,7 @@ async function main(argv, log) {
   return 0;
 }
 
-module.exports = { requestKind, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
+module.exports = { requestKind, screenHint, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {
   const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket)$/.test(a)) || 'usage' };
