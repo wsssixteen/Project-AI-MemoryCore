@@ -369,6 +369,7 @@ Then stop.
 | 8 | 🚨 **`int-env` receives ONLY the ticket's fixes.** If the staged merge diff vs `origin/mlk/int-env` shows a `pom.xml` version bump or other tickets' files, you are merging the wrong thing — stop. |
 | 9 | 🚨 **A deploy-script failure is read TOP-DOWN, never from the last line.** The final error is usually a cascade symptom (§7). |
 | 10 | 🔁 **Branch carries a colleague's commit** (`git log --no-merges --format=%an origin/mlk/master..<branch>` shows an author who is not us) → the takeover review must have run first and our correction must be committed on top (quest SKILL.md § Colleague asks us to review their fix = TAKEOVER). No `fix_by=` in the quest block → stop and review before the card. |
+| 11 | 🚨 **Before offering any branch choice (merge into X vs redeploy Y), show one branch table first** (2026-10-27, #246964): for `mlk/master`, the newest `mlk/release/*`, `mlk/stag-env` (and `mlk/int-env` if it is in play), list its module version, whether it holds the newest release, and whether it holds the ticket's fix. Say in one line which branch is the latest base. **Banned**: two buttons with no branch picture (he chose "redeploy stag-env" not knowing release 1.8.5 was the newest base and lacked the fix). |
 
 ---
 
