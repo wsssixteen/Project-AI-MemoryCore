@@ -6,6 +6,13 @@
 
 - **SESSION vibrant-solomon-cd24c1 (#285871), 2026-10-21 10:27 → 16:40.** BA Mira opened Internal Issue #285871 for yesterday's adhoc ADHOC-PT-2026-13 (A69 promoted → TICKETED). Full quest re-run: one sonnet adversarial review found 2 gaps in the adhoc fix: B1 PPD → PTNH path (no KPPD Semakan; 3 PROD Pengesahan rows) left an empty KPPD section; B2 Minit Bebas made before deploy lost both sign blocks (fill list from the classpath template, `TemplateConfig.readAllContentControl():747`). Fixed in `PelupusanTemplateUtil`: `isPerakuanMinitBebasTanpaSemakanKppd` (wrapper `blokSemakanMinitBebasKPPD` removed at PMB unless previous tugasan = SMB by KPPD) + `addMinitBebasKppdTagLama` (old docs keep old tags). Offline doc-sim 4 flows PASS. Scope check: only TemplateMinitBebasKPPD.docx locked the sentence. Commit 2026-10-21 14:52 `66422b3ddf` on `mlk/internal-issues/285871` (+56/0, compile green), merged `mlk/int-env` 14:53 `e30e4206cb`. miya deployed + tested internal PLPS/2026/48; screenshot `2. Fix\1. Ayat boleh kemaskini.png`; Redmine Resolved to Mira. Quest Phase 1 closed (archive waits Redmine Closed). Wrong-fix row 1. Open: planned-release list; staging not merged; optional hide outer box label; ADHOC-PT-2026-13 archive save (brief-first, background). Slip `reask/verbose` (commit subject described the effect).
 **Last Activity**: 2026-10-22 19:00 — PymTime roadmap phase 1 (design) DONE: A with a left rail, every pick in DESIGN.md · new Phase P (the ProTime weekly plan moves into PymTime, handover from the ProTime plan session 2026-10-20) · its architecture explained to miya, his decisions next
+**Last Activity**: 2026-10-27 20:15 — worktree `esokongan-quest-sweep-2bce09` (286315 + 286462), Domain Expansion.
+
+## Session Recap (2026-10-27, worktree "esokongan-quest-sweep-2bce09", 286315 + 286462)
+- 286315 PPTPB Risalat bold: commit `eb108928dc` on `mlk/esokongan/286315`, merged `mlk/int-env`, server test passed, Redmine Resolved to Amani. 20:12 still Resolved, no reply. Quest Phase 1 closed. Standby: noRujukanSuratJT bold (Option A) not built, waits for miya.
+- 286462 PRBB Borang 4C Plot: handed to Reports. 20:12 CRITICAL: Fatin Resolved it to Amani herself; current output follows Requirement #222056 (no Plot option); Plot as "No. Plot" needs a CR. The kak Yati tab in Edge is stale, never submit it. Quest Phase 1 closed.
+- Built: `lib/handover-check.js` (Tool) + `domain/handover-check-gate` (Stop, bundle) after miya's audit of the bad hand-over note (TSO vs BA, guessed Lot/PT rows, bare line numbers); `domain/system-change-title` v2 (every system change gets a `System › kind › parent › name` heading, reply-shape-spec 3i); Pena bans "ye"; ba-names + STATE-FACTS §8 add kak Yati (Reports TL) and Fatin. All on main.
+- Open: planned-release list for 286315; Amani or BA on both tickets; 2 handover-check-gate gaps (stamp check, tab-vs-draft compare) offered, not approved.
 
 ## Session Recap (2026-10-27, worktree "esokongan-ticket-selection-cad51f", 246964)
 - Picked 246964 (PSBS Surat Tolak) as the extra ticket while 3 sessions took the eSOKONGAN tickets. Mira had sent it back: staging was rebuilt on 26 Oct from Ammar's `mlk/release/1.8.5` baseline, which lacks the fix (ef49baf78f + 6feb2525c6 are on stag-env only).
@@ -15,6 +22,7 @@
 - 20:14: Redmine 246964 = Verified (BA passed). Fix is in stag-env only, not released; it ships in the next release. The 1.8.5 to master merge is the release owner's step, not this ticket (I listed it as a 246964 item and asked miya again: slip reask/verbose).
 - 261986 (Redmine Rework, Individu Lulus): briefed. Lulus template has no header reference (RAHSIA + ID Permohonan never prints) and prints "Mukim Mukim". Fix not started; diagnosis in the archived QA-261986.md. Next session starts here.
 - Open: archive 246964 when Redmine is Closed; 261986 fix.
+- Open: staging redeploy on 1.8.5 by miya; merge 1.8.5 into master after BA pass; next ticket 261986 (Risalat MMKN).
 
 ## Session Recap (2026-10-27, worktree "redmine-ticket-review-764ebb", 285768)
 - 285768 UPP Surat Makluman Pembatalan: common fix released in 1.10.17-MLK.beta.patch1 (template identical to ours). Pelupusan `mlk/int-env` pinned to it, commit `7c0287d3ef` "Ref #285768 - Verify common 1.10.17-MLK.beta.patch1", pushed, compile green.
