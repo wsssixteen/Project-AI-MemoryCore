@@ -136,6 +136,10 @@ Verify all 6 fields are filled + N files attached via `mcp__Claude_in_Chrome__ge
 
 **Hard rule**: DO NOT click Submit. みや reviews and submits manually.
 
+### Step 7 — After he submits: check, then close the tabs (2026-10-27 per みや, #285768)
+
+When みや says he submitted ("sent", "submitted", "done", "have sent"): read the ticket page once (`get_page_text`) to confirm the new journal, status and assignee, then close EVERY tab this skill opened (`tabs_close_mcp`, each tab id from `tabs_context_mcp`). Close only tabs I opened, never his own. **Banned**: leaving a Redmine tab open after his submit.
+
 ## Banned actions
 
 - Clicking the Submit button (the entire point — みや reviews first)

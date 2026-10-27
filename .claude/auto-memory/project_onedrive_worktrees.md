@@ -79,6 +79,8 @@ Related: [[project-onedrive-worktrees]] · [[feedback_etanah_git_separate_clone]
 
 **Why**: みや 2026-05-11 — *"I believe the ones untracked are as per protocol to remember by CLAUDE.md those files are confidential."* The OneDrive sync handles cross-machine availability without git; git stays minimal-public.
 
+**When a request would put confidential data into git (2026-10-27 per みや, 285768)**: say up front, in plain words, that I recommend keeping it local and why: the GitHub repo `wsssixteen/Project-AI-MemoryCore` is PUBLIC, sensitive data (logins, test data, client details) lives only on the company OneDrive, and a push cannot be fully taken back. Then do the safe thing. **Banned**: offering "commit them / keep out" as a neutral choice · asking several times without the reason · getting to the push before checking the repo is public. His words: *"You should've known and highlight to me and justify the recommendation of our general rule, to keep sensitive data locally. Even in cloud, we're using company's onedrive/cloud."*
+
 **How to apply**:
 - When `git status` in main repo shows `??` files under `projects/coding-projects/active/etanah-knowledge/`, `projects/coding-projects/active/QA-*/`, or similar paths — these are EXPECTED state. Don't flag as drift.
 - When writing new knowledge entries (e.g. test data, urusan glossaries, ticket diagnostics), write to the main-repo absolute path. They live untracked, OneDrive-synced.
