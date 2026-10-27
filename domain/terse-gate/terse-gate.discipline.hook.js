@@ -15,6 +15,9 @@
  *   and does not itself ask for a list/table/steps/detail/code, and the reply has more than 15 non-empty lines
  *   outside code fences -> BLOCK. Tables do not exempt it:
  *   a whole investigation moved into tables passed signal 1 all day. Bypass [skip-terse: he asked for the detail].
+ * SIGNAL 3 (miya 2026-10-27, "not shot ticket numbers with hashtags"): a ticket number written as #<5-7 digits>
+ *   outside code (fences and inline backticks) -> BLOCK, any reply length. The app turns it into a dead issue link
+ *   he cannot copy. Write plain digits. Bypass [skip-hashtag: <reason>]. Canonical: .claude/reply-shape-spec.md §3h.
  * EXEMPT: short replies (< 800 chars) · DE/closing/personal (═══ · るり結界 · Domain Expansion)
  *   · bypass token [skip-terse: <reason>].
  * FAIL-OPEN: any error → allow stop.
@@ -71,6 +74,19 @@ process.stdin.on('end', () => {
     const data = JSON.parse(input);
     if (data.stop_hook_active) process.exit(0);
     const text = lastText(data.transcript_path || '');
+    if (text && !/\[skip-hashtag:/.test(text)) {
+      const plain = text.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '');
+      const tags = plain.match(/(?:^|[^\w&/#])#\d{5,7}\b/g);
+      if (tags) {
+        log({ action: 'blocked-hashtag', count: tags.length });
+        process.stdout.write(JSON.stringify({ decision: 'block', reason: [
+          '⛔ terse-gate: ticket number written with a hashtag (' + tags.map(s => s.trim()).slice(0, 3).join(', ') + ').',
+          '   The app turns #<digits> into a dead link he cannot copy. Write plain digits: 286462, QA-286462.',
+          '   ⚡ DELTA ONLY: re-send only the lines that carried the hashtag, fixed; do NOT re-emit the reply.',
+        ].join('\n') }));
+        process.exit(0);
+      }
+    }
     if (!text || text.length < 800) process.exit(0);
     if (EXEMPT.test(text)) process.exit(0);
     const noCode = text.replace(/```[\s\S]*?```/g, '');

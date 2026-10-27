@@ -169,9 +169,21 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
    - **Banned**: a rule or habit that keeps a session's work off main · a bare `git commit` in the main checkout · committing without reading the stat · deleting or shrinking a file as a side effect of saving another.
    - **Why**: 2026-10-06, commit `c1e6ad56`. A bare commit in main took a stale shared index: 19 files, 447 lines deleted, one Feature commit undone. I then taught myself the wrong lesson ("never commit in main from a session folder"). みや never asked for that; it blocked exactly what he wants, and on 2026-10-08 it led me to skip a Domain Expansion. Same family: `25a0379c` (2026-08-03, a stale conflict copy overwrote two rule files before a `git add -A`). Text-level sibling: Rule 6 v1.2 (spec-preservation diff).
 
+16. **🚨 Self-audit on every run — every Feature, Workflow and Tool checks its own output against its goal each time it runs, and refines on a miss** (HARD RULE, added 2026-10-23 per みや: *"it is like the default thing that needs to be inside any Feature/Workflow/Tools ... To audit any mistakes and refine, to properly check back against the goal"*).
+   - **What**: a run ends by reading back what it just produced (from disk or the live system, never from memory) and checking it against the part's `goal:` / `goal_signal:`. A FAIL names its fix; the fix is applied and the audit re-run before the reply (fix loop).
+   - **Shape**: a script runs it in-process at the end of every writing command (exit 0 PASS / 1 FAIL) and also as an `audit` command; a skill or workflow ends with a step that runs that command, or, with no script, a check of at most 3 lines read against the goal; a Tool's audit is the check its call returns.
+   - **Declared at birth**: one README key `self_audit:` says how each run checks itself (`component-birth-gate` blocks a new Feature README without it).
+   - **Logged**: each audit writes a row (ts · outcome · goal_met · dur_ms) to the part's log, the monitoring layer.
+   - **Refine**: the same FAIL class 3 times = refine the part (fixture first), not fix the row again.
+   - **Scope**: new parts at birth; an existing part gains it when it is next refined (Rule 6 v1.2).
+   - First instances: `domain/kpi/kpi.js` (born with it) · `lib/adhoc-save-audit.js` (the earlier shape).
+   - **Banned**: reporting success without reading the output back · an audit that only checks a file exists · skipping the fix loop because a check is "advisory".
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 3.4 — 2026-10-23. Rule 16 added per みや (KPI Feature build, popup answer): self-audit on every run, checked against the part's goal, fix loop before the reply, `self_audit:` README key enforced by `component-birth-gate` (eval 10/10), first instance `domain/kpi/`. Spec-preservation: Rules 6–15, the trinity diagram and the INSTALLED table are untouched; additive.*
 
 *Version 3.3 — 2026-10-14. Rule 15 gains check (d): a session-folder commit reaches main only through `lib/land-on-main.js` (eval 15/15). Root cause: two regressions the same day landing by hand into a diverged main (`git checkout <github commit> -- SKILL.md` undid main-only `b4f614f6`; `git apply --index` + a path-limited commit left main's shared index holding the pre-change copies of 7 files); slip tracker escalation, regression 2 in 7 days. Spec-preservation: checks (a)–(c), the goal, the purpose and the banned list are untouched; additive.*
 

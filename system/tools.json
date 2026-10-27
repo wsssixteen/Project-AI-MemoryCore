@@ -335,14 +335,14 @@
       "groups": [
         "documents"
       ],
-      "state_scope": "not verified",
-      "footprint": "on demand",
+      "state_scope": "per state, keyed by --jboss (default the Melaka pelupusan JBoss)",
+      "footprint": "on demand: 1 JVM about 1.1 to 2 GB per cold run; --warm keeps one shared JVM about 1.1 GB up to 15 idle minutes",
       "usage": {
-        "sessions": 1,
-        "last": "2026-10-06"
+        "sessions": 3,
+        "last": "2026-10-22"
       },
       "status": "rare",
-      "note": "Born 2026-10-06"
+      "note": "Born 2026-10-06. 2026-10-22: chain (one start for many tugasan steps), --warm, --java-src, [time] lines, a log row per run (domain/doc-sim/log.jsonl). Sessions counted from the run logs 2026-10-20 to 2026-10-22, not a transcript scan"
     },
     {
       "id": "docx-scripts",
@@ -611,6 +611,22 @@
         "last": null
       },
       "status": "new"
+    },
+    {
+      "id": "kpi-moments",
+      "answers": "Which recorded appraisal moments back competency X (B1-B6, C1-C2) or ticket Y, with their evidence",
+      "call": "node domain/kpi/kpi.js list [--competency B4] [--ticket <n>] [--since YYYY-MM-DD] [--json]",
+      "home": "domain/kpi/kpi.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on-demand: 1 node process, about 0.2 s, exits after printing",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
     }
   ],
   "unused_scripts_2026-10-06": {

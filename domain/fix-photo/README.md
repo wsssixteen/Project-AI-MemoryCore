@@ -61,6 +61,12 @@ retention: rotate monthly
 | 30 | re-run overwrites (idempotent) · webp source · logging | fixtures M12 M16 M17 |
 | 31 | the line mark.py prints satisfies the gate end to end | fixture E01 |
 
+## v3 (2026-10-23, #246964)
+
+Keyword "test result" installed per miya: when his message carries "test result(s)", "here test scenario", "here screenshot of test" or "please save this" together with an image, the next long reply must carry a valid `FIX-PHOTO:` line (photo saved in the cycle folder `2. Fix` or the `N. Rework` root, named `<n>. <what it shows>.png`, red box where it helps). No hand-back / UI / etanah words are needed for this path. Spec kept: the v2 ask path, path rules, bypass token, block shape. Eval 63/63 (T01-T17 added).
+
 ## v2 (2026-10-04, #282924)
 
 The gate fires only when miya asked for a fix photo in his own words this session. A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it. Why: an unrequested marked-up BA screenshot was created for #282924 and read as a fake screenshot of the fix. Eval 46/46.
+
+- **One box per change (2026-10-22 per miya, #285768).** Draw exactly one box for each change the note or ticket names. Never box an unchanged field (no 'Kekal' boxes) and never box an empty spot where something was removed: a removal is said in the note, not drawn. Count the boxes against the note's changes before handing back.

@@ -59,7 +59,7 @@ Trigger phrases:
    du -sh "C:/temp/video-frames-<ticket>/"
    ```
 
-5. **Read each frame** via the Read tool (PNG natively supported). Build a timeline summary:
+5. **Read EVERY frame, never a sample** (2026-10-27 per みや, 286315: frames 1, 3 and 5 of 5 were read, frames 2 and 4 held the `noRujukanSuratJT` clicks and were missed). Short video (under 30 s): extract at 1 fps and read all of them. The timeline names each content control, field or button the cursor touches, frame by frame. Build a timeline summary:
    - Frame 001 (t=0s): <visual description>
    - Frame 002 (t=1s): <visual description>
    - ...

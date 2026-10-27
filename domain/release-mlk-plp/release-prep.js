@@ -17,6 +17,9 @@
  *           records HEAD sha (push refuses if HEAD moves after verify)
  *   push    ONLY when phase=verified AND HEAD unchanged AND branch matches
  *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>
+ *   stag-catchup  post-baseline: merge origin/mlk/master (or the release) into mlk/stag-env in the WORK
+ *           clone; keep the env common pin unless the release common is outside its line (then stop);
+ *           --push pushes + reads origin back. --check only measures (exit 3 = behind). See stag-catchup.js.
  *   status  print state
  *
  * HARD GUARDS (every command): origin URL must contain "etanah-pelupusan" (PLP-only rule);
@@ -67,7 +70,8 @@ function fetchOrigin(repo, allowFail) {
 function parseArgs(argv) {
   const out = { _: [] };
   for (let i = 0; i < argv.length; i++) {
-    if (argv[i].startsWith('--')) { out[argv[i].slice(2)] = argv[i + 1]; i++; }
+    // a bare flag (next token missing or another --flag) stores undefined and consumes nothing (2026-10-23)
+    if (argv[i].startsWith('--')) { const v = argv[i + 1]; if (v === undefined || v.startsWith('--')) out[argv[i].slice(2)] = undefined; else { out[argv[i].slice(2)] = v; i++; } }
     else out._.push(argv[i]);
   }
   return out;
@@ -140,6 +144,23 @@ function assertMasterReflectsPrevRelease(st, a) {
     `  Fix: run \`merge-to-master --release ${prev.release} --ba-approved\` first (Phase F), then re-run branch.\n` +
     `  Override only if you KNOW master is intentionally ahead: --stale-master-ack "<reason>".`;
   if (a && a['stale-master-ack']) { console.log(`⚠️  STALE MASTER overridden by --stale-master-ack "${a['stale-master-ack']}"`); return; }
+  die(msg, 2);
+}
+
+// ── Post-baseline stag-env catch-up guard (2026-10-23, #246964; asked 2026-08-10, never built) ──
+// A passed release lands on mlk/master; mlk/stag-env must then receive it (`stag-catchup`), or the next
+// ticket deploy to stag-env rebuilds staging without the released tickets. The next baseline's `init`
+// refuses while origin/mlk/stag-env lacks origin/mlk/master. Override: --stag-behind-ack "<reason>".
+function assertStagHoldsMaster(repo, a) {
+  if (!remoteBranchExists(repo, 'mlk/stag-env')) return;
+  const m = require('./stag-catchup.js').measure(repo, 'mlk/stag-env', 'origin/mlk/master');
+  if (!m.behind) { console.log('· stag-env check: origin/mlk/stag-env holds origin/mlk/master ✓'); return; }
+  const msg = `INIT REFUSED — origin/mlk/stag-env is ${m.behind} commit(s) behind origin/mlk/master` +
+    `${m.tickets.length ? ` (missing ${m.tickets.map(t => '#' + t).join(' ')})` : ''}.\n` +
+    `  The previous release never reached staging's env branch; the next stag-env deploy would drop it.\n` +
+    `  Fix: node domain/release-mlk-plp/release-prep.js stag-catchup --push   (work clone; common pin rule inside)\n` +
+    `  Override only with a reason: --stag-behind-ack "<reason>".`;
+  if (a && a['stag-behind-ack']) { console.log(`⚠️  stag-env behind master by ${m.behind} — overridden by --stag-behind-ack "${a['stag-behind-ack']}"`); return; }
   die(msg, 2);
 }
 
@@ -225,6 +246,7 @@ function cmdInit(a) {
     die('PREFLIGHT FAIL — these ticket branches do NOT exist on origin (all-or-nothing rule):\n'
       + missing.map(t => `   ${t.ticket} -> ${t.src}`).join('\n'), 2);
   }
+  assertStagHoldsMaster(repo, a);   // ── post-baseline catch-up guard: the previous release must be on stag-env ──
 
   const st = { release, branch, repo, tickets, phase: 'planned', conflict: null, headSha: null, created: new Date().toISOString() };
   saveState(st);
@@ -791,7 +813,20 @@ function cmdMergeToMaster(a) {
   const leftCarry = require('./carry-over.js').prune(st.repo, 'origin/mlk/master');   // shipped carry-overs drop off
   if (leftCarry.length) console.log(`📌 carry-over still pending: ${leftCarry.map(c => '#' + c.ticket).join(', ')}`);
   console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (ff from ${st.branch}) + pushed`);
-  console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master · release COMPLETE`);
+  console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master`);
+  // Post-baseline step (2026-10-23): the release is complete only once mlk/stag-env holds it.
+  const m = require('./stag-catchup.js').measure(st.repo, 'mlk/stag-env', 'origin/mlk/master');
+  if (m.behind) console.log(`🚨 NEXT (mandatory): origin/mlk/stag-env is ${m.behind} commit(s) behind — run \`stag-catchup --release ${st.release} --push\` in the work clone (the next baseline's init refuses until it ran)`);
+  else console.log('✅ origin/mlk/stag-env already holds the release · release COMPLETE');
+}
+
+// stag-catchup — see stag-catchup.js. Runs in the work clone (E:\Dev\etanah-work\<repo>), never in みや's repo.
+function cmdStagCatchup(a) {
+  const sc = require('./stag-catchup.js');
+  let code;
+  try { code = sc.run(a); }
+  catch (e) { if (e instanceof sc.Stop) die(e.message, e.code); throw e; }
+  process.exit(code);
 }
 
 function cmdStatus(a) {
@@ -823,8 +858,8 @@ const commands = {
   init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'defer-carry': cmdDeferCarry, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
-  push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,
+  push: cmdPush, 'merge-to-master': cmdMergeToMaster, 'stag-catchup': cmdStagCatchup, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
-if (cmd !== 'init' && !a.release) die('--release required');
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|stag-catchup|status> --release <ver> [...]`);
+if (cmd !== 'init' && cmd !== 'stag-catchup' && !a.release) die('--release required');
 commands[cmd](a);

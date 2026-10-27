@@ -19,7 +19,7 @@ footprint: on-demand: 1 node process under 1 second per show, add or check; noth
 
 | Module | What it means |
 |---|---|
-| `greet` | Salam + short name of the live assignee. Close with Thank you. |
+| `greet` | Salam + short name of the live assignee. Close with one of his five closings by judgement: Thank you. (default) · Thank you very much. (large ticket) · Thank you <name>. (reader did extra) · Thanks. (one-line dev hand-over) · Terima kasih. (Malay note). |
 | `lean` | Only what the reader does not have yet. No lead-in, no restating, stop after the last item. |
 | `line` | Short sentences. A continuing sentence stays on the same line, at most 2. Never two facts in one sentence. |
 | `table` | Field / table / column data goes in a table (Textile on Redmine). |

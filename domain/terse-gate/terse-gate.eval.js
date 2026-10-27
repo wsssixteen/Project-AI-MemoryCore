@@ -119,6 +119,19 @@ check('F10 a question that asks for a list/board/table is NOT capped', !isBlocke
 qp = writeQA('fixture-terse-q7.jsonl', 'Then how much has Izz progressed on his branch?', longTables); qaPaths.push(qp);
 r = runHook(qp);
 check('F11 a plain how-much question is capped', isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+// --- F12..F15: ticket number with a hashtag (2026-10-27) ---
+qp = writeQA('fixture-terse-h1.jsonl', 'is 286462 for reports?', 'Yes. #286462 goes to the Reports team.'); qaPaths.push(qp);
+r = runHook(qp);
+check('F12 short reply with #286462 is BLOCKED', isBlocked(r) && /hashtag/.test(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-h2.jsonl', 'is 286462 for reports?', 'Yes. 286462 goes to the Reports team, see QA-286462.'); qaPaths.push(qp);
+r = runHook(qp);
+check('F13 plain digits pass', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-h3.jsonl', 'show the folder', 'Folder: `321. ES #286462 - Pelupusan`\n```\nES #286462\n```'); qaPaths.push(qp);
+r = runHook(qp);
+check('F14 hashtag inside inline code or a fence passes', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-h4.jsonl', 'quote it', 'Subject is ESOKONGAN #286462. [skip-hashtag: quoting the Redmine subject]'); qaPaths.push(qp);
+r = runHook(qp);
+check('F15 [skip-hashtag:] bypass passes', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
 for (const p of qaPaths) { try { fs.unlinkSync(p); } catch (_) {} }
 
 // cleanup tmp fixtures

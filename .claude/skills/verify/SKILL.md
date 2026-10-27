@@ -104,7 +104,7 @@ For ticket `QA-<n>` with active.txt entry transitioning to `status=closed`:
 | # | Step | How to verify |
 |---|---|---|
 | E1 | Faster-finding emitted in Phase 2 chat output (step 1) | transcript trace |
-| E2 | KPI entry exists at the cited path — `main/kpi-tracker.md` contains a header line matching this QA + today's date | `grep "QA-<n>" main/kpi-tracker.md` |
+| E2 | KPI step ran — this ticket has a row in the KPI ledger, or Phase 2 chat shows `KPI: skip — no moment on this quest` | `node domain/kpi/kpi.js list --ticket <n>` (≥1 row) or transcript trace |
 | E3 | Post-mortem META entry exists — `main/post-mortems.md` contains a header line matching this QA + today's date | `grep "QA-<n>" main/post-mortems.md` |
 | E4 | active.txt entry has `post_mortem=` AND `kpi_entry=` lines pointing at the actual files | `grep -A10 "^qa=QA-<n>" quest/active.txt` |
 | E5 | Refine pass emitted in chat — at least one yes/no/park decision per relevant skill | transcript trace |
