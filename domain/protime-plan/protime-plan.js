@@ -208,7 +208,7 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
   // every ticket he worked gets its line; the KPI of 3 limits morning planning only (miya 2026-10-28: "I did more than 3 tickets")
   for (const w of [...worked].sort((a, b) => (b.done ? 1 : 0) - (a.done ? 1 : 0))) {
     if (onDay.has(String(w.id))) continue;
-    if (w.own) { if (w.touched === false) continue; addPlan.push(String(w.id)); }
+    if (w.own) { if (w.touched === false) continue; addPlan.push(w.pct ? `${w.id} - ${w.pct}%` : String(w.id)); }
     else addAdhoc.push(w.title || `${w.id} - Assist`);
     onDay.add(String(w.id));
   }
@@ -390,7 +390,8 @@ function ledgerDay(day) {
     for (const line of text.split('\n')) {
       if (!line || line.indexOf(day.slice(0, 7)) < 0 && line.indexOf(iso(new Date(atNoon(day).getTime() - 864e5)).slice(0, 7)) < 0) continue;
       let r; try { r = JSON.parse(line); } catch (_) { continue; }
-      if (!r.qa || r.qa_source === 'top-active' || !r.closed_ts) continue;
+      // only turns that named the ticket count: "top-active" is a fallback label, "tools" a relabel from file paths (2026-10-28: 265109 got 121 turns of unrelated work)
+      if (!r.qa || r.qa_source === 'top-active' || r.qa_source === 'tools' || !r.closed_ts) continue;
       if (iso(new Date(r.closed_ts)) !== day) continue;
       const k = r.turn_id || r.closed_ts + '|' + r.session_id;
       if (seen.has(k)) continue;
