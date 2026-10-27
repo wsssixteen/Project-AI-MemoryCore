@@ -3,11 +3,11 @@
 **Last Activity**: 2026-10-28 05:00 — PymTime phase 2 (self-check engine) BUILT AND PROVEN, not committed in the PymTime repo (his go first)
 
 ## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
-- **READ FIRST (PymTime)**: the MAIN checkout's `projectscoding-projectsactivePymTimePROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
+- **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
 - **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
-- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:DevscriptsPymTimedevdesignphase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
+- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
 - **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
-- **State**: `E:DevscriptsPymTime` working tree on main at a66843b, 18 tracked files changed + `libselfcheck.js` + `libunlock.js`, NOT committed, nothing pushed, VERSION.txt 17, no zip built.
+- **State**: `E:\Dev\scripts\PymTime` working tree on main at a66843b, 18 tracked files changed + `lib\selfcheck.js` + `lib\runlock.js`, NOT committed, nothing pushed, VERSION.txt 17, no zip built.
 - **Next**: his go to commit (subject `v18 (phase 2): ...`, no trailer, no push), then phase 3 (page rebuild). Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
 
 **Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
