@@ -165,7 +165,7 @@ t('C3 the usage log is git-ignored (a call never dirties the tree)', () => {
   return r.status === 0 || 'not ignored';
 });
 t('C4 a stale index is answered from at once; the rebuild is detached, never awaited', () => {
-  const src = read('quest/requirement-index.js');
+  const src = read('quest/requirement-index.js').replace(/\r\n/g, '\n'); // main checks out CRLF
   const body = (src.match(/async function ensure[\s\S]*?\n}\n/) || [''])[0];
   return (/detached: true/.test(body) && /\.unref\(\)/.test(body) && !/ageDays > STALE_DAYS\)[^]*?await build/.test(body.replace(/if \(idx\.missing\)[\s\S]*?\} else/, ''))) || 'stale path awaits a build';
 });
