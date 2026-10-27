@@ -3,6 +3,7 @@ symptom: closed adhocs pile in active/ forever; quest/archive-quest.js never bui
 goal: surface terminal-status adhoc rows ripe for archive; propose-only sweep
 goal_signal: the SessionStart fire produced: surface terminal-status adhoc rows ripe for archive; propose-only sweep
 retention: rotate monthly
+footprint: per-session: 1 node SessionStart check that exits (RAM not measured); the sweep itself runs only on the first boot of a new ISO week
 # adhoc-lifecycle
 
 **Born** 2026-08-19 via `core/forge.js` (hook) + hand-built CLI. **Events** SessionStart (Door B). **Lifecycle** created.

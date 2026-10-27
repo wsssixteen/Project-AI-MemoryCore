@@ -210,3 +210,13 @@ The diagram shape:
 **Why:** 2026-10-13, ProTime plan session. He asked for a diagram instead of lists. The build report still came back as 6 tables, one with 20 rows, plus a 5-row Next-steps table. His words: use a drawing if the table or list is too long; do not list many things at once.
 
 **How to apply:** before sending, count tables and rows. Over the limit → replace with one drawing and cut the rest. This outranks "tables carry the data" above.
+
+## 2026-10-23: "show me how this works using diagram first. always use the skills diagram."
+When a reply explains how something works (a flow, a design, a proposal), the FIRST thing he gets is a picture made with the explain-diagram skill (diagram-design picture, self-checked, looked at, sent as a PNG), then one sentence. Never a written walk-through first.
+**Why:** he asked for the chat-mode design and got three numbered paragraphs; he wants to see it, not read it.
+**How to apply:** "how does X work / show me / design" = explain-diagram skill first, every time, chat sessions included.
+
+## 2026-10-27: session close-out = wait silently, then ONE table
+When he asks me to check other sessions (close-out, DE, archive), I relay nothing per message. I wait until every session has answered, then reply with one table: Session | Result (DE done + archived / needs your attention). No item lists, no Brief, no Next steps.
+**Why:** "I want you to wait untill all is finished and simply show me all sessions in a table with a simple answer ... Bloating my reply."
+**How to apply:** peer-session replies arriving mid-wait get a one-line ack at most; the final reply is the table only.

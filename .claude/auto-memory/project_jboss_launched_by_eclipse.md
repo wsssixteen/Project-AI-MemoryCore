@@ -84,14 +84,13 @@ The OneDrive copy at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Projects\Melak
 
 The old server `ssh://git@172.16.93.167/<repo>` still answers on port 22 but refuses every key: `Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password)`. That message means a stale remote, never "the network is down".
 
-| Checkout (verified 2026-10-03) | Remote |
+| Checkout (verified 2026-10-21) | Remote |
 |---|---|
-| `E:\Projects\Melaka\*` | GitLab |
-| `E:\Dev\etanah-work\etanah-pelupusan`, `etanah-awam` | GitLab |
-| `E:\Projects\Terengganu\*` (4 repos) | old server |
-| `E:\Projects\Perak\etanah-pelupusan` | old server |
-| `E:\Dev\etanah-work\etanah-common` | old server (and 7,000 dirty paths) |
+| `E:\Projects\Melaka\*` · `Penang\*` · `Perak\*` · `Selangor\*` · `Terengganu\*` · `E:\Dev\etanah-work\*` | GitLab (Perak, Selangor, Terengganu and work-clone common re-pointed 2026-10-21 per miya; every old tip was inside the GitLab history) |
+| `E:\Projects\WP\*` | WP's own server `ssh://git@172.16.90.151`: rejects every local key; WP code is NOT on our GitLab (same commit searched, none); last fetch 2026-09-01 |
+| Kedah | no local checkout; `kdh/development` + `kdh/int-env` exist on GitLab |
 
+GitLab `master` in each repo = Perak's line (`-PRK` versions); other states use their prefix (`sgr/master`, `trg/master`, `mlk/master`, `png/*`).
 **How to apply**: before saying a branch is behind or missing, check `git remote get-url origin`. To compare without moving any ref in his repo: `git ls-remote` from a GitLab-pointed clone. Re-pointing HIS checkout is his decision. Nexus for `-TRG` / `-MLK` common jars: `http://172.16.90.169/nexus`.
 
 Related: [[feedback_etanah_git_separate_clone]] · [[project-terengganu-active]]

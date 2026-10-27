@@ -161,6 +161,97 @@ t(`B1 blind key: right requirement in the top 3 for 16+ of 21, and 9+ of 11 "non
   return (found >= 16 && quiet >= 9) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 
+// Rounds 2-10 of the 2026-10-27 kink hunt: 180 more tickets, each set keyed blind by its own Sonnet reader.
+const BLIND2 = [
+  [282924, [212157, 212115]], [277706, [277706]], [246964, [237883, 223348]], [282721, 'none'], [282723, 'none'], [282442, [218968]],
+  [274461, [220611, 216013]], [282555, 'none'], [281423, [214484]], [282198, 'none'], [282061, [220564, 234424]], [281712, [220178, 233340]],
+  [281650, 'none'], [281638, [212115]], [256334, [279554]], [281656, 'none'], [281568, 'none'], [281567, [242031]], [281482, 'none'],
+  [281319, [212115]], [281392, [218976, 218455]], [244600, 'none'], [264355, [248290, 218233]], [280895, [218968]], [280614, 'none'], [280265, 'none'],
+  [280540, [220411, 230088]], [280099, 'none'], [280132, [220410, 242553]], [280166, 'none'], [280176, [218976]], [280191, [215476]],
+  [280029, [218966]], [279882, 'none'], [279787, [218455, 218459]], [279793, 'none'], [274323, [221204, 221211]], [279615, [218968]],
+  [279711, [220611]], [269704, [224859, 225802]], [279391, 'none'], [279404, [218455, 228495]], [279411, [215482]], [275043, [240903]],
+  [278930, [218966, 224440]], [274266, [221967]], [276997, [221159, 221183]], [278699, [242031, 220611]], [278580, 'none'], [278585, [220410]],
+  [278109, 'none'], [278218, 'none'], [277442, 'none'], [275847, 'none'], [278304, 'none'], [277926, 'none'], [277346, [221307]], [277697, 'none'],
+  [277295, [221204]], [277370, [220371]], [277532, 'none'], [277115, 'none'], [277439, 'none'], [277147, [218967]], [277309, [220395, 224440]],
+  [276654, [219294, 227712]], [276504, 'none'], [276539, [218966]], [276584, [221204, 221211, 212157]], [276549, [216991, 212157]],
+  [276182, [219929, 219930]], [276349, [222650]], [276422, [220373]], [276436, [228654, 219379]], [276181, [219929, 219930]], [276074, [266474]],
+  [275475, 'none'], [275501, [221307, 221309]], [275505, [219929, 219930]], [275587, [218455, 218459]],
+  // rounds 6-7
+  [275456, [213454, 219379]], [275500, [221963, 246494, 220369]], [275319, 'none'], [275009, [215523, 220611]], [275152, 'none'],
+  [274740, [224440, 219387]], [274745, [266472, 220373]], [274914, [219926, 219927]], [274532, [242036, 224440]], [274510, 'none'], [273707, 'none'],
+  [273956, 'none'], [274182, [218971, 215517]], [274318, [218967]], [273837, 'none'], [274046, 'none'], [274136, [216044, 248930]],
+  [273621, [218455, 218459, 218976]], [273919, [222650]], [273921, 'none'], [273625, [242036]], [273455, [216013, 216044, 220373]], [273460, [215488]],
+  [273461, [218971, 215517]], [273465, [216044]], [273201, [219646]], [273294, [220395, 220373]], [273300, [221211, 212157]],
+  [272867, [220178, 220369]], [272881, [215488]], [272943, [222698, 224440]], [272982, [216044, 220803]], [272574, [215508, 215583]],
+  [272329, [216991]], [272378, [222695]], [272499, [218968]], [272527, 'none'], [272127, [230723, 219625, 221204]], [272096, [242036]],
+  [271985, [218455, 228495]],
+  // rounds 8-10
+  [272181, 'none'], [271918, [220803, 216044]], [271721, [222056, 255996, 212115]], [265537, [218455, 218450]], [270900, [226079, 226084, 226100]],
+  [271049, [221965, 221966, 242029]], [270297, [212157]], [270003, [221204, 221018, 221014]], [270052, [221965, 234397]], [269939, [216992, 216994]],
+  [269918, [221309, 221307]], [259112, [224761, 224814, 225756]], [269437, [218980, 221307]], [246532, 'none'], [268883, [224435, 224440]],
+  [269169, [215482, 224440]], [268415, [240903, 224440]], [268637, [224489, 216992]], [268322, [223227, 223226]], [268273, 'none'],
+  [268170, [216044, 212990, 223226]], [267976, [242036]], [267382, [224440, 215482]], [239386, [239386]], [266503, [218455]], [266215, [219294]],
+  [266249, [216044]], [265964, [219141, 219139]], [266039, [218450]], [261517, [223325, 220371, 215478]], [264293, [218457]],
+  [264347, [218247, 218232]], [245240, [226233, 226206]], [264006, 'none'], [263921, [221963, 246494]], [246949, [230727, 220730, 230726]],
+  [246923, [224093, 215487, 215497]], [262755, [214154, 214153]], [259914, [216044, 220373]], [247707, [224446, 224451, 248381]], [262762, [218971]],
+  [263344, [221364, 221358]], [259702, [218964, 236336]], [258004, [223236]], [253053, [221963, 221964]], [262243, [224440]], [260508, 'none'],
+  [262786, [219379, 219294]], [262495, [222712]], [262869, [220500, 220489]], [262783, [220411]], [262370, [232324, 227053]],
+  [262233, [248383, 248381]], [261613, [223347]], [259339, [221990, 221993]], [261986, [237880]], [262027, [237882]], [262004, [237880]],
+  [262039, [237883]], [260869, [248395]],
+  // round 11
+  [260316, [266725]], [260820, [248395]], [260733, [242029]], [260302, 'none'], [260876, [221964, 246494]], [260965, [215476, 216991]],
+  [260179, [242036]], [260298, [215506, 215507, 215505]], [260154, [220410]], [260139, 'none'], [247710, [218239, 218243, 218964]],
+  [259759, [224507, 215513]], [259428, [224440]], [250665, [212990]], [259534, [221108]], [259342, [220410, 223344]], [259318, [218247]],
+  [258418, [215513, 215514, 215516]], [258022, [218980, 218970]], [257569, [221967, 220410]]];
+t(`B2 rounds 2-11 key: right requirement in the top 3 for 132+ of 155, and 43+ of 45 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  if (!REAL) return true;
+  let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
+  for (const [num, ok] of BLIND2) {
+    const r = runReal(['--ticket', String(num), '--no-refresh', '--top', '3', '--json']);
+    let j; try { j = JSON.parse(r.stdout); } catch (_) { miss.push(num + ' no JSON'); continue; }
+    if (ok === 'none') { none++; if (j.kind || !j.hits[0] || j.hits[0].match !== 'strong') quiet++; else miss.push(num + ' strong'); continue; }
+    want++;
+    if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
+  }
+  return (found >= 132 && quiet >= 43) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
+});
+t('Q2 a "Semua Urusan" requirement earns the urusan bonus (it beats a same-words PLTP row)', () => {
+  const rows = [row(1, 'PLTP - Template Risalat', 'Pelupusan'), row(2, 'Pelupusan Semua Urusan - Butang Jana Semula Dokumen', 'Pelupusan'), row(3, 'PRBB - Butang Jana Semula Dokumen', 'Pelupusan')];
+  const id = R.search(rows, 'PLTP - versi dokumen bila klik butang Jana Semula')[0].row.id;
+  return id === 2 || 'top ' + id;
+});
+t('Q3 a short generic subject that covers itself is "possible", not "strong", under score 30', () => {
+  const rows = [row(1, 'Perampasan - Klik hantar papar ralat', 'Perampasan'), ...Array.from({ length: 40 }, (_, i) => row(10 + i, 'PT - Tugasan ' + i + ' hantar papar', 'Pelupusan'))];
+  const h = R.search(rows, 'Klik hantar papar ralat')[0];
+  return (h.score < 30 ? h.match === 'possible' : true) || `score ${h.score} match ${h.match}`;
+});
+t('Q4 screenHint reads the tugasan line and the menu path, not the email or greeting lines', () => {
+  const d = 'PDTJ Hi team, mohon semak\nnurhafizah@melaka.gov.my\nPT - Permohonan Pemberimilikan\n*Penyediaan Risalat MMKN - PDT*\nPTMLK/02/L/PT/2026/6\nUser pergi ke Menu Pelupusan &gt; Kemaskini Ulasan Jabatan Teknikal';
+  const h = R.screenHint(d);
+  return (/Penyediaan Risalat MMKN - PDT/.test(h) && /Kemaskini Ulasan Jabatan Teknikal/.test(h) && !/melaka\.gov|Hi team/.test(h)) || h;
+});
+t('Q7 an environment tag is never the urusan, and a "Semua Urusan" subject has none', () => {
+  const rows = [row(1, 'AWAM - PT - Skrin Portal Awam', 'Pelupusan'), row(2, 'AWAM - PPS - Paparkan keluasan tanah', 'Pelupusan')];
+  const id = R.search(rows, '[STAGING] AWAM - PT - Keluasan Tanah - Nombor bertukar')[0].row.id;
+  const all = R.search([row(1, 'PT - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan'), row(2, 'Semua Urusan - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan')],
+    'Semua Urusan - Tugasan peranan PT - Semakan Kemasukan Maklumat')[0].row.id;
+  return (id === 1 && all === 2) || `staging top ${id}, semua urusan top ${all}`;
+});
+t('Q8 a ticket with no module takes its urusan\'s module (PT rows beat a Pendaftaran row with the same words)', () => {
+  const rows = [row(5, 'Kadar Cukai Hakmilik', 'Pendaftaran'), row(2, 'Kadar Cukai Tanah', 'Pelupusan'), row(3, 'PT - Tugasan Semakan', 'Pelupusan'), row(4, 'PT - Risalat', 'Pelupusan')];
+  const id = R.search(rows, 'FAT - PT - KKMMKN - Kadar Cukai salah')[0].row.id;
+  const read = R.search(rows, 'FAT - PT - KKMMKN - Kadar Cukai salah', { module: 'Pendaftaran' })[0].row.id;
+  return (id === 2 && read === 5) || `guessed top ${id}, read-module top ${read}`;
+});
+t('Q6 screenHint reads the numbered list under "Tugasan involved"', () => {
+  const h = R.screenHint('ID Permohonan: PTMLK/03/L/PLTP/2026/4\n\nTugasan involved\n1. Kemasukkan/Semakan/Perakuan Keputusan MMKN\n2. Penyediaan/Semakan/Perakuan Surat Keputusan dan Borang Notis 5A\n\nIssue:\nLangkah Maklumat Tanah missing panel');
+  return (/Keputusan MMKN/.test(h) && /Notis 5A/.test(h) && !/Issue/.test(h)) || JSON.stringify(h);
+});
+t('Q5 screenHint reads "Tugasan Semasa: <screen>" (the PDTMT template)', () => {
+  const h = R.screenHint('PDTMT\nUser ID: sanarimah@melaka.gov.my\nTugasan Semasa: Semakan Risalat MMKN - PDT\nUrusan : PLPS - Permohonan Lesen Pendudukan Sementara');
+  return /^Semakan Risalat MMKN - PDT$/.test(h) || JSON.stringify(h);
+});
+
 // --- render
 t('R1 MD has one table row per requirement and a heading per module', () => {
   const md = R.renderMd(ROWS, { label: 'Melaka', project: 'e-tanah-melaka', built: '2026-10-27T00:00:00Z' });

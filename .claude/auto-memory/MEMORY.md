@@ -11,13 +11,14 @@
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat; 🚨 ticket numbers as plain digits, never #286462 (dead link, cannot copy)
 - [hook-noise](feedback_delta_correction_on_stop_block.md) — Stop block = delta only; hidden bypass tokens; canonical formats only
 - [act-dont-ask](feedback_do_dont_ask_answer_literal.md) — do the safe step, answer literally, fix not reroute, popup questions
-- [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"
+- [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"; app blank over remote desktop = capture on the PC first
 - [show-evidence](feedback_show_evidence_script_or_code.md) — every claim or fix shows a runnable script or the code lines
 - [tickets-from-live-redmine](feedback_esokongan_means_tracker.md) — 🚨 any ticket status = live Redmine only; script timeout → read it in Edge via Claude in Chrome; ledger is never status; a "No folder" session still moves to the MemoryCore folder first
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
 - [workflow-name-runs-stale-copy](feedback_workflow_name_runs_stale_copy.md) — a workflow file edited in-session is launched by `scriptPath`, never by `name:`; check the first agent's label
+- [session-revive-handover](feedback_session_revive_handover.md) — reviving or redirecting a session = full handover: every misrouted message verbatim, what was done with it, the state and rules it needs; never just the one command he named
 
 ## System design (skills: system-rules, system-design)
 - [system-design-rules](feedback_inventory_first.md) — inventory first, universal + mechanical rules, top-down apps, RAM footprint

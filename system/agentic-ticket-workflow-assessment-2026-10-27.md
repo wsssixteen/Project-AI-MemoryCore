@@ -28,3 +28,15 @@
 | A3 debugging | The NPE trace went from the error-store row to `PelupusanWordEditorHelperForm.java:3494`, then `git log -L` on that line gave commit 4422003a204 (reader switched to the approved unit), then the writer. That took 3 hops and no wasted reads. ⏭ no new idea. | — |
 | A4 etanah issue-solving | Root cause = a reader switched to `getUnitKuantitiDilulus()` while the only PRBB writer has `setUnitKuantitiDilulus` commented out (`PelupusanService.java:11294`); 98 permits carry the null. | yes (A4, reader-changed-field writer sweep) |
 | A5 sweep / file sweep | ⏭ no sweep ran this session. | — |
+
+## Session melaka-prod-adhoc-permohonan-f52ca5 (Melaka adhoc day, 21:30)
+
+| Axis | Assessment | Concrete instance |
+|---|---|---|
+| A1 agentic system | Working memory drifts with no schedule; the audit briefing lies from a worktree | active.txt 77 blocks (25 closed, 25 stale adhocs); audit-briefing from the worktree printed "0 hook fires" |
+| A2 quest workflow | Branch state was answered from git, not from the quest record | 264355: held Pelupusan branch called "missed at merge"; fixed by quest-branches.js + save item 5 (2fc2c809) |
+| A3 debugging | Same root: no read of the saved record before a verdict | 264355 merge question; slip `answered-without-reading-quest-record` |
+| A4 etanah issue-solving | ⏭ nothing new: the one adhoc (PT-2026-15) was a flow alter advice, saved and waiting on BA | ADHOC-PT-2026-15 |
+| A5 sweep / file sweep | Session close-out relayed every peer message; plans outside todo.md are lost on archive | slip `bloated-reply`; 2026-05-28 plan file gone (todo M13) |
+
+Proposals logged: A1 ×2, A2, A3, A5 (core/slips.js --type proposal, 2026-10-27).
