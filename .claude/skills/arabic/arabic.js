@@ -20,7 +20,10 @@
  *   node arabic.js nudge                          one boot line or nothing
  *   node arabic.js focus [<lesson> [part]|off]    class focus: the Week Set and the ayat walk stay on that class until replaced
  *   node arabic.js sentence [again|<n>|list]      next ayat of the class focus, word by word (data/sentences.json)
- *   node arabic.js daily                          `sentence` when a class focus has ayat, else `review`
+ *   node arabic.js review next | words next       5 more words of this week's set (not the same 5 again)
+ *   node arabic.js mode [vocab|class-latest|class-topic <lesson> [part]|<topic id>]   pick what `daily` gives; no arg = the menu
+ *   node arabic.js daily                          follows the stored mode (no mode = the menu)
+ *   node arabic.js next                           per mode: 5 more words · next ayat · next grammar topic
  * Env: ARABIC_DATA_DIR overrides the data folder (used by tests).
  */
 'use strict';
@@ -198,11 +201,29 @@ function table(five) {
 }
 
 // ---------- commands ----------
-function cmdReview(date) {
+// next = 5 more words of the Week Set not yet shown today (wraps when all are seen); the day stays one review, its recall moves to the
+// new five, and a same-day re-run shows the latest five.
+function moreBlock(p, words, set, r, wrap) {
+  const five = r.more[r.more.length - 1].map(id => words.find(w => w.id === id)); const recall = words.find(w => w.id === r.recall_id);
+  return [`${header(p, set, r.n)} · words ${r.more.length + 1}/${Math.ceil(set.ids.length / S.words)}${wrap || ''}`, table(five), `Recall: '${recall.malay}' → Arabic?`].join('\n');
+}
+function cmdReview(date, next) {
   const words = loadWords(); const p = loadProgress();
   const set = rollIfNeeded(p, words, date);
   const existing = reviewsThisWeek(p).find(r => r.date === date);
   let n, five, recall, mode;
+  if (existing && next) {
+    if (!existing.more) existing.more = [];
+    const today = new Set([...existing.shown, ...existing.more.flat()]);
+    let pool = { ids: set.ids.filter(id => !today.has(id)) }; let wrap = '';
+    if (!pool.ids.length) { pool = set; existing.more = []; wrap = ` · all ${set.ids.length} words seen today, starting again`; }
+    five = pickFive(p, words, pool); recall = pickRecall(p, five, date + ':' + existing.more.length);
+    for (const w of five) stats(p, w.id).shown++;
+    existing.more.push(five.map(w => w.id)); existing.recall_id = recall.id; existing.result = 'skip'; delete existing.answer;
+    writeJson(PROGRESS, p);
+    return moreBlock(p, words, set, existing, wrap);
+  }
+  if (existing && existing.more && existing.more.length) return moreBlock(p, words, set, existing);
   if (existing) {
     n = existing.n; mode = existing.mode; five = existing.shown.map(id => words.find(w => w.id === id)); recall = words.find(w => w.id === existing.recall_id);
   } else {
@@ -356,10 +377,77 @@ function cmdSentence(arg, date) {
   }
   return out;
 }
+// ---------- start mode (v1.4, 2026-10-27): みや picks what `/arabic` gives — words, the latest class, or a part / topic he names ----------
+// mode = State: ONE value in progress.json (vocab | class-latest | class-topic), replaced by the next `mode`. class-topic keeps
+// its lesson + part in `focus`, or a grammar topic id in `mode_topic`.
+const MODES = ['vocab', 'class-latest', 'class-topic'];
+const CMD = 'node .claude/skills/arabic/arabic.js';
+// The latest class = the lesson + part of the last class position ("Lesson 13 ج Exercise 1 ..."). null when it names none.
+function latestClass(p) {
+  const m = p.class_position && /lesson\s+(\d+)(?:\s+([ء-ي])(?![ء-ي]))?/i.exec(p.class_position.text || '');
+  return m ? { lesson: Number(m[1]), part: m[2] || null } : null;
+}
+function cmdMode(args, date) {
+  const p = loadProgress(); let [a, b, c] = args;
+  if (a === 'class') a = b ? 'class-topic' : 'class-latest';
+  else if (a && !MODES.includes(a)) { c = b; b = a; a = 'class-topic'; }   // `mode <topic id>` / `mode <lesson> [part]`
+  if (!a) return modeMenu(p);
+  let head;
+  if (a === 'class-topic') {
+    if (!b) return `class-topic needs a lesson or a topic id: \`${CMD} mode class-topic <lesson> [part]\` · \`${CMD} mode class-topic <topic id>\` (\`topic list\`).`;
+    if (/^\d+$/.test(b)) {
+      const f = cmdFocus(b, c, date); if (!f.startsWith('Focus →')) return f;
+      const q = loadProgress(); q.mode = a; q.mode_topic = null; writeJson(PROGRESS, q); head = `Mode → class-topic · ${f}`;
+    } else {
+      const syll = loadSyllabus(); if (!syll || !syll[b]) return `No topic "${b}". \`${CMD} topic list\` shows the ids.`;
+      p.mode = a; p.mode_topic = b; writeJson(PROGRESS, p); head = `Mode → class-topic · topic ${b}.`;
+    }
+  } else {
+    p.mode = a; p.mode_topic = null; writeJson(PROGRESS, p); head = `Mode → ${a}.`;
+  }
+  return head + '\n\n' + cmdDaily(date);
+}
+function modeMenu(p) {
+  const S2 = loadSentences(); const lc = latestClass(p);
+  const cur = m => (p.mode === m ? '▶' : '');
+  const topicCell = p.mode === 'class-topic' ? (p.mode_topic ? 'topic ' + p.mode_topic : p.focus ? 'Lesson ' + p.focus.lesson : '') : '';
+  const rows = [
+    `| ${cur('vocab') || 1} | vocab | 5 words of this week's set · "next" = 5 more | ${p.focus ? 'Lesson ' + p.focus.lesson : ''} | | \`${CMD} mode vocab\` |`,
+    `| ${cur('class-latest') || 2} | class-latest | the latest class, ayat by ayat · "next" = next ayat | ${lc ? 'Lesson ' + lc.lesson : 'no class yet'} | ${lc && lc.part ? lc.part : ''} | \`${CMD} mode class-latest\` |`,
+    `| ${cur('class-topic') || 3} | class-topic | a lesson part (ayat walk) or a grammar topic you pick · "next" = next ayat or topic | ${topicCell} | ${p.mode === 'class-topic' && !p.mode_topic && p.focus && p.focus.part ? p.focus.part : ''} | \`${CMD} mode class-topic <lesson> [part]\` · \`${CMD} mode class-topic <topic id>\` |`
+  ];
+  return [`Arabic: pick a mode (current: ${p.mode || 'none'})`, '',
+    '| # | Mode | What you get | On | Part | Command |', '|---|---|---|---|---|---|', ...rows, '',
+    `Lessons with ayat: ${S2 && Array.isArray(S2.sentences) ? [...new Set(S2.sentences.map(s => s.lesson))].join(', ') : 'none'} · topic ids: \`${CMD} topic list\``].join('\n');
+}
+// class-latest follows the last class position: a new class part replaces the focus (pointer from ayat 1), the same part keeps it.
+function syncLatest(p, date) {
+  const lc = latestClass(p); if (!lc) return;
+  if (p.focus && p.focus.lesson === lc.lesson && (p.focus.part || null) === lc.part) return;
+  const S2 = loadSentences();
+  if (S2 && Array.isArray(S2.sentences) && S2.sentences.some(s => s.lesson === lc.lesson && (!lc.part || s.part === lc.part))) cmdFocus(String(lc.lesson), lc.part, date);
+}
 function cmdDaily(date) {
   const p = loadProgress();
-  if (p.focus && focusSentences(p, loadSentences()).length) return cmdSentence(null, date);
-  return cmdReview(date);
+  if (!p.mode) return modeMenu(p);
+  if (p.mode === 'vocab') return cmdReview(date);
+  if (p.mode === 'class-topic' && p.mode_topic) return cmdTopic(p.mode_topic, date);
+  if (p.mode === 'class-latest') syncLatest(p, date);
+  const q = loadProgress();
+  if (q.focus && focusSentences(q, loadSentences()).length) return cmdSentence(null, date);
+  return `No ayat entered for ${q.focus ? 'Lesson ' + q.focus.lesson : 'this class'} yet: the word review instead.\n\n` + cmdReview(date);
+}
+// "next" follows the mode: 5 more words · the next ayat · the next grammar topic in class order.
+function cmdNext(date) {
+  const p = loadProgress();
+  if (!p.mode) return modeMenu(p);
+  if (p.mode === 'vocab') return cmdReview(date, true);
+  if (p.mode === 'class-topic' && p.mode_topic) {
+    const syll = loadSyllabus(); const list = Object.values(syll || {}).sort((a, b) => a.order - b.order);
+    const i = list.findIndex(t => t.id === p.mode_topic); if (i < 0) return cmdTopic(p.mode_topic, date);
+    p.mode_topic = list[(i + 1) % list.length].id; writeJson(PROGRESS, p); return cmdTopic(p.mode_topic, date);
+  }
+  return cmdDaily(date);
 }
 function cmdNudge(date) {
   const words = readJson(WORDS, null); const p = readJson(PROGRESS, null);
@@ -604,7 +692,9 @@ function main(argv) {
   const cmd = args[0] || 'review';
   const t0 = Date.now(); let out;
   switch (cmd) {
-    case 'review': out = cmdReview(date); break;
+    case 'review': case 'words': out = cmdReview(date, args[1] === 'next'); break;
+    case 'mode': out = cmdMode(args.slice(1), date); break;
+    case 'next': out = cmdNext(date); break;
     case 'answer': out = cmdAnswer(args.slice(1).join(' '), date); break;
     case 'more': out = cmdMore(); break;
     case 'week': out = cmdWeek(args[1], date); break;
