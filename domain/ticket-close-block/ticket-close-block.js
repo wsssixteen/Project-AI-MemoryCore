@@ -122,7 +122,7 @@ if (ba && ba !== true && commit && !foreign) {
 }
 
 // AWAM: the env line names the module, "internal (Awam)" (2026-10-19 per miya, #285252).
-// Every branch line names its module, "(Awam)" or "(Pelupusan)" (2026-10-27 per miya, #264355: the Pelupusan branch was missed at merge).
+// Every branch line names its module, "(Awam)" or "(Pelupusan)" (2026-10-27 per miya, #264355: a two-repo ticket whose note named only the AWAM branch).
 const moduleTag = isAwam ? '(Awam)' : '(Pelupusan)';
 let env = envs && envs !== true ? envs : 'internal';
 if (isAwam && !/\(awam\)/i.test(env)) env = `${env} (Awam)`;
