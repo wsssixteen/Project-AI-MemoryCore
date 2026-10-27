@@ -114,6 +114,16 @@ function prepare(rows) {
   return { docs, idf, avgSubj: subjTotal / n || 1 };
 }
 
+// A ticket read from its Task folder has no module: the urusan's own requirements tell it ("PT" lives in Pelupusan, 257569).
+function moduleOf(prep, urusan) {
+  if (!urusan) return '';
+  const n = new Map();
+  for (const d of prep.docs) if (d.r.module && d.codes.has(urusan)) n.set(d.r.module, (n.get(d.r.module) || 0) + 1);
+  let best = '', top = 0;
+  for (const [m, c] of n) if (c > top) { best = m; top = c; }
+  return best;
+}
+
 // query = a string (searched as a subject) or { subject, body }. The subject carries the meaning;
 // the body only breaks ties, so a long journal cannot outvote it.
 // Each hit carries `match`: strong · possible · none, from how much of the query subject it covers and its score.
@@ -126,7 +136,9 @@ function search(rows, query, opts) {
   const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w) && !qHint.includes(w));
   const urusan = urusanOf(q.subject);
   const qAll = /semua\s+urusan/i.test(String(q.subject || ''));
-  const wanted = String(o.module || '').toLowerCase();
+  const wanted = String(o.module || moduleOf(prep, urusan)).toLowerCase();
+  // A guessed module counts less than a read one: the spec can sit in another module (265109: a PLPS fee lives in Sokongan).
+  const modBonus = o.module ? 1.3 : 1.1;
   const exclude = new Set((o.exclude || []).map(Number));
   if (!qSubj.length && !qBody.length && !qHint.length) return [];
   const qTotal = qSubj.reduce((s, w) => s + prep.idf(w), 0) || 1;
@@ -152,7 +164,7 @@ function search(rows, query, opts) {
     }
     if (!score) continue;
     if ((urusan && (d.codes.has(urusan) || d.allUrusan)) || (qAll && d.allUrusan)) score *= 1.5;
-    if (wanted && d.r.module.toLowerCase() === wanted) score *= 1.3;
+    if (wanted && d.r.module.toLowerCase() === wanted) score *= modBonus;
     // A cancelled requirement is history, not the spec.
     if (/cancel|not applicable/i.test(d.r.status)) score *= 0.5;
     const cover = covered / qTotal;
