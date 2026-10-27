@@ -20,6 +20,14 @@
 - DE found the shared main index holding 377 staged OneDrive conflict copies (127 telemetry shards = 6 GB); unstaged before the commit, nothing large committed.
 - Nothing pending in this session; archive after DE.
 
+**Last Activity**: 2026-10-28 01:50 — session "27/10/2026 - Requirement Documentation" (worktree `melaka-requirements-index-123431`), Domain Expansion, then archive.
+
+## Session Recap (2026-10-27 → 28, "Requirement Documentation", requirement-index)
+- Tool `quest/requirement-index.js` (2,083 Melaka Requirement tickets): 11 blind rounds, 196 tickets, each keyed by a Sonnet reader that never saw the tool. All rounds: top-1 135/174, top-3 151/174, "none" kept quiet 55/56. Eval 50/50.
+- Kinks fixed: alter/patch/cancel = not needed · ticket that is itself a requirement · Semua Urusan rows earn the urusan bonus · screen hint from "Tugasan Semasa:" and the "Tugasan involved" list · STAGING-style tags never the urusan · a ticket with no module takes its urusan's module (×1.1; a read module stays ×1.3, 265109's fee spec lives in Sokongan).
+- miya corrected the goal (2026-10-28): it is an INDEX: narrow to the likely requirement, then open it and check the ask; also answers "what is the requirement for X" at once; a Semua Urusan hit is a right pointer. Written into the tool header; slip `build-missed-requirement` logged in detail.
+- Built **system-design Rule 17 diagram at birth**: Tool `lib/diagram-census.js` (`--check <part>`, `--missing`; eval 26/26), `component-birth-gate` needs `diagram:` in a new Feature README (eval 11/11), `explain-diagram` step 4 exception. First diagrams in git: `quest/requirement-index.diagram.png`, `lib/diagram-census.diagram.png`. Census: Features 0/97 · Skills 0/81 · Tools 2/13.
+- Open (miya: later): tugasan codes not expanded (257569 "KKMMKN" misses 221967/220410) · NUKE-MARKER for requirement-index (miya: log only) · no unused Task-folder tickets left for another blind round.
 
 **Last Activity**: 2026-10-28 01:25 — worktree `ticket-286650-quest-188daf` (eSOKONGAN 286650, PROD SPI Dokumen Verifikasi NPE), Domain Expansion, then archived.
 
@@ -29,6 +37,15 @@
 - ProTime 27/10 night run: 261986 removed correctly (only one turn named it, a session report; nothing worked). Left off the plan.
 - Open: "system changes run on the highest model" rule not written into CLAUDE.md · child session quest-audit-fixes waits on miya's answer about where system changes run · Phase 0 audit of all Melaka tickets not started.
 
+**Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
+
+## Session Recap (2026-10-13 → 2026-10-28, worktree "protime-weekly-plan-changes-d89526", ProTime weekly plan)
+- Built `domain/protime-plan/` to run every working day: 08:30 morning (settle the previous working day, top up today, plan the week) and 23:00 night (settle today). Windows task `\MemoryCore\ProTime Weekly Plan`, WakeToRun, logon catch-up, retry 30 min x6.
+- Settle rules: add worked tickets + the day's adhocs in his wording; remove only PENDING bare-number PLAN entries this script placed and not worked; never touch his own lines; KPI 3 plan tickets a day (finished first); plan vs adhoc by whose fix is in the ticket that day (assist like 283345 = ADHOC); resolve step; an approved day left alone.
+- Adhoc wording rule v2 (from his 121 ProTime adhocs, blind-tested on 37 real lines): `<n> - <action>` · `Assist BA - <what>` · `<ENV> (<STATE>) - <title>`; lives in `.claude/skills/adhoc-save/SKILL.md`, built by `protimeLine`, checked by `lintLine`.
+- Skill `/protime-plan` (one door, same script as the scheduler; `--rules` prints the rules); eval 112/112; on main since `bdba227e`.
+- Handed over 2026-10-20 to session "PymTime password authentication failure": move the feature into PymTime (PymTime ROADMAP Phase P).
+- Open: "Staging" vs "Internal" for staging adhoc lines (his ruling); asks never saved as adhoc are only found by `--sessions` (night run cannot title them); a ticket with no commit in our repos counts as his.
 **Last Activity**: 2026-10-28 01:05 — session "System Upgrade 23/9/2026" (born 2026-09-23 in worktree `session-naming-format-b88025`, revived 2026-10-27 by a PymTime handover), Domain Expansion, then archived.
 
 ## Session Recap (2026-09-23 → 2026-10-28, "System Upgrade 23/9/2026", session naming)

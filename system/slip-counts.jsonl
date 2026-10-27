@@ -1400,6 +1400,10 @@
 {"ts":"2026-10-27T03:35:09.260Z","category":"commit-message"}
 {"ts":"2026-10-27T05:36:48.687Z","category":"gate-missed-approval"}
 {"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
+{"ts":"2026-10-27T07:44:32.592Z","category":"reask/redundant"}
+{"ts":"2026-10-27T12:26:59.228Z","category":"build-missed-requirement"}
+{"ts":"2026-10-27T13:31:03.198Z","category":"build-missed-requirement"}
+{"ts":"2026-10-27T17:13:25.674Z","category":"build-missed-requirement"}
 {"ts":"2026-10-27T12:20:58.862Z","category":"ask-back-searchable-fact"}
 {"ts":"2026-10-27T12:23:01.108Z","category":"A1"}
 {"ts":"2026-10-27T12:24:27.640Z","category":"A2"}
@@ -1453,3 +1457,15 @@
 {"ts":"2026-10-27T17:35:35.466Z","category":"A2"}
 {"ts":"2026-10-27T17:35:36.049Z","category":"A3"}
 {"ts":"2026-10-27T17:35:37.506Z","category":"A5"}
+{"ts":"2026-10-27T17:31:21.137Z","category":"A1"}
+{"ts":"2026-10-27T17:31:21.997Z","category":"A2"}
+{"ts":"2026-10-27T17:31:23.204Z","category":"A3"}
+{"ts":"2026-10-27T17:31:23.670Z","category":"A4"}
+{"ts":"2026-10-27T17:43:29.469Z","category":"A1"}
+{"ts":"2026-10-27T17:43:29.638Z","category":"A1"}
+{"ts":"2026-10-27T17:43:29.797Z","category":"A2"}
+{"ts":"2026-10-27T17:43:29.982Z","category":"A3"}
+{"ts":"2026-10-27T17:43:30.196Z","category":"A4"}
+{"ts":"2026-10-27T17:43:30.377Z","category":"A5"}
+{"ts":"2026-10-27T17:34:22.840Z","category":"A1"}
+{"ts":"2026-10-27T17:34:23.709Z","category":"A1"}
