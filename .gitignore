@@ -115,3 +115,4 @@ domain/*/cache.json
 .claude/state/worktree-cleanup-last.json
 .claude/state/worktree-cleanup-*.lock
 quest/requirement-index.log.jsonl
+domain/session-name/.seen.json*

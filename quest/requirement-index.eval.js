@@ -197,8 +197,13 @@ const BLIND2 = [
   [263344, [221364, 221358]], [259702, [218964, 236336]], [258004, [223236]], [253053, [221963, 221964]], [262243, [224440]], [260508, 'none'],
   [262786, [219379, 219294]], [262495, [222712]], [262869, [220500, 220489]], [262783, [220411]], [262370, [232324, 227053]],
   [262233, [248383, 248381]], [261613, [223347]], [259339, [221990, 221993]], [261986, [237880]], [262027, [237882]], [262004, [237880]],
-  [262039, [237883]], [260869, [248395]]];
-t(`B2 rounds 2-10 key: right requirement in the top 3 for 115+ of 137, and 41+ of 43 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  [262039, [237883]], [260869, [248395]],
+  // round 11
+  [260316, [266725]], [260820, [248395]], [260733, [242029]], [260302, 'none'], [260876, [221964, 246494]], [260965, [215476, 216991]],
+  [260179, [242036]], [260298, [215506, 215507, 215505]], [260154, [220410]], [260139, 'none'], [247710, [218239, 218243, 218964]],
+  [259759, [224507, 215513]], [259428, [224440]], [250665, [212990]], [259534, [221108]], [259342, [220410, 223344]], [259318, [218247]],
+  [258418, [215513, 215514, 215516]], [258022, [218980, 218970]], [257569, [221967, 220410]]];
+t(`B2 rounds 2-11 key: right requirement in the top 3 for 132+ of 155, and 43+ of 45 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
   if (!REAL) return true;
   let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
   for (const [num, ok] of BLIND2) {
@@ -208,7 +213,7 @@ t(`B2 rounds 2-10 key: right requirement in the top 3 for 115+ of 137, and 41+ o
     want++;
     if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
   }
-  return (found >= 115 && quiet >= 41) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
+  return (found >= 132 && quiet >= 43) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 t('Q2 a "Semua Urusan" requirement earns the urusan bonus (it beats a same-words PLTP row)', () => {
   const rows = [row(1, 'PLTP - Template Risalat', 'Pelupusan'), row(2, 'Pelupusan Semua Urusan - Butang Jana Semula Dokumen', 'Pelupusan'), row(3, 'PRBB - Butang Jana Semula Dokumen', 'Pelupusan')];
@@ -231,6 +236,12 @@ t('Q7 an environment tag is never the urusan, and a "Semua Urusan" subject has n
   const all = R.search([row(1, 'PT - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan'), row(2, 'Semua Urusan - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan')],
     'Semua Urusan - Tugasan peranan PT - Semakan Kemasukan Maklumat')[0].row.id;
   return (id === 1 && all === 2) || `staging top ${id}, semua urusan top ${all}`;
+});
+t('Q8 a ticket with no module takes its urusan\'s module (PT rows beat a Pendaftaran row with the same words)', () => {
+  const rows = [row(5, 'Kadar Cukai Hakmilik', 'Pendaftaran'), row(2, 'Kadar Cukai Tanah', 'Pelupusan'), row(3, 'PT - Tugasan Semakan', 'Pelupusan'), row(4, 'PT - Risalat', 'Pelupusan')];
+  const id = R.search(rows, 'FAT - PT - KKMMKN - Kadar Cukai salah')[0].row.id;
+  const read = R.search(rows, 'FAT - PT - KKMMKN - Kadar Cukai salah', { module: 'Pendaftaran' })[0].row.id;
+  return (id === 2 && read === 5) || `guessed top ${id}, read-module top ${read}`;
 });
 t('Q6 screenHint reads the numbered list under "Tugasan involved"', () => {
   const h = R.screenHint('ID Permohonan: PTMLK/03/L/PLTP/2026/4\n\nTugasan involved\n1. Kemasukkan/Semakan/Perakuan Keputusan MMKN\n2. Penyediaan/Semakan/Perakuan Surat Keputusan dan Borang Notis 5A\n\nIssue:\nLangkah Maklumat Tanah missing panel');
