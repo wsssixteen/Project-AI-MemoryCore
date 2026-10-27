@@ -344,7 +344,11 @@ function roleTag(name, stateKey) {
 // or as a menu path ("Menu Pelupusan > Kemaskini Ulasan Jabatan Teknikal / JPPH"); only the first lines are read.
 function screenHint(description) {
   const lines = String(description || '').replace(/&gt;/g, '>').split(/\r?\n/).map(l => l.replace(/^[*\s]+|[*\s]+$/g, '')).filter(Boolean).slice(0, 14);
-  const tugasan = [], menu = [];
+  const tugasan = [], menu = [], involved = [];
+  // "Tugasan involved / terlibat" heads a numbered list of the screens the issue is on (271049).
+  const head = lines.findIndex(l => /^tugasan\s+(yang\s+)?(involved|terlibat)\b/i.test(l));
+  if (head >= 0) for (const l of lines.slice(head + 1)) { const m = l.match(/^\d+[.)]\s*(.+)$/); if (!m) break; involved.push(m[1]); }
+  if (involved.length) return involved.join(' ');
   for (const l of lines) {
     const t = l.replace(/^tugasan(\s+semasa)?\s*:\s*/i, '');
     if (t.length <= 90 && /^(penyediaan|semakan|pengesahan|kemasukan|kemaskini|cetakan|penerimaan|arahan|pendaftaran|pengeluaran)\b/i.test(t)) tugasan.push(t);
