@@ -278,6 +278,18 @@
           "source": "main/session-format.md (500-Line Limit Protocol) and domain/de-close-gate (C3)"
         },
         {
+          "id": "mem-no-swearing",
+          "text": "Lines written into memory this session hold no swear words; his anger is recorded as anger (angry / frustrated), never as the words.",
+          "check": "no-swearing",
+          "applies": [
+            "main/*",
+            "daily-diary/*",
+            "daily-diary/*/*",
+            ".claude/auto-memory/*"
+          ],
+          "source": "domain/memory-clean-words/README.md (miya 2026-10-28) and lib/clean-words.js (the word list)"
+        },
+        {
           "id": "mem-diary-template",
           "text": "A diary entry has the locked Sessions, Index and Closing sections.",
           "check": "diary-template",

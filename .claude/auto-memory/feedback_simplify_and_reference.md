@@ -125,7 +125,7 @@ When loggers ARE needed, the build that goes to みや carries `QA<num>-PROBE` l
 - Only the production trigger (the scheduled task / the real user click) passes the flag.
 - Time/scope guards (e.g. "only within the configured window") are written and unit-tested **before** any live run, never bolted on afterwards.
 
-**Why (2026-08-27, PymTime):** I built the clock-in automation without a dry-by-default gate, then ran `node run.js` at 00:22 as a "test" — it made a **real attendance record** on みや's live Protime account, on a day he had not worked. Protime has no user-level delete, so it could only be removed by an admin. I created an unfixable problem out of a test. みや: *"WHEN MAKING A FUCKING APP, MAKE IT SAFELY EVEN WHEN TESTING… REMEMBER THIS."*
+**Why (2026-08-27, PymTime):** I built the clock-in automation without a dry-by-default gate, then ran `node run.js` at 00:22 as a "test" — it made a **real attendance record** on みや's live Protime account, on a day he had not worked. Protime has no user-level delete, so it could only be removed by an admin. I created an unfixable problem out of a test. みや: *"WHEN MAKING AN APP, MAKE IT SAFELY EVEN WHEN TESTING… REMEMBER THIS."* (angry)
 
 **Compounding failure the same night — never call it working from one pass:**
 - I reported "login works" after ONE success; it failed 8 minutes later.

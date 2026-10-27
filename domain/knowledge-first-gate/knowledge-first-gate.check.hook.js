@@ -10,7 +10,7 @@
 // OF LOWER RANKING" — after which it was derivable in one read and confirmed 4/4 against the code.
 // CLAUDE.md's KNOWLEDGE-FIRST rule is prose, and prose does not fire.
 //
-// NOD: miya 2026-08-05 — "WE COLLECTED ALL THE FUCKING INFO ABOUT ETANAH AND YOU'RE STILL THE SAME"
+// NOD: miya 2026-08-05 — "WE COLLECTED ALL THE INFO ABOUT ETANAH AND YOU'RE STILL THE SAME"
 //
 // v2 (2026-08-07, #274510, miya): FLOWABLE-CHANGE branch added — touching engine/BPMN state
 // (a .bpmn edit, a flowable-core source file, or an Edit/Write/Bash whose SQL hits umm_aliran_kerja/

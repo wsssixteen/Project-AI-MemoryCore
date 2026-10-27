@@ -66,7 +66,7 @@ Format: short bullet per gap with a one-line "what to do" suggestion. みや dec
 
 > Restored 2026-09-22 (system-check run 3): committed 2026-07-28 (`2940eb07`), silently deleted 2026-08-03 (`25a0379c`) when a stale OneDrive conflict copy overwrote this file before a `git add -A`. The `-PJNBRidhwan` copy preserved it. Boot check `system-audit` CHECK 9 now lists conflict copies so this cannot recur silently.
 
-**みや, verbatim**: *"MAKE IT FUCKING EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"*
+**みや, verbatim**: *"MAKE IT EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"* (angry)
 
 Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence.
 
@@ -308,7 +308,7 @@ freshness ≤12h); (C3) `main/current-session.md` exceeds 500 lines (trim skippe
 2026-08-21 evening) `node quest/redmine-reconcile.js` did not run this session (action=reconcile-ran
 row ≤12h in the gate's log.jsonl) — the Redmine board-truth step. **Why C4**: 2026-08-21 boot showed
 20 "open" blocks while Redmine had 0 assigned-open; DE had NO Redmine step, so active.txt rotted for
-weeks (みや: *"Domain expansion doesn't check against redmine for the fucking tickets?"*). The
+weeks (みや: *"Domain expansion doesn't check against redmine for the tickets?"* (frustrated)). The
 reconcile script prints divergence (Redmine-done/reassigned blocks still open locally) + missing
 (assigned-open with no block) and logs the run; closes/archives stay みや-approved, never automatic.
 Network failure still logs the row — an offline evening never deadlocks DE. Bypass
@@ -432,3 +432,6 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 *Updated 2026-05-22 — added step (0b) worktree/branch sync check (みや): detect worktree-vs-main + pull origin/main early if a worktree branch is behind. Earlier 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*
 *Last updated: 2026-05-30 — Step 11 (Worktree & branch close): retired sub-parts (c) Sweep stale worktrees / (d) Delete merged stale branches / (e) current-worktree flag — that cleanup now runs AUTOMATICALLY + SILENTLY at SessionStart via `worktree-cleanup-boot.js` (v1.2, which now also removes merged `claude/*` worktree directories, not just branches). DE retains only (a) verify-main-current + (b) salvage-unmerged-content. Per みや: a deterministic SessionStart hook fires 100% of the time and keeps session-end lean.*
 *Updated 2026-05-26 — Step 4 wording updated to use the new 3-section diary template (Sessions / Index / Closing) per `daily-diary/diary-format.md`. Empty Index sub-categories omitted at render. `diary-format-gate.js` Stop hook validates the 3 H2s (warn-only). Phase 1 of diary redesign per `~/.claude/plans/yes-very-much-catches-squishy-cake.md`.*
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

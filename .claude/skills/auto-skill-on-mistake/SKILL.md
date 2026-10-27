@@ -149,7 +149,7 @@ A DEFENDER IS NOT DONE UNTIL YOU HAVE RUN AN EVAL THAT REPRODUCES THE EXACT FAIL
 AND PASTED ITS REAL OUTPUT THIS TURN.
 ```
 
-A written `Fire-on-trigger: <component> exercised ✓` with no executed output is **BANNED** — that is the claim-not-execute hole. **2026-08-12**: I built a memory + a *deferred proposal*, wrote "exercised on QA-274318 ✓", and shipped nothing runnable; みや had to demand *"RUN THE FUCKING EVAL"*. The phrase-trigger fired and produced no proof — because this step let me narrate instead of run.
+A written `Fire-on-trigger: <component> exercised ✓` with no executed output is **BANNED** — that is the claim-not-execute hole. **2026-08-12**: I built a memory + a *deferred proposal*, wrote "exercised on QA-274318 ✓", and shipped nothing runnable; みや had to demand *"RUN THE EVAL"* (angry). The phrase-trigger fired and produced no proof — because this step let me narrate instead of run.
 
 **Mandatory on EVERY defender build — no exceptions:**
 1. Build the defender as **runnable code with its own `eval.js`** (a text/keyword scan, a hook, a script). A memory MAY accompany it, but **a memory + a "proposal" is NOT a defender** — it is prose that doesn't fire, the exact pattern these slips are about.
@@ -282,3 +282,6 @@ Format: appended-only entries + running-count table at top (per Step 5 refined 2
 *Version: 2 | Last updated: 2026-05-25 — Step 3.6 promoted from `Comparative-systems check` (architectural-only content audit) to `Best-Practices Consult` (dual audit: 3.6a content + 3.6b wording-shape, latter mandatory for ALL skill/rule changes with no scope exemption). Refine triggered by 99%-compliance-lift slip 2026-05-25 — bypass via "small refine" scope was the structural gap. Modeled Authority-loaded forcing-functions (Iron Law + Red Flags + Excuse table) inside the refine itself to demonstrate the wording-shape the new step requires.*
 
 *Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `system/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

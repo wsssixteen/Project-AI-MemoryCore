@@ -1,4 +1,4 @@
-symptom: #244600 (2026-10-01 to 2026-10-04) — the Rubric wrote "Falsifier C1: a Word no-change save changes body XML beyond rsid/paraId"; the same design shipped as d61fc2e611 with local_test_confirmed=false; the falsifier was never run; BA failed the fix on 2026-10-03; the run took 5 minutes. miya: "you've been ignoring your own fucking alarms"
+symptom: #244600 (2026-10-01 to 2026-10-04) — the Rubric wrote "Falsifier C1: a Word no-change save changes body XML beyond rsid/paraId"; the same design shipped as d61fc2e611 with local_test_confirmed=false; the falsifier was never run; BA failed the fix on 2026-10-03; the run took 5 minutes. miya: "you've been ignoring your own alarms" (angry)
 goal: no etanah fix is committed or passed to BA while a written falsifier is unrun
 goal_signal: `node domain/falsifier-ran-check/check.js <QA>` exits 0 before the commit; log.jsonl row outcome=pass for that QA
 retention: rotate monthly (log.jsonl) · keep (overrides.jsonl)

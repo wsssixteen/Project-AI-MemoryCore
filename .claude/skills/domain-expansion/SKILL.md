@@ -54,7 +54,7 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 
 ## 🚨 STEP 10 IS AN EXPLICIT ORDER — COMMIT + PUSH + MERGE (hard rule, 2026-07-28 per みや)
 
-**みや, verbatim**: *"MAKE IT FUCKING EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"*
+**みや, verbatim**: *"MAKE IT AN EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"* (angry)
 
 Every Domain Expansion **ends with all three, verified**:
 

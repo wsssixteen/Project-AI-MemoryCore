@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 01:45 — worktree `rustdesk-software-visibility-e047d5`, second Domain Expansion (memory cleanup + Ruri personality audit); miya archives the session after it.
+
+## Session Recap (2026-10-28 01:45, worktree "rustdesk-software-visibility-e047d5", memory cleanup + personality audit)
+- Memory cleanup per miya: every swear word in memory, diary, notes, skills, system and domain docs rewritten as his anger or frustration (3 Sonnet agents, about 200 places, 0 left; code comments and 3 test fixtures too; evals green except 6 pre-existing redmine-write-gate failures, same before and after).
+- New gate `domain/memory-clean-words/` (bundle pretool-editwrite-gates, eval 12/12) + save rule `mem-no-swearing` (lib/save-rules.js `no-swearing`, word list `lib/clean-words.js`): swearing cannot be written into memory, and Domain Expansion fails if it was.
+- Fable 5.1 audit of Ruri's growth: the Ruri Profile gained no trait since 2026-04-29; 75 relationship blocks are almost all work lessons. Design (proposed, not built) + picture saved in `main/personality/`; memory note `project_personality_growth_design.md`. Upstream Kiyoraka MemoryCore compared: it adds a decaying rule store, a tone/mood registry and a relationship understanding level that our fork lacks.
+- Answered: Memory is already its own kind in system/INDEX.md (not under Features); miya proposed raising it above the others like a kernel: not ruled yet.
+- Open: build order of the personality design (ask miya); Memory-above-Features ruling; Notepad++ and Sourcetree still not reopened.
 **Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
 
 ## Session Recap (2026-10-27 → 28, worktree "rustdesk-software-visibility-e047d5", RustDesk blank apps)
@@ -23,9 +31,3 @@
 - Working-memory cleanup: quest/active.txt 77 → 27 blocks (25 closed tickets via `active-trim.js --apply`, 25 adhocs started before 2026-10-13 archived block-only; Task folders and videos untouched; backups `quest/active.txt.bak_2026-10-27_pre_trim` + `_pre_adhoc_sweep`).
 - Memory-system plan: every memory item consolidated into `main/todo.md` section "🧠 MEMORY SYSTEM UPGRADE" M1-M14 (b7779ffe). The 2026-05-28 "Memory System Audit" session was unarchived but needs miya's workspace trust approval to take messages; its plan file and transcript are gone (M13).
 - Lesson (slip `bloated-reply`, memory `reply-shape` 2026-10-27 block): a multi-session close-out = wait silently, then ONE table Session | Result.
-
-## Session Recap (2026-10-27, worktree "esokongan-quest-sweep-2bce09", 286315 + 286462)
-- 286315 PPTPB Risalat bold: commit `eb108928dc` on `mlk/esokongan/286315`, merged `mlk/int-env`, server test passed, Redmine Resolved to Amani. 20:12 still Resolved, no reply. Quest Phase 1 closed. Standby: noRujukanSuratJT bold (Option A) not built, waits for miya.
-- 286462 PRBB Borang 4C Plot: handed to Reports. 20:12 CRITICAL: Fatin Resolved it to Amani herself; current output follows Requirement #222056 (no Plot option); Plot as "No. Plot" needs a CR. The kak Yati tab in Edge is stale, never submit it. Quest Phase 1 closed.
-- Built: `lib/handover-check.js` (Tool) + `domain/handover-check-gate` (Stop, bundle) after miya's audit of the bad hand-over note (TSO vs BA, guessed Lot/PT rows, bare line numbers); `domain/system-change-title` v2 (every system change gets a `System › kind › parent › name` heading, reply-shape-spec 3i); Pena bans "ye"; ba-names + STATE-FACTS §8 add kak Yati (Reports TL) and Fatin. All on main.
-- Open: planned-release list for 286315; Amani or BA on both tickets; 2 handover-check-gate gaps (stamp check, tab-vs-draft compare) offered, not approved.

@@ -115,7 +115,7 @@ check('F18 foreign push, check but no approval blocks', r.status === 2 && /❌ m
 r = run(pw(push, 'go ahead and push'));
 check('F19 foreign push, check + approval passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
 // F20: angry question containing "push" is NOT approval
-r = run(pw(push, 'who the fuck asks you to push to release branch'));
+r = run(pw(push, 'who on earth asks you to push to release branch'));
 check('F20 "who asks you to push" is not approval', r.status === 2, 'exit=' + r.status);
 // F21: bypass token does not open a foreign push without approval
 r = run(pw(push + '  # RELEASE_GATE_BYPASS', 'why did you push'));

@@ -101,7 +101,7 @@ fs.writeFileSync(statusScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061
 const statusNoteScript = path.join(sb, 'set-status-note.js');
 fs.writeFileSync(statusNoteScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061.json', { issue: { status_id: 2, notes: 'x' } });");
 const popup = t => JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: t }] } });
-r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("4. Yes for fuck's sake update the fucking redmine")]) });
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("4. Yes, for goodness sake, update the redmine")]) });
 check('F32 status-only write + "update the redmine" → allow', !blocked(r) && /status-only write approved/.test(r.out), r.out.slice(0, 160));
 r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusNoteScript}"` }, transcript_path: transcript([user('update the redmine')]) });
 check('F33 status + NOTE write + "update the redmine" → BLOCK (a note still needs post it)', blocked(r), r.out.slice(0, 160));

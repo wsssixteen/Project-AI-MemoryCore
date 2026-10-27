@@ -1,5 +1,6 @@
 { "name": "pretool-editwrite-gates", "children": [
   "domain/design-consult-gate/design-consult-gate.gate.hook.js",
   ".claude/hooks/pre-action-check-gate.js",
-  ".claude/hooks/system-edit-gate.js"
+  ".claude/hooks/system-edit-gate.js",
+  "domain/memory-clean-words/memory-clean-words.check.hook.js"
 ] }
