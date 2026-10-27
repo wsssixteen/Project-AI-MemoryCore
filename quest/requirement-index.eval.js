@@ -111,7 +111,14 @@ t('S11 the body never outvotes the subject', () => {
   const id = R.search(rows, { subject: 'PPTPB Risalat', body: 'resit kaunter cetakan bayaran cukai' })[0].row.id;
   return id === 1 || 'top ' + id;
 });
-t('S12 every hit carries a match label strong | weak | none', () => R.search(ROWS, 'PPTPB Tugasan Penyediaan Risalat MMKN PTG').every(h => ['strong', 'weak', 'none'].includes(h.match)) || 'no label');
+t('S12 every hit carries a match label strong | possible | none', () => R.search(ROWS, 'PPTPB Tugasan Penyediaan Risalat MMKN PTG').every(h => ['strong', 'possible', 'none'].includes(h.match)) || 'no label');
+t('Q1 alter / patch / cancel asks are requests, a feature ask is not', () => {
+  const want = [['Pelupusan > PRBB > Request untuk Alter ke Tugasan Penyediaan Rencana', 'alter'], ['Pelupusan > MLPS > Mohon Untuk Patch pada Penyediaan Borang 4Ae', 'patch'],
+    ['Pelupusan > UPS > Batalkan ID UPS', 'cancel'], ['Utiliti Penyediaan Surat > Mohon untuk Tamat/Batalkan kedua-dua ID', 'cancel'],
+    ['Pelupusan > PRBB > Pengiraan Hari Ganti Papar Lebih dan Berbeza', null], ['UPP > Surat Makluman Pembatalan Permohonan tidak papar', null]];
+  const bad = want.filter(([s, k]) => R.requestKind(s) !== k);
+  return !bad.length || bad.map(b => b[0]).join(' ; ');
+});
 t('N2 an unrelated ask (resit cukai) does not match the Risalat requirement', () => top('cetakan resit cukai tanah kaunter') === 300001 || 'wrong top');
 
 // --- key: the five real tickets judged 2026-10-27 (Fable audit + controller check)
@@ -131,6 +138,27 @@ t(`K281324 (no requirement exists) is flagged weak, not presented as a match${RE
   if (!REAL) return true;
   const r = runReal(['--ticket', '281324', '--no-refresh', '--top', '3']);
   return /top match is weak on the subject/.test(r.stdout) || r.stdout.slice(0, 300);
+});
+
+// --- blind key: 30 recent tickets judged 2026-10-27 by a Sonnet reader that never saw the tool's answer.
+// [ticket, right requirement ids] or [ticket, 'none']; a ticket that is itself a requirement is its own answer.
+const BLIND = [[286650, [229847, 223990]], [286462, [222056, 212157, 255996]], [285768, [218968]], [285871, [220611]], [285680, 'none'],
+  [233646, [220611]], [285532, [221350, 221307, 221358]], [285252, [212157, 216991]], [285181, 'none'], [285159, 'none'], [285171, 'none'],
+  [285012, [218971]], [284884, [223247, 223226]], [284831, [220410, 236336]], [284775, 'none'], [284544, [218459, 218455, 218071]],
+  [282303, 'none'], [240907, [240907]], [284201, [221211, 221204]], [283980, 'none'], [283960, [219294, 221097]], [283345, [221350, 221358]],
+  [279554, [279554]], [283670, [223325]], [283751, [234424, 227986, 220564]], [265691, 'none'], [283550, 'none'], [283286, 'none'],
+  [283532, 'none'], [282966, [226135]]];
+t(`B1 blind key: right requirement in the top 3 for 16+ of 21, and 9+ of 11 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  if (!REAL) return true;
+  let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
+  for (const [num, ok] of BLIND) {
+    const r = runReal(['--ticket', String(num), '--no-refresh', '--top', '3', '--json']);
+    let j; try { j = JSON.parse(r.stdout); } catch (_) { miss.push(num + ' no JSON'); continue; }
+    if (ok === 'none') { none++; if (j.kind || !j.hits[0] || j.hits[0].match !== 'strong') quiet++; else miss.push(num + ' strong'); continue; }
+    want++;
+    if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
+  }
+  return (found >= 16 && quiet >= 9) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 
 // --- render

@@ -111,7 +111,7 @@ function prepare(rows) {
 
 // query = a string (searched as a subject) or { subject, body }. The subject carries the meaning;
 // the body only breaks ties, so a long journal cannot outvote it.
-// Each hit carries `match`: strong · weak · none, from how much of the query subject it covers.
+// Each hit carries `match`: strong · possible · none, from how much of the query subject it covers and its score.
 function search(rows, query, opts) {
   const o = opts || {};
   const prep = o.prep || prepare(rows);
@@ -144,7 +144,9 @@ function search(rows, query, opts) {
     // A cancelled requirement is history, not the spec.
     if (/cancel|not applicable/i.test(d.r.status)) score *= 0.5;
     const cover = covered / qTotal;
-    out.push({ row: d.r, score: Math.round(score * 10) / 10, cover: Math.round(cover * 100) / 100, match: cover >= 0.4 ? 'strong' : cover >= 0.15 ? 'weak' : 'none', hits });
+    // Cut points from the 2026-10-27 blind test (30 tickets): every right top-1 scored >= 29; cover alone did not separate right from none.
+    const match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 ? 'strong' : 'possible';
+    out.push({ row: d.r, score: Math.round(score * 10) / 10, cover: Math.round(cover * 100) / 100, match, hits });
   }
   out.sort((a, b) => b.score - a.score || b.row.id - a.row.id);
   return out.slice(0, o.top || 8);
@@ -329,6 +331,15 @@ function roleTag(name, stateKey) {
   try { return R.tag(R.roleOf(name, { state: stateKey })); } catch (_) { return 'role unknown'; }
 }
 
+// An alter / patch / cancel ask moves data or a flow; no requirement specified it.
+function requestKind(subject) {
+  const s = String(subject || '');
+  if (/\balter\b/i.test(s)) return 'alter';
+  if (/\bpatch\b/i.test(s)) return 'patch';
+  if (/\bbatal(kan)?\s+id\b|tamat\s*\/\s*batal/i.test(s)) return 'cancel';
+  return null;
+}
+
 function fmtHit(h, n, stateKey) {
   const r = h.row;
   return `  ${n}. #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · ${h.match || 'match'} ${h.score} · ${REDMINE_BASE}/issues/${r.id}`;
@@ -386,7 +397,8 @@ async function main(argv, log) {
 
   // --ticket: the ticket's own subject + description are the query; its parent chain is listed first.
   const byId = new Map(idx.rows.map(r => [r.id, r]));
-  let issue = byId.has(Number(ticket)) ? { ...byId.get(Number(ticket)), description: byId.get(Number(ticket)).snippet, source: 'index' } : localTicket(ticket);
+  const self = byId.has(Number(ticket));
+  let issue = self ? { ...byId.get(Number(ticket)), description: byId.get(Number(ticket)).snippet, source: 'index' } : localTicket(ticket);
   if (!issue) {
     try {
       const i = (await get(`/issues/${encodeURIComponent(ticket)}.json`)).issue;
@@ -404,18 +416,24 @@ async function main(argv, log) {
   }
   const query = { subject: issue.subject, body: String(issue.description || '').slice(0, 600) };
   const hits = search(idx.rows, query, { module, top, exclude: [issue.id, ...chain.map(r => r.id)] });
-  Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
-  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, parents: chain, hits }, null, 1)); return 0; }
+  const kind = requestKind(issue.subject);
+  Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: kind ? 'request' : self ? 'self' : hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
+  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, kind, self, parents: chain, hits }, null, 1)); return 0; }
   console.log(`REQUIREMENT-MATCH #${issue.id} (${module || 'module not read'}) "${issue.subject}" [read from ${issue.source}] — ${idxLine(idx)}`);
+  if (kind) {
+    console.log(`  ⓘ this is a ${kind} request (moves data or a flow, not a feature change): write REQUIREMENT-MATCH: not needed — ${kind} request.`);
+    return 0;
+  }
+  if (self) console.log(`  ⓘ this ticket is itself Requirement #${issue.id}: it is the original spec. Compare it with its parent and the rows below only for overlap.`);
   chain.forEach(r => console.log(`  parent: #${r.id} ${r.status} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · ${REDMINE_BASE}/issues/${r.id}`));
   hits.forEach((h, n) => console.log(fmtHit(h, n + 1, stateKey)));
   if (!hits.length && !chain.length) console.log('  no match — say "no original requirement found" in the hand-back, then try --find with the screen or tab name');
-  else if (!chain.length && hits[0].match === 'none') console.log('  ⚠ top match is weak on the subject — likely no requirement for this exact ask; say "none found" unless a row above clearly fits, or try --find with the screen or tab name');
-  console.log('  Next: open the closest match (node quest/redmine-sync.js <id> or the link) and compare its ask with this ticket\'s; write the verdict as REQUIREMENT-MATCH: aligned | extends | contradicts | none found.');
+  else if (!chain.length && !self && hits[0].match === 'none') console.log('  ⚠ top match is weak on the subject — likely no requirement for this exact ask; say "none found" unless a row above clearly fits, or try --find with the screen or tab name');
+  console.log('  Next: open the closest match (node quest/redmine-sync.js <id> or the link) and compare its ask with this ticket\'s; write the verdict as REQUIREMENT-MATCH: aligned | extends | contradicts | none found | not needed.');
   return 0;
 }
 
-module.exports = { tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
+module.exports = { requestKind, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {
   const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket)$/.test(a)) || 'usage' };
