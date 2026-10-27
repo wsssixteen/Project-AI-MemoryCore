@@ -13,3 +13,7 @@
 {"ts":"2026-10-13T11:59:02.343Z","qa":"QA-240907","reason":"plain words: \"Test on server (Recommended)\"","via":"plain"}
 {"ts":"2026-10-14T04:50:48.860Z","qa":"QA-240907","reason":"plain words: \"Please revert internal's common version so that BA can test this on internal and the other ticket on STAGING\"","via":"plain"}
 {"ts":"2026-10-15T07:21:57.282Z","qa":"QA-282303","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
+{"ts":"2026-10-21T06:52:50.753Z","qa":"QA-285871","reason":"plain words: \"test on server, skip local\"","via":"plain"}
+{"ts":"2026-10-23T08:16:11.778Z","qa":"QA-246964","reason":"test on staging server"}
+{"ts":"2026-10-23T09:28:35.345Z","qa":"QA-265109","reason":"plain words: \"265109 I test on server\" (his own message 2026-10-23; the gate read only the next line of that message)","via":"plain"}
+{"ts":"2026-10-27T04:31:42.958Z","qa":"QA-286315","reason":"plain words: \"okay then proceed to commit, push and merge but we'll do a test first on server, I will share the screenshots for you to include in the redmine staging later.\"","via":"plain"}
