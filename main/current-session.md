@@ -14,6 +14,12 @@
 - Built: `lib/handover-check.js` (Tool) + `domain/handover-check-gate` (Stop, bundle) after miya's audit of the bad hand-over note (TSO vs BA, guessed Lot/PT rows, bare line numbers); `domain/system-change-title` v2 (every system change gets a `System › kind › parent › name` heading, reply-shape-spec 3i); Pena bans "ye"; ba-names + STATE-FACTS §8 add kak Yati (Reports TL) and Fatin. All on main.
 - Open: planned-release list for 286315; Amani or BA on both tickets; 2 handover-check-gate gaps (stamp check, tab-vs-draft compare) offered, not approved.
 
+## Session Recap (2026-10-27, worktree "surat-tawaran-missing-e1e49c", Perak ADHOC-PRBB-2026-17 + quest rule 6f)
+- **Last Activity**: 2026-10-27 20:15, Domain Expansion; miya archives the session after it.
+- BA relay (LEN): PROD Perak PRBB `PTPK/15/E/PRBB/2025/7` (apl 11291084), PYSTW Penyediaan Surat Tawaran, mita@perak.gov.my: no Surat Tawaran, retry gives NPE (ID Rujukan 3853128). Cause verified on PROD: `UMM_A_PERMIT_LESEN` 126243 KUANTITI_DILULUS 1000, UNIT_KUANTITI_DILULUS_ID null → NPE `PelupusanWordEditorHelperForm.java:3494` (reads the approved unit since 4422003a204, 2025-04-10); writer `PelupusanService.saveMaklumatBayaranPRBB` has the unit setter commented out at `:11294`; 98 PRBB permits share it.
+- Fix ladder: data patch unit 11891 Tan Metrik (`2. Fix\ADHOC-PRBB-2026-17.sql`, ready, NOT sent) · code fix (uncomment :11294 + fallback to getUnitKuantitiDipohon at :3494) pending. **miya deferred the fix-order choice 2026-10-27**; block status=hold, register perak A5 OPEN, Resume Point written. Save audit 30/30 PASS (background agent).
+- Built: quest skill step 6f (code fix → offer a ticket from BA/TSO; `Code-fix route:` line at Phase 0 and Phase 1; basic check, to be refined), landed on main `c78d26bd`.
+
 ## Session Recap (2026-10-27, worktree "esokongan-ticket-selection-cad51f", 246964)
 - Picked 246964 (PSBS Surat Tolak) as the extra ticket while 3 sessions took the eSOKONGAN tickets. Mira had sent it back: staging was rebuilt on 26 Oct from Ammar's `mlk/release/1.8.5` baseline, which lacks the fix (ef49baf78f + 6feb2525c6 are on stag-env only).
 - miya redeployed stag-env. Release 1.8.5 merged into stag-env `cc56a92240` (only the version bump was missing), compile green, pushed. Master stays 1.8.4 until BA passes the 1.8.5 baseline (release skill V8).
