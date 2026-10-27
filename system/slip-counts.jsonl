@@ -1363,6 +1363,9 @@
 {"ts":"2026-10-20T10:48:40.393Z","category":"A1"}
 {"ts":"2026-10-20T10:48:41.024Z","category":"A4"}
 {"ts":"2026-10-20T10:48:42.408Z","category":"A2"}
+{"ts":"2026-10-27T05:36:48.687Z","category":"gate-missed-approval"}
+{"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
+{"ts":"2026-10-27T12:14:04.752Z","category":"reask/verbose"}
 {"ts":"2026-10-27T04:06:28.661Z","category":"reask/verbose"}
 {"ts":"2026-10-27T04:48:48.955Z","category":"reask/ambiguous"}
 {"ts":"2026-10-27T04:50:45.108Z","category":"handoff/upload-not-in-task-folder"}
@@ -1400,6 +1403,10 @@
 {"ts":"2026-10-27T12:20:58.862Z","category":"ask-back-searchable-fact"}
 {"ts":"2026-10-27T12:23:01.108Z","category":"A1"}
 {"ts":"2026-10-27T12:24:27.640Z","category":"A2"}
+{"ts":"2026-10-27T12:20:58.338Z","category":"A1"}
+{"ts":"2026-10-27T12:20:58.759Z","category":"A2"}
+{"ts":"2026-10-27T12:20:59.282Z","category":"A3"}
+{"ts":"2026-10-27T12:20:59.653Z","category":"A4"}
 {"ts":"2026-10-27T08:32:12.495Z","category":"reask/verbose"}
 {"ts":"2026-10-27T12:19:16.879Z","category":"A2"}
 {"ts":"2026-10-27T12:19:17.089Z","category":"A2"}
