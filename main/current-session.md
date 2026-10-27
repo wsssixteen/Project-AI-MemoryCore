@@ -8,6 +8,15 @@
 - ProTime 27/10 night run: 261986 removed correctly (only one turn named it, a session report; nothing worked). Left off the plan.
 - Open: "system changes run on the highest model" rule not written into CLAUDE.md · child session quest-audit-fixes waits on miya's answer about where system changes run · Phase 0 audit of all Melaka tickets not started.
 
+**Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
+
+## Session Recap (2026-10-13 → 2026-10-28, worktree "protime-weekly-plan-changes-d89526", ProTime weekly plan)
+- Built `domain/protime-plan/` to run every working day: 08:30 morning (settle the previous working day, top up today, plan the week) and 23:00 night (settle today). Windows task `\MemoryCore\ProTime Weekly Plan`, WakeToRun, logon catch-up, retry 30 min x6.
+- Settle rules: add worked tickets + the day's adhocs in his wording; remove only PENDING bare-number PLAN entries this script placed and not worked; never touch his own lines; KPI 3 plan tickets a day (finished first); plan vs adhoc by whose fix is in the ticket that day (assist like 283345 = ADHOC); resolve step; an approved day left alone.
+- Adhoc wording rule v2 (from his 121 ProTime adhocs, blind-tested on 37 real lines): `<n> - <action>` · `Assist BA - <what>` · `<ENV> (<STATE>) - <title>`; lives in `.claude/skills/adhoc-save/SKILL.md`, built by `protimeLine`, checked by `lintLine`.
+- Skill `/protime-plan` (one door, same script as the scheduler; `--rules` prints the rules); eval 112/112; on main since `bdba227e`.
+- Handed over 2026-10-20 to session "PymTime password authentication failure": move the feature into PymTime (PymTime ROADMAP Phase P).
+- Open: "Staging" vs "Internal" for staging adhoc lines (his ruling); asks never saved as adhoc are only found by `--sessions` (night run cannot title them); a ticket with no commit in our repos counts as his.
 **Last Activity**: 2026-10-28 01:05 — session "System Upgrade 23/9/2026" (born 2026-09-23 in worktree `session-naming-format-b88025`, revived 2026-10-27 by a PymTime handover), Domain Expansion, then archived.
 
 ## Session Recap (2026-09-23 → 2026-10-28, "System Upgrade 23/9/2026", session naming)
