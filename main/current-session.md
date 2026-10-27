@@ -1,5 +1,7 @@
 # Current Session
 
+**Last Activity**: 2026-10-27 20:14 — session `esokongan-ticket-selection-cad51f` (246964 Verified by BA; 261986 briefed, fix not started), closed by its own Domain Expansion.
+
 **Last Activity**: 2026-10-21 16:40 — session `vibrant-solomon-cd24c1` (#285871 Minit Bebas Tolak Ringkas, from ADHOC-PT-2026-13), Phase 1 closed, closed by its own Domain Expansion (bullet below).
 
 - **SESSION vibrant-solomon-cd24c1 (#285871), 2026-10-21 10:27 → 16:40.** BA Mira opened Internal Issue #285871 for yesterday's adhoc ADHOC-PT-2026-13 (A69 promoted → TICKETED). Full quest re-run: one sonnet adversarial review found 2 gaps in the adhoc fix: B1 PPD → PTNH path (no KPPD Semakan; 3 PROD Pengesahan rows) left an empty KPPD section; B2 Minit Bebas made before deploy lost both sign blocks (fill list from the classpath template, `TemplateConfig.readAllContentControl():747`). Fixed in `PelupusanTemplateUtil`: `isPerakuanMinitBebasTanpaSemakanKppd` (wrapper `blokSemakanMinitBebasKPPD` removed at PMB unless previous tugasan = SMB by KPPD) + `addMinitBebasKppdTagLama` (old docs keep old tags). Offline doc-sim 4 flows PASS. Scope check: only TemplateMinitBebasKPPD.docx locked the sentence. Commit 2026-10-21 14:52 `66422b3ddf` on `mlk/internal-issues/285871` (+56/0, compile green), merged `mlk/int-env` 14:53 `e30e4206cb`. miya deployed + tested internal PLPS/2026/48; screenshot `2. Fix\1. Ayat boleh kemaskini.png`; Redmine Resolved to Mira. Quest Phase 1 closed (archive waits Redmine Closed). Wrong-fix row 1. Open: planned-release list; staging not merged; optional hide outer box label; ADHOC-PT-2026-13 archive save (brief-first, background). Slip `reask/verbose` (commit subject described the effect).
@@ -23,6 +25,9 @@
 - miya redeployed stag-env. Release 1.8.5 merged into stag-env `cc56a92240` (only the version bump was missing), compile green, pushed. Master stays 1.8.4 until BA passes the 1.8.5 baseline (release skill V8).
 - Redmine note posted 13:33 in miya's words, Resolved, to Mira. Quest Phase 1 closed (save-quest verdict PHASE-1); archive waits Redmine Closed. Test: ramlahkassim, PYSTP a_tgsn 2882973, reset the Surat Keputusan Tolak.
 - Built: redmine-write-gate reads messages sent mid-turn (queued_command) + every go-word form, denial still blocks (eval F91-F99; F29 is an older unrelated red). Deploy skill rule 11: show the branch table read against the flow release → master + stag-env → new fix into stag-env, next release. Pena: 3 of miya's sentences stored. Slips: gate-missed-approval, branch-state-unexplained.
+- 20:14: Redmine 246964 = Verified (BA passed). Fix is in stag-env only, not released; it ships in the next release. The 1.8.5 to master merge is the release owner's step, not this ticket (I listed it as a 246964 item and asked miya again: slip reask/verbose).
+- 261986 (Redmine Rework, Individu Lulus): briefed. Lulus template has no header reference (RAHSIA + ID Permohonan never prints) and prints "Mukim Mukim". Fix not started; diagnosis in the archived QA-261986.md. Next session starts here.
+- Open: archive 246964 when Redmine is Closed; 261986 fix.
 - Open: staging redeploy on 1.8.5 by miya; merge 1.8.5 into master after BA pass; next ticket 261986 (Risalat MMKN).
 
 ## Session Recap (2026-10-27, worktree "redmine-ticket-review-764ebb", 285768)
