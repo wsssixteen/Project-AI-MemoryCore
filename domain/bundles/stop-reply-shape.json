@@ -4,6 +4,7 @@
     "domain/terse-gate/terse-gate.discipline.hook.js",
     "domain/show-gate/show-gate.discipline.hook.js",
     "domain/full-address-trace-gate/full-address-trace-gate.discipline.hook.js",
-    "domain/next-steps-shape/next-steps-shape.check.hook.js"
+    "domain/next-steps-shape/next-steps-shape.check.hook.js",
+    "domain/handover-check-gate/handover-check-gate.check.hook.js"
   ]
 }

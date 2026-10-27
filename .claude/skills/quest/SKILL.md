@@ -291,7 +291,9 @@ The moment the Rubric says the fix belongs to another team, the hand-over reply 
 | 2 | The bare hand-off file: file-name header + `Line N (BEFORE)` / `Line N (AFTER)` markers + code only, per `feedback_cross_module_handoff_artifact` | Task folder `2. Fix\` (or the latest `N. Rework\`), full path in the reply |
 | 3 | The Redmine tab: the ticket's edit form opened in Edge (Claude in Chrome), Assignee + Notes + Root Cause (DEV) + Solutions filled, **% Done = 50** (a hand-over to another team is half done, 2026-10-27 per みや), file attached, **stopped before Submit** so he approves it | browser, then one line naming the tab |
 
-**🚨 Before the note is shown: `node lib/handover-check.js --brief "<Task folder>\1. Brief" --draft <note.txt>` MUST exit 0 (2026-10-27 per みや, 286462).** Paste its `EXPECTED SOURCE` line and its `HANDOVER-CHECK:` line under the draft. The check names who wrote the Expected (BA, or a TSO or QA report) and flags:
+**🚨 Reports team (any `.jrxml` fix) = Assignee Nurhayati Abdul Razak, note opens "Salam kak Yati," (2026-10-27 per みや).** She is the Reports TL: she reviews every ticket first, then passes it to the PIC (Fatin and others). **Banned**: assigning a Reports ticket to the PIC directly; kak Yati had already warned about this before 286462. People list: `etanah-knowledge/<state>/STATE-FACTS.md` § 8.
+
+**Before the note is shown: `node lib/handover-check.js --brief "<Task folder>\1. Brief" --draft <note.txt>` MUST exit 0 (2026-10-27 per みや, 286462).** Paste its `EXPECTED SOURCE` line and its `HANDOVER-CHECK:` line under the draft. The check names who wrote the Expected (BA, or a TSO or QA report) and flags:
 - every expected row the ticket's Expected does not ask for;
 - every line number given without its file and branch.
 
