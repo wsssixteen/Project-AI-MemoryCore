@@ -1391,3 +1391,5 @@
 {"ts":"2026-10-23T08:11:31.412Z","category":"reask/rambling"}
 {"ts":"2026-10-23T08:58:04.272Z","category":"verify-before-claim/partial-source"}
 {"ts":"2026-10-27T03:35:09.260Z","category":"commit-message"}
+{"ts":"2026-10-27T05:36:48.687Z","category":"gate-missed-approval"}
+{"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
