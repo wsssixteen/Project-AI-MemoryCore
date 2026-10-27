@@ -161,7 +161,7 @@ t(`B1 blind key: right requirement in the top 3 for 16+ of 21, and 9+ of 11 "non
   return (found >= 16 && quiet >= 9) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 
-// Rounds 2-7 of the 2026-10-27 kink hunt: 120 more tickets, each set keyed blind by its own Sonnet reader.
+// Rounds 2-10 of the 2026-10-27 kink hunt: 180 more tickets, each set keyed blind by its own Sonnet reader.
 const BLIND2 = [
   [282924, [212157, 212115]], [277706, [277706]], [246964, [237883, 223348]], [282721, 'none'], [282723, 'none'], [282442, [218968]],
   [274461, [220611, 216013]], [282555, 'none'], [281423, [214484]], [282198, 'none'], [282061, [220564, 234424]], [281712, [220178, 233340]],
@@ -184,8 +184,21 @@ const BLIND2 = [
   [273461, [218971, 215517]], [273465, [216044]], [273201, [219646]], [273294, [220395, 220373]], [273300, [221211, 212157]],
   [272867, [220178, 220369]], [272881, [215488]], [272943, [222698, 224440]], [272982, [216044, 220803]], [272574, [215508, 215583]],
   [272329, [216991]], [272378, [222695]], [272499, [218968]], [272527, 'none'], [272127, [230723, 219625, 221204]], [272096, [242036]],
-  [271985, [218455, 228495]]];
-t(`B2 rounds 2-7 key: right requirement in the top 3 for 67+ of 82, and 36+ of 38 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
+  [271985, [218455, 228495]],
+  // rounds 8-10
+  [272181, 'none'], [271918, [220803, 216044]], [271721, [222056, 255996, 212115]], [265537, [218455, 218450]], [270900, [226079, 226084, 226100]],
+  [271049, [221965, 221966, 242029]], [270297, [212157]], [270003, [221204, 221018, 221014]], [270052, [221965, 234397]], [269939, [216992, 216994]],
+  [269918, [221309, 221307]], [259112, [224761, 224814, 225756]], [269437, [218980, 221307]], [246532, 'none'], [268883, [224435, 224440]],
+  [269169, [215482, 224440]], [268415, [240903, 224440]], [268637, [224489, 216992]], [268322, [223227, 223226]], [268273, 'none'],
+  [268170, [216044, 212990, 223226]], [267976, [242036]], [267382, [224440, 215482]], [239386, [239386]], [266503, [218455]], [266215, [219294]],
+  [266249, [216044]], [265964, [219141, 219139]], [266039, [218450]], [261517, [223325, 220371, 215478]], [264293, [218457]],
+  [264347, [218247, 218232]], [245240, [226233, 226206]], [264006, 'none'], [263921, [221963, 246494]], [246949, [230727, 220730, 230726]],
+  [246923, [224093, 215487, 215497]], [262755, [214154, 214153]], [259914, [216044, 220373]], [247707, [224446, 224451, 248381]], [262762, [218971]],
+  [263344, [221364, 221358]], [259702, [218964, 236336]], [258004, [223236]], [253053, [221963, 221964]], [262243, [224440]], [260508, 'none'],
+  [262786, [219379, 219294]], [262495, [222712]], [262869, [220500, 220489]], [262783, [220411]], [262370, [232324, 227053]],
+  [262233, [248383, 248381]], [261613, [223347]], [259339, [221990, 221993]], [261986, [237880]], [262027, [237882]], [262004, [237880]],
+  [262039, [237883]], [260869, [248395]]];
+t(`B2 rounds 2-10 key: right requirement in the top 3 for 115+ of 137, and 41+ of 43 "none" tickets not shown as strong${REAL ? '' : ' — skipped, no real index'}`, () => {
   if (!REAL) return true;
   let found = 0, want = 0, quiet = 0, none = 0; const miss = [];
   for (const [num, ok] of BLIND2) {
@@ -195,7 +208,7 @@ t(`B2 rounds 2-7 key: right requirement in the top 3 for 67+ of 82, and 36+ of 3
     want++;
     if ((j.self && ok.includes(j.ticket)) || j.hits.some(h => ok.includes(h.row.id))) found++; else miss.push(String(num));
   }
-  return (found >= 67 && quiet >= 36) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
+  return (found >= 115 && quiet >= 41) || `top-3 ${found}/${want}, none kept quiet ${quiet}/${none}; misses ${miss.join(', ')}`;
 });
 t('Q2 a "Semua Urusan" requirement earns the urusan bonus (it beats a same-words PLTP row)', () => {
   const rows = [row(1, 'PLTP - Template Risalat', 'Pelupusan'), row(2, 'Pelupusan Semua Urusan - Butang Jana Semula Dokumen', 'Pelupusan'), row(3, 'PRBB - Butang Jana Semula Dokumen', 'Pelupusan')];
@@ -211,6 +224,13 @@ t('Q4 screenHint reads the tugasan line and the menu path, not the email or gree
   const d = 'PDTJ Hi team, mohon semak\nnurhafizah@melaka.gov.my\nPT - Permohonan Pemberimilikan\n*Penyediaan Risalat MMKN - PDT*\nPTMLK/02/L/PT/2026/6\nUser pergi ke Menu Pelupusan &gt; Kemaskini Ulasan Jabatan Teknikal';
   const h = R.screenHint(d);
   return (/Penyediaan Risalat MMKN - PDT/.test(h) && /Kemaskini Ulasan Jabatan Teknikal/.test(h) && !/melaka\.gov|Hi team/.test(h)) || h;
+});
+t('Q7 an environment tag is never the urusan, and a "Semua Urusan" subject has none', () => {
+  const rows = [row(1, 'AWAM - PT - Skrin Portal Awam', 'Pelupusan'), row(2, 'AWAM - PPS - Paparkan keluasan tanah', 'Pelupusan')];
+  const id = R.search(rows, '[STAGING] AWAM - PT - Keluasan Tanah - Nombor bertukar')[0].row.id;
+  const all = R.search([row(1, 'PT - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan'), row(2, 'Semua Urusan - Tugasan Semakan Kemasukan Maklumat', 'Pelupusan')],
+    'Semua Urusan - Tugasan peranan PT - Semakan Kemasukan Maklumat')[0].row.id;
+  return (id === 1 && all === 2) || `staging top ${id}, semua urusan top ${all}`;
 });
 t('Q6 screenHint reads the numbered list under "Tugasan involved"', () => {
   const h = R.screenHint('ID Permohonan: PTMLK/03/L/PLTP/2026/4\n\nTugasan involved\n1. Kemasukkan/Semakan/Perakuan Keputusan MMKN\n2. Penyediaan/Semakan/Perakuan Surat Keputusan dan Borang Notis 5A\n\nIssue:\nLangkah Maklumat Tanah missing panel');
