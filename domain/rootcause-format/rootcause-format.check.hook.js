@@ -53,6 +53,10 @@ function extractRootCause(text) { return extractLabelled(text, /root cause/i); }
 function extractSolution(text) { return extractLabelled(text, /\bsolution\b/i); }
 
 function isPlaceholder(s) { return /<CAUSE ONLY|<FIX ONLY|not yet diagnosed|not yet fixed|⬜/i.test(s); }
+// Solution left empty on purpose while the fix waits for acceptance (miya 2026-10-27, 286462).
+function isEmptyMark(s) { return /^\(?\s*(empty|kosong|leave empty|biar kosong)\s*\)?\.?$/i.test(String(s).trim()); }
+// A Solution is the fix we made or suggest. "belum dibaiki" is never written in it (miya 2026-10-27, 286462).
+const NOT_FIXED = /belum\s+(di)?(baiki|perbaiki|betulkan|fix)/i;
 
 function findViolations(s) {
   const v = [];
@@ -78,13 +82,14 @@ function evaluate(text) {
     const s0 = extractSolution(text);
     const missing = [];
     if (!rc || isPlaceholder(rc)) missing.push('Root cause row missing (every Redmine hand-over / pass / close carries it, patch tickets too)');
-    if (!s0 || isPlaceholder(s0)) missing.push('Solution row missing (filled together with Root cause)');
+    if (!s0 || (isPlaceholder(s0) && !isEmptyMark(s0))) missing.push('Solution row missing (filled together with Root cause; write the fix made or suggested, or (empty) while it waits)');
     if (missing.length) return { verdict: 'blocked', violations: missing, rc, sol: s0 };
   }
   if (!rc || isPlaceholder(rc)) return { verdict: 'silent' };
   const sol = extractSolution(text);
   const violations = findViolations(rc).map(x => 'Root cause: ' + x);
-  if (sol && !isPlaceholder(sol)) violations.push(...findViolations(sol).map(x => 'Solution: ' + x));
+  if (sol && !isPlaceholder(sol) && !isEmptyMark(sol)) violations.push(...findViolations(sol).map(x => 'Solution: ' + x));
+  if (sol && NOT_FIXED.test(sol)) violations.push('Solution: never write "belum dibaiki". Write the fix made or suggested to the other team, or (empty) while it waits');
   return violations.length ? { verdict: 'blocked', violations, rc, sol } : { verdict: 'passed', rc, sol };
 }
 module.exports = { evaluate, extractRootCause, extractSolution, findViolations };

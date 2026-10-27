@@ -239,7 +239,7 @@ Pre-emit gate: Test data ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Ro
 | Redmine-ready | Text (plain, sendable to BA) |
 |---|---|
 | Root cause | <Shape and exemplars live in `.claude/auto-memory/feedback_redmine_rootcause_format.md`, read it first. CAUSE ONLY, max 2 plain sentences. Say what happens and why. NO fix sentence. NO file:line, class names, jargon. NEVER use dashes or semicolons. Use ASD-STE100 Simplified Technical English, one idea per sentence. Straightforward sentences are fine and need not be formal. Exemplar (#277532): "Di Pengiraan Bayaran Lesen, Tujuan Permohonan ikut kod Maksud Menduduki yang tersimpan. Lain-Lain pun ada kod sendiri jadi sistem papar gabungan lama, bukan teks yang diisi pengguna." MANDATORY every hand-back once a cause is known. Use `⬜ not yet diagnosed` if pre-Recon.> |
-| Solution | <FIX ONLY, max 2 plain sentences, same rules as Root cause (no dashes, no semicolons, no file:line or class names). Say what was changed and what the user now gets. Exemplar (#278585): "Had saiz muat naik Lampiran di Panel Jabatan Teknikal dan Ulasan YB dibuang, kini ikut had sistem. Fail lebih 1 MB boleh dimuat naik dan dipaparkan." MANDATORY once a fix shape is chosen. Use `⬜ not yet fixed` before Rubric picks a candidate. (Added 2026-09-07 per みや, #278585: the two Redmine fields Root cause + Solution are filled together, so the hand-back carries both.)> |
+| Solution | <FIX ONLY, max 2 plain sentences, same rules as Root cause (no dashes, no semicolons, no file:line or class names). Say what was changed and what the user now gets. Exemplar (#278585): "Had saiz muat naik Lampiran di Panel Jabatan Teknikal dan Ulasan YB dibuang, kini ikut had sistem. Fail lebih 1 MB boleh dimuat naik dan dipaparkan." MANDATORY once a fix shape is chosen. Use `⬜ not yet fixed` in chat before Rubric picks a candidate. A hand-over to another team: the Solution is the fix we suggest to them. Never write "belum dibaiki" or "not yet fixed" in a Redmine field; while the fix waits for acceptance, leave the field empty and write `(empty)` in the row (2026-10-27 per みや, 286462; enforced by `domain/rootcause-format` F27-F29). (Added 2026-09-07 per みや, #278585: the two Redmine fields Root cause + Solution are filled together, so the hand-back carries both.)> |
 
 | Test data | Value |
 |---|---|
@@ -279,6 +279,18 @@ Rules:
 ### 🧾 Root cause + Solution on EVERY Redmine hand-over (added 2026-10-02 per みや, #282198)
 
 Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "pass to X", in any wording, for EVERY ticket type (code fix, data patch, document patch, alter), carries the **Root cause** and **Solution** rows FIRST, above the field table and the Notes. Format per `feedback_redmine_rootcause_format` (plain Malay, max 2 sentences each, no dashes, no semicolons, no code names, no blame). A patch ticket is not exempt: its cause is why the data or document was wrong, its solution is what was patched. Enforced by `domain/rootcause-format` (Stop, BLOCKS a Redmine close-field reply without both rows; bypass `[skip-rootcause-format: <reason>]`).
+
+### 📤 Hand-over to ANOTHER TEAM (reports · common · SPOC) — file + Redmine tab, in the SAME turn as the note (added 2026-10-27 per みや, 286462)
+
+The moment the Rubric says the fix belongs to another team, the hand-over reply ships THREE things together, unasked:
+
+| # | Deliverable | Where |
+|---|---|---|
+| 1 | The note (Pena, sentences grouped in pairs, a blank line between groups) + Root cause + Solution rows. Solution = the fix we suggest to them | chat |
+| 2 | The bare hand-off file: file-name header + `Line N (BEFORE)` / `Line N (AFTER)` markers + code only, per `feedback_cross_module_handoff_artifact` | Task folder `2. Fix\` (or the latest `N. Rework\`), full path in the reply |
+| 3 | The Redmine tab: the ticket's edit form opened in Edge (Claude in Chrome), Assignee + Notes + Root Cause (DEV) + Solutions filled, file attached, **stopped before Submit** so he approves it | browser, then one line naming the tab |
+
+**Banned**: a hand-over note with no file and no prefilled tab · asking him to "copy this into Redmine". **Why**: 286462, he had to ask "Where is the handover tab for me to approve and the file?"
 
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 

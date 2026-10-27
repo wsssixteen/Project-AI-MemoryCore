@@ -55,6 +55,10 @@ check('F23 Resolved By alone without the word Redmine is silent', runOn('| Resol
 check('F24 Redmine mention without close fields is silent', runOn('I synced Redmine #282198 and read the journal.') === 0, 'redmine mention only');
 check('F25 bypass on hand-over is silent', runOn('[skip-rootcause-format: draft only]\n' + HO('')) === 0, 'bypass');
 check('F26 hand-over with dash in Root cause still blocks on format', runOn(HO(`| Root cause | Fail ditukar — PDF lama.|\n| Solution | ${SOL_OK} |\n`)) === 2, 'format still enforced');
+// Solution = the fix made or suggested; never "belum dibaiki"; (empty) allowed while waiting (2026-10-27, 286462)
+check('F27 replay 286462: Solution "belum dibaiki (Reports team)" blocks', runOn(HB2(RC_OK, 'belum dibaiki (Reports team)')) === 2, 'belum dibaiki');
+check('F28 hand-over with Solution (empty) passes', runOn(HO(`| Root cause | ${RC_OK} |\n| Solution | (empty) |\n`)) === 0, 'empty mark');
+check('F29 hand-over with suggested fix passes', runOn(HO(`| Root cause | ${RC_OK} |\n| Solution | Asingkan Plot daripada Lot supaya draf papar No. Plot. |\n`)) === 0, 'suggested fix');
 check('F11 empty stdin no false block', spawnSync(process.execPath, [HOOK], { input: '{}', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'empty');
 check('F12 malformed stdin no false block', spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'malformed');
 
