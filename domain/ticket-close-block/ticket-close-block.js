@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ticket-close-block — deterministic git commit-reference block for a ticket close.
 // Usage: node ticket-close-block.js --repo <path> --ticket <num> --module <pelupusan|awam>
-//        [--branch <name>] [--intenv-sha <sha>] [--cherrypick]
+//        [--branch <name>] [--intenv-sha <sha>] [--cherrypick] [--closing "Thank you very much."]
 // AWAM      -> branch only (another team does the PROD merge and refers to the branch).
 // pelupusan -> branch + merged to mlk/int-env (we deploy PROD; BA tests on int-env).
 
@@ -27,7 +27,7 @@ const repo = arg('repo');
 const ticket = arg('ticket');
 const module_ = String(arg('module') || '').toLowerCase();
 if (!repo || !ticket || !module_) {
-  console.error('usage: --repo <path> --ticket <num> --module <pelupusan|awam> [--branch <name>] [--intenv-sha <sha>] [--cherrypick]');
+  console.error('usage: --repo <path> --ticket <num> --module <pelupusan|awam> [--branch <name>] [--intenv-sha <sha>] [--cherrypick] [--closing "<closing line>"]');
   process.exit(1);
 }
 const isAwam = module_.includes('awam');
@@ -82,6 +82,8 @@ lines.push('</pre>');
 let ba = arg('ba');
 const envs = arg('envs');
 const prodScript = arg('prod-script');
+// Closing is a judgement call (2026-10-27 per miya, #285768): default Thank you., the five forms live in domain/pena/modules.json greet.
+const closing = (arg('closing') && arg('closing') !== true) ? arg('closing') : 'Thank you.';
 if (ba && ba !== true) {
   let names = {};
   try { names = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'ba-names.json'), 'utf8')); } catch (_) {}
@@ -129,7 +131,7 @@ if (foreign && ba && ba !== true) {
   if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
   if (isAwam || !historyHasBranch) { console.log(''); console.log(`Branch: ${branch || '(not found)'}`); }
   console.log('');
-  console.log('Thank you.');
+  console.log(closing);
 } else {
   if (ba && ba !== true) {
     console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
@@ -143,7 +145,7 @@ if (foreign && ba && ba !== true) {
   if (ba && ba !== true) {
     if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
     console.log('');
-    console.log('Thank you.');
+    console.log(closing);
   }
 }
 
@@ -166,4 +168,8 @@ if (prodScript && prodScript !== true) {
   console.log(`Attach: ${full || '(not found — give the full path) ' + prodScript}`);
 }
 
+if (ba && ba !== true) {
+  if (!(prodScript && prodScript !== true)) { console.log(''); console.log('--- not part of the note ---'); }
+  console.log(`Closing: ${closing} Pick by judgement: Thank you very much. (large ticket) · Thank you <name>. (reader did extra) · Thanks. (one-line dev hand-over) · Terima kasih. (Malay note). Change with --closing.`);
+}
 logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch: branch || null, commit: commit ? commit.hash : null, intenv: intenv || null, outcome: commit ? 'ok' : 'no-commit' });

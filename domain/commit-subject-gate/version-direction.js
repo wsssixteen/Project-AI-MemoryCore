@@ -31,8 +31,24 @@ function direction(oldVer, newVer) {
   return 0;
 }
 
+// A beta / patch common is a test build, never an upgrade (2026-10-27 per miya, #285768).
+const TEST_BUILD = /beta|patch/i;
+const VERIFY_WORDS = /\bverify common\b/i;
+
 // Pure check. Returns { ok, message }.
 function checkSubject(subject, oldVer, newVer) {
+  if (TEST_BUILD.test(newVer)) {
+    if (VERIFY_WORDS.test(subject) && subject.includes(newVer)) return { ok: true };
+    const ticket = (/#(\d{4,})/.exec(subject) || [])[1] || '<num>';
+    return {
+      ok: false,
+      message: [
+        `⛔ commit-subject-gate (test build): ${newVer} is a beta / patch common, a build to verify a fix.`,
+        `   Subject: ${subject}`,
+        `   Use:  Ref #${ticket} - Verify common ${newVer}`,
+      ].join('\n'),
+    };
+  }
   const dir = direction(oldVer, newVer);
   if (dir === null || dir === 1) return { ok: true };
   if (UP_WORDS.test(subject) || !CHANGE_WORDS.test(subject)) {

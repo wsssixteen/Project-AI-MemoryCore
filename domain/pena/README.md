@@ -123,3 +123,5 @@ Eval: 46/46 (fixtures 41 to 46 new).
 | 19 | two vague words on one line | handled: one finding for the line |
 | 20 | "rarely" in an infra note | handled: infra-handoff carries `proven` |
 | 21 | the finding is cleared by deleting the sentence | accepted-risk: the note then says less; by-hand |
+
+*2026-10-27 per miya (#285768): greet closing becomes a judgement among five forms (Thank you. default · Thank you very much. large ticket · Thank you <name>. · Thanks. · Terima kasih.), grounded in 134 of his Redmine closings; the greet check accepts all five; ticket-close-block.js gains --closing. Spec change named: the 2026-10-09 #283960 rule 'BA pass note closes with exactly Thank you.' is retired by his new instruction. Kept: Salam + short name, nothing after the closing. Eval 50/50.*
