@@ -20,6 +20,20 @@ State: design proposed, NOT approved, nothing built. Tomorrow's baseline starts 
 
 ## 3. Next step: the Fable 5.1 audit (tomorrow, in this child session)
 
+**His order, 2026-10-28 evening (supersedes the path-only audit below as the FIRST step):**
+
+1. Fable 5.1 audits the system's RULES and DESIGN first (`system-rules`, `system-design`, `system/INDEX.md` map + rulings, CLAUDE.md). The result is the new "Foundations".
+2. Against those Foundations, decide whether the change flow (the six paths below) actually works.
+3. Then consolidate WITHOUT removing anything as the first step; keep every mechanical or deterministic part (hook, gate, script) where it is needed.
+
+His principle: "EVERYTHING needs to be NAMED first. Then STRUCTURED." Naming is step 0 of the Foundations audit:
+- the group Workflows + Features + Tools has no name in the map (his "blue box");
+- 9 tracked root entries have no kind: `growth` · `library` · `plugins` · `salvage` · `tools` · `outputs-temp` · `Project Resources` · `RURI-GROWTH.md` · root `etanah-knowledge` (verdicts pending in `system/FOLDER-STRUCTURE.md` lines 34-42);
+- `node lib/folder-structure.js map` reports "0 unmapped" while these 9 are on disk; why is not verified.
+- Architecture picture of today's map: shared notes folder `system-architecture.png`.
+
+His hierarchy concern: a Workflow (route) carrying out changes to Rules and Kernel looks like a lower layer running a higher one. Accepted on the condition that the change procedure's text is OWNED by Rules (CLAUDE.md / system-design) and the Workflow only carries it out. Weigh this in decision 1.
+
 - Switch this session to Fable 5.1 (`claude-fable-5-1`) before the audit; say the model in the first line.
 - Goal of the audit: miya understands the STRUCTURE and FLOW of how a system change happens today, before any design is decided.
 - For each of the six paths (plus a correction via `auto-skill-on-mistake`): trigger → steps in order → files and tools touched → who enforces each step (hook, skill, prose) → where it ends (committed? pushed? on main?).
