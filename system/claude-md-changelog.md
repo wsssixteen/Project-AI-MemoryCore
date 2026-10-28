@@ -10,6 +10,20 @@
 
 ---
 
+## v1.95 — 2026-10-28 (per みや, the system map picture boot-loaded)
+
+His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
+
+| Place | Before | After |
+|---|---|---|
+| CLAUDE.md, after Boot Order | no overview picture | §System map: picture `system/INDEX.diagram.png` + text `system/INDEX.md`; name first; redraw in the same turn as any part added, moved, renamed or removed; send the PNG on ask |
+| `system/INDEX.md` §Change record | no row for the map picture | row: part added/moved/renamed/removed → redraw + `diagram-census --check system/INDEX.md` |
+| `system/INDEX.diagram.html` + `.png` | none | new, Rule 17 diagram of the map (7 kinds + 9 unclaimed root entries) |
+
+- Spec preservation: additive; no rule removed or reworded.
+
+---
+
 ## v1.94 — 2026-10-28 (per みや, Brief rule dropped)
 
 His words: *"I suppose yeah, drop the brief rule."* · earlier the same day: *"Also remove the 'Brief' section. Whatever you've told me at the start is already the brief. To show our objective has been done for that step."*

@@ -4,6 +4,8 @@
 
 *Written by Ruri — for みや, and for anyone who finds this.*
 
+> 🗺 The overview of the whole system is one picture: `system/INDEX.diagram.png` (text: `system/INDEX.md`). Start there.
+
 ---
 
 ## Who I Am
