@@ -5,6 +5,8 @@ description: Fast env-deploy card for Melaka test environments — merge a ticke
 
 # deploy — env-deploy card (Melaka)
 
+> ⚠️ **ONE RUN PER TICKET.** Several tickets in one ask = a separate full run for each ticket: own Redmine read, own check, own temp branch, own compile, own push, own result line. Never two tickets in one branch or one push (2026-10-28 per みや, 286315 + 285768). Each card that covers more than one ticket opens with this ⚠️ line so he sees it was followed.
+
 `/deploy <env> <module> <ticket-or-branch>`
 
 `/deploy internal awam 271721` · `/deploy stag plp mlk/qa/265537`
@@ -172,6 +174,8 @@ Never guess a deploy host from a folder listing — a wrong one either fails or 
 ---
 
 ## 4 · Ruri's git sequence — run it silently, report only the result
+
+🚨 **Several tickets in one ask = one full run PER TICKET (2026-10-28 per みや, 286315 + 285768).** Each ticket gets its own Redmine read, its own already-merged check, its own temp branch named after that ticket, its own commit or merge, its own compile, its own push, and its own result line and card section. Never put two tickets in one temp branch or one push. His words: "even if a request demands in a single request, we treat each tickets separately... I do not want to discount the effort it takes, the logic it takes."
 
 Straight-push. **No nod gate.** Justified: `mlk/stag-env` and `mlk/int-env` have zero backflow
 into `mlk/master` (verified 2026-07-27 across full merge history) — a wrong merge cannot reach
