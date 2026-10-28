@@ -171,7 +171,8 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
         : `     2. ⚠️ state UNKNOWN — ask みや which state; never default to Melaka silently`,
     `   EMIT the rows as ✓/⬜ (a skipped row must be VISIBLE):`,
     `     A0 ⬜ RESOLVE words → objects: "ID Permohonan" → aplikasi_id · urusan · pejabat; "tugasan X" → ind_tgsn kod(s) under THAT urusan; each "serahan" → its own aplikasi + hubungan_aliran_kerja_id`,
-    `     A1 ⬜ LIVE-PROCESS CHECK: umm_aliran_kerja (process ids) · umm_a_tgsn flag_aktif='Y' · umm_tgsn_semasa · header status — THEN the ENGINE (engine schema, or the page's ID Process dropdown after Cari): Tamat/0-active is NOT proof the process ended (#275847)`,
+    `     A1 ⬜ LIVE-PROCESS CHECK: umm_aliran_kerja (process ids) · umm_a_tgsn flag_aktif='Y' · umm_tgsn_semasa · header status — THEN the ENGINE (engine schema, or the page's ID Process dropdown after Cari): Tamat/0-active is NOT proof the process ended (#275847)` +
+      (state === 'melaka' ? ` · Melaka stg/mlit, no page: node E:\\Dev\\scripts\\FlowableAlter\\alter.js live --env <stg|mlit> --id <ID> (app rows + engine tasks; NOT CONSISTENT = a live umm_a_tgsn row with no engine task, or the reverse)` : ''),
     `     A2 ⬜ BIRTH CHECK: integration child (hubungan set) vs counter/standalone (hubungan NULL, KodPemula=PEMULA_ABK) — decides whether "re-run X to regenerate Y" is a mechanism at all`,
     `     A3 ⬜ NODE EDGE-TRACE table for the target (grep receiveUserTask(&quot;KOD&quot; in <state>/flowables-bpmn/<KEY>.bpmn20.xml — dump if absent); OUTGOING edge = intended next step? twins by edges, never by name`,
     `     A3b ⬜ VARIABLE TRACE for a sub-flow target: node domain/alter-ticket-gate/subflow-trace.js <bpmn-dir> <parent.bpmn20.xml> <callActivityId> — the callActivity NAME is a label; the in-mapped variables (nextUrusan, flagSemakanPemohonan, …) decide what the child does`,
