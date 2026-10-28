@@ -10,6 +10,20 @@
 
 ---
 
+## v1.94 — 2026-10-28 (per みや, Brief rule dropped)
+
+His words: *"I suppose yeah, drop the brief rule."* · earlier the same day: *"Also remove the 'Brief' section. Whatever you've told me at the start is already the brief. To show our objective has been done for that step."*
+
+| Place | Before | After |
+|---|---|---|
+| §Explanation | line "📋 BRIEF AT THE END OF EVERY REPLY (2026-10-23 per みや)" | removed |
+| `.claude/reply-shape-spec.md` §3g | live rule | marked RETIRED, body kept as history |
+
+- Not touched: the adhoc "Brief first" order (`adhoc-save` skill) and the `/brief` start-of-work skill. They are different products.
+- Spec preservation: the v1.92 rule is retired by name; no other rule changed.
+
+---
+
 ## v1.93 — 2026-10-27 (per みや, pictures replace story diagrams)
 
 His words: *"Beautiful, that is really really helpful. I would like to integrate using this diagram into our workflows, I guess we're starting with replacing the current story diagram."* · then *"Yes, update the three story-diagram mentions in CLAUDE.md to point at the picture default, through the CLAUDE.md change pipeline."*
@@ -451,4 +465,9 @@ Added 2026-05-13 per みや.
 
 ## v1.76 (2026-09-30 — merged after main's v1.75)
 - Disposition +rule 6 NEVER ASSUME / never state a guess as fact; stored formats copied word for word. Per miya after #256334 (guessed server-log path + rewritten infra format). Additive; no spec dropped.
+
+
+## 2026-10-28 — memory cleanup (no rule change)
+
+Per みや: every quote that held a swear word, in memory, diary, skills, system and domain files, is rewritten as his anger or frustration. New gate domain/memory-clean-words/ + save rule mem-no-swearing (word list lib/clean-words.js). Spec preservation: wording only; no rule, step, trigger or banned clause changed. Skills stamped: auto-skill-on-mistake, bpmn-check, release-mlk-plp, system-design; protocol: expansion-protocol.md.
 
