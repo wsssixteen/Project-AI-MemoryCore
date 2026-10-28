@@ -29,6 +29,18 @@ One sentence of answer, then one drawing. Nothing he did not ask for.
 
 For explaining a change to an existing part, the four rows + flow with the one changed step marked: `.claude/reply-shape-spec.md` §3d.
 
+## 2b. Etanah issue (adhoc · quest): draw the urusan flow, mark the value (2026-10-28 per みや, ADHOC-MCL-2026-1)
+
+| Rule | Banned |
+|---|---|
+| The drawing follows the **business urusan flow**, not the code: one lane per module (Pendaftaran · Portal Awam · Pelupusan …), the lane label says which module | a code chain (`Form :413 → Service :1464`) as the issue picture |
+| Keep only the steps that **make or show the value of concern**; a lane already names the module, so its tugasan sub-steps fold into one box (Perserahan + Kemasukan + Keputusan → one "Pindahmilik" box, logins as its small line) | a box per tugasan when the tugasan does not touch the value |
+| Never drop the step that **creates** the value, however long the flow (ADHOC-MCL-2026-1: Turun Milik and Pindahmilik made the split shares) | cutting the cause steps to save boxes |
+| **Highlight the value itself** (the variable, keyword or value: e.g. `MOHD TAUFIK 1/2` twice) in the accent colour, at the step where it starts and where it shows wrong; a now ✗ / expected ✓ pair at the end | highlighting a whole step when the value is the point |
+| Box text = labels and values only, no sentences | sentences inside boxes |
+
+Example: `domain/adhoc-brief-first/diagram.html` shows the adhoc order; the MCL simulation picture (Pendaftaran lane: Asal → Pindahmilik → owner rows ✗; Portal lane: Carian Rasmi → MCL Tab 2 → now ✗ / expected ✓) is the shape.
+
 ## 3. Picture route (diagram-design)
 
 1. Skill file: the `diagram-design` skill when loaded; in a session started before its install, read `%USERPROFILE%\.claude\plugins\cache\diagram-design\diagram-design\<version>\skills\diagram-design\SKILL.md` and its type reference by hand. Not installed at all → install it first (`.claude/auto-memory/project_installed_skills.md` has the command).
