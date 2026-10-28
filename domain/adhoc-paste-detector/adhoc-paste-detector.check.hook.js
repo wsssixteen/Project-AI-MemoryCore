@@ -125,6 +125,8 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '',
     '   ORDER (miya 2026-10-13): investigate, then BRIEF him in chat, THEN hand the scaffold below to a background',
     '   agent. Never write a scaffold part before the brief is shown (adhoc-save skill, section "Brief first").',
+    '   The brief ENDS with ONE picture of the cause (explain-diagram skill, sent as a PNG) and "## Reply to BA"',
+    '   in two versions, Short then Full (Pena whatsapp-dev), unasked (miya 2026-10-28).',
     '',
     '   FIX LADDER (miya 2026-10-22) — plan it from the start, cheapest rung first; CHECK each rung before offering it:',
     '     1. User side (click / fill / re-save) → trace the screen: disabled=/rendered= on that field, the flag it reads,',

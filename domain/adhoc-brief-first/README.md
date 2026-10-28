@@ -1,7 +1,8 @@
 # adhoc-brief-first
 
 symptom: 2026-10-13 miya: please fix this step, you must brief me first before saving or anything else that should be done in the background
-goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
+goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
+diagram: domain/adhoc-brief-first/diagram.png (refined 2026-10-28: the brief also owes one picture of the finding and the BA reply, checked even when the save agent starts with no marker line)
 goal_signal: an adhoc turn ends with the brief and has no main-thread save-set write before it
 retention: rotate monthly
 footprint: per-tool: 1 node process per Write, Edit, PowerShell or Bash call, about 40 MB for under 100 ms
