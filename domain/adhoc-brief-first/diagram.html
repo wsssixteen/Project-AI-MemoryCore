@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adhoc brief: what the stop check holds</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--color-paper); color: var(--color-ink);
+           min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1000px; width: 100%; min-width: 0; padding: 28px 32px; box-sizing: content-box; background: var(--color-paper); }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.2rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Feature · domain/adhoc-brief-first</p>
+    <h1>Adhoc brief: what the stop check holds</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+        <title id="t">Adhoc brief: what the stop check holds</title>
+        <desc id="d">Investigate, brief with picture and BA reply, stop check on marker or save agent, block or start the background save.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <line x1="330" y1="86" x2="330" y2="118" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="330" y1="190" x2="330" y2="222" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="330" y1="294" x2="330" y2="326" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="500" y1="362" x2="618" y2="362" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <line x1="330" y1="398" x2="330" y2="430" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="532" y="344" width="56" height="13" rx="2" fill="#f5f5f5"/>
+        <text x="560" y="354" fill="#bf4520" font-size="10" font-family="Consolas" text-anchor="middle">missing</text>
+        <rect x="336" y="404" width="56" height="13" rx="2" fill="#f5f5f5"/>
+        <text x="364" y="414" fill="#4f5d75" font-size="10" font-family="Consolas" text-anchor="middle">all there</text>
+
+        <rect x="160" y="30" width="340" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="330" y="54" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">1. Investigate (read only)</text>
+        <text x="330" y="74" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">DB, code, fix ladder</text>
+
+        <rect x="160" y="120" width="340" height="70" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+        <text x="330" y="144" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">2. Brief ends the turn</text>
+        <text x="330" y="163" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">finding + SELECTs + PICTURE</text>
+        <text x="330" y="180" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">+ Reply to BA (Short, Full)</text>
+
+        <rect x="160" y="224" width="340" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="330" y="248" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">3. Stop check wakes</text>
+        <text x="330" y="267" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">"Saving in the background next"</text>
+        <text x="330" y="284" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">OR save agent already started</text>
+
+        <rect x="160" y="328" width="340" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="330" y="352" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">4. Checks the brief</text>
+        <text x="330" y="371" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">BA reply · picture · User-step</text>
+        <text x="330" y="388" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">After-state for a patch</text>
+
+        <rect x="620" y="334" width="320" height="56" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+        <text x="780" y="358" fill="#2d3142" font-size="13" font-weight="600" text-anchor="middle">Block: send only the missing part</text>
+        <text x="780" y="378" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">delta, not the whole brief</text>
+
+        <rect x="160" y="432" width="340" height="56" rx="22" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+        <text x="330" y="456" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">5. Background agent saves</text>
+        <text x="330" y="476" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">save-set + audit green</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -109,6 +109,10 @@ check('F22 A6 = miya voice memory + fill-if-exists', /feedback_ticket_writing_st
 check('F23a Perak A5 = runbook for miya, no alter.js run line', /A5 ⬜ RUNBOOK for みや/.test(r.out) && !/RUN IT YOURSELF/.test(r.out), r.out.slice(0, 160));
 r = run({ prompt: 'tolong alter tugasan PTMLK/02/L/PT/2026/343' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
 check('F23b Melaka A5 = alter.js dry-run → approval code → --approve, AFTER check, keeper login', /A5 ⬜ RUN IT YOURSELF/.test(r.out) && /--dry-run/.test(r.out) && /--approve <code>/.test(r.out) && /keeper\.js --login --env prod/.test(r.out) && /ASSIGNEE = agihan default/.test(r.out), r.out.slice(0, 300));
+// F24 (2026-10-28, alter-sim) Melaka A1 names the no-page engine read; Perak A1 does not
+check('F24a Melaka A1 = alter.js live (engine read, no page)', /A1 ⬜ [^\n]*alter\.js live --env <stg\|mlit> --id <ID>/.test(r.out) && /NOT CONSISTENT/.test(r.out), r.out.slice(0, 300));
+r = run({ prompt: 'retrieve 275847', transcript_path: transcript([]) });
+check('F24b Perak A1 carries no alter.js live line', /A1 ⬜/.test(r.out) && !/alter\.js live/.test(r.out), r.out.slice(0, 160));
 r = run({ prompt: 'tolong alter tugasan PTMLK/02/L/PT/2026/343', transcript_path: transcript([readTool('C:/x/etanah-knowledge/ALTER-TICKET-PLAYBOOK.md')]) }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
 check('F23c Melaka reminder line also names the alter.js route', reminder(r) && /run it yourself: alter\.js --dry-run/.test(r.out), r.out.slice(0, 200));
 // F15 non-ticket, non-permohonan chat mentioning alter (e.g. git "alter table") → silent

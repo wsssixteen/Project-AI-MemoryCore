@@ -29,11 +29,13 @@ const QUERY = AU('mcp__postgres-mlkstg1-pg__query_database', { query: 'SELECT 1'
 const AGENT = AU('Agent', { description: 'Save adhoc', prompt: '[skip-brief-first: background save agent] write the save-set for ADHOC-MLPS-2026-4, run adhoc-save-audit', model: 'sonnet', run_in_background: true });
 const OTHER_AGENT = AU('Agent', { description: 'Explore', prompt: 'find callers of insertGITP' });
 
-function run(lines) {
+// Every brief sends one picture of the finding (2026-10-28, ADHOC-MCL-2026-1); fixtures carry it unless pic=false.
+const PIC = AU('SendUserFile', { files: ['C:\\tmp\\finding.png'], status: 'normal', display: 'render' });
+function run(lines, pic = true) {
   let payload = { hook_event_name: 'Stop' };
   if (lines !== undefined) {
     const f = Array.isArray(lines) ? path.join(TMP, 't' + (++seq) + '.jsonl') : lines;
-    if (Array.isArray(lines)) fs.writeFileSync(f, lines.join('\n'));
+    if (Array.isArray(lines)) fs.writeFileSync(f, (pic ? lines.concat([PIC]) : lines).join('\n'));
     payload = { hook_event_name: 'Stop', transcript_path: f };
   }
   return spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, env: process.env });
@@ -79,6 +81,20 @@ expectPass('C2 the same answer with a Confidence table passes', run([SURE, AT('6
 expectPass('C3 a % in a turn that did not ask how sure passes', run([U('how many rows?'), AT('23 rows, 70% of them from mita.')]));
 expectPass('C4 "how sure" answered without any % passes', run([SURE, AT('Not sure yet: the screen conditions are not read.')]));
 expectConfBlock('C5 Malay ask "berapa yakin" with a bare % blocks', run([U('berapa yakin?'), AT('90%.')]));
+const expectPicBlock = (n, r) => check(n, blocked(r) && /no picture of the finding/.test(said(r)) && /explain-diagram/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectPicBlock('D1 brief with marker and BA reply but no picture blocks', run([ASK, QUERY, AT(BRIEF), AGENT], false));
+expectPass('D2 "Diagram: none (<reason>)" stands in for the picture', run([ASK, AT(BODY + BA + '\nDiagram: none (one-row lookup, nothing to draw)' + MARK), AGENT], false));
+expectPicBlock('D3 "Diagram: none" with no reason does not count', run([ASK, AT(BODY + BA + '\nDiagram: none' + MARK), AGENT], false));
+expectPicBlock('D4 an HTML file sent is not the picture', run([ASK, AT(BRIEF), AU('SendUserFile', { files: ['C:\\tmp\\finding.html'] }), AGENT], false));
+expectPicBlock('D5 a PNG path named only in text, never sent, does not count', run([ASK, AT(BRIEF + '\nPicture: C:\\tmp\\finding.png'), AGENT], false));
+expectPicBlock('D6 "Diagram: none (x)" quoted inside hook feedback (meta) does not count', run([ASK, AT(BRIEF), UM('Diagram: none (meta)'), AGENT], false));
+// ADHOC-MCL-2026-1 (2026-10-28): no marker line, save agent started in the same turn, no BA reply → the checks never ran
+const expectMclBa = (n, r) => check(n, blocked(r) && /no reply to the BA/.test(said(r)) && /ADHOC-MLPS-2026-4/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectMclBa('M1 the ADHOC-MCL-2026-1 miss: no marker, save agent started, no BA reply blocks', run([ASK, QUERY, AT(BODY), AGENT], false));
+expectPass('M2 no marker, save agent started, BA reply + picture: passes', run([ASK, QUERY, AT(BODY + BA), AGENT]));
+expectPicBlock('M3 no marker, save agent started, BA reply but no picture blocks', run([ASK, QUERY, AT(BODY + BA), AGENT], false));
+expectPass('M4 no marker, an Explore agent only: not an adhoc brief', run([ASK, QUERY, AT(BODY), OTHER_AGENT], false));
+expectPass('M5 no marker, save agent started in an EARLIER turn does not hold this turn', run([ASK, AT(BODY), AGENT, U('ok'), AT('Noted.')], false));
 let r = spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env });
 check('S9 malformed stdin exits 0', r.status === 0, 'exit=' + r.status);
 expectPass('S10 no transcript path: fail-open', run(undefined));

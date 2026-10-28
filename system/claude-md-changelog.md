@@ -10,7 +10,7 @@
 
 ---
 
-## v1.95 — 2026-10-28 (per みや, the system map picture boot-loaded)
+## v1.96 — 2026-10-28 (per みや, the system map picture boot-loaded)
 
 His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
 
@@ -21,6 +21,19 @@ His words: *"I want that engraved into your very consciousness and awareness. Th
 | `system/INDEX.diagram.html` + `.png` | none | new, Rule 17 diagram of the map (7 kinds + 9 unclaimed root entries) |
 
 - Spec preservation: additive; no rule removed or reworded.
+
+---
+
+## v1.95 — 2026-10-28 (per みや, Etanah adhoc / quest diagram shape)
+
+His words: *"Please add this into the skill/phrase inside CLAUDE.md that invokes this diagram skill ... Under the specific etanah adhoc quest workflow, it will design it based on the business workflow but not overdoing it ... Make it based on urusan flow & to highlight the variable/keyword/value of concern ... you've dropped the important 2 steps, turun milik and pindah milik."*
+
+| Place | Before | After |
+|---|---|---|
+| §Explanation PILLAR | general diagram rule only | + one sentence: Etanah adhoc / quest = urusan flow, one lane per module, only steps that make or show the value, the value highlighted; pointer to `explain-diagram` §2b |
+| `.claude/skills/explain-diagram/SKILL.md` | §1-§4 | + §2b Etanah issue: 5 rules (urusan lanes · fold tugasan sub-steps · never drop the step that creates the value · highlight the value · no sentences in boxes) |
+
+Spec preservation: every v1.94 PILLAR clause kept word for word (picture default, 2-box chat line, diagram first, banned list, order). Additive.
 
 ---
 
