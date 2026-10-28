@@ -82,8 +82,8 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    do NOT put it in the plan table, do NOT ask みや about it.** Only a SQL whose owning ticket is
    NEW to this release is ever mentioned. **Why**: 1.3.0 — I carried `FAT-CR #252786.sql` through the
    plan table, the hand-off card, and the Sheet values across five separate turns. `mlk/fat-cr/252786`
-   had been merged long before 1.3.0 and contributed nothing to the delta. みや: *"why the fuck are
-   you including it in our baseline out of nowhere?"* Correct answer was to never raise it.
+   had been merged long before 1.3.0 and contributed nothing to the delta. みや: *"why are
+   you including it in our baseline out of nowhere?"* (frustrated) Correct answer was to never raise it.
 
    🚨 **The Sheet's SQL cell — what goes in, and the ONE test** (2026-07-31, release 1.3.0, after I
    got this wrong in BOTH directions in one hour).
@@ -466,3 +466,6 @@ Then emit the two-host stag build + deploy card (deploy skill §5, one command p
 - Resume after interruption: state survives in `domain/release-mlk-plp/state/release-<ver>.json`.
 
 *2026-10-23: Phase G (stag-env catch-up after the master merge) added, `release-prep.js stag-catchup`, guards in `init` + `merge-to-master`, eval `eval-stag-catchup.js` (#246964, asked 2026-08-10). DON'T #12 widened to name Phases F and G. Common pin = the release's own, in a separate commit, nexus-checked (miya same day; replaced a first "keep the env pin" draft). Other phases unchanged.*
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

@@ -466,3 +466,8 @@ Added 2026-05-13 per みや.
 ## v1.76 (2026-09-30 — merged after main's v1.75)
 - Disposition +rule 6 NEVER ASSUME / never state a guess as fact; stored formats copied word for word. Per miya after #256334 (guessed server-log path + rewritten infra format). Additive; no spec dropped.
 
+
+## 2026-10-28 — memory cleanup (no rule change)
+
+Per みや: every quote that held a swear word, in memory, diary, skills, system and domain files, is rewritten as his anger or frustration. New gate domain/memory-clean-words/ + save rule mem-no-swearing (word list lib/clean-words.js). Spec preservation: wording only; no rule, step, trigger or banned clause changed. Skills stamped: auto-skill-on-mistake, bpmn-check, release-mlk-plp, system-design; protocol: expansion-protocol.md.
+

@@ -82,7 +82,7 @@ Then check that env's DB + the ticket journals in the SAME window (what changed 
 1. "migration didn't carry the data" → refuted (registry `ind_mklmt_tnh_permit_lesen` had it all).
 2. "key PDTJ.600-2/9/79 instead" → refuted (live test threw two errors).
 3. "key 2027" → tujuan dropdowns STILL empty (the real bug survived every guess).
-みや: *"run full /quest ... so that you do not give bullshit and lying"*. The premature guesses wasted his time and burned trust; the quest loop (adversarial Recon + verify-before-claim) exists precisely to stop this.
+みや: *"run full /quest ... so that you do not give nonsense and lying"* (angry). The premature guesses wasted his time and burned trust; the quest loop (adversarial Recon + verify-before-claim) exists precisely to stop this.
 
 **How to apply**:
 - Adhoc with a reproducible symptom + any code/DB dig → treat it like a ticket: `/quest start` (or run the Scout→Recon→Rubric emits by hand if no ticket number).

@@ -16,7 +16,7 @@ runHook({ name: 'local-deploy-gate', event: 'UserPromptSubmit' }, (input) => {
   // it BOTH ways on 2026-07-24 ("cannot start my local server" / the raw stack trace).
   const hardSignal = /(ClassNotFoundException|NoClassDefFoundError|POST_MODULE|WFLYSRV0026|WFLYCTL0013|jboss-deployment-structure|HibernateException|HttpRequestHandlerServlet)/i.test(p);
   const softSignal = /\b(jboss|deploy(ment|ing|ed)?|\.war\b|local server)\b/i.test(p)
-    && /(fail|error|broken|stuck|same (fucking )?issue|not deploying|won'?t|can'?t|cannot|not working|what'?s the problem)/i.test(p);
+    && /(fail|error|broken|stuck|same (\w+ )?issue|not deploying|won'?t|can'?t|cannot|not working|what'?s the problem)/i.test(p);
   if (!hardSignal && !softSignal) return { fired: false };
 
   return {

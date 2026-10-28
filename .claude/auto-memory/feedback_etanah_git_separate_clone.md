@@ -38,7 +38,7 @@ Order, every time, no exception:
 3. Commit the fix on that branch.
 4. THEN merge --no-ff into mlk/stag-env, and cherry-pick / merge into mlk/int-env.
 
-**Banned**: committing or cherry-picking a fix DIRECTLY onto mlk/int-env or mlk/stag-env with no ticket branch behind it. This session (#279711, #279787, 2026-09-17) both fixes went straight to int-env with no ticket branch and never reached staging — the board went blind and BA could not retest. みや: *"always create the fixes in a fucking branch before merging into any main branches."*
+**Banned**: committing or cherry-picking a fix DIRECTLY onto mlk/int-env or mlk/stag-env with no ticket branch behind it. This session (#279711, #279787, 2026-09-17) both fixes went straight to int-env with no ticket branch and never reached staging — the board went blind and BA could not retest. みや: *"always create the fixes in a branch before merging into any main branches."* (angry)
 
 **Why the branch must exist**: it is the single source the env merges pull from; without it a rework has nothing to reset (see the 279615 v2 mess), staging never gets the fix, and the commit is orphaned on one env. Pairs with (merged above) and [[feedback-commit-deploy-runbook]].
 

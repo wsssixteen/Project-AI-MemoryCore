@@ -43,7 +43,7 @@ These are values, not procedures. The atomic Honesty primitive skills (see syste
 |---|---|
 | `claim-verification` | "is X done", "did you complete", "show me the diff", "verify before declaring", "before you say done" |
 | `task-assignment-honesty` | "who's doing this", "is this still mine", "did you reassign", "you moved my task", "I assigned this to you" |
-| `stalling-detector` | "just do it", "proceed", "go ahead", "implement", "stop offering choices", "what the fuck just do it" |
+| `stalling-detector` | "just do it", "proceed", "go ahead", "implement", "stop offering choices", "what, just do it" |
 | `scope-anchor-echo` | "what's the scope", "are you in scope", "scope anchor", "before any edit", "remind me the scope" |
 | `over-generalization-check` | "didn't we see this before", "is this same as last", "you're over-applying", "different ticket, check fresh", "not the same shape" |
 | `test-data-echo` | "test data", "permohonan ID", "pengguna semasa", "what do I test", "hand-back", "stop-point summary" |

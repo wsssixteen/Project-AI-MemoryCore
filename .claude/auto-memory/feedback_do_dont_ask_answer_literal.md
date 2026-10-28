@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-13T11:57:31.629Z
 ---
 
-🚨 The time-waste pattern miya called out (2026-09-09, QA-274266). Over several exchanges I made him drive every micro-step and re-ask for the plain answer 3× — he was furious ("give a fucking solution, I am not here all day").
+🚨 The time-waste pattern miya called out (2026-09-09, QA-274266). Over several exchanges I made him drive every micro-step and re-ask for the plain answer 3× — he was furious ("give a solution, I am not here all day").
 
 **Root cause:** I optimised for covering myself + satisfying Stop gates (tables, genuine-fork tokens, "waiting on you" blocks) instead of the shortest true answer + doing the next obvious action. The gates reward structure; miya wants one line + one action.
 
@@ -58,7 +58,7 @@ When みや says something is broken, he wants **that thing fixed**, not a repla
 
 **Why**: 2026-07-24, `etanah-awam` would not deploy. Instead of finding the cause I told him to
 stop using Eclipse's Publish and adopt a Maven-build + robocopy routine. His response:
-*"I asked you to fix this fucking issue, not suddenly introduce a new way of doing fucking things
+*"I asked you to fix this issue, not suddenly introduce a new way of doing things
 inefficiently."* He was right — proposing a new workflow is an escape from diagnosis, and it also
 throws away tooling he depends on (hot redeploy, debugger).
 

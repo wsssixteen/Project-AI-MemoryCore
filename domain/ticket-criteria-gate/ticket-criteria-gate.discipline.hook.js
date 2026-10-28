@@ -20,7 +20,7 @@
  *      A fix "verified" on data that never exhibited the bug is VACUOUS. Closes the exact
  *      hole that let "issue 2 PASS" through on a no-collision shape (evidence tokens alone
  *      satisfied Check A, but nothing had reproduced the actual delete). Per みや: the
- *      single most-demanded hook of the session — "you lied; build the fucking hook".
+ *      single most-demanded hook of the session — "you lied; build the hook" (angry).
  *   B. CHECKLIST-QUALITY -> ADVISORY (v1, start-simple per /system-rules R4).
  *      Reply emits an Issue Checklist with zero BA-source citation -> remind each
  *      item must cite Description / journal / History / photo / PDF; no invented

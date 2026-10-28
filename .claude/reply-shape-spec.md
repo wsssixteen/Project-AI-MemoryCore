@@ -195,7 +195,11 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **Why**: 2026-10-14, DawahMap. A report said "walk step 2" and he replied "I don't know what step 2 you're talking about"; the reports of the same night ran to five sections. Four rules already stood near this (answer the ask · no information overload · name the thing · no vague words). None put the three faults together at the top, and none said that a reply in long work must say where it is going. Not mechanical: it rests on this section and the boot-loaded line in CLAUDE.md.
 
-## 3g. 📋 Brief at the end of every reply, in simple technical English (2026-10-23, per みや)
+## 3g. 🪦 RETIRED 2026-10-28 per みや — Brief at the end of every reply
+
+His words: "drop the brief rule … Whatever you've told me at the start is already the brief." Replies carry NO `## Brief` section; the first line says what was done. The body below is kept as history only.
+
+### (retired) Brief at the end of every reply, in simple technical English (2026-10-23, per みや)
 
 His words: "use simple technical english to brief me (Add this into claude.md if needed on every end of reply aside from the next steps)."
 

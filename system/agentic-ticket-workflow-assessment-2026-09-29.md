@@ -59,7 +59,7 @@ esource-blindness |
 
 | Axis | Finding | Instance |
 |---|---|---|
-| A1 agentic | `redmine-write-gate` blocked two approved status writes: a popup answer ("Yes, post In Progress") and a plain "update the fucking redmine" were not read as approval. Fixed as v1.2 (popup answers read, status-only path), eval 38/38. The early-mint audit spawned to its own session landed as ADHOC-PERMIT-2026-1 and merged with zero conflict. | 2 blocked writes; F32-F38 fixtures |
+| A1 agentic | `redmine-write-gate` blocked two approved status writes: a popup answer ("Yes, post In Progress") and a plain "update the redmine" (angry) were not read as approval. Fixed as v1.2 (popup answers read, status-only path), eval 38/38. The early-mint audit spawned to its own session landed as ADHOC-PERMIT-2026-1 and merged with zero conflict. | 2 blocked writes; F32-F38 fixtures |
 | A1 agentic | audit-briefing again lists `sql-schema-verify` as 0 fires / RETIRE, yet it fired and stamped twice this session. Third day of the same false RETIRE. | stamps f45478f6, 6d0324b2 |
 | A2 quest | The BA pass-note rule lived only in a memory file, so I sent my own Malay shape after miya had given his English template. Moved into a tool (`ticket-close-block --ba --envs`) + quest SKILL § Hand-over to BA + deploy 6b. | slip `reask/redundant` |
 | A2 quest | `## 0. Resume Point` stayed at the W2 state ("No code changed", 80%) through Apply, commit, 2 env merges and Redmine Resolved; only the DE save rewrote it. A cold resume mid-afternoon would have read the opposite of the truth. | QA-282061.md §0 vs §7-§13 |

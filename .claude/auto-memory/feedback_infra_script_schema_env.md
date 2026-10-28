@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-03T01:35:29.644Z
 ---
 
-🚨 A SQL script HANDED OFF for infra/PROD execution follows THIS EXACT format (canonical 2026-09-02, #277291 — miya shared it twice: *"follow this format from now on… don't go back to your fuck face format"*). This SUPERSEDES the 2026-08-27 #275847 "no header at all" wording.
+🚨 A SQL script HANDED OFF for infra/PROD execution follows THIS EXACT format (canonical 2026-09-02, #277291 — miya shared it twice: *"follow this format from now on… don't go back to your old format"*, frustrated). This SUPERSEDES the 2026-08-27 #275847 "no header at all" wording.
 
 ```
 -- Ticket: <ticket ref>

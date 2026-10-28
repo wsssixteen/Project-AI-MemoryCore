@@ -26,7 +26,7 @@ Reply-structure fundamentals (miya 2026-08-19, QA-274914 session — his verbati
 
 Rule: when みや asks a question that is answerable in ~2 sentences, ANSWER IN 2 SENTENCES. Do not manufacture tables, diagrams, "alternatives considered" sections, story diagrams, or scope tables for a question that just wanted a short explanation.
 
-**Why:** 2026-07-05 みや (multiple times, ending in shouting) — *"You could've fucking answered: 'Adjusting the numbers there wont change the size anymore because it is the maximum for xxxxx. So we will need to scale up the document using this xxxxx.' Two fucking sentences there. Fucking hell, don't waste my fucking time. I can always ask further or adjust to tell a bit more. But not FUCKING ESSAYS AND REPORTS!!!"*
+**Why:** 2026-07-05 みや (multiple times, ending in shouting) — *"You could've answered: 'Adjusting the numbers there wont change the size anymore because it is the maximum for xxxxx. So we will need to scale up the document using this xxxxx.' Two sentences there. Don't waste my time. I can always ask further or adjust to tell a bit more. But not ESSAYS AND REPORTS!!!"* (angry)
 
 **How to apply:**
 - Every non-code-emit reply: first draft in 2 sentences.

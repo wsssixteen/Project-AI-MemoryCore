@@ -7,7 +7,7 @@
 // REPLAY (QA-274745 2026-08-13): a --no-ff merge of the ticket branch into mlk/int-env conflicted
 // on an unrelated release-lineage .docx; instead of STOPPING (deploy skill §4: "Conflict -> stop,
 // never auto-resolve"), the fix was cherry-picked onto the company branch — a divergent duplicate
-// SHA that desyncs int-env from the ticket merge history. みや: "NO FUCKING CHERRY PICKING ...
+// SHA that desyncs int-env from the ticket merge history. みや (angry): "NO CHERRY PICKING ...
 // don't keep on breaking the company's branches."
 'use strict';
 const path = require('path');

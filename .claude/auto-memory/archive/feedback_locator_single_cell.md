@@ -9,7 +9,7 @@ metadata:
 
 When emitting a tabular checklist / inventory / matrix that references a code location, the locator MUST be ONE cell: `MlkBorang4AeForm.xhtml:495`, `BasePelupusanForm.java:111-116`.
 
-**BANNED**: separate "File" column + "Line" column. みや 2026-06-30: *"I already told you TO NOT CREATE A FUCKING NEW COLUMN FOR THE FUCKING LINE"*.
+**BANNED**: separate "File" column + "Line" column. みや 2026-06-30: *"I already told you TO NOT CREATE A NEW COLUMN FOR THE LINE"* (angry).
 
 **Why**: he reads the locator as a single click-target (file:line opens an editor jump in one go). Splitting it forces him to mentally rejoin two cells. Wastes time.
 
