@@ -15,6 +15,7 @@ description: Baseline — Melaka Pelupusan (PLP) release PREPARATION. Redmine ev
 |---|---|
 | **Common version** | Keep master's `<etanah.common.version>`. Bump ONLY when a ticket in THIS release carries a fix that needs a newer common (recon `COMMON-VER`, or the ticket's own code will not compile without it). int-env/MLIT running a newer common is NOT a reason. Decide it LAST, after every ticket is in. |
 | **Flowable in a release ticket** (BAQA note "Ada flowable", or a `.bpmn20.xml` change) | **We own it** as part of the baseline. PROD delivery = upload the model file to the remote through WinSCP/FileZilla (SFTP as `ftpuser`, folder `/home/ftpuser/files/flowable-diagrams/<State>/<YYYY-MM-DD>/Pelupusan/` — `<State>` = `Melaka` for this skill); the release team picks it up from there and deploys. File source = the deployed `.bpmn20.xml` pulled from MLIT `et_flowable_mlit.act_ge_bytearray` (md5-checked). Stag gets the same model published by みや, and any SQL the ticket ships is run on stag too (1.7.0: #263304 isu24 SQL run on `et_main_stg2`). Put it on the hand-off card as its own step; never ask "who publishes". |
+| **Release-ticket SQL → staging DURING PREP, not at push** (2026-10-28 per みや, Baseline 1.9.0, 282587) | Every SQL a release ticket ships is handled at Phase A, right after the recon, so BA can start testing: (1) download it from Redmine (latest upload; a journal saying "replaces the earlier" wins) · (2) read every statement and say in one line what it changes · (2b) run its SELECTs on EVERY environment it touches — internal (`postgres-mlit-pg`), PROD (`postgres-mlkprod-pg`, read only: PROD must still show the script's "before" values, or the script is stale), training (when a connector exists; say "no training connector" otherwise) — and show one row per env · (3) run its own SELECTs on the ON staging schema (`system/melaka-env-state.json`) to see whether it is already applied — the latest `last_modified_date` / an existing INSERT row is the proof · (4) already applied → do NOT re-run (an INSERT duplicates), show the rows · (5) not applied → run it on that schema straight away (write path: `feedback_staging_schema_stg2.md` gateway login, MCP is read-only), then re-run the SELECTs and match the script's `-- N rows` comments. No separate nod: the ticket is already audited at V1. PROD stays infra-only. **Report it simply (2026-10-28 per みや)**: staging = one line ("already ran" / "ran"), no rows or tables; the only SQL detail he needs is PROD: the script is PROD-ready (schema-qualified `et_main.`) and PROD still shows its "before" values. Training only when its script must be uploaded too (schema replaced for training). |
 | **Hand-off card = EVERYTHING in one go, unasked** (2026-09-28 per みや, 1.7.0) | At push, the card already carries: (1) every SQL file downloaded from Redmine + shown inline + run on stag (verified by counts) · (2) the flowable `.bpmn20.xml` file (MLIT pull, md5) · (3) the full Sheet Developer block ready to paste — Domain · DB · Common · Module · Branch · **Flowable Diagram = `/home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/<file>`** (leading `/`, **Melaka** folder, never Perak) · SQL line. Never wait for みや to ask for the file or the script. |
 | **Flowable drop VERIFIED by me, not assumed** (2026-09-29 per みや, 1.7.0: file sat in `Perak/`, release team found `Melaka/2026-09-28` empty) | Before the card says "uploaded", I list the drop folder myself with `C:\Program Files (x86)\WinSCP\WinSCP.com` (stored session to `ftpuser@172.16.90.169`) and show the listing: file name + 348,612-style byte size under `Melaka/<date>/Pelupusan/`. No listing = not delivered. Blocker today: stored session `Petaling` collides with the workspace of the same name — needs a distinct alias (みや's nod). |
 | **BA "tak pergi mana-mana tugasan" during baseline** | Answer with the test table FIRST (login · screen · do · expect, from live `umm_a_tgsn`), the investigation after. Check `sis_bpm_log` delay vs `act_hi_taskinst.start_time_` before blaming the release — 1.7.0 PT stall was a node-level async queue, not code. |
@@ -177,6 +178,8 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    **Banned**: declaring a ticket ready on "a named branch merged" — readiness is **content coverage of the
    complete footprint**, proven by `audit-ticket`, never by branch-reachability alone.
 
+5.6 **Release-ticket SQL → staging now** (2026-10-28 per みや): runs AFTER 5.5 (audit) and BEFORE V1, so the staging run happens once every check (internal · PROD · training · staging) is done and before any branch or merge. Run the "Release-ticket SQL → staging DURING PREP" row of the awareness table for every SQL row the recon kept. Report one line per script at V1: `<file> on <schema>: already applied (<evidence row>)` or `ran: <counts> = expected`.
+
 6. Emit the plan table (ticket · verdict · branch · action) + the **audit-ticket verdict per ticket** +
    the Ask-BA table → **🛑 V1: みや nods**.
 
@@ -270,20 +273,19 @@ before spending a build cycle. **Always include this line in the card, above C �
 as many lines as tickets; a short list means a branch is missing, and the per-ticket
 `git log --oneline origin/<branch> --not mlk/release/<ver>` (empty output = merged) tells you which.
 
-**C · BUILD** — run on the build server:
-1. `ssh app@<build.host>`
-2. `cd build-scripts17/`
-3. `bash build-pelupusan.sh mlk/release/<ver>`
-4. choose `stag`, then wait for BUILD SUCCESS.
-5. **Before closing the session, copy the checkout line the build prints** (the commit SHA it built
-   from) and paste it back — see the SHA-match check below.
+**C · BUILD + DEPLOY (UI)** (2026-10-28 per みや: he builds and deploys from the UI now, which is quicker) —
+the card gives ONE thing only: the branch name in its own fenced block so he can copy it, target `stag`:
 
-**D · DEPLOY** — exit the build session first, then:
-1. `ssh app@<deploy.host>`
-2. `cd deployment-scripts/stag/`
-3. `bash deploy-pelupusan.sh`, then wait for the success message.
+    mlk/release/<ver>
 
-### 🚨 V6b — BUILD-SHA MATCH (added 2026-07-20 per みや; the hole his question found)
+The old ssh build + deploy steps (build host `build-scripts17/` `bash build-pelupusan.sh <branch>` → deploy
+host `deployment-scripts/stag/` `bash deploy-pelupusan.sh`) are retired from the card; hosts stay in
+`servers.local.json` for when the UI is down. **No `## Brief` section in the card** (2026-10-28 per みや:
+the first line already says the step's objective is done).
+
+### ⏸ V6b — BUILD-SHA MATCH — RETIRED from the card 2026-10-28 per みや
+Do NOT ask for the build log or its commit line. みや shares the build output only when something fails;
+the check below runs only then. Kept for reference:
 
 The deployed footer's `Module Version` + `Git Branch` **cannot distinguish the pre-merge commit from
 the merged one** — the version bump commit and the post-merge commit sit on the same branch with the
