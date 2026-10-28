@@ -435,6 +435,16 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\redmine-upload-path\\\\redmine-upload-path.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__ccd_session__start_session|mcp__ccd_session__hand_off_to_session",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\session-name\\session-name.check.hook.js\"",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
