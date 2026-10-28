@@ -59,6 +59,7 @@ const MARK_RE = /^[ \t>*`-]*Saving in the background next:[ \t`*]*(ADHOC-[A-Z0-9
 // A round with nothing for the BA says so in one line: "BA reply: none (<reason>)".
 const BA_HEAD_RE = /^#{1,4}[^\n]*\b(?:reply to (?:the )?BA|BA reply)\b[^\n]*$/im;
 const BA_NONE_RE = /^[ \t>*`-]*BA reply:\s*none\s*\([^)\n]+\)/im;
+const DIAGRAM_NONE_RE = /^[ \t>*`-]*Diagram:\s*none\s*\([^)\n]+\)/im;
 function hasBaReply(text) {
   if (BA_NONE_RE.test(text)) return true;
   const m = text.match(BA_HEAD_RE);
@@ -106,9 +107,21 @@ function stopCheck(data) {
   const conf = confidenceCheck(all[all.length - 1]);
   if (conf) return conf;
   const ev = all[all.length - 1].events;
-  const first = ev.findIndex(e => e.kind === 'text' && MARK_RE.test(e.text));
-  if (first === -1) return { fired: false };
-  const id = ev[first].text.match(MARK_RE)[1];
+  let first = ev.findIndex(e => e.kind === 'text' && MARK_RE.test(e.text));
+  let id;
+  if (first !== -1) {
+    id = ev[first].text.match(MARK_RE)[1];
+  } else {
+    // No marker, but the save agent started in this turn: the brief still owes the BA reply and the picture
+    // (miya 2026-10-28, ADHOC-MCL-2026-1: marker left out, save started inline, neither check ran).
+    const agent = ev.findIndex(e => {
+      if (e.kind !== 'tool' || e.name !== 'Agent') return false;
+      try { return isSaveAgent('Agent', JSON.parse(e.input)); } catch (_) { return false; }
+    });
+    if (agent === -1) return { fired: false };
+    id = (ev[agent].input.match(/ADHOC-[A-Z0-9]+-\d{4}-\d+/i) || ['this adhoc'])[0];
+    first = agent - 1;
+  }
   const said = ev.filter(e => e.kind === 'text').map(e => e.text).join('\n');
   if (!hasBaReply(said)) {
     return {
@@ -119,6 +132,21 @@ function stopCheck(data) {
         '   drafted with Pena (profile whatsapp-dev + module plain), placed just above Next steps (miya 2026-10-22).',
         '   Nothing to tell the BA this round? One line instead: BA reply: none (<reason>).',
         '   ⚡ DELTA ONLY: send just the Reply to BA section, then start the save agent.',
+      ].join('\n') + '\n',
+    };
+  }
+  // The finding is also drawn as ONE picture (explain-diagram skill) and sent, so the BA gets it with the reply
+  // (miya 2026-10-28, ADHOC-MCL-2026-1). A round with nothing to draw says so: "Diagram: none (<reason>)".
+  const sentPicture = ev.some(e => e.kind === 'tool' && e.name === 'SendUserFile' && /\.(?:png|jpe?g|svg)\b/i.test(e.input));
+  if (!sentPicture && !DIAGRAM_NONE_RE.test(said)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the brief for ' + id + ' has no picture of the finding.',
+        '   Draw the cause as ONE picture with the explain-diagram skill (render: node lib/diagram-render.js),',
+        '   look at the PNG, then send it with SendUserFile, placed with the Reply to BA (miya 2026-10-28).',
+        '   Nothing to draw this round? One line instead: Diagram: none (<reason>).',
+        '   ⚡ DELTA ONLY: send just the picture.',
       ].join('\n') + '\n',
     };
   }
