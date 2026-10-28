@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 16:50 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow", child of the Baseline 1.9.0 session), design shown, saved for tomorrow's baseline.
+
+## Session Recap (2026-10-28, worktree "dreamy-pike-08af0b", one workflow for every system change)
+- Ask: one workflow that all six kinds of system change go through, ending with commit + push + land on main in the same turn.
+- Inventory done and a design picture shown (/system-change, 8 steps, step 7 lands on main). miya: NOT approved; audit first with Fable 5.1, in this child session, so he understands the structure and flow before deciding.
+- Saved for tomorrow: `main/handoff-2026-10-28-system-change-workflow.md` (goal, his answers verbatim, audit brief, inventory facts, draft design, 3 open decisions). Nothing built.
+- Open: the Fable 5.1 audit · skill vs fold into system-design · entry guard · highest-model rule.
+
 **Last Activity**: 2026-10-28 01:45 — worktree `rustdesk-software-visibility-e047d5`, second Domain Expansion (memory cleanup + Ruri personality audit); miya archives the session after it.
 
 ## Session Recap (2026-10-28 01:45, worktree "rustdesk-software-visibility-e047d5", memory cleanup + personality audit)
