@@ -1,14 +1,16 @@
 # Current Session
 
-**Last Activity**: 2026-10-28 05:00 — PymTime phase 2 (self-check engine) BUILT AND PROVEN, not committed in the PymTime repo (his go first)
+**Last Activity**: 2026-10-28 13:40 — PymTime phase 2 (self-check engine) DONE: Fable audit, its 3 majors fixed, committed locally as a68c18c (not pushed); next phase 3
 
 ## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
 - **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
 - **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
 - **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
 - **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
-- **State**: `E:\Dev\scripts\PymTime` working tree on main at a66843b, 18 tracked files changed + `lib\selfcheck.js` + `lib\runlock.js`, NOT committed, nothing pushed, VERSION.txt 17, no zip built.
-- **Next**: his go to commit (subject `v18 (phase 2): ...`, no trailer, no push), then phase 3 (page rebuild). Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
+- **Fable audit (his popup pick)**: 1 read-only Fable 5.1 auditor: 3 majors (READY despite failed days; a launcher switch re-registering a waiting run; a scheduled check closing an open page) + 12 minors. Fixed by an Opus fixer, proven; later-phase items filed under ROADMAP phases 3 and P.
+- **State**: committed `a68c18c` on main in `E:\Dev\scripts\PymTime` (local, not pushed; 5 unpushed commits now). Final proof: self-test 661 of 661, install sim 30 of 31 (the zip row), real tasks unchanged.
+- **Found**: his real tasks run FROM this repo (live install): the uncommitted build ran for real at 08:00 (reminder self-check filled the empty Drive link, wrote config.last-good.json, re-created shortcuts) and 09:24 (clock-in OK). PROJECT.md hard rule 10 added. Slips logged: model-tiering/fable-skipped, delegation/kill-rule-too-broad, resource-blindness/live-install-edited.
+- **Next**: phase 3 (page rebuild, with the weekly plan card and the Redmine key). Push only on his word. Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
 
 **Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
 
