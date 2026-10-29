@@ -6,7 +6,7 @@
 
 | Code | Competency | Rows | Latest |
 |---|---|---|---|
-| B1 | Technical & Domain Knowledge | 1 | 2026-05-31 |
+| B1 | Technical & Domain Knowledge | 2 | 2026-10-29 |
 | B2 | Quality of Work | 1 | 2026-10-23 |
 | B3 | Delivery & Planning | 0 | - |
 | B4 | Ownership & Initiative | 4 | 2026-10-29 |
@@ -25,6 +25,7 @@
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-10-29 | #286646 | Proved that the jenis hakmilik check used for PLTP and PSBS cannot refuse a strata petak, because a petak carries the same jenis PN as its land, and built the MCL check on the strata parent link instead. | PROD ind_hkmlk 040141PN00001856/M1/4/28 jns 4 strata_induk 13377 · commit 1ac43f7b0d CarianRasmiHakmilikForm.java |
 | 2026-05-31 | #259702 | Traced all 12 content-control populators of the PRU risalat templates to their source and proved the faults were in the data, not the code. | projects/coding-projects/archive/QA-259702/QA-259702.md |
 
 ## B2 — Quality of Work
