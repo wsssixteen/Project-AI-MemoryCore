@@ -205,14 +205,20 @@ surfaced today".
 ### Required output — two parts, both written, not just spoken
 
 **(a) ASSESSMENT** — what this session actually showed, measured, with the instance that proves each
-point. Append to (or create) `system/agentic-ticket-workflow-assessment-<YYYY-MM-DD>.md`. Name failure
-classes; each class carries the concrete instance. **Banned**: aspirational prose with no instance.
+point: the five-axis table in the DE reply and in the session recap (`main/current-session.md`); each
+proposal row of (b) carries its own instance. **No file.** `system/` holds the constitution and the
+ledgers (`system/FOLDER-STRUCTURE.md`); the dated `system/agentic-ticket-workflow-assessment-<date>.md`
+files are RETIRED 2026-10-28 per みや (62 files in 12 weeks, 3 clobbered by a second session on the
+same day, read by no script; "would you find a single note file inside the Windows System folder?").
+`system-edit-gate` v1.4 denies a Write that would create any file under `system/`. Name failure
+classes; each class carries the concrete instance. **Banned**: aspirational prose with no instance ·
+a per-session or dated file anywhere under `system/`.
 
 **(b) BRAINSTORM** — forward ideas, including ones this session did not force. Each idea gets a row in
 the weekly-audit feed so it is actually ruled on rather than admired:
 
 ```
-node core/slips.js add --type proposal --category <A1|A2|A3|A4|A5> --evidence "<idea + its eval case>" --caught-by self
+node core/slips.js add --type proposal --category <A1|A2|A3|A4|A5> --evidence "<instance this session + idea + its eval case>" --caught-by self
 ```
 
 These surface in `system/slip-dashboard.md` under **💡 Open proposals**. The weekly audit rules each

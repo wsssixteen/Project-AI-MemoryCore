@@ -22,6 +22,15 @@
  * the bypass token is present. Root slip: 5 framework files shipped without any
  * architecture-doc entry, silent drift for weeks. Bypass PRESERVED:
  *   [skip-architecture-doc-update: <reason>]
+ *
+ * v1.4 2026-10-28 — SYSTEM-FILE BIRTH predicate (per miya). system/ holds the constitution
+ * and the ledgers (system/FOLDER-STRUCTURE.md); a Write that would CREATE a file under it is
+ * DENIED. Instance: 62 dated `agentic-ticket-workflow-assessment-<date>.md` files written by
+ * DE step 7.5 between 2026-08-05 and 2026-10-28, three clobbered by a second session on the
+ * same day. A per-run note goes to the diary or the session recap, a proposal to
+ * `core/slips.js add --type proposal`, a new ledger is born by core/forge.js.
+ *   [skip-system-file-birth: <reason>]   (assistant text, this turn only)
+ * Eval: node .claude/hooks/system-edit-gate.eval.js
  */
 'use strict';
 const fs = require('fs');
@@ -62,6 +71,29 @@ process.stdin.on('end', () => {
     const isArchDocItself = /[\\/]system[\\/]system-architecture\.md$/i.test(filePath);
 
     if (!isSystemPath && !isSystemTouching) process.exit(0);
+
+    // v1.4: a NEW file under system/ is denied — system/ is the constitution + ledgers, never a notes folder.
+    if (isSystemPath && data.tool_name === 'Write' && filePath && !fs.existsSync(filePath)) {
+      const bypassBirth = (function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, /\[skip-system-file-birth:\s*[^\]\s]/i);
+      if (!bypassBirth) {
+        const reason = [
+          '⛔ system-edit-gate (system-file-birth v1.4): a NEW file under system/ is denied.',
+          `   Path: ${filePath}`,
+          '   system/ holds the constitution and the ledgers (system/FOLDER-STRUCTURE.md). A dated or',
+          '   per-run note there is junk: 62 agentic-ticket-workflow-assessment-<date>.md files, 2026-08-05 → 10-28.',
+          '',
+          '   → a session finding: main/current-session.md recap or the day\'s diary',
+          '   → a forward idea: node core/slips.js add --type proposal --evidence "<instance + idea + eval case>"',
+          '   → a part\'s own finding: that part\'s README / qa_doc / knowledge file',
+          '   → a new ledger or dashboard: born by core/forge.js, listed in system/INDEX.md',
+          '   Genuinely a new constitution file miya asked for? `[skip-system-file-birth: <reason>]`',
+        ].join('\n');
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason },
+        }));
+        process.exit(0);
+      }
+    }
 
     // v1.2: HARD-BLOCK arch-doc-sync when a system-touching edit lacks proof that
     // system/system-architecture.md was consulted this session.

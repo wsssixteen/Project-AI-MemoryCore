@@ -52,7 +52,8 @@ function main() {
     for (const f of fs.readdirSync(STATE_DIR).filter(f => /^release-.*\.json$/.test(f))) {
       try {
         const st = JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), 'utf8'));
-        if (st.phase && st.phase !== 'merged-to-master') stale.push(`${st.release} (phase=${st.phase})`);
+        if (st.phase === 'mr-pending') stale.push(`${st.release} (merge request ${st.mr && st.mr.url ? `open: ${st.mr.url}` : 'not created yet'} — then merge-to-master --release ${st.release} --check)`);
+        else if (st.phase && st.phase !== 'merged-to-master') stale.push(`${st.release} (phase=${st.phase})`);
       } catch (e) { /* unreadable state — skip */ }
     }
   }
@@ -60,7 +61,7 @@ function main() {
   const lines = ['🚨 UNMERGED RELEASE(S) — a passed baseline MUST end merged into mlk/master:'];
   for (const b of unmerged) lines.push(`   ${b} is NOT in origin/mlk/master — its fixes are STRANDED (the 1.3.4 failure class).`);
   for (const s of stale) lines.push(`   state ${s} — release pipeline never reached merged-to-master.`);
-  lines.push('   Fix: node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved (after BA pass)');
+  lines.push('   Fix (after BA pass): node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved → GitLab merge request → --check');
   lines.push('   (last verified against local origin/* refs — run git fetch for absolute truth)');
   console.log(lines.join('\n'));
 }

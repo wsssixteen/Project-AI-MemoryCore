@@ -102,6 +102,8 @@ Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <n
 
 ## Phase 2 archive  (status == closed  →  archived)
 
+**🩹 Patch ticket = Phase 1 + Phase 2 in one pass (2026-10-29, per みや, #287292).** A quest with `ticket_type=patch` (Internal Issue (PROD), Data Patching (PROD), a PROD document or data patch, an alter) whose infra step is done and whose Redmine handover is submitted runs the Phase 1 close-out and then Phase 2 in the same pass, on `PHASE-1` or `WAIT` too. It does not wait for Redmine Closed. Write `archived ahead of Redmine (<status>), patch ticket` in the quest doc. The Rubric before the patch is never skipped. His words: "we should ALWAYS straight away close phase and run phase 2 for quest patching type, Internal Issue (PROD) ... we will still need to run through Rubric to ensure, to check."
+
 **🚨 Redmine check before any Phase 2 step (2026-10-04, per みや).** Read the `SAVE-QUEST:` line from Step 0. Phase 2 runs only on `PHASE-2`, `LEARN-THEN-PHASE-2`, or `ADHOC`. On `WAIT` or `UNKNOWN`: stop, the quest stays `closed`, and say `Redmine shows <status>: archive waits for Closed`. The only override is みや's own words in his message: "archive anyway". Then write `archived ahead of Redmine (<status>)` in the quest doc. **Why**: #281638 (2026-09-28, Redmine Resolved) and #282198 (2026-10-04, Redmine Ready in PROD) were both archived before Redmine closed them.
 
 **Visible Phase 2 step line:** `Phase 2 — QA-<num>: 0 ⬜ 🔧 WORKFLOW UPGRADE · 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 5b ⬜ Bounty · 6 ⬜ /verify`
