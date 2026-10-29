@@ -42,12 +42,14 @@ Date Request Hotfix: <DD/MM/YYYY>
 
 Would like to request a hotfix deployment for the etanah-pelupusan Melaka server using branch: mlk/hotfix/<ticket>
 
-Ticket No / Subject: #<ticket> - <Redmine subject>
+Ticket No / Subject: #<ticket>
 
 Reason: <the issue in one plain sentence + what the fix changes>
 
 Thank you.
 ```
+
+Ticket line = the number only, never the long Redmine title (2026-10-29 per みや).
 
 **Before handback, emit**: `HOTFIX — scaffold ✓ · proof SELECTs <n> · branch mlk/hotfix/<#> off <master SHA> · mirror reset ✓ · screen values traced <n>/<n> · tugasan sharing screen <list> · test keys echoed ✓`
 
