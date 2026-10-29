@@ -22,6 +22,31 @@ TRIGGER: PROD break after a release: the word hotfix, released yesterday/dah rel
 | 8 | **Renumber** (own # arrives late / wrong # used): new branch off master, re-apply with `git diff A~1 A \| git apply --index`, revert the old merge on stag-env, re-merge, delete the old remote branch. Never force-push, never cherry-pick | `git log origin/mlk/stag-env --grep <old #>` shows only the revert | `deploy-guard` bans cherry-pick |
 | 9 | **Redmine pass** — Root cause + Solution in plain Malay, branch named; `redmine-phase1-prefill` needs a nod | miya submits | `redmine-write-needs-nod` |
 
+## Hotfix deployment — BA asks for a hotfix on a ticket already verified (2026-10-29 per みや, 285768)
+
+The fix is done and verified; PROD needs it before the next release. Steps from the team lead:
+
+| # | Step | Done when |
+|---|---|---|
+| H1 | Branch `mlk/hotfix/<ticket>` off FRESH `origin/mlk/master` (the last stable release is already merged there), in a separate worktree of the work clone: `git worktree add --no-track -b mlk/hotfix/<ticket> E:\Dev\etanah-work\etanah-pelupusan-hotfix-<ticket> origin/mlk/master` | `git rev-list --count HEAD..origin/mlk/master` = 0 |
+| H2 | Put in only the ticket's fix: merge its ticket branch, or for a common-only fix ONE pom line `<etanah.common.version>` = the version the common team named on Redmine, commit `Ref #<ticket> - Up common to <ver>`; check the new common's `etanah-domain` in its nexus pom equals master's | `compile-check.js run` green, origin read back |
+| H3 | Draft the infra message below, give it to みや; he posts it in the **MLK infra group** (never sent by me) | message shown in one fenced block |
+| H4 | Infra replies with the new URL → みや passes that link to BA | BA has the URL |
+
+```
+Hi Infra team,
+Date Request Hotfix : <DD/MM/YYYY>
+
+Would like to request a hotfix deployment as below:
+
+etanah-pelupusan
+Branch : mlk/hotfix/<ticket>
+
+Ticket No/Subject:#<ticket>
+```
+
+Open (not verified): the team lead's example (etanah-spoc-hasil) names `Branch : mlk/hotfix-env`; pelupusan has no `mlk/hotfix-env` on origin, so the ticket branch is named. Ask みや if infra replies asking for an env branch.
+
 **Before handback, emit**: `HOTFIX — scaffold ✓ · proof SELECTs <n> · branch mlk/hotfix/<#> off <master SHA> · mirror reset ✓ · screen values traced <n>/<n> · tugasan sharing screen <list> · test keys echoed ✓`
 
 **Knowledge**: `projects/coding-projects/active/etanah-knowledge/melaka/BRANCH-AND-DEPLOY.md` §8 (branch + renumber commands).
