@@ -1681,6 +1681,7 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 | Individu / Syarikat | either | `jns_no_id` 452 JNKP_BARU / 456 JNSYKT |
 - TRAP: PRBB pemohon rows ALWAYS carry `jns_pihak_bkptg_id = 625` (JENPPM) — 432/433 on MLIT, owner or not. Never use it to find the owner.
 - Code: `PelupusanExcelReaderHelper.java:4310-4318` → `PihakBerkepentinganRepository.findByJenisPBKodInAndDhdVersiBerkuatkuasa` (etanah-common :42).
+- TRAP (2026-10-28, ADHOC-MCL-2026-1, PROD-proven): one person can hold SEVERAL in-force Pemilik rows on the same hakmilik version (one per transfer, e.g. TMAMT then PMT each give an heir 1/6). Same name on two in-force rows is NOT a duplicate: check `syer_pembilang` / `syer_penyebut` and sum per IC before calling it wrong (there 6 x 1/6 = 1, each heir 1/3 = the carian rasmi). Carian rasmi merges by name and sums; AWAM MCL lists every row as one pemohon.
 
 ## 31. PRBB: where No. Lot and Luas are kept (2026-10-09, ADHOC-PRBB-2026-12, MLIT-proven)
 | Data | Table.column | Note |
