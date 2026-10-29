@@ -5,6 +5,8 @@ metadata:
   type: reference
 ---
 
+**🚨 STAGING / MLIT = PAGE-FREE, NO LOGIN (2026-10-28 per miya, 262027)**: run the alter page's own Java code straight on the DB — `powershell -NoProfile -ExecutionPolicy Bypass -File E:\Dev\scripts\AlterSim\as.ps1 -Env stg1|stg2|mlit -Id <ID> -Target <KOD>` = rollback trial; same + `-Commit` = the real alter (commits only on a clean run). Then `node E:\Dev\scripts\FlowableAlter\alter.js live --env stg|mlit --id <ID>` must show LINKED. Never ask him for a keeper login for stg/mlit. PROD stays on alter.js + his approval code below.
+
 **Tool**: `E:\Dev\scripts\FlowableAlter\` (outside git; README there). Drives the "Pelupusan Flowable Alter Page" headless for prod / stg / mlit.
 
 - `alter.js ... --dry-run --headless` → plan + `APPROVAL CODE: XXXX-XXXX` (plan sealed in `logs\plans\`).

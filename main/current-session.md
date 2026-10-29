@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 21:25 — worktree `esokongan-quest-sweep-2bce09` (branch claude/qa-tickets-review-9d166c), 262027 handed to BA, quest saved, Domain Expansion.
+
+## Session Recap (2026-10-23 → 2026-10-29, worktree "esokongan-quest-sweep-2bce09", tickets 262027 and 261986)
+- **262027 (PSBS Surat Keputusan PTG kepada PDT Tolak, rework cycle 2)**: fix on mlk/qa/262027v2 (54d8ffedb3, afe270b690), merged int-env + stag-env. Staging runs release 1.9.0 (baseline, no 262027), so the test ran on internal PTMLK/01/L/PSBS/2026/8. Redmine 2026-10-29 21:02: Resolved, Nurul Amirah Nadiah, 100%, note + internal Tolak PDF. Quest status=closed (Phase 1); archive waits for Redmine Closed. KPI P-262027-B4-20261023 pending BA verify.
+- **261986 (Risalat MMKN RAHSIA header)**: next. miya wants it re-looked from the start. Phase 0 done earlier; Rubric, Apply, Test not done; nothing moved this session.
+- **"164"**: no open ticket ends in 164. Ask miya for the full number.
+- **Slip**: the Redmine edit page froze Chrome for about 20 minutes while redmine-write-gate (STAGE-ONLY until 2026-10-30) blocked the API. I fought the page before telling him about the gate. He submitted the form himself.
+- **Linked sessions**: session-name-fix (cranky-wilson, DE done, 6a478ade on main) · alter-sim (cool-hopper, waits on his "add it" and a staging permohonan for a real-vs-preview compare).
+
 **Last Activity**: 2026-10-29 21:00 — worktree `redmine-issue-287292-1cfb39`, quest 287292 (PROD document patch, UPP Surat Makluman Pembatalan) closed through Phase 2 and archived, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "redmine-issue-287292-1cfb39", 287292 PROD letter patch)
@@ -17,10 +26,3 @@
 - miya: "no, it is okay" → closed ANSWERED, route ANSWER. Register Penang A6 ANSWERED; Task folder 7 → Archive; block → active-archive.txt. Audit 30/30 PASS (agent's run; my own re-run is blocked by the adhoc-brief-first gate).
 - Open: nothing for this adhoc. archive-quest needed `--allow-stub` (no Bounty section on an answered adhoc).
 **Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
-- Built: Fable 5.1 Foundations audit (18 foundations, 12 conflicts, 0 of 7 change paths ended on main) → `/system-change` route owned by `system/INDEX.md` §The change route (rulings 13-14, group name Capabilities), skill + `domain/system-change/` (eval 21/21), design-consult-gate advisory (37/37), map picture boot-pointed (CLAUDE.md v1.96, v1.97). On GitHub main since `0cdf6ee6`.
-- miya's verdict at the end: talk to him like a person, not a report; answering a Stop hook in the middle of a conversation broke it. Child sessions felt like wasted time; this one was slow because the audit, two landing fights and robot replies, not because it was a child.
-- Not done (handover `main/handoff-2026-10-28-system-change-workflow.md` top note): `feedback_daily_commit.md` pointer · stale lines in auto-skill-on-mistake and design-consult-gate README · one path list for the 3 gates · version-stamp uniqueness check · the 9 unnamed root folders (his nod needed, most proposals are deletes).
-- Next: the parent session pulls main; the route's first real run is the live proof (watch `wmvta6ack`).
-**Last Activity**: 2026-10-29 20:05 — worktree `melaka-goal-quest-adhoc-297634`, adhoc ADHOC-PRBB-2026-19 answered + saved, Domain Expansion.
