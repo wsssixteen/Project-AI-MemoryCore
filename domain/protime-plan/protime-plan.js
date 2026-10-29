@@ -136,7 +136,7 @@ function ticketsIn(name) { return (String(name || '').match(/(?<!\d)\d{6}(?!\d)/
 
 // Two adhoc titles are the same adhoc when their meaningful words mostly agree
 // (he may have typed today's adhoc by hand in other words; a second copy must not be added).
-const STOP = new Set(['the', 'and', 'for', 'dan', 'yang', 'dalam', 'with', 'from', 'not', 'issue', 'check', 'assist', 'prod', 'internal', 'mlit', 'staging', 'stag', 'mlk', 'trg', 'prk', 'awam', 'plp']);
+const STOP = new Set(['the', 'and', 'for', 'dan', 'yang', 'dalam', 'with', 'from', 'not', 'issue', 'check', 'assist', 'prod', 'internal', 'mlit', 'staging', 'stag', 'mlk', 'trg', 'prk', 'png', 'sgr', 'kdh', 'awam', 'plp']);
 const words = s => [...new Set(String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ').filter(w => w.length >= 3 && !STOP.has(w)))];
 function sameTitle(a, b) {
   const A = words(a), B = words(b);
@@ -145,15 +145,19 @@ function sameTitle(a, b) {
   return shared >= 2 && shared / Math.min(A.length, B.length) >= 0.6;
 }
 
-// His ProTime wording for an adhoc (his format, given 2026-10-14: "Internal (PNG) - Check SPOC service data save from Awam"):
-//   "<ENV> (<STATE>) - <title>", ENV = PROD / Internal / Staging, STATE = MLK / TRG / PNG / PRK / SGR / KDH / WP, always written.
-//   A title that already opens with an env word, "Assist", "BA", "Baseline" or a ticket number is his own line: kept as it is.
-const OWN_LINE = /^(PROD|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM|BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
+// His ProTime wording for an adhoc (his format, given 2026-10-29: "MLK (PROD/Internal) - <very short description/keyword>";
+//   "Internal is for all environments, staging, internal, training, whatever that is not PROD"):
+//   "<STATE> (<ENV>) - <title>", STATE = MLK / TRG / PNG / PRK / SGR / KDH / WP, always written first; ENV = PROD or Internal.
+//   A title already in that shape, or opening with "Assist", "BA", "Baseline" or a ticket number, is his own line: kept as it is.
+//   A title in the older env-first form (2026-10-14: "Internal (PNG) - ...", "Staging (MLK) - ...", "PROD - TRG - ...") is rewritten state first.
+const STATES = 'MLK|TRG|PNG|PRK|SGR|KDH|WP';
+const STATE_LINE = new RegExp(`^(${STATES}) \\((PROD|Internal)\\) - \\S`);
+const OWN_LINE = /^(BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
+const OLD_ENV_LINE = new RegExp(`^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG)(?: \\(([A-Z]+)\\))?(?: - (${STATES}))? - (\\S.*)$`, 'i');
 function envWord(env) {
   const e = String(env || '');
   if (/prod/i.test(e)) return 'PROD';
-  if (/mlit|internal|\bint\b/i.test(e)) return 'Internal';
-  if (/stg|stag/i.test(e)) return 'Staging';
+  if (/mlit|mlkit|internal|\bint\b|int-env|stg|stag|train|uat|fat|\bpat\b|\bsit\b|\bdev\b|local/i.test(e)) return 'Internal';
   return '';
 }
 function stateWord(state) {
@@ -162,16 +166,22 @@ function stateWord(state) {
   if (/perak|prk/i.test(s)) return 'PRK';
   if (/selangor|sgr/i.test(s)) return 'SGR';
   if (/kedah|kdh/i.test(s)) return 'KDH';
-  if (/\bwp\b|kuala lumpur|\bkl\b/i.test(s)) return 'WP';
+  if (/\bwp\b|kuala lumpur|\bkl\b|putrajaya/i.test(s)) return 'WP';
   if (/penang|pulau pinang|png/i.test(s)) return 'PNG';
   return 'MLK';                                  // Melaka, or no state recorded: the home state
 }
 function protimeLine(block) {
   const t = String((block && block.title) || '').trim();
   if (!t) return '';
-  if (OWN_LINE.test(t)) return t;
+  if (STATE_LINE.test(t) || OWN_LINE.test(t)) return t;
+  const old = OLD_ENV_LINE.exec(t);
+  if (old) {
+    const inBrackets = String(old[2] || '').toUpperCase();
+    const st = new RegExp(`^(${STATES})$`).test(inBrackets) ? inBrackets : (old[3] ? old[3].toUpperCase() : stateWord(block.state));
+    return `${st} (${/^PRO[DG]$/i.test(old[1]) ? 'PROD' : 'Internal'}) - ${old[4]}`;
+  }
   const env = envWord(block.env);
-  return env ? `${env} (${stateWord(block.state)}) - ${t}` : t;
+  return env ? `${stateWord(block.state)} (${env}) - ${t}` : t;
 }
 
 // Mechanical half of his adhoc wording (the judgment half is the rule in .claude/skills/adhoc-save/SKILL.md "Adhoc title").
@@ -179,14 +189,15 @@ function protimeLine(block) {
 const SHAPES = [
   /^\d{6}( & \d{6})* - \S/,                                          // ticket work: 246923 - Review & deploy
   /^Assist BA - \S/,                                                   // a BA ask
-  /^(PROD|Internal|Staging) \((MLK|TRG|PNG|PRK|SGR|KDH|WP)\) - \S/,    // his format, given 2026-10-14
+  STATE_LINE,                                                          // his format, given 2026-10-29
 ];
-const ENV_LEAD = /^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM)\b/i;
+// an env-first line, a state line in another shape, or a made-up word in the env brackets is refused
+const ENV_LEAD = new RegExp(`^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM)\\b|^(${STATES})\\b(?! Baseline)|^[A-Z]{2,5} \\((PROD|Internal|Staging|STG|MLIT)\\)`, 'i');
 function lintLine(line) {
   const s = String(line || '').trim(), out = [];
   if (!s) return ['empty'];
-  if (ENV_LEAD.test(s) && !SHAPES[2].test(s)) out.push('env line not in his format "<ENV> (<STATE>) - <title>"');
-  const title = s.replace(/^(\d{6}( & \d{6})*|Assist BA|(PROD|Internal|Staging) \([A-Z]+\)) - /, '');
+  if (ENV_LEAD.test(s) && !SHAPES[2].test(s)) out.push('env line not in his format "<STATE> (PROD|Internal) - <title>"');
+  const title = s.replace(new RegExp(`^(\\d{6}( & \\d{6})*|Assist BA|(${STATES}) \\((PROD|Internal)\\)) - `), '');
   const envShape = SHAPES[2].test(s);
   if (s.length > (envShape ? 80 : 200)) out.push('too long');
   if (envShape && title.split(/\s+/).length > 10) out.push('title longer than 10 words');

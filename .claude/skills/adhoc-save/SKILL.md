@@ -24,7 +24,7 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 ## Adhoc title (ProTime) — the ONE rule (v2, 2026-10-14 per みや; read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12)
 Every adhoc gets a **title**: the short line みや would type in ProTime himself. The `protime` skill and the 23:00 run of `domain/protime-plan` WRITE it into his ProTime, so it must read as his.
 
-**The line = `<ENV> (<STATE>) - <title>`** (his format, given 2026-10-14). Stored `title=` has no env or state; `protimeLine` in `domain/protime-plan/protime-plan.js` adds both from the block's `env=` and `state=`. ENV = `PROD` · `Internal` (MLIT / internal) · `Staging` (STG). STATE = `MLK` · `TRG` · `PNG` · `PRK` · `SGR` · `KDH` · `WP`, always written.
+**The line = `<STATE> (<ENV>) - <title>`** (his format, given 2026-10-29: "MLK (PROD/Internal) - <very short description/keyword>"; it replaces the env-first form of 2026-10-14). Stored `title=` has no env or state; `protimeLine` in `domain/protime-plan/protime-plan.js` adds both from the block's `env=` and `state=`, and rewrites an older env-first title state first. STATE = `MLK` · `TRG` · `PNG` · `PRK` · `SGR` · `KDH` · `WP`, always written first. ENV = `PROD`, or `Internal` for every environment that is not PROD (staging, MLIT / internal, training: his words "Internal is for all environments ... whatever that is not PROD").
 
 Three line shapes. The first that fits wins:
 
@@ -33,14 +33,14 @@ Three line shapes. The first that fits wins:
 | Work on a ticket that is not his own, or a user question on his ticket | `<number> - <action>` · no env, no state | `246923 - Review & deploy` · `268173 - Assist debug` · `282275 - Assist Hasil` · `281650 - Clarify to user` |
 | A BA asked for data, a script or a check | `Assist BA - <what>` · no env, no state | `Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah` · `Assist BA - Query to patch Tarikh Tamat permit` |
 | His own task, not about a screen or an environment (setup, training, documentation, Redmine updates, a release). Reading code to answer a question about a system is NOT this shape: it keeps env and state | plain action line · no env, no state | `Setup clone for Penang project` · `Set up GitLab` · `Update Redmine details (Root Cause, Solutions, etc) for tickets ...` · `Baseline Pelupusan 1.8.1` |
-| Anything else | `<ENV> (<STATE>) - <title>` | `PROD (MLK) - Missing Tujuan in Borang 4Ae` · `Internal (PNG) - Check SPOC service data save from Awam` |
+| Anything else | `<STATE> (<ENV>) - <title>` | `MLK (PROD) - Missing Tujuan in Borang 4Ae` · `PNG (Internal) - Check SPOC service data save from Awam` |
 
 The title:
 - Says what the user sees, not the mechanism. Mine `PLP dashboard ralat Invalid path TestGis` → his `MLK internal server issue (infra migration)`. Mine `PRBB Ganti Hari bayaran royalti` → his `PRBB cannot proceed due to previous fees`.
 - Ends on, or carries, a plain English problem word: `issue` · `missing` · `error` · `page error` · `cannot proceed` · `wrong`. Mine `AWAM slip permohonan gagal jana` → his `AWAM - Slip permohonan page error`; mine `... tandatangan pecah` → his `... tandatangan issue`. A Malay phrase only when the screen itself says it: `tak papar`, `tiada dalam senarai`, `kosong`.
 - An ask opens with the verb: `Check ...` · `Patch ...` · `Verify ...` · `Retrieve ...` · `Create ...`. A check he did opens or ends with `check`: `Keluasan issue check`, `Missing Jabatan Teknikal check`.
 - Names the urusan first when there is one (`PRBB`, `MLPS`, `PPTPB`), then the screen or form as the screen names it (`Borang 4Ae`, `surat keputusan`, `laporan tanah`, `Kuantiti Disyorkan`).
-- 3 to 8 words, at most 60 characters. No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
+- Very short: a description or keyword, 3 to 8 words, at most 60 characters (2026-10-29: "very short description/keyword"). No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
 - Keeps the words the screen or the BA used for the problem when they are short: `tak papar`, `kosong`, `cannot proceed`. Mine `MLPS Borang 4Ae cop PDT Jasin missing` → his `MLPS Borang 4Ae cop tak papar`; mine `PRBB Maklumat Siasatan No Lot & Luas missing` → his `PRBB lot luas laporan tanah kosong`.
 - Sentence case as he types it: first word capital, urusan and form names as written on screen.
 - A deploy for a ticket (staging, internal, common version change) is `<number> - Assist <what>`, never `Deploy ...`: the work is the merge checks plus the deploy (2026-10-28 per みや). `286315 - Assist staging deployment` · `286654 - Assist common testing on internal`.
