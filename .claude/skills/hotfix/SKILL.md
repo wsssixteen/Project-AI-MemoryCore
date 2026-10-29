@@ -33,19 +33,21 @@ The fix is done and verified; PROD needs it before the next release. Steps from 
 | H3 | Draft the infra message below, give it to みや; he posts it in the **MLK infra group** (never sent by me) | message shown in one fenced block |
 | H4 | Infra replies with the new URL → みや passes that link to BA | BA has the URL |
 
+The team's own template (2026-10-29, replaces the spoc-hasil example first given). Copy it word for word, fill only the `<...>` parts:
+
 ```
-Hi Infra team,
-Date Request Hotfix : <DD/MM/YYYY>
+Hi Infra Team,
 
-Would like to request a hotfix deployment as below:
+Date Request Hotfix: <DD/MM/YYYY>
 
-etanah-pelupusan
-Branch : mlk/hotfix/<ticket>
+Would like to request a hotfix deployment for the etanah-pelupusan Melaka server using branch: mlk/hotfix/<ticket>
 
-Ticket No/Subject:#<ticket>
+Ticket No / Subject: #<ticket> - <Redmine subject>
+
+Reason: <the issue in one plain sentence + what the fix changes>
+
+Thank you.
 ```
-
-Open (not verified): the team lead's example (etanah-spoc-hasil) names `Branch : mlk/hotfix-env`; pelupusan has no `mlk/hotfix-env` on origin, so the ticket branch is named. Ask みや if infra replies asking for an env branch.
 
 **Before handback, emit**: `HOTFIX — scaffold ✓ · proof SELECTs <n> · branch mlk/hotfix/<#> off <master SHA> · mirror reset ✓ · screen values traced <n>/<n> · tugasan sharing screen <list> · test keys echoed ✓`
 
