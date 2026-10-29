@@ -14,3 +14,5 @@
 {"ts":"2026-10-29T11:37:05.475Z","num":"286988","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":7278}
 {"ts":"2026-10-29T11:38:12.707Z","num":"286988","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":4496}
 {"ts":"2026-10-29T13:47:26.006Z","num":"286646","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":62275}
+{"ts":"2026-10-29T14:15:36.293Z","num":"286610","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/esokongan/286610"],"dur_ms":9093}
+{"ts":"2026-10-29T14:15:57.707Z","num":"286610","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":8276}
