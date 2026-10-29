@@ -4,6 +4,17 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
+- **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
+- **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
+- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
+- **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
+- **Fable audit (his popup pick)**: 1 read-only Fable 5.1 auditor: 3 majors (READY despite failed days; a launcher switch re-registering a waiting run; a scheduled check closing an open page) + 12 minors. Fixed by an Opus fixer, proven; later-phase items filed under ROADMAP phases 3 and P.
+- **State**: committed `a68c18c` on main in `E:\Dev\scripts\PymTime` (local, not pushed; 5 unpushed commits now). Final proof: self-test 661 of 661, install sim 30 of 31 (the zip row), real tasks unchanged.
+- **Found**: his real tasks run FROM this repo (live install): the uncommitted build ran for real at 08:00 (reminder self-check filled the empty Drive link, wrote config.last-good.json, re-created shortcuts) and 09:24 (clock-in OK). PROJECT.md hard rule 10 added. Slips logged: model-tiering/fable-skipped, delegation/kill-rule-too-broad, resource-blindness/live-install-edited.
+- **Next**: phase 3 (page rebuild, with the weekly plan card and the Redmine key). Push only on his word. Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
+**Last Activity**: 2026-10-28 16:50 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow", child of the Baseline 1.9.0 session), design shown, saved for tomorrow's baseline.
+
 ## Session Recap (2026-10-28, worktree "dreamy-pike-08af0b", one workflow for every system change)
 - Ask: one workflow that all six kinds of system change go through, ending with commit + push + land on main in the same turn.
 - Inventory done and a design picture shown (/system-change, 8 steps, step 7 lands on main). miya: NOT approved; audit first with Fable 5.1, in this child session, so he understands the structure and flow before deciding.
@@ -6845,6 +6856,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

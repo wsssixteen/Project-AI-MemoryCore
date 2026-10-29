@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 20:05 — worktree `pembatalan-dropdown-popup-251828`, adhoc ADHOC-BPRZ-2026-1 (Penang IT AWAM BPRZ) closed ANSWERED and archived, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "pembatalan-dropdown-popup-251828", Penang BPRZ adhoc)
+- His ask: Penang AWAM BPRZ popup, "Pembatalan dropdown" shows nothing; ticket maybe under Izz. Screen confirmed: tab Maklumat Perizaban > popup Maklumat Plot.
+- Finding: the plot popup lists (No. Lot/PT, No Lot Bersebelahan, Tempat) are built from the saved Maklumat Tanah rows (`etanah-awam` PelupusanService.java:4725-4782). IT record 430 has no No Lot Bersebelahan (row 201 mklmt_tmbhn blank), so that list is empty. By design per BA spec 286972. No Izz ticket matches.
+- miya: "no, it is okay" → closed ANSWERED, route ANSWER. Register Penang A6 ANSWERED; Task folder 7 → Archive; block → active-archive.txt. Audit 30/30 PASS (agent's run; my own re-run is blocked by the adhoc-brief-first gate).
+- Open: nothing for this adhoc. archive-quest needed `--allow-stub` (no Bounty section on an answered adhoc).
+
 **Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
 
 ## Session Recap (2026-10-29, worktree "sweep-orchestration-audit-39e710", /sweep audit + refinement)
@@ -18,14 +26,3 @@
 - New adhoc ADHOC-PPTPB-2026-7 (A81, archive hold, Task 337): waits for the CR ticket. ADHOC-PPTPB-2026-6 still open: archive-quest refused at the harvest gate (no Bounty section); needs miya's call (bounty or --allow-stub).
 - Open: blank-line Ulasan never tested (262 of 1023 PROD rows); requirement-index improvement (proposal logged).
 **Last Activity**: 2026-10-28 13:40 — PymTime phase 2 (self-check engine) DONE: Fable audit, its 3 majors fixed, committed locally as a68c18c (not pushed); next phase 3
-
-## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
-- **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
-- **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
-- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
-- **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
-- **Fable audit (his popup pick)**: 1 read-only Fable 5.1 auditor: 3 majors (READY despite failed days; a launcher switch re-registering a waiting run; a scheduled check closing an open page) + 12 minors. Fixed by an Opus fixer, proven; later-phase items filed under ROADMAP phases 3 and P.
-- **State**: committed `a68c18c` on main in `E:\Dev\scripts\PymTime` (local, not pushed; 5 unpushed commits now). Final proof: self-test 661 of 661, install sim 30 of 31 (the zip row), real tasks unchanged.
-- **Found**: his real tasks run FROM this repo (live install): the uncommitted build ran for real at 08:00 (reminder self-check filled the empty Drive link, wrote config.last-good.json, re-created shortcuts) and 09:24 (clock-in OK). PROJECT.md hard rule 10 added. Slips logged: model-tiering/fable-skipped, delegation/kill-rule-too-broad, resource-blindness/live-install-edited.
-- **Next**: phase 3 (page rebuild, with the weekly plan card and the Redmine key). Push only on his word. Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
-**Last Activity**: 2026-10-28 16:50 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow", child of the Baseline 1.9.0 session), design shown, saved for tomorrow's baseline.
