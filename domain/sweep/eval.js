@@ -15,8 +15,8 @@ function check(n, c, d) { results.push({ n, pass: !!c, d: d || '' }); }
 check('1 DELEGATION PLAN before any fan-out', /DELEGATION PLAN table BEFORE any fan-out/i.test(s) && /stage · #agents · model · effort/.test(s));
 // §8-2 redmine first, active.txt banned as date source
 check('2 Redmine-first; active.txt dates banned', /redmine-board\.js/.test(s) && /never take dates or status from active\.txt/i.test(s));
-// §8-3 rank descending by days; difficulty on request only
-check('3 3-DAY-RULE ranking; difficulty on request', /descending days since `?start_date`?/i.test(s) && /difficulty\/ease is NOT a column unless miya asks/i.test(s));
+// §8-3 ranking — re-pinned 2026-10-29: the 3-DAY RULE ranking was replaced by the tracker-tier rule (miya 2026-10-19)
+check('3 tracker-tier ranking; he picks the tickets', /TICKET PRIORITY RULE/.test(s) && /TRACKER_TIER/.test(s) && /he picks the day's tickets/i.test(s));
 // §8-4 safety template with 7 clauses, verbatim mandate
 const clauses = (s.match(/^\d\. /gm) || []).length;
 check('4 safety template VERBATIM with 7 clauses', /SAFETY CONTRACT \(all 7 binding\)/.test(s) && /VERBATIM in every familiar prompt/i.test(s), 'numbered lines=' + clauses);
@@ -38,6 +38,18 @@ check('11 orch flag: 4h TTL + delete at close + suppression telemetry check', /T
 check('12 never Fable · Apply not owned · distill only at Phase-2', /NEVER fable/i.test(s) && /Apply is NOT part of the sweep/i.test(s) && /ONLY at Phase-2 close/i.test(s));
 // miya 2026-08-17: sweep ends with the brief table and STOPS; fixes get their own sessions; board updated
 check('13 brief-table-then-STOP + own-session rule + active.txt phase update', /the table IS the close; then STOP/i.test(s) && /OWN dedicated session/i.test(s) && /active-cli\.js update/.test(s));
+// miya 2026-10-29: run layout, baseline pin, scratch-then-bank, audit Tool, audit-and-refine step
+check('14 goal stated: accuracy first, then speed', /\*\*Goal\*\*/.test(s) && /Accuracy first/i.test(s));
+check('15 flag on/off through the audit Tool (main folder)', /audit\.js flag on/.test(s) && /audit\.js flag off/.test(s) && /MAIN folder/.test(s));
+check('16 W3 launched with W1+W2; W4 per ticket on its two passes', /W1\+W2 and W3 of EVERY ticket go out together/.test(s) && /W4 of a ticket launches the moment that ticket's two passes are banked/.test(s));
+check('17 code baseline pinned to origin/mlk/master + fetch before launch', /git show origin\/mlk\/master:<path>/.test(s) && /git fetch origin/.test(s));
+check('18 familiar writes to scratch, controller banks', /<scratchpad>\\sweep\\QA-<n>-<wave>\.md/.test(s) && /\*\*Bank\*\*/.test(s));
+check('19 W4 reads the commit that introduced each changed line', /read the commit that introduced each line the fix changes/i.test(s));
+check('20 ledger row written by the audit Tool with --write', /audit\.js run --tickets/.test(s) && /--write/.test(s));
+check('21 audit-and-refine step: fix loop, accuracy guard, REFINE NOW via /system-change', /audit and refine/i.test(s) && /fix loop/i.test(s) && /never proposed/.test(s) && /REFINE NOW/.test(s) && /\/system-change/.test(s));
+check('22 no recursive delete in cleanup', /recursive delete of any folder is banned/i.test(s));
+const ae = require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'audit.eval.js')], { encoding: 'utf8', windowsHide: true });
+check('23 audit Tool fixture eval green', ae.status === 0, (ae.stdout || '').trim().split('\n').pop());
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' ' + x.d)); }

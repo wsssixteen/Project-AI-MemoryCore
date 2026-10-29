@@ -68,7 +68,7 @@ Format: short bullet per gap with a one-line "what to do" suggestion. みや dec
 
 **みや, verbatim**: *"MAKE IT EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"* (angry)
 
-Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence.
+Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence. Then (4) `node lib/land-on-main.js <HEAD>` from the session folder, so the main FOLDER has it too; REFUSED → `system/INDEX.md` §The change route step 7.
 
 **Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway · treating "auto-commit + push" as advisory · **skipping or scoping down the ritual itself** (added 2026-10-08): a `⏭` covers ONE step, never the whole Domain Expansion, and "another live session owns today's diary or session file" is never a reason. Every session appends its own entry and runs its own full DE.
 

@@ -22,6 +22,8 @@ footprint: per-tool: 1 short node process per Edit/Write/MultiEdit (<50 MB, <50 
 | 5 type | a file named `feedback_*.md` is ALWAYS gated, whatever its frontmatter `type:` says (no relabelling). For other names, frontmatter `type: user`, `project` or `reference` (top-level or nested under `metadata:`) passes without a line; `type: feedback` is gated; no type (`notes.md`) passes. Edit reads the type from the existing file, or from the `type:` line in `new_string` if the edit changes it |
 | 6 enforcer | a path inside an `auto-memory` folder is refused: a memory is not an enforcer |
 
+**Order + ending**: a memory refinement is step 4 of `system/INDEX.md` §The change route; it lands on main the same turn (step 7).
+
 Only assistant `text` blocks count. Tool results, hook output, user messages and the tool inputs themselves never satisfy the line or the bypass. A user message that is only a `<system-reminder>`, `<task-notification>` or `Stop hook feedback` is not a turn boundary.
 
 Bypass: `[skip-memory-write: <reason>]` in assistant text of the current turn. The reason needs 8+ characters and may not be a `<placeholder>`, so the gate's own block text (which prints `<reason>`) can never satisfy it. Logged as `bypass`.

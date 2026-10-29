@@ -43,7 +43,8 @@ metadata:
 5. **One `main/todo.md` Q1 row per run carrying every CRITICAL + HIGH item** (apply first-time-creation rule — don't wait for strikes). Was "TaskCreate per item" until 2026-09-22: the Task tools are OFF by default since Claude Code v2.1.233 (2026-08-14) unless `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`, so that step silently could not run; the todo row is also the portable home (north-star: quit Claude Code)
 6. **Surface to next-session boot** via standing-flag mechanism if any CRITICAL remain after this run
 7. **Update last-system-check date** in `system/evolution-protocol.md`
-8. **Emit final report** to chat — what shipped this run + what's tracked + what's deferred
+8. **Acting on a finding after his go** is a system change: `system/INDEX.md` §The change route, ending on main the same turn (step 7). This skill itself still does not implement.
+9. **Emit final report** to chat — what shipped this run + what's tracked + what's deferred
 
 ## Familiar templates (frozen from 2026-05-24 first run)
 

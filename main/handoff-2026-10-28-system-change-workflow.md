@@ -1,5 +1,7 @@
 # Handoff 2026-10-28: one workflow for every system change (/system-change)
 
+> **2026-10-29 — DONE.** Fable 5.1 Foundations audit run (18 foundations, 12 conflicts, 7 paths none ending on main). His popup: Rules own + skill runs · refine design-consult-gate (advisory) · highest-model rule row · group name Capabilities. Built: `system/INDEX.md` rulings 13-14 + §The change route · `.claude/skills/system-change/` · `domain/system-change/` (eval 21/21) · gate advisory (eval 37/37) · 8 lane pointers · CLAUDE.md v1.97. Not done (follow-ups): `feedback_daily_commit.md` pointer (memory-write-gate did not see the placement line) · stale text in `auto-skill-on-mistake` (:46 :69 :91 :141), `design-consult-gate/README.md` :8 :15, `INDEX.md` recursive-safety line on system-edit-gate · one shared path list for the 3 gates · version-stamp uniqueness check in claude-md-edit-guard · the 9 unclaimed root folders' verdicts.
+
 Session: "28/10/2026 - one system-change workflow" (worktree `dreamy-pike-08af0b`), a child of the Baseline 1.9.0 session.
 State: design proposed, NOT approved, nothing built. Tomorrow's baseline starts from this file.
 
