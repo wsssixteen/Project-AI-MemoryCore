@@ -79,7 +79,8 @@ try {
   check('M4 prepare: exit 0, phase mr-pending, nothing pushed', r.status === 0 && s1.phase === 'mr-pending' && tip('mlk/master') === master0, all(r));
   check('M5 prepare never switches みや\'s checkout and makes no tag', sh(repo, ['branch', '--show-current']) === 'mlk/hotfix/1' && !sh(repo, ['tag', '-l']), sh(repo, ['branch', '--show-current']));
   check('M6 form: exact title, counts, both reviewers, squash/delete OFF', /title\s+Release Pelupusan 9\.9\.20/.test(all(r)) && /commits\s+2 /.test(all(r)) && /files\s+2 /.test(all(r)) && /Aaron \(@aaron\)/.test(all(r)) && /Alex \(@alexk\)/.test(all(r)) && /squash\s+OFF/.test(all(r)) && /delete src\s+OFF/.test(all(r)), all(r));
-  check('M7 URL pre-fills source, target and title, url-encoded', s1.mr.newUrl === `${WEB}/${PROJECT}/-/merge_requests/new?merge_request%5Bsource_branch%5D=mlk%2Frelease%2F9.9.20&merge_request%5Btarget_branch%5D=mlk%2Fmaster&merge_request%5Btitle%5D=Release%20Pelupusan%209.9.20`, s1.mr.newUrl);
+  check('M7 URL pre-fills source, target and title, url-encoded', s1.mr.newUrl === `${WEB}/${PROJECT}/-/merge_requests/new?merge_request%5Bsource_branch%5D=mlk%2Frelease%2F9.9.20&merge_request%5Btarget_branch%5D=mlk%2Fmaster&merge_request%5Btitle%5D=Release%20Pelupusan%209.9.20&merge_request%5Bdescription%5D=Need%20assistance%20to%20merge.%20Thank%20you.`, s1.mr.newUrl);
+  check('M7b form: fixed description', /description Need assistance to merge\. Thank you\./.test(all(r)), all(r));
   check('M8 self-audit reads the state back', /self-audit: state read back/.test(all(r)), all(r));
 
   r = prep(['merge-to-master', '--release', '9.9.20', '--check']);
