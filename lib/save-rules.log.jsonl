@@ -196,3 +196,4 @@
 {"ts":"2026-10-29T11:53:26.897Z","parts":13,"pass":51,"fail":0,"unruled":0,"skip":0,"dur_ms":11119,"partial":false}
 {"ts":"2026-10-29T12:02:53.758Z","parts":16,"pass":63,"fail":1,"unruled":0,"skip":0,"dur_ms":16745,"partial":false}
 {"ts":"2026-10-29T12:05:42.777Z","parts":16,"pass":64,"fail":0,"unruled":0,"skip":0,"dur_ms":40090,"partial":false}
+{"ts":"2026-10-29T12:02:37.482Z","parts":16,"pass":57,"fail":0,"unruled":1,"skip":0,"dur_ms":12834,"partial":false}
