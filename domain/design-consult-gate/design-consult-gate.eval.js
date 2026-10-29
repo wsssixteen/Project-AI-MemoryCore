@@ -69,6 +69,57 @@ r = run(GUARDED_PATH, [
 ]);
 check('T6 stale assistant token -> BLOCK', r.deny === true, r.out.slice(0, 60));
 
+// T7/T8 (2026-10-29): consult passed but /system-change not loaded -> allowed WITH the route advisory;
+// loaded -> allowed, no advisory. The commit step itself is never gated.
+const CONSULTED = [
+  { role: 'assistant', text: 'Launching skill: system-rules' },
+  { role: 'assistant', text: 'Launching skill: system-design' },
+];
+r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED]);
+check('T7 no /system-change -> allowed + route advisory rendered', r.deny === false && /system-change/.test(r.out) && /additionalContext/.test(r.out), r.out.slice(0, 80));
+r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change' }]);
+check('T8 /system-change loaded -> allowed, no advisory', r.deny === false && !/system-change/.test(r.out), r.out.slice(0, 80));
+
+// ================= Own-reader rider (2026-10-29, system-rules Rule 8) =================
+// A hook or lib file may not parse transcript user lines itself; it requires lib/his-words.js or carries the marker.
+function runTool(tool, tool_input, entries) {
+  const stdin = JSON.stringify({ tool_name: tool, tool_input, transcript_path: transcript(entries) });
+  const r = spawnSync(process.execPath, [HOOK], { input: stdin, encoding: 'utf8', timeout: 30000, env: process.env });
+  let deny = false, reason = '';
+  try { const o = JSON.parse(r.stdout || ''); deny = o.hookSpecificOutput && o.hookSpecificOutput.permissionDecision === 'deny'; reason = (o.hookSpecificOutput && o.hookSpecificOutput.permissionDecisionReason) || ''; } catch (_) {}
+  return { deny, reason, out: r.stdout || '', status: r.status };
+}
+const rdir = path.join(os.tmpdir(), 'dcg-reader-' + Date.now()); fs.mkdirSync(path.join(rdir, 'domain', 'own-gate'), { recursive: true }); fs.mkdirSync(path.join(rdir, 'lib'), { recursive: true });
+fs.writeFileSync(path.join(rdir, 'domain', 'own-gate', 'eval.js'), '// eval');
+const OWN_HOOK = path.join(rdir, 'domain', 'own-gate', 'own-gate.check.hook.js');
+const OWN_CODE = "const lines = tail.split('\\n').filter(l => /\"type\"\\s*:\\s*\"user\"/.test(l));\nif (obj.isMeta) continue;\n";
+const GOOD_CODE = "const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));\nconst last = lastHis(data.transcript_path);\n";
+const MARKED_CODE = "// his-words: not an approval reader — finds the turn boundary for the bypass token\nfor (let i = T.length - 1; i >= 0; i--) if (T[i].role === 'user') { start = i; break; }\n";
+const CONS = [{ role: 'user', text: 'build the gate' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change [skip-eval-check: fixture folder, the eval rider is not under test here]' }];
+r = runTool('Write', { file_path: OWN_HOOK, content: OWN_CODE }, CONS);
+check('R1 Write of a new hook that parses user lines itself -> DENY, names the line and lib/his-words.js', r.deny && /his-words/.test(r.reason) && /"type"/.test(r.reason), r.reason.slice(0, 120) || r.out.slice(0, 80));
+r = runTool('Write', { file_path: OWN_HOOK, content: GOOD_CODE }, CONS);
+check('R2 Write of a hook that requires lib/his-words.js -> allowed', !r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: OWN_HOOK, content: MARKED_CODE }, CONS);
+check('R3 Write of a turn-boundary reader with the not-an-approval-reader marker -> allowed', !r.deny, r.reason.slice(0, 80));
+fs.writeFileSync(OWN_HOOK, "'use strict';\nconst x = 1;\n// end\n");
+r = runTool('Edit', { file_path: OWN_HOOK, old_string: '// end', new_string: "if (ev.type === 'user' && ev.message) last = ev.message.content; // his LAST message" }, CONS);
+check('R4 Edit that adds an own reader to a file without his-words -> DENY', r.deny, r.reason.slice(0, 80));
+fs.writeFileSync(OWN_HOOK, "'use strict';\nconst { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));\n// end\n");
+r = runTool('Edit', { file_path: OWN_HOOK, old_string: '// end', new_string: "if (o.type === 'user' && !o.isMeta) n++;" }, CONS);
+check('R5 Edit adding a user-line scan to a file that already requires his-words -> allowed', !r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: path.join(rdir, 'lib', 'counter.js'), content: OWN_CODE }, CONS);
+check('R6 a lib/*.js file with an own reader -> DENY (lib is covered)', r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: path.join(rdir, 'domain', 'own-gate', 'own-gate.eval.js'), content: OWN_CODE }, CONS);
+check('R7 an eval file building user-line fixtures -> allowed (evals are exempt)', !r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: OWN_HOOK, content: OWN_CODE }, [...CONS, { role: 'assistant', text: 'one-off migration script [skip-own-reader: reads lines to migrate them, decides nothing]' }]);
+check('R8 bypass token in my own current-turn text -> allowed', !r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: OWN_HOOK, content: OWN_CODE }, [{ role: 'user', text: 'blocked: Add [skip-own-reader: <reason>]' }, ...CONS]);
+check('R9 the token only in an old hook-feedback line -> still DENY', r.deny, r.reason.slice(0, 80));
+r = runTool('Write', { file_path: path.join(rdir, 'notes', 'reader.md'), content: OWN_CODE }, CONS);
+check('R10 a non-code path with the same text -> silent', !r.deny && r.status === 0, 'exit=' + r.status);
+fs.rmSync(rdir, { recursive: true, force: true });
+
 // ================= Stop side: proposal judge (2026-09-30, slip design-not-universal) =================
 const pj = require('./proposal-judge.js');
 function tr(entries) {

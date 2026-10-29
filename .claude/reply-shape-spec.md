@@ -195,7 +195,11 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **Why**: 2026-10-14, DawahMap. A report said "walk step 2" and he replied "I don't know what step 2 you're talking about"; the reports of the same night ran to five sections. Four rules already stood near this (answer the ask · no information overload · name the thing · no vague words). None put the three faults together at the top, and none said that a reply in long work must say where it is going. Not mechanical: it rests on this section and the boot-loaded line in CLAUDE.md.
 
-## 3g. 📋 Brief at the end of every reply, in simple technical English (2026-10-23, per みや)
+## 3g. 🪦 RETIRED 2026-10-28 per みや — Brief at the end of every reply
+
+His words: "drop the brief rule … Whatever you've told me at the start is already the brief." Replies carry NO `## Brief` section; the first line says what was done. The body below is kept as history only.
+
+### (retired) Brief at the end of every reply, in simple technical English (2026-10-23, per みや)
 
 His words: "use simple technical english to brief me (Add this into claude.md if needed on every end of reply aside from the next steps)."
 
@@ -230,19 +234,29 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 
 ## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
 
-**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. Each changed part gets its own heading, written as its place in the hierarchy (`system/INDEX.md`): System › kind › parent, if any › name (new or changed). Under the heading come one diagram or table and one short sentence. No bullet lists.
+**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. **One heading per KIND** (`system/INDEX.md`: Rule · Workflow · Feature · Tool · Memory · Kernel · Project), and under it **ONE table, one row per changed part**: Name · Parent (if any) · New or changed · one line on what changed. A kind with one part still gets the table (one row). After the table at most one short sentence. No bullet lists. (2026-10-28 per みや: "if it is under memory, just put it in a single table, separate them by the name of the memory, same like the other layers".)
 
-| Kind | Where it lives | Example heading |
+| Kind | Where it lives | Heading, then the table |
 |---|---|---|
-| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## System › Rule › Reply spec › 3i title (changed)` |
-| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## System › Workflow › Quest › Hand-over step (changed)` |
-| Feature | `domain/<name>/` (a check or gate: hook + eval + log) | `## System › Feature › handover-check-gate (new)` |
-| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## System › Tool › handover-check.js (new)` |
-| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` · `domain/pena/` style data | `## System › Memory › People list › kak Yati (changed)` |
-| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## System › Kernel › forge (changed)` |
-| Project | `projects/coding-projects/active/<Name>/` | `## System › Project › PymTime (changed)` |
+| Rule | `.claude/CLAUDE.md` · `.claude/reply-shape-spec.md` · `personality.md` · `system/` | `## System › Rule (changed)` |
+| Workflow | a step skill (quest · deploy · release · adhoc · Domain Expansion) | `## System › Workflow (changed)` |
+| Feature | `domain/<name>/` (a check or gate: hook + eval + log) | `## System › Feature (new)` |
+| Tool | a script or index called on purpose (`lib/`, `quest/` scripts) | `## System › Tool (new)` |
+| Memory | `.claude/auto-memory/` · `etanah-knowledge/` · `main/` · `domain/pena/` style data | `## System › Memory (changed)` |
+| Kernel | `core/` · shared `lib/` code · `.claude/settings.json` | `## System › Kernel (changed)` |
+| Project | `projects/coding-projects/active/<Name>/` | `## System › Project (changed)` |
 
-**Banned**: a system change reported with no breadcrumb heading · one heading that lumps several parts · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was.
+Example, the Memory kind with two parts:
+
+```
+## System › Memory (changed)
+| Name | Parent | New or changed | What changed |
+|---|---|---|---|
+| main-memory.md | main/ | changed | relationship row: a revival is a handover |
+| 2026-10-28.md | daily-diary/current/ | changed | this session's entry added |
+```
+
+**Banned**: a system change reported with no `System › <kind>` heading · the same kind headed twice in one reply (one heading per part was the 2026-10-27 shape; retired 2026-10-28) · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` v3 (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it, and blocks a kind headed twice. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was. 2026-10-28: the DE delta carried four `System › Memory` headings for four files; he reads a kind as one table, like the Workflows / Features / Tools layers.
 
 ## 4. Precedence Note
 

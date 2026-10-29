@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Created | 2026-07-06 |
-| Session | Background task — recurring "missing end-of-reply summary" slip. Root symptom: 154/618 substantive turns compliant = 24.9% baseline. みや: *"Please also add ALWAYS AT THE END OF A REPLY A FUCKING SUMMARY."* |
+| Session | Background task — recurring "missing end-of-reply summary" slip. Root symptom: 154/618 substantive turns compliant = 24.9% baseline. みや: *"Please also add ALWAYS AT THE END OF A REPLY A SUMMARY."* (frustrated) |
 | Files | (a) `domain/stop-point-summary/stop-point-summary.discipline.hook.js` (Stop hook) · (b) `domain/stop-point-summary/eval.js` (compliance scanner + 7-case smoke-test) · (c) `domain/stop-point-summary/README.md` (contract) · (d) `domain/stop-point-summary/log.jsonl` (auto-created on first fire) · (e) `.claude/skills/stop-point-summary/SKILL.md` (REFINED — Micro-Summary + banned bypass docs — pre-existing skill) · (f) `.claude/settings.json` `Stop` array entry pointing to hook · (g) `system/system-architecture.md` §3.5 rows 110-111 (retirement of old + new hook row) · (h) `system/system-architecture.md` detail row for the hook · (i) `domain/stop-point-todo-table/README.md` retirement tombstone · (j) `Feature/Forge-Self-Improvement-System/skill-failure-log.md` slip row |
 | Rollback | See block below |
 | Retire | 2026-08-05 (Created + 30 days). Remove this file at DE if `domain/stop-point-summary/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |

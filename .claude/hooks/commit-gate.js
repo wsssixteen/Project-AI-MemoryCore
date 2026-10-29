@@ -185,8 +185,8 @@ process.stdin.on('end', () => {
     }
 
     // v2: checks 3a/3b are UNCONDITIONAL on any work-repo commit. Per みや 2026-08-05:
-    // "Whatever the fuck it is if I don't mention always stop at the fucking staging.
-    //  Don't fucking simply commit." Quest resolution must NEVER be able to switch them off —
+    // (angry) "Whatever it is, if I don't mention it, always stop at the staging.
+    //  Don't simply commit." Quest resolution must NEVER be able to switch them off —
     // the old `if (state.qa === 'none' || state.status === 'idle') process.exit(0)` did exactly
     // that whenever the quest was closed/archived or the QA could not be matched.
     const state = pickTargetState(cmd);

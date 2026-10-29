@@ -17,7 +17,7 @@ When justifying a claim, a fix, or a constant/value choice, **SHOW the evidence,
 **How to apply**: at every fix/claim emit, the justification carries either a `SELECT` he can run or a fenced code block with the real lines. A conclusion with no runnable/greppable evidence attached is incomplete.
 
 ## 🚨 STRENGTHENED 2026-09-02 (miya, #274094 staging capaian) — SCRIPT IN THE SAME REPLY, NEVER ON ASK
-Verbatim: *"ALWAYS GIVE SCRIPT STRAIGHT AWAY WHEN YOU'RE FUCKING CLAIMING SOMETHING FROM THE FUCKING DB."*
+Verbatim: *"ALWAYS GIVE SCRIPT STRAIGHT AWAY WHEN YOU'RE CLAIMING SOMETHING FROM THE DB."* (angry)
 I diagnosed "PPTnKanan users lack PRBB capaian on stg2" from 4 MCP queries, then ended with "tell me and I prepare a script" — he had to ask twice ("what is the script" / "to show"). **Rule**: the moment a reply asserts a DB fact (row exists / missing / value X), the SAME reply carries (a) the SELECT that proves it, unqualified, runnable by him, and (b) if a fix is data-side, the script-check'd patch script — not an offer to prepare one. An offer = a stop-instead-of-action slip. Ledger: `reask/redundant` + `stop-instead-of-action` 2026-09-02.
 
 ## Evidence script shows EVERY column the code reads, in read order (2026-10-04, #280540 Phase 2)

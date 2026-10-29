@@ -15,8 +15,8 @@ description: List the short ProTime titles of the day's adhocs, ready to paste. 
 3. Read each title before sending. It must carry the ISSUE word (what is wrong). A title that only names the subject is rewritten first, same command as step 2.
 4. Reply with the titles only, ONE fenced block PER title (each gets its own copy button), in the order the script printed them.
 
-## ProTime line = `<ENV> - <title>` (2026-10-06 per みや: "the format starts with PROD - ...")
-The script prints it that way, from the block's `env=` and `title=`. Paste the script's line as is: `PROD - Load documents from PROD to STAG`.
+## ProTime line = `<STATE> (<ENV>) - <title>` (2026-10-29 per みや: "MLK (PROD/Internal) - <very short description/keyword>")
+The script prints it that way, from the block's `state=`, `env=` and `title=` (`protimeLine` in `domain/protime-plan/protime-plan.js`). ENV is `PROD` or `Internal` (every environment that is not PROD). Paste the script's line as is: `MLK (PROD) - Load documents from PROD to STAG`.
 The stored `title=` carries no env prefix; the script adds it. An env word inside the title itself is fine when the work is about that env.
 For an ask (not a defect) the title is the plain action: `Load documents from PROD to STAG`.
 
@@ -36,7 +36,7 @@ An adhoc that started on an earlier day and was picked up again today is listed 
 ## Banned
 - Making up titles from chat memory instead of running the script.
 - Adding ids or permohonan numbers to a title.
-- Giving a ProTime title without the `<ENV> - ` prefix.
+- Giving a ProTime title without the `<STATE> (<ENV>) - ` prefix.
 - Asking みや which adhocs he worked on today; the blocks already say.
 
 symptom: 2026-10-04 miya: "I don't want to keep on repeating to ask for a simple short keyword title to put into protime"

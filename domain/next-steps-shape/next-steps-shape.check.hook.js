@@ -6,6 +6,9 @@
 // SIGNAL: last assistant text has a "Next steps" heading followed by a markdown table
 // BLOCK: header has no "What it means" column, OR any row's meaning cell has < 5 words
 // PASS: no Next steps table · table carries the column with a >= 5-word meaning on every row
+// v3 BLOCK: a quest reply (names an active quest's ticket number) with a Next steps table and no image sent this turn
+//           and no "Diagram: none (<reason>)" line — 2026-10-29 miya on 286655: "I didn't see any story diagram using
+//           your diagram skill to decide. Why do you fail to show this on every quest run?"
 // BYPASS: [skip-next-steps-shape: <reason>] · FAIL-OPEN on any error
 // Runs inside the stop-reply-shape bundle (lib/dispatch-hooks.js), not a standalone registration (system-rules Rule 7)
 // Log: domain/next-steps-shape/log.jsonl
@@ -13,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const LOG = path.resolve(__dirname, 'log.jsonl');
+const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const BYPASS = /\[skip-next-steps-shape:/i;
 const HEADING = /^\s*(#{1,6}\s*|\*\*)\s*Next steps\b/i;
 const MEANING_COL = /what it means|what this is|why/i;
@@ -75,6 +79,38 @@ function evaluate(text) {
   if (orphans.length) return { verdict: 'block', reason: 'row-not-explained-above', rows: orphans, headings: heads.length };
   return { verdict: 'pass', reason: 'shape-ok' };
 }
+
+// v3: a quest reply that asks him to decide carries a picture (explain-diagram skill, rendered by lib/diagram-render.js)
+// sent this turn. Quest = the reply names the number of a status=active block in quest/active.txt.
+const DIAGRAM_NONE_RE = /^[ \t>*`-]*Diagram:\s*none\s*\([^)\n]{3,}\)/im;
+const IMAGE_SEND_RE = /\.(?:png|jpe?g|svg)\b/i;
+function activeTickets(file) {
+  let raw; try { raw = fs.readFileSync(file, 'utf8'); } catch (_) { return []; }
+  const out = [];
+  for (const block of raw.split(/\r?\n\s*\r?\n/)) {
+    const qa = block.match(/^qa=QA-(\d{5,7})\s*$/m);
+    if (qa && /^status=active\s*$/m.test(block)) out.push(qa[1]);
+  }
+  return out;
+}
+function evaluatePicture(text, turnEvents, tickets) {
+  if (!text || BYPASS.test(text)) return { verdict: 'pass', reason: 'no-text-or-bypass' };
+  const plain = text.replace(/```[\s\S]*?```/g, '');
+  if (!plain.split(/\r?\n/).some(l => HEADING.test(l))) return { verdict: 'pass', reason: 'no-next-steps' };
+  const ticket = (tickets || []).find(n => new RegExp('(^|[^0-9])' + n + '([^0-9]|$)').test(plain));
+  if (!ticket) return { verdict: 'pass', reason: 'not-a-quest-reply' };
+  if (DIAGRAM_NONE_RE.test(plain)) return { verdict: 'pass', reason: 'diagram-none-stated' };
+  const sent = (turnEvents || []).some(e => e.kind === 'tool' && e.name === 'SendUserFile' && IMAGE_SEND_RE.test(e.input || ''));
+  if (sent) return { verdict: 'pass', reason: 'picture-sent' };
+  return { verdict: 'block', reason: 'quest-no-picture', ticket };
+}
+function lastTurnEvents(tp) {
+  try {
+    const { parse, turns } = require(path.join(ROOT, 'lib', 'adhoc-brief-first.js'));
+    const t = turns(parse(tp));
+    return t.length ? t[t.length - 1].events : [];
+  } catch (_) { return null; }
+}
 // content words reduced to a short stem, so "ending" meets "end" no better than any other word: the first 5 letters of words of 4+ letters
 const STOP = new Set(['with', 'from', 'that', 'this', 'your', 'what', 'when', 'will', 'have', 'them', 'they', 'then', 'only', 'into', 'about', 'after', 'before', 'there', 'their', 'which', 'would', 'could', 'should', 'each', 'every', 'more', 'than', 'also', 'here', 'just', 'like', 'make', 'look']);
 function stems(s) { return (String(s).toLowerCase().match(/[a-zÀ-ɏ]{4,}/g) || []).filter(w => !STOP.has(w)).map(w => w.slice(0, 5)); }
@@ -89,7 +125,21 @@ if (require.main === module) {
       if (data.stop_hook_active) process.exit(0);
       const text = typeof data._testText === 'string' ? data._testText : lastText(data.transcript_path || '');
       const r = evaluate(text);
-      if (r.verdict !== 'block') { log({ action: 'passed', reason: r.reason }); process.exit(0); }
+      if (r.verdict !== 'block') {
+        const ev = Array.isArray(data._testTurn) ? data._testTurn : lastTurnEvents(data.transcript_path || '');
+        const tk = Array.isArray(data._testTickets) ? data._testTickets : activeTickets(path.join(ROOT, 'quest', 'active.txt'));
+        const p = ev === null ? { verdict: 'pass', reason: 'no-transcript' } : evaluatePicture(text, ev, tk);
+        if (p.verdict !== 'block') { log({ action: 'passed', reason: r.reason, picture: p.reason }); process.exit(0); }
+        log({ action: 'blocked', reason: p.reason, detail: p.ticket });
+        process.stderr.write([
+          `⛔ next-steps-shape: this ${p.ticket} reply asks miya to decide, but no picture was sent this turn.`,
+          '   Draw the urusan flow with the changed step marked, and the options side by side, with the explain-diagram skill',
+          '   (render: node lib/diagram-render.js), Read the PNG, then send it with SendUserFile (miya 2026-10-29).',
+          '   Nothing to draw this round? One line instead: Diagram: none (<reason>).',
+          '   ⚡ DELTA ONLY: send just the picture, not the whole reply.',
+        ].join('\n') + '\n');
+        process.exit(2);
+      }
       log({ action: 'blocked', reason: r.reason, detail: r.rows || r.header });
       process.stderr.write([
         r.reason === 'row-not-explained-above'
@@ -110,4 +160,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate };
+module.exports = { evaluate, evaluatePicture, activeTickets };

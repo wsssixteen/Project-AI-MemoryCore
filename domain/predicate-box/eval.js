@@ -27,7 +27,7 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'predicate-box-eval-'));
 const LOG = path.join(TMP, 'log.jsonl'); // keeps eval rows out of the live fire log
 
 function jl(obj) { return JSON.stringify(obj); }
-function userLine(text) { return jl({ message: { role: 'user', content: text } }); }
+function userLine(text) { return jl({ type: 'user', message: { role: 'user', content: text } }); }
 function asstLine(text) { return jl({ message: { role: 'assistant', content: [{ type: 'text', text }] } }); }
 
 const ETANAH_EDIT_TEXT =
@@ -504,6 +504,14 @@ const fixtures = [
     name: '49. fix-intent + real Write of an etanah .xhtml + no diagram -> block (requirement 1 still fires)',
     run() {
       const t = writeTranscript('f49', [userLine('Please fix the dropdown.'), toolLine('Write', { file_path: XHTML, content: '<h:form/>' }), asstLine('Done.')]);
+      return expectBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '50. his fix word, then an injected skill line as the last user line -> gate still reads his word and blocks',
+    run() {
+      const inj = jl({ type: 'user', ['is' + 'Meta']: true, message: { role: 'user', content: 'Base directory for this skill: x' } });
+      const t = writeTranscript('f50', [userLine('Please fix the dropdown.'), toolLine('Write', { file_path: XHTML, content: '<h:form/>' }), inj, asstLine('Done.')]);
       return expectBlock(runHook(t, false));
     },
   },

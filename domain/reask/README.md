@@ -19,7 +19,7 @@ retention: rotate monthly
 |---|---|---|
 | `reask/verbose` | "in one sentence" / "one line" / "briefly" / "just answer" / "simple yes or no" | Answer FIRST, one sentence, no lead-up |
 | `reask/rambling` | "why are you rambling" / "blabbering" / "essays" / "long-winding" / "wall of text" | Table/diagram > prose, cut scaffolding |
-| `reask/hallucination` | "hallucinat" / "making that up" / "bullshit" / "you're wrong" | Verify before claim, retract explicitly |
+| `reask/hallucination` | "hallucinat" / "making that up" / (a swear-word form of "that's not true") / "you're wrong" | Verify before claim, retract explicitly |
 | `reask/buried-answer` | "answer my question" / "you didn't answer" / "still no answer" | Lede = answer, put it in the first sentence |
 | `reask/redundant` | "I already asked" / "I already told you" / "I've said this" | Read prior context before replying |
 | `reask/rephrase-check` | "wait so..." / "so is it..." / "so basically..." | Reply was ambiguous — confirm/deny sharper |

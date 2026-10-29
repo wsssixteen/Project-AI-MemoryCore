@@ -101,7 +101,7 @@ fs.writeFileSync(statusScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061
 const statusNoteScript = path.join(sb, 'set-status-note.js');
 fs.writeFileSync(statusNoteScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061.json', { issue: { status_id: 2, notes: 'x' } });");
 const popup = t => JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: t }] } });
-r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("4. Yes for fuck's sake update the fucking redmine")]) });
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("4. Yes, for goodness sake, update the redmine")]) });
 check('F32 status-only write + "update the redmine" → allow', !blocked(r) && /status-only write approved/.test(r.out), r.out.slice(0, 160));
 r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusNoteScript}"` }, transcript_path: transcript([user('update the redmine')]) });
 check('F33 status + NOTE write + "update the redmine" → BLOCK (a note still needs post it)', blocked(r), r.out.slice(0, 160));
@@ -217,6 +217,54 @@ for (const [id, w] of [['F93', 'submitted'], ['F94', 'send it'], ['F95', 'pass']
 }
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('wait, do not send yet')]) }, STAGE);
 check('F99 "wait, do not send yet" → BLOCK', blocked(r), r.out.slice(0, 200));
+// v1.7 (2026-10-29, #261986): five submits he had ordered were blocked; harness lines were read as his words.
+const meta = t => JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: [{ type: 'text', text: t }] } });
+const goalCmd = a => user(`<command-name>/goal</command-name>\n<command-message>goal</command-message>\n<command-args>${a}</command-args>`);
+const submitWith = lines => run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript(lines) }, STAGE);
+r = submitWith([user('WHY THE FUCK YOU ARE NOT SUBMITTING IT YOU STUPID FUCKER!!!')]);
+check('F100 REPLAY 261986 "WHY ... ARE NOT SUBMITTING IT" → Submit allowed (complaint = order)', !blocked(r) && /Submit approved/.test(r.out), r.out.slice(0, 200));
+r = submitWith([goalCmd("do not stop until you've fucking posted the redmine you stupid fuck."), meta('A session-scoped Stop hook is now active with condition: "do not stop until you\'ve fucking posted the redmine". Briefly acknowledge')]);
+check('F101 REPLAY 261986 /goal "do not stop until you\'ve posted" + harness notice → Submit allowed', !blocked(r), r.out.slice(0, 200));
+r = submitWith([user('SEND THE FUCKING REDMINE'), meta('Base directory for this skill: C:\\x\\.claude\\skills\\redmine-phase1-prefill')]);
+check('F102 a loaded skill text after "SEND" is skipped → Submit allowed', !blocked(r), r.out.slice(0, 200));
+r = submitWith([user('hmm'), meta('Base directory for this skill: post it, submit it')]);
+check('F103 go-words only inside a harness/skill line → BLOCK (never his words)', blocked(r), r.out.slice(0, 200));
+r = submitWith([goalCmd('do not post it yet')]);
+check('F104 /goal args "do not post it yet" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user("don't submit")]);
+check('F105 "don\'t submit" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('stop, do not send it')]);
+check('F106 "stop, do not send it" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('why did you post it without asking')]);
+check('F107 "why did you post it without asking" → a question decides nothing → BLOCK (v1.8; v1.7 allowed it as accepted-risk)', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('never post on my behalf')]);
+check('F108 "never post on my behalf" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('hold on, let me read it before you send')]);
+check('F109 "hold on, let me read it before you send" → BLOCK (no go-word)', blocked(r), r.out.slice(0, 200));
+r = submitWith([meta('A session-scoped Stop hook is now active with condition: "submit it"')]);
+check('F110 only a harness line, no human line → BLOCK', blocked(r), r.out.slice(0, 200));
+// ── v1.8 (2026-10-29, system-rules Rule 8): the shared reader lib/his-words.js; his order stands up to 8 messages back ──
+const SKILL_LINE = JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: C:\\x\\.claude\\skills\\redmine-phase1-prefill\n# prefill' } });
+const SLIPS = path.join(sb, 'slips.jsonl'); fs.writeFileSync(SLIPS, '');
+const run8 = (lines, until) => spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript(lines) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until || STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS } });
+const b8 = r => /redmine-write-gate/.test((r.stdout || '') + (r.stderr || '')) && /⛔/.test((r.stdout || '') + (r.stderr || ''));
+let r8 = run8([user('post it'), toolResult(), user('what does the BA journal say?'), toolResult(), user('and the second photo?')]);
+check('F111 his "post it" three messages back, then two questions → Submit allowed (an order stands until a hold)', !b8(r8), (r8.stdout || '').slice(0, 200));
+r8 = run8([user('post it'), toolResult(), user('wait, let me read the note first')]);
+check('F112 his "post it", then "wait, let me read it first" → BLOCK (a later hold wins)', b8(r8), (r8.stdout || '').slice(0, 200));
+r8 = run8([user('Do that then straight away upload to the redmine. Simple.')]);
+check('F113 REPLAY 13:42 "straight away upload to the redmine" → Submit allowed', !b8(r8), (r8.stdout || '').slice(0, 200));
+r8 = run8([user('now just please update yourself on the redmine tickets progress')]);
+check('F114 "update yourself on the redmine tickets" is a read ask, not a send → BLOCK', b8(r8), (r8.stdout || '').slice(0, 200));
+r8 = run8([user('do not ever, under any case, post without me')]);
+check('F115 "do not ever, under any case, post" → BLOCK (a no in the same clause as the verb, any distance)', b8(r8), (r8.stdout || '').slice(0, 200));
+r8 = run8([user('SEND'), toolResult(), SKILL_LINE, toolResult(), user('<system-reminder>\nLinked sessions now: x\n</system-reminder>')]);
+check('F116 REPLAY 13:57: "SEND", then a skill line, then a reminder-only line → Submit allowed', !b8(r8), (r8.stdout || '').slice(0, 200));
+fs.writeFileSync(SLIPS, '');
+r8 = run8([user('draft it')]); const r8b = run8([user('draft it')]);
+check('F117 a second block of the same send within 30 min writes a gate/repeat-block slip row and says so', b8(r8b) && /block \d+ of the same send/.test((r8b.stdout || '') + (r8b.stderr || '')) && /gate\/repeat-block/.test(fs.readFileSync(SLIPS, 'utf8')), ((r8b.stdout || '') + (r8b.stderr || '')).slice(0, 240));
+r8 = run8([user('ok post it'), toolResult(), user('<command-name>/goal</command-name>\n<command-message>goal</command-message>\n<command-args>do not stop until the ticket is posted</command-args>')]);
+check('F118 /goal "do not stop until the ticket is posted" after "post it" → Submit allowed', !b8(r8), (r8.stdout || '').slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.querySelector('.attributes').innerText" }, transcript_path: transcript([user('check the ticket')]) }, STAGE);
 check('F70 DOM read of the issue page → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "fetch('https://example.com/api/x.json')" }, transcript_path: transcript([user('x')]) }, STAGE);
@@ -251,7 +299,7 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: `${CLAIM_CMD}; node "$
 check('F81 claim script chained with a writer script → BLOCK (the writer body is still scanned)', blocked(r), r.out.slice(0, 160));
 // A copy of the repo layout where the script was edited to also send a note: the body check must void the exemption.
 const mkRepo = (name, body) => { const d = path.join(sb, name); fs.mkdirSync(path.join(d, 'lib'), { recursive: true });
-  for (const f of ['hook-runtime.js', 'turn-context.js']) { try { fs.copyFileSync(path.join(ROOT, 'lib', f), path.join(d, 'lib', f)); } catch (_) { /* optional */ } }
+  for (const f of ['hook-runtime.js', 'turn-context.js', 'his-words.js']) { try { fs.copyFileSync(path.join(ROOT, 'lib', f), path.join(d, 'lib', f)); } catch (_) { /* optional */ } }
   fs.writeFileSync(path.join(d, 'lib', 'quest-start-claim.js'), body); return d; };
 const cleanRepo = mkRepo('repo-clean', claimBody);
 const tamperedRepo = mkRepo('repo-tampered', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', "{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, notes: 'taken' } }"));

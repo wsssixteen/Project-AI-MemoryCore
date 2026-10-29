@@ -10,6 +10,56 @@
 
 ---
 
+## system-rules SKILL.md v1.5 — 2026-10-29 (per みや, the five refused Submits)
+
+**Rule 8 — One ask, then obey.** His words: "audit why you are being stopped by a simple 'Submit it' ... find a universal solution to add into our system-change or system-rules or system-design so that you DO NOT EVER build a step or workflow or gate ... like this ever again. A simple check is enough."
+
+| Cause found (today's logs) | Rule 8 clause | Mechanical home |
+|---|---|---|
+| 7 gates each read "the last transcript user line" with their own reader; a skill's text, a system-reminder, a Stop-hook notice, a /goal notice counted as his last message (redmine-write-gate log 14:01 to 14:09, 5 refusals; 286646 commit refused 4 times after his waiver) | (c) one reader, app lines never his | `lib/his-words.js` (eval 44/44) · `--audit` lists own readers · `design-consult-gate` rider denies writing one (R1 to R10) |
+| his order had to be in the LAST message; any later line voided it | (a) his order anywhere in the ask is the approval; (b) it holds until he holds or refuses | `decide()`: 8 messages back, newest decisive wins; `redmine-write-gate` v1.8, `falsifier-ran-check` waiver |
+| "do not stop until you've posted" read as a refusal; "why are you not submitting" read as nothing | (b) a no counts only in the clause that names the action; a question decides nothing; a complaint is an order | `his-words` clause judge (H1 to H13, R1 to R6) |
+| the same send blocked 5 times, each time asking him again | (d) a repeat block is the gate's defect, logged, fixed in the gate | `redmine-write-gate` `gate/repeat-block` slip row (F117) |
+
+- Paired same turn: 20 other gates moved onto the reader (prod-alter, release-push, stg1-block, agent-spend, terse, predicate-box, memory-write, de-knowledge, no-code-comments, de-run-verify, project-load) or marked `not an approval reader` (turn-boundary readers); prod-alter S12 flipped (tool output after his approval no longer voids it).
+- Spec preservation: Rules 1 to 7 untouched; additive. Named drops in the gates: "last message only" (redmine, falsifier fixture 28), F107 accepted-risk allow, the two-word negation distance.
+- Diagrams (Rule 17): `lib/his-words.diagram.png` · `domain/redmine-write-gate/diagram.png` (updated) · `domain/falsifier-ran-check/diagram.png` · `domain/design-consult-gate/diagram.png` · `.claude/skills/system-rules/diagram.png`.
+
+## v1.98 — 2026-10-29 (per みや, 286655)
+
+- **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.
+- **Paired**: deploy SKILL §5b, where his test photos are found (session images folder, PicturesScreenshots, clipboard) and a photo not on disk is never a question.
+- **Trigger**: I asked him to save a Pengesahan photo into 2. Fix and stopped on a refused tool call. His words: "do not ask me when you have done it many times ... take note when there are blockers ... people use AI to save time".
+- **Spec preservation**: additive. Rules 0-6 unchanged; rule 2 (no asking-back for searchable facts) and rule 3 (enumerate-then-pursue) keep their text, rule 7 names the two cases they missed (an own step, a refused call) and adds the log row.
+
+## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
+
+His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".
+
+| Place | Before | After |
+|---|---|---|
+| §System map | 3 bullets | + every system change runs `/system-change`; steps owned by `system/INDEX.md` §The change route |
+| §Delegation Economy table | no row for system changes | + row: a system change is designed and decided on the highest model; a slip row or urgent fix is never held for a switch |
+| `system/INDEX.md` | §Change record defined "a system change" as Rule · Workflow · Feature · Kernel | rulings 13-14 · §The change route (8 steps + 7 lanes) · one definition = all seven kinds |
+
+- Spec preservation: additive. The §Change record definition is widened from 4 kinds to 7, and the old text is replaced by a pointer to the new definition (named here).
+
+---
+
+## v1.96 — 2026-10-28 (per みや, the system map picture boot-loaded)
+
+His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
+
+| Place | Before | After |
+|---|---|---|
+| CLAUDE.md, after Boot Order | no overview picture | §System map: picture `system/INDEX.diagram.png` + text `system/INDEX.md`; name first; redraw in the same turn as any part added, moved, renamed or removed; send the PNG on ask |
+| `system/INDEX.md` §Change record | no row for the map picture | row: part added/moved/renamed/removed → redraw + `diagram-census --check system/INDEX.md` |
+| `system/INDEX.diagram.html` + `.png` | none | new, Rule 17 diagram of the map (7 kinds + 9 unclaimed root entries) |
+
+- Spec preservation: additive; no rule removed or reworded.
+
+---
+
 ## v1.95 — 2026-10-28 (per みや, Etanah adhoc / quest diagram shape)
 
 His words: *"Please add this into the skill/phrase inside CLAUDE.md that invokes this diagram skill ... Under the specific etanah adhoc quest workflow, it will design it based on the business workflow but not overdoing it ... Make it based on urusan flow & to highlight the variable/keyword/value of concern ... you've dropped the important 2 steps, turun milik and pindah milik."*

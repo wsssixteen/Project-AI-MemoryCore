@@ -43,7 +43,7 @@ These are values, not procedures. The atomic Honesty primitive skills (see syste
 |---|---|
 | `claim-verification` | "is X done", "did you complete", "show me the diff", "verify before declaring", "before you say done" |
 | `task-assignment-honesty` | "who's doing this", "is this still mine", "did you reassign", "you moved my task", "I assigned this to you" |
-| `stalling-detector` | "just do it", "proceed", "go ahead", "implement", "stop offering choices", "what the fuck just do it" |
+| `stalling-detector` | "just do it", "proceed", "go ahead", "implement", "stop offering choices", "what, just do it" |
 | `scope-anchor-echo` | "what's the scope", "are you in scope", "scope anchor", "before any edit", "remind me the scope" |
 | `over-generalization-check` | "didn't we see this before", "is this same as last", "you're over-applying", "different ticket, check fresh", "not the same shape" |
 | `test-data-echo` | "test data", "permohonan ID", "pengguna semasa", "what do I test", "hand-back", "stop-point summary" |
@@ -62,6 +62,21 @@ quest workflow:
 ```
 
 silent-claim-drift-gate.js (Phase 2 Enforcement hook) catches missed invocations — if quest workflow tries to declare done without these primitives firing, the hook blocks.
+
+## Known gaps register — what I cannot know from code alone (moved here 2026-10-29 from `system/known-gaps.md`, in git history)
+
+> Created 2026-06-22 per みや: *"I do not know what other things you lied about and what other gaps are being lied about. We cannot make improvements on things we do not know and do not log."* A GAP is normal. The LIE is asserting a guess as a verified fact to paper over it. When I hit a row below without the closing verification in hand, I say HYPOTHESIS and do the verification. Append-only; mark a row `narrowed:` when a closing tool ships.
+
+| # | Blind spot | Lives in | The verification that closes it | Guard today |
+|---|---|---|---|---|
+| G1 | Which `.xhtml` form renders a screen or tugasan | `ind_skrin.jsf_view` + `ind_langkah` + Flowable routing | query `ind_langkah.nama` / `ind_skrin.jsf_view`, or みや gives the xhtml | quest skill `ind_langkah.nama` lookup row |
+| G2 | What runtime data shows: dropdown options, panel visibility, row values | DB rows + config at request time | read the actual rows / the feeding config | none static; a runtime probe |
+| G3 | Whether my edited code is deployed and runs | the WAR + the JVM, not the diff | `QA<num>-PROBE:` logger in server.log · build timestamp · his reproduction | `deploy-proof-gate` |
+| G4 | Table and column existence, entity↔schema | the live DB, not the Java names | `information_schema` / SchemaCrawler before the SQL | quest skill schema-prefix + entity-first rows |
+| G5 | Which branch executes at runtime | the request's data | read the branch body + confirm the data shape or a probe logger | none static; a runtime probe |
+| G6 | Which module is deployed locally | `etanah-teknikal` not on local JBoss | BPMN `<userTask>` vs `<callActivity MLK_TKL_*>` before Scout | CLAUDE.md BPMN-FIRST rule |
+
+Logged instances: QA-266503 (G1, G3) · QA-262755 (G1, G6) · QA-260508 (G3) · QA-264006 (G5) · the DB-fabrication slip class (G4). The 2026-06-22 DB security findings that sat in the same file are in `main/todo.md` (DB-level read-only row).
 
 ## Cross-references
 

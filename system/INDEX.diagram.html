@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoryCore · System map</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --color-accent: #bf4520;
+      --font-sans:    'Segoe UI', Arial, sans-serif;
+      --font-mono:    Consolas, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+    .scroll { overflow-x: auto; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">System map · picture of system/INDEX.md · updated 2026-10-29 · redraw in the same turn as any part added, moved or renamed</p>
+    <h1>Project AI MemoryCore: seven named kinds, and nine folders with no kind yet</h1>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ar-title ar-desc">
+      <title id="ar-title">MemoryCore architecture</title>
+      <desc id="ar-desc">Rules on top govern everything. Memory on the left. Workflows, Features and Tools in the middle. Kernel underneath. Projects and the unclaimed folders at the bottom.</desc>
+      <defs>
+        <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/>
+        </pattern>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <rect width="100%" height="100%" fill="url(#dots)" opacity="0.55"/>
+
+      <!-- Rules -->
+      <rect x="20" y="20" width="960" height="80" rx="6" fill="#ececec" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="50" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Rules: govern everything below</text>
+      <text x="40" y="76" fill="#4f5d75" font-size="11" font-family="Consolas, monospace">CLAUDE.md · personality.md · reply-shape-spec.md · system/ (the map, design rules, ledgers) · root guides</text>
+
+      <!-- Memory -->
+      <rect x="20" y="135" width="300" height="290" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="165" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Memory: what Ruri knows</text>
+      <text x="40" y="200" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">identity</text>
+      <text x="40" y="216" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">main/main-memory.md</text>
+      <text x="40" y="242" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">knowledge</text>
+      <text x="40" y="258" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">etanah-knowledge · library-items</text>
+      <text x="40" y="284" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">notes</text>
+      <text x="40" y="300" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">.claude/auto-memory</text>
+      <text x="40" y="326" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">diary</text>
+      <text x="40" y="342" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">daily-diary</text>
+      <text x="40" y="368" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">state</text>
+      <text x="40" y="384" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">active.txt · current-session · todo</text>
+
+      <!-- the middle group -->
+      <rect x="340" y="135" width="640" height="290" rx="6" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5 4"/>
+      <text x="360" y="160" fill="#4f5d75" font-size="11" font-style="italic" font-family="'Segoe UI', Arial, sans-serif">Capabilities: Workflows · Features · Tools (ruling 14)</text>
+
+      <line x1="550" y1="280" x2="573" y2="280" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="765" y1="280" x2="788" y2="280" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <rect x="360" y="175" width="190" height="210" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="376" y="203" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Workflows</text>
+      <text x="376" y="224" fill="#4f5d75" font-size="11" font-family="'Segoe UI', Arial, sans-serif">a route over many turns</text>
+      <text x="376" y="262" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">quest · deploy</text>
+      <text x="376" y="278" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">release · adhoc</text>
+      <text x="376" y="294" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">Domain Expansion</text>
+      <text x="376" y="360" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">quest/ · Feature/</text>
+
+      <rect x="575" y="175" width="190" height="210" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="591" y="203" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Features</text>
+      <text x="591" y="224" fill="#4f5d75" font-size="11" font-family="'Segoe UI', Arial, sans-serif">one job at one moment</text>
+      <text x="591" y="262" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">gates · checks</text>
+      <text x="591" y="278" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">skills</text>
+      <text x="591" y="360" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">domain/&lt;name&gt;/</text>
+
+      <rect x="790" y="175" width="175" height="210" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="806" y="203" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Tools</text>
+      <text x="806" y="224" fill="#4f5d75" font-size="11" font-family="'Segoe UI', Arial, sans-serif">called on purpose,</text>
+      <text x="806" y="240" fill="#4f5d75" font-size="11" font-family="'Segoe UI', Arial, sans-serif">returns an answer</text>
+      <text x="806" y="262" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">codegraph · databases</text>
+      <text x="806" y="278" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">indexes · scripts</text>
+      <text x="806" y="360" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">system/tools.json</text>
+
+      <text x="360" y="408" fill="#4f5d75" font-size="11" font-style="italic" font-family="'Segoe UI', Arial, sans-serif">A Workflow is made of Features. Workflows and Features call Tools. A Tool never calls back.</text>
+
+      <!-- Kernel -->
+      <rect x="20" y="445" width="960" height="70" rx="6" fill="#ececec" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="473" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Kernel: what everything runs on</text>
+      <text x="40" y="497" fill="#4f5d75" font-size="11" font-family="Consolas, monospace">core/ (forge · registry · slips · boot) · lib/ (shared scripts) · .claude/settings.json (hook wiring)</text>
+
+      <!-- Projects -->
+      <rect x="20" y="535" width="560" height="85" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="563" fill="#2d3142" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">Projects: work built for you, not system parts</text>
+      <text x="40" y="589" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">etanah_atlas · PymTime · DawahMap · Eisenhower</text>
+      <text x="40" y="605" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">mas-ergonomics-animation · Masterline</text>
+
+      <!-- Unclaimed (the one marked thing) -->
+      <rect x="600" y="535" width="380" height="85" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="620" y="563" fill="#bf4520" font-size="14" font-weight="600" font-family="'Segoe UI', Arial, sans-serif">No kind: 9 root folders, verdict pending</text>
+      <text x="620" y="589" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">growth · library · plugins · salvage · tools · outputs-temp</text>
+      <text x="620" y="605" fill="#4f5d75" font-size="10" font-family="Consolas, monospace">Project Resources · RURI-GROWTH.md · root etanah-knowledge</text>
+    </svg>
+    </div>
+  </div>
+</body>
+</html>
+
+

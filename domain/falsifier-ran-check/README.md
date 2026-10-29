@@ -1,9 +1,11 @@
-symptom: #244600 (2026-10-01 to 2026-10-04) — the Rubric wrote "Falsifier C1: a Word no-change save changes body XML beyond rsid/paraId"; the same design shipped as d61fc2e611 with local_test_confirmed=false; the falsifier was never run; BA failed the fix on 2026-10-03; the run took 5 minutes. miya: "you've been ignoring your own fucking alarms"
+symptom: #244600 (2026-10-01 to 2026-10-04) — the Rubric wrote "Falsifier C1: a Word no-change save changes body XML beyond rsid/paraId"; the same design shipped as d61fc2e611 with local_test_confirmed=false; the falsifier was never run; BA failed the fix on 2026-10-03; the run took 5 minutes. miya: "you've been ignoring your own alarms" (angry)
 goal: no etanah fix is committed or passed to BA while a written falsifier is unrun
 goal_signal: `node domain/falsifier-ran-check/check.js <QA>` exits 0 before the commit; log.jsonl row outcome=pass for that QA
 retention: rotate monthly (log.jsonl) · keep (overrides.jsonl)
 footprint: none: no new registration; check.js is required in-process by the compile-gate hook on a `git commit` only, and run on demand by close-phase and ticket-close-block
 state-scoped: no, state-agnostic — the quest doc is found through `qa_doc=` in quest/active.txt, the repo through the commit command
+diagram: domain/falsifier-ran-check/diagram.png
+self_audit: every check writes a log.jsonl row (outcome · kinds · dur_ms); check.eval.js replays the #244600 shape and the 2026-10-29 waiver shape
 
 # falsifier-ran-check
 
@@ -50,7 +52,7 @@ Skipped, never blocked: a commit with no ticket number · a ticket with no block
 
 ## Override
 
-- `local-test` only: miya says in his own message that he tests on the server or skips the local test. Plain words count (2026-10-08, #283751): "I want to test on server", "skip local testing", "BA will check it on staging". Not counted: a question, a negated or "before / unless" sentence, the phrase inside a bracketed option list, a message that names only other ticket numbers, my own text. The token `[risk-ok: <num> <reason>]` still works. It is read from his LAST message (or his popup answer), recorded in `overrides.jsonl`, and counts for 72 hours.
+- `local-test` only: miya says in his own message that he tests on the server or skips the local test. Plain words count (2026-10-08, #283751): "I want to test on server", "skip local testing", "BA will check it on staging". Not counted: a question, a negated or "before / unless" sentence, the phrase inside a bracketed option list, a message that names only other ticket numbers, my own text. The token `[risk-ok: <num> <reason>]` still works. **Read through `lib/his-words.js` (system-rules Rule 8, 2026-10-29)**: his own messages, newest first, up to 8 back, until a later hold ("wait", "test locally first", "don't commit"); a skill's text, a reminder, hook feedback or a tool result is never his message and never hides his waiver (286646, 2026-10-29: his waiver stood and the commit was refused four times because an app line was read as his last message). Recorded in `overrides.jsonl`, counts for 72 hours. Dropped and named: "his LAST message only" (fixture 28 flipped; 28b and 28c added).
 - An OPEN row has no override. Run it, or miya accepts the risk in the row.
 - There is no skip token. `[skip-compile-gate:]` does not reach this check.
 - Fail-open only on the check's own crash (logged `outcome=error`).
@@ -103,3 +105,4 @@ log: `domain/falsifier-ran-check/log.jsonl` (ts · qa · ctx cli/commit/note · 
 
 - 2026-07-12 born: Stop advisory for a planted probe never shown firing (narrow).
 - 2026-10-04 ledger check added per miya (#244600). Spec preservation: the Stop advisory is untouched (its eval 7/7).
+- 2026-10-29 the local-test waiver is read through `lib/his-words.js` (his messages, 8 back, until a later hold; app lines never his) per system-rules Rule 8. Fixtures 28 flipped, 28b + 28c added; check.eval 58/58. Diagram added (Rule 17).

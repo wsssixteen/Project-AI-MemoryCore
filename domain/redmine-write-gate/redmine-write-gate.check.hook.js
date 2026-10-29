@@ -53,8 +53,11 @@ const BYPASS = /\[skip-redmine-write-gate:\s*[^\]]+\]/i;
 // "set status" / "update in progress" from miya — a status can be set back, a note cannot (2026-09-29, #282061).
 const NON_STATUS_MUTATION = /assigned_to_id|done_ratio|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
 const STATUS_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:update|set|change|tukar|kemaskini)\b[^.\n]{0,40}\b(?:redmine|status|in progress)\b/i;
-// The AskUserQuestion answer arrives as a tool_result, not user text.
-const POPUP_ANSWER = /^\s*Your questions have been answered:/;
+// v1.8 (2026-10-29, system-rules Rule 8): his words come from the ONE shared reader, lib/his-words.js — his typed lines,
+// his /goal words, messages sent mid-turn and popup answers; never a skill's text, a reminder, a hook notice or a summary.
+// His order stands up to 8 of his messages back until a later hold or refusal; a no counts only in the clause that
+// names the action; a question decides nothing. The gate keeps only its own go-words below.
+const { decide, HOLD } = require(path.join(ROOT, 'lib', 'his-words.js'));
 // v1.4 (2026-09-30, #282555): STAGE-ONLY for a month or until miya lifts it — every Redmine update is staged in the
 // browser edit form and stops before Submit. A view-first ask forces staging even after the date.
 const STAGE_ONLY_UNTIL = process.env.REDMINE_STAGE_ONLY_UNTIL || '2026-10-30';
@@ -63,9 +66,32 @@ const VIEW_FIRST = /\b(?:let me (?:see|check|view|review)|(?:view|see|check|revi
 // Submit on the staged form needs miya's explicit send approval in his LAST message.
 // 2026-10-19 per miya (#285252, "I have to confirm it many times"): plain go-words also approve a staged submit.
 // 2026-10-27 per miya (#246964, "add all and its variations"): every go-word and its forms, alone or in a sentence.
-const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan)\b/i;
-// A no-word anywhere before a go-word in the same sentence voids it ("I don't approve current send").
-const SUBMIT_DENIAL = /\b(?:don'?t|do not|jangan|never|not yet|wait|hold on|stop)\b[^.\n]{0,40}\b(?:approve|submit|send|post|pass|go|proceed|hantar)/i;
+// v1.8: + an imperative that names the Redmine ("upload to the redmine", "update the redmine"; "update yourself on the
+// redmine" does not match).
+const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan|(?:upload|post|submit|send|hantar|update)\s+(?:it\s+)?(?:to\s+|on\s+|in\s+|into\s+)?(?:the\s+)?redmine)\b/i;
+// The verbs a no-word must share a clause with to refuse ("don't post it yet"); the reader does the clause work, so
+// "do not stop until you've posted" is an order (v1.7 fixed this with a two-word distance; v1.8 uses the clause).
+const SUBMIT_ACTION = /\b(?:approve|submit|send|post|pass|proceed|hantar|upload|update)\w*/i;
+// "why are you not submitting it" = an order to submit.
+const SUBMIT_COMPLAINT = /\bwhy\b[^.?!\n]{0,60}\bnot\s+(?:submit|send|post|pass|hantar)\w*/i;
+// A hold on a Redmine write, anywhere in his message: the reader's holds plus "view it first" shapes.
+const REDMINE_HOLD = new RegExp(HOLD.source + '|' + VIEW_FIRST.source, 'i');
+const hisSubmitWords = tp => decide(tp, { approve: SUBMIT_APPROVAL, action: SUBMIT_ACTION, complaint: SUBMIT_COMPLAINT, hold: REDMINE_HOLD, bypass: BYPASS });
+const hisPostWords = (tp, approve, action) => decide(tp, { approve, action, hold: REDMINE_HOLD, bypass: BYPASS });
+// A second block of the same action in one task is the gate's defect, not his (Rule 8d): it is logged as a slip.
+function repeatBlock(surface) {
+  try {
+    const cutoff = Date.now() - 30 * 60 * 1000;
+    const rows = fs.readFileSync(LOG, 'utf8').trim().split('\n').slice(-40).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean);
+    const prior = rows.filter(r => r.outcome === 'blocked' && r.surface === surface && Date.parse(r.ts) >= cutoff).length;
+    if (prior < 1) return prior;
+    const row = { ts: new Date().toISOString(), type: 'slip', category: 'gate/repeat-block', qa: null, guard_expected: 'redmine-write-gate', guard_fired: true,
+      evidence: `redmine-write-gate blocked ${surface} ${prior + 1} times within 30 min; a repeat block is the gate's defect (system-rules Rule 8d)`, situation: null, action: null, caught_by: 'gate' };
+    const slips = process.env.REDMINE_GATE_SLIPS || path.join(ROOT, 'system', 'slips.jsonl');
+    fs.appendFileSync(slips, JSON.stringify(row) + '\n');
+    return prior;
+  } catch (_) { return 0; }
+}
 // Browser JS: any network call to Redmine (the .json API pops a basic-auth password box; a PUT/POST posts) is banned —
 // read the open page's DOM instead. Form submit via JS needs SUBMIT_APPROVAL.
 const BROWSER_NET = /\b(?:fetch|XMLHttpRequest|\$\.(?:ajax|get|post|getJSON)|axios)\b/;
@@ -120,40 +146,6 @@ function browserVerdict(name, input, tail) {
   return '';
 }
 
-function lastUserText(transcriptPath) {
-  let tail = '';
-  try {
-    const size = fs.statSync(transcriptPath).size, want = 400000;
-    const fd = fs.openSync(transcriptPath, 'r'); const buf = Buffer.alloc(Math.min(size, want));
-    fs.readSync(fd, buf, 0, buf.length, Math.max(0, size - buf.length)); fs.closeSync(fd);
-    tail = buf.toString('utf8');
-  } catch (_) { return ''; }
-  // A message miya sends while I work is a queued_command attachment, not a user line (2026-10-27, #246964):
-  // every such message after his last prompt counts, together with that prompt.
-  const lines = tail.split('\n').filter(l => /"type"\s*:\s*"user"|"type"\s*:\s*"queued_command"/.test(l));
-  const queued = [];
-  const withQueued = t => queued.length ? [t, ...queued.reverse()].join('\n') : t;
-  for (let i = lines.length - 1; i >= 0; i--) {
-    let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }
-    const a = obj && obj.attachment;
-    if (a && a.type === 'queued_command' && typeof a.prompt === 'string' && (!a.origin || a.origin.kind === 'human')) { queued.push(a.prompt); continue; }
-    if (!obj || obj.type !== 'user') continue;
-    const c = obj && obj.message && obj.message.content;
-    if (typeof c === 'string') return withQueued(c);           // plain user text
-    if (Array.isArray(c)) {
-      const texts = c.filter(x => x && x.type === 'text').map(x => x.text);
-      if (texts.length) return withQueued(texts.join('\n'));   // user text blocks (tool_result-only turns are skipped)
-      for (const x of c) {                                      // except a popup answer, which IS miya's reply
-        if (!x || x.type !== 'tool_result') continue;
-        const t = typeof x.content === 'string' ? x.content
-          : Array.isArray(x.content) ? x.content.filter(y => y && y.type === 'text').map(y => y.text).join('\n') : '';
-        if (POPUP_ANSWER.test(t)) return [...t.matchAll(/"="([^"]*)"/g)].map(m => m[1]).join('\n'); // answers only, never the question text
-      }
-    }
-  }
-  return '';
-}
-
 runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) => {
   let data = {};
   try { data = typeof input === 'string' ? JSON.parse(input || '{}') : (input || {}); } catch (_) { return { fired: false }; }
@@ -165,7 +157,8 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
     const tail = data.transcript_path ? transcriptTail(String(data.transcript_path)) : '';
     const verdict = browserVerdict(data.tool_name, ti, tail);
     if (!verdict) return { fired: false };
-    const lastB = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';
+    const his = data.transcript_path ? hisSubmitWords(String(data.transcript_path)) : { verdict: 'none', text: '' };
+    const lastB = his.text || '';
     if (verdict === 'net') {
       logRow({ outcome: 'blocked', surface: 'browser-net', last_user: lastB.slice(0, 120) });
       return { fired: true, blocked: true, blockReason: [
@@ -174,19 +167,22 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
         '   Read the OPEN page\'s DOM instead (form fields, .attributes, #history), or run node quest/redmine-sync.js <num>.',
       ].join('\n') };
     }
-    if ((SUBMIT_APPROVAL.test(lastB) && !SUBMIT_DENIAL.test(lastB)) || BYPASS.test(lastB)) {
-      logRow({ outcome: 'allowed', surface: 'browser-submit', approval: (lastB.match(SUBMIT_APPROVAL) || ['bypass'])[0] });
-      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${(lastB.match(SUBMIT_APPROVAL) || ['bypass'])[0]}")\n` };
+    if (his.verdict === 'approve') {
+      const said = his.via === 'bypass' ? 'bypass' : (lastB.match(SUBMIT_APPROVAL) || lastB.match(SUBMIT_COMPLAINT) || [his.via])[0];
+      logRow({ outcome: 'allowed', surface: 'browser-submit', approval: said, back: his.back });
+      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${said}")\n` };
     }
-    logRow({ outcome: 'blocked', surface: 'browser-submit', last_user: lastB.slice(0, 120) });
+    const prior = repeatBlock('browser-submit');
+    logRow({ outcome: 'blocked', surface: 'browser-submit', why: his.verdict === 'deny' ? 'his ' + his.via : 'no order found', last_user: lastB.slice(0, 120), repeat: prior });
     return { fired: true, blocked: true, blockReason: [
-      '⛔ redmine-write-gate: this clicks SUBMIT on a staged Redmine form and miya has not approved THIS send.',
-      '',
-      `   last user message: "${lastB.replace(/\s+/g, ' ').slice(0, 140) || '(none)'}"`,
-      '',
-      '   STOP AT STAGING: leave every field filled, show miya the staged values as a table, and wait for',
-      '   "I approve" / "submit it" / "post it" in his latest message.',
-    ].join('\n') };
+      his.verdict === 'deny'
+        ? `⛔ redmine-write-gate: miya held or refused this send ("${lastB.replace(/\s+/g, ' ').slice(0, 100)}"). Do not click Submit.`
+        : '⛔ redmine-write-gate: this clicks SUBMIT on a staged Redmine form and none of miya\'s last messages orders it.',
+      his.verdict === 'deny' ? '' : `   his newest message: "${lastB.replace(/\s+/g, ' ').slice(0, 140) || '(none)'}"`,
+      '   STOP AT STAGING: leave every field filled and show him the staged values as a table.',
+      '   One word from him unblocks it: any go-word (post it · submit · send · ok · go) or "upload to the redmine".',
+      prior ? `   This is block ${prior + 1} of the same send in 30 min: that is this gate's defect, logged as gate/repeat-block.` : '',
+    ].filter(Boolean).join('\n') };
   }
 
   const cmd = String(ti.command || '');
@@ -210,10 +206,11 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
     return { fired: false };
   }
 
-  const last = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';
-  if (BYPASS.test(last)) return { fired: true, blocked: false, contextOut: 'redmine-write-gate: bypassed by miya\n' };
+  const post = data.transcript_path ? hisPostWords(String(data.transcript_path), APPROVAL, /\b(?:post|hantar)\w*/i) : { verdict: 'none', text: '' };
+  const last = post.text || '';
+  if (post.via === 'bypass') return { fired: true, blocked: false, contextOut: 'redmine-write-gate: bypassed by miya\n' };
   // v1.4: stage-only window, or miya asked to view first → no API write at all, even with "post it".
-  if (stageOnly() || VIEW_FIRST.test(last)) {
+  if (stageOnly() || (post.verdict === 'deny' && post.via === 'hold')) {
     const why = stageOnly() ? `STAGE-ONLY until ${STAGE_ONLY_UNTIL} (miya 2026-09-30)` : 'miya asked to view it first';
     logRow({ outcome: 'blocked', surface: 'api-stage-only', why, last_user: last.slice(0, 120) });
     return { fired: true, blocked: true, blockReason: [
@@ -224,12 +221,14 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
       '   Never fetch /redmine/…json from the browser (it pops a password box).',
     ].join('\n') };
   }
-  if (APPROVAL.test(last)) {
-    try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'allowed', approval: (last.match(APPROVAL) || [''])[0] }) + '\n'); } catch (_) { /* never block */ }
+  if (post.verdict === 'approve') {
+    try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'allowed', approval: (last.match(APPROVAL) || [''])[0], back: post.back }) + '\n'); } catch (_) { /* never block */ }
     return { fired: true, blocked: false, contextOut: `redmine-write-gate: approved by miya ("${(last.match(APPROVAL) || [''])[0]}")\n` };
   }
-  if (/status_id/i.test(body) && !NON_STATUS_MUTATION.test(body) && STATUS_APPROVAL.test(last)) {
-    const said = (last.match(STATUS_APPROVAL) || [''])[0];
+  const status = (/status_id/i.test(body) && !NON_STATUS_MUTATION.test(body) && data.transcript_path)
+    ? hisPostWords(String(data.transcript_path), STATUS_APPROVAL, /\b(?:update|set|change|tukar|kemaskini)\w*/i) : { verdict: 'none' };
+  if (status.verdict === 'approve' && status.via !== 'bypass') {
+    const said = (status.text.match(STATUS_APPROVAL) || [''])[0];
     try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'allowed', approval: 'status-only: ' + said }) + '\n'); } catch (_) { /* never block */ }
     return { fired: true, blocked: false, contextOut: `redmine-write-gate: status-only write approved by miya ("${said}")\n` };
   }

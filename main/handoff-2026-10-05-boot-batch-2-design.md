@@ -1184,7 +1184,7 @@ Why boot was the wrong moment (verified on the main checkout today, read-only):
 - An archived row keeps its closing word forever, and `adhoc-lifecycle.js archive` itself writes OWNED-ELSEWHERE (CLI :177), so the count can never reach zero.
 - The folders that really pile up are a different set the hook cannot see: Melaka has 19 live "AH" Task folders = 11 with an open block, 1 whose block is archived as answered (#237), 7 with no block at all (#111, 138, 142, 146, 149, 194, 244).
 - Its stated harm ("clutter active surfacing", hook :58) is not true in code: the ticket-time reader only surfaces OPEN/LATENT rows (domain/adhoc-register/adhoc-register.check.hook.js:69).
-- It ran (519 telemetry rows, 5 with fired:true), and its output was already recorded as ignored (system/agentic-ticket-workflow-assessment-2026-08-24.md:10).
+- It ran (519 telemetry rows, 5 with fired:true), and its output was already recorded as ignored (system/agentic-ticket-workflow-assessment-2026-08-24.md:10, in git history).
 
 **Mechanism**
 
@@ -1905,7 +1905,7 @@ About 7,150 to 7,250 of 7,421 chars: one line of roughly 170 to 270 chars stays.
 - Feature/Domain-Expansion/expansion-protocol.md (DE step) — README line 46 says DE was rejected for the sweep because it skips when not invoked; as a fallback only, grep found no current adhoc-lifecycle reference there.
 - .claude/skills/adhoc-save/SKILL.md (step at line 55) and lib/adhoc-save-audit.js — the moment an adhoc is saved/closed is exactly when a row becomes terminal; adhoc-save already invokes adhoc-lifecycle.js promote, so an archive/sweep step could run there (the handoff says the real fix is to move the folder when an adhoc is closed).
 - domain/adhoc-register/adhoc-register.check.hook.js (UserPromptSubmit-side register reader) and domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js — they already read ADHOC-REGISTER.md at ticket/adhoc time; the sweep count could be emitted there (Door A match is already ticket-time). Their registration/bundle membership under domain/bundles/ was not checked by me.
-- quest/redmine-reconcile.js (referenced in system/agentic-ticket-workflow-assessment-2026-08-24.md:10,15 proposal #4) — the assessment proposes folding adhoc-lifecycle sweep verdicts into redmine-reconcile output; that script already runs when ticket status is checked. File itself not read by me.
+- quest/redmine-reconcile.js (referenced in system/agentic-ticket-workflow-assessment-2026-08-24.md:10,15 proposal #4, in git history) — the assessment proposes folding adhoc-lifecycle sweep verdicts into redmine-reconcile output; that script already runs when ticket status is checked. File itself not read by me.
 - Feature/Session-Briefing-System briefing / list-redmine at boot (open-quest-surfacer.js already runs at SessionStart) — an already-booting surfacer could include the count; not verified that it reads the register.
 
 

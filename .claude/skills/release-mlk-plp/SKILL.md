@@ -15,13 +15,14 @@ description: Baseline — Melaka Pelupusan (PLP) release PREPARATION. Redmine ev
 |---|---|
 | **Common version** | Keep master's `<etanah.common.version>`. Bump ONLY when a ticket in THIS release carries a fix that needs a newer common (recon `COMMON-VER`, or the ticket's own code will not compile without it). int-env/MLIT running a newer common is NOT a reason. Decide it LAST, after every ticket is in. |
 | **Flowable in a release ticket** (BAQA note "Ada flowable", or a `.bpmn20.xml` change) | **We own it** as part of the baseline. PROD delivery = upload the model file to the remote through WinSCP/FileZilla (SFTP as `ftpuser`, folder `/home/ftpuser/files/flowable-diagrams/<State>/<YYYY-MM-DD>/Pelupusan/` — `<State>` = `Melaka` for this skill); the release team picks it up from there and deploys. File source = the deployed `.bpmn20.xml` pulled from MLIT `et_flowable_mlit.act_ge_bytearray` (md5-checked). Stag gets the same model published by みや, and any SQL the ticket ships is run on stag too (1.7.0: #263304 isu24 SQL run on `et_main_stg2`). Put it on the hand-off card as its own step; never ask "who publishes". |
+| **Release-ticket SQL → staging DURING PREP, not at push** (2026-10-28 per みや, Baseline 1.9.0, 282587) | Every SQL a release ticket ships is handled at Phase A, right after the recon, so BA can start testing: (1) download it from Redmine (latest upload; a journal saying "replaces the earlier" wins) · (2) read every statement and say in one line what it changes · (2b) run its SELECTs on EVERY environment it touches — internal (`postgres-mlit-pg`), PROD (`postgres-mlkprod-pg`, read only: PROD must still show the script's "before" values, or the script is stale), training (when a connector exists; say "no training connector" otherwise) — and show one row per env · (3) run its own SELECTs on the ON staging schema (`system/melaka-env-state.json`) to see whether it is already applied — the latest `last_modified_date` / an existing INSERT row is the proof · (4) already applied → do NOT re-run (an INSERT duplicates), show the rows · (5) not applied → run it on that schema straight away (write path: `feedback_staging_schema_stg2.md` gateway login, MCP is read-only), then re-run the SELECTs and match the script's `-- N rows` comments. No separate nod: the ticket is already audited at V1. PROD stays infra-only. **Report it simply (2026-10-28 per みや)**: staging = one line ("already ran" / "ran"), no rows or tables; the only SQL detail he needs is PROD: the script is PROD-ready (schema-qualified `et_main.`) and PROD still shows its "before" values. Training only when its script must be uploaded too (schema replaced for training). |
 | **Hand-off card = EVERYTHING in one go, unasked** (2026-09-28 per みや, 1.7.0) | At push, the card already carries: (1) every SQL file downloaded from Redmine + shown inline + run on stag (verified by counts) · (2) the flowable `.bpmn20.xml` file (MLIT pull, md5) · (3) the full Sheet Developer block ready to paste — Domain · DB · Common · Module · Branch · **Flowable Diagram = `/home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/<file>`** (leading `/`, **Melaka** folder, never Perak) · SQL line. Never wait for みや to ask for the file or the script. |
 | **Flowable drop VERIFIED by me, not assumed** (2026-09-29 per みや, 1.7.0: file sat in `Perak/`, release team found `Melaka/2026-09-28` empty) | Before the card says "uploaded", I list the drop folder myself with `C:\Program Files (x86)\WinSCP\WinSCP.com` (stored session to `ftpuser@172.16.90.169`) and show the listing: file name + 348,612-style byte size under `Melaka/<date>/Pelupusan/`. No listing = not delivered. Blocker today: stored session `Petaling` collides with the workspace of the same name — needs a distinct alias (みや's nod). |
 | **BA "tak pergi mana-mana tugasan" during baseline** | Answer with the test table FIRST (login · screen · do · expect, from live `umm_a_tgsn`), the investigation after. Check `sis_bpm_log` delay vs `act_hi_taskinst.start_time_` before blaming the release — 1.7.0 PT stall was a node-level async queue, not code. |
 | **📌 Carry-over tickets** ("include it next baseline", 2026-09-30 per みや, #274461) | Never a todo row alone: `node domain/release-mlk-plp/carry-over.js add --ticket <n> --branch <origin branch> --reason "<why>"`. `init` prints the list, `verify` BLOCKS until each is in the release or `defer-carry --release <ver> --ticket <n> --reason "<his words>"`, and `merge-to-master` drops shipped ones. Put them in V1 and tell BA to add them to the BAQA list. |
 | **AWAM tickets in the BAQA message** ("Release Awam PLP") | List only, or ignore. At most one branch table. No AWAM git work, and no question about it. |
 | **🚨 ANY push to another team's branch (AWAM release etc.)** (2026-09-30 per みや, #256334) | **ENFORCED by `release-mlk-plp-push-gate` v4** (25/25): blocks a push from any non-pelupusan etanah repo to `mlk/release/*`, `stag-env`, `int-env`, `master`, `mlit` unless `foreign-merge-check.js` ran on that exact HEAD AND みや's own last message says "push it" / "go ahead and push" / "boleh push". No token opens it. Order is fixed: (1) FULL check first — every line the ticket's branch changes, release vs int-env, merge commits included, no keyword filter · (2) brief みや WHY each differing line exists (git log -S, who added it, who dropped it) · (3) show the diff · (4) wait for his nod · (5) push. **Banned**: pushing before steps 1-4 · calling a check "complete" when it was filtered · keeping a line that differs from int-env as "harmless" without reading what it executes. **Why**: pushed `8cf46735d4` before the full check; the earlier "harmless extra param" `P_ADALAH_INDIVIDU` crashed the borang (LazyInitializationException). |
-| **Any "is X on staging / why does staging do Y" question** (2026-09-30 per みや, 1.8.0 PDBB duplicate land row) | Read the env's footer **Git Branch** FIRST and check THAT branch. During a baseline, staging runs `mlk/release/<ver>` (AWAM: its own release branch, e.g. `mlk/release/1.11.1`), NOT `mlk/stag-env`. Checking `stag-env` gave a false "not deployed" verdict; the real cause was a merge resolution inside the release branch. |
+| **Any "is X on staging / why does staging do Y" question** (2026-09-30 per みや, 1.8.0 PDBB duplicate land row) | Read the env's footer **Git Branch** FIRST and check THAT branch. During a baseline, staging runs `mlk/release/<ver>` (AWAM: its own release branch, e.g. `mlk/release/1.11.1`), NOT `mlk/stag-env`. Checking `stag-env` gave a false "not deployed" verdict; the real cause was a merge resolution inside the release branch. This row is for diagnosis only: a cut release that has not passed never blocks a ticket's stag-env merge or deploy (miya 2026-10-28, 262027). The release reaches master and stag-env through Phase F + G after it passes. |
 | **Commit on `mlk/master` that is not on the BAQA list** (e.g. a direct maintenance commit) | Include it, but only after I audit the whole diff and compile it. If it is unsafe, it gets fixed on its own ticket branch before the release. Report the audit verdict at V1. |
 
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
@@ -81,8 +82,8 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    do NOT put it in the plan table, do NOT ask みや about it.** Only a SQL whose owning ticket is
    NEW to this release is ever mentioned. **Why**: 1.3.0 — I carried `FAT-CR #252786.sql` through the
    plan table, the hand-off card, and the Sheet values across five separate turns. `mlk/fat-cr/252786`
-   had been merged long before 1.3.0 and contributed nothing to the delta. みや: *"why the fuck are
-   you including it in our baseline out of nowhere?"* Correct answer was to never raise it.
+   had been merged long before 1.3.0 and contributed nothing to the delta. みや: *"why are
+   you including it in our baseline out of nowhere?"* (frustrated) Correct answer was to never raise it.
 
    🚨 **The Sheet's SQL cell — what goes in, and the ONE test** (2026-07-31, release 1.3.0, after I
    got this wrong in BOTH directions in one hour).
@@ -177,6 +178,8 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    **Banned**: declaring a ticket ready on "a named branch merged" — readiness is **content coverage of the
    complete footprint**, proven by `audit-ticket`, never by branch-reachability alone.
 
+5.6 **Release-ticket SQL → staging now** (2026-10-28 per みや): runs AFTER 5.5 (audit) and BEFORE V1, so the staging run happens once every check (internal · PROD · training · staging) is done and before any branch or merge. Run the "Release-ticket SQL → staging DURING PREP" row of the awareness table for every SQL row the recon kept. Report one line per script at V1: `<file> on <schema>: already applied (<evidence row>)` or `ran: <counts> = expected`.
+
 6. Emit the plan table (ticket · verdict · branch · action) + the **audit-ticket verdict per ticket** +
    the Ask-BA table → **🛑 V1: みや nods**.
 
@@ -270,20 +273,19 @@ before spending a build cycle. **Always include this line in the card, above C �
 as many lines as tickets; a short list means a branch is missing, and the per-ticket
 `git log --oneline origin/<branch> --not mlk/release/<ver>` (empty output = merged) tells you which.
 
-**C · BUILD** — run on the build server:
-1. `ssh app@<build.host>`
-2. `cd build-scripts17/`
-3. `bash build-pelupusan.sh mlk/release/<ver>`
-4. choose `stag`, then wait for BUILD SUCCESS.
-5. **Before closing the session, copy the checkout line the build prints** (the commit SHA it built
-   from) and paste it back — see the SHA-match check below.
+**C · BUILD + DEPLOY (UI)** (2026-10-28 per みや: he builds and deploys from the UI now, which is quicker) —
+the card gives ONE thing only: the branch name in its own fenced block so he can copy it, target `stag`:
 
-**D · DEPLOY** — exit the build session first, then:
-1. `ssh app@<deploy.host>`
-2. `cd deployment-scripts/stag/`
-3. `bash deploy-pelupusan.sh`, then wait for the success message.
+    mlk/release/<ver>
 
-### 🚨 V6b — BUILD-SHA MATCH (added 2026-07-20 per みや; the hole his question found)
+The old ssh build + deploy steps (build host `build-scripts17/` `bash build-pelupusan.sh <branch>` → deploy
+host `deployment-scripts/stag/` `bash deploy-pelupusan.sh`) are retired from the card; hosts stay in
+`servers.local.json` for when the UI is down. **No `## Brief` section in the card** (2026-10-28 per みや:
+the first line already says the step's objective is done).
+
+### ⏸ V6b — BUILD-SHA MATCH — RETIRED from the card 2026-10-28 per みや
+Do NOT ask for the build log or its commit line. みや shares the build output only when something fails;
+the check below runs only then. Kept for reference:
 
 The deployed footer's `Module Version` + `Git Branch` **cannot distinguish the pre-merge commit from
 the merged one** — the version bump commit and the post-merge commit sit on the same branch with the
@@ -343,22 +345,40 @@ mlk/release/<ver>  ──push──▶ origin
         └────────── merge ──────────▶ mlk/master        ← WE do this, gated on BA's confirmation
 ```
 
-**Run it through the script — no hand-run git** (built 2026-07-28, same session as the slip):
+**mlk/master is a PROTECTED branch since 2026-10-29** (push refused: "You are not allowed to push code to
+protected branches on this project"). The release reaches master ONLY through a GitLab merge request that
+Aaron or Alex merges. The script never pushes, checks out, merges or tags; it measures, prints the form,
+stores the MR, and checks the merge. Picture: `.claude/skills/release-mlk-plp/diagram.png`.
 
-```powershell
-node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved
-```
+Run every command from the MemoryCore MAIN folder (the state file `domain/release-mlk-plp/state/` and
+`servers.local.json` live there, not in a session folder).
 
-It refuses unless `phase=pushed`, re-fetches, asserts `origin/mlk/release/<ver>` still equals the
-pushed head, tolerates a dirty tree **only** when no dirty path intersects the release delta,
-tags `mlk/pre-master-merge/<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
-re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
+| # | Who | Step | Exact action |
+|---|---|---|---|
+| F1 | みや | says BAQA passed | his words are the V8 nod |
+| F2 | Ruri | prepare | `node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved` → paste its MERGE REQUEST FORM block. Refusal = stop and show it (hotfix on master, release moved). Reviewer usernames missing → after みや signs in, read the project's Members page in Edge, show him the two usernames, write them into `gitlab.reviewers`, run F2 again |
+| F3 | みや | 🛑 **CONFIRMATION 1 — permanent**: pick the reviewer | AskUserQuestion, options = the form's reviewer line only (Aaron · Alex), plus the form block as preview |
+| F4 | Ruri | right after his pick, in the SAME turn, both at once (2026-10-29 per みや: "You do not need to wait for master merge, you can even run both merge to master and merge to staging both at once"; the table confirmation is removed) | (a) `merge-to-master --release <ver> --create-mr --reviewer <name> --confirm`: refuses if an MR is already open; POSTs through the GitLab API with `gitlab.token` (git-ignored `servers.local.json`, never printed); description always `Need assistance to merge. Thank you.`; reads back source · target · title · description · reviewer · squash OFF · delete source OFF · state opened · commit count, one ✓/✗ each; records the URL. Any ✗ = stop and show it. (b) Phase G `stag-catchup --release <ver> --ticket <num>` dry run then `--push`: its source is the release branch while master waits for the reviewer |
+| F5 | Ruri | one reply | the MR link + the read-back table + the stag-env result + build branch `mlk/stag-env` |
+| F6 | Aaron or Alex | approve and merge in GitLab | merge commit or fast-forward; never squash |
+| F7 | Ruri | on みや's "merged" | `merge-to-master --release <ver> --check` → `merged-to-master`. Staging is already done: the MR merge commit does not count as stag-env behind (`stag-catchup.js` measure counts non-merge commits) |
+
+| `--check` result | Meaning | Action |
+|---|---|---|
+| exit 0 | master holds the release tip (merge commit or fast-forward) | Phase G |
+| exit 3 | not merged yet | wait; show the MR link |
+| exit 2 "squash or rebase" | files arrived without the commits | ask the reviewer to revert and merge again with a merge commit |
+| exit 2 "moved after the MR was prepared" | someone pushed to the release branch | re-verify the release, prepare again |
+
+Reviewer away → re-run `--record-mr` with the other name. MR closed without merging → `--abandon-mr`, then
+F2 again. Reviewer usernames sit in the main folder's `servers.local.json` → `gitlab.reviewers`, read once
+from the GitLab project Members page, never guessed; a placeholder username is refused.
 
 | Gate | Rule |
 |---|---|
-| 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: the command dies without `--ba-approved`. |
-| Who | **Us** (みや + Ruri) for `etanah-pelupusan`. |
-| Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. |
+| 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: prepare dies without `--ba-approved`. |
+| Who | **Us** (みや + Ruri) open the merge request for `etanah-pelupusan`; Aaron or Alex merge it. |
+| Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. Never a direct push to `mlk/master` (`release-mlk-plp-push-gate` blocks it). |
 
 🚨 **This is where AWAM and PLP DIVERGE — do not carry one repo's topology onto the other:**
 
@@ -375,8 +395,9 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 **The release is not done until `mlk/stag-env` holds it.** A ticket deploy to stag-env rebuilds staging from that branch; if it lacks the release, staging silently loses every released ticket. みや asked for this step on 2026-08-10; it stayed a todo row, and on 2026-10-23 stag-env sat 21 commits behind 1.8.4 (#218977 #284544 #274266 + the version bump).
 
 ```
-merge-to-master (F) ──▶ stag-catchup (G) ──▶ stag build + deploy card (deploy skill §5)
-                         └─ origin/mlk/master → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
+BA passed ──▶ merge request (F) ┐ same turn, both at once (2026-10-29 per みや)
+          └──▶ stag-catchup (G) ┘──▶ stag build branch mlk/stag-env
+                 └─ origin/mlk/release/<ver> → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
 ```
 
 ```powershell
@@ -463,4 +484,9 @@ Then emit the two-host stag build + deploy card (deploy skill §5, one command p
 - **`status` anytime**: `node domain/release-mlk-plp/release-prep.js status --release <ver>`.
 - Resume after interruption: state survives in `domain/release-mlk-plp/state/release-<ver>.json`.
 
+*2026-10-29: Phase F rewritten per みや after the 1.9.0 push to mlk/master was refused (protected branch): the release lands through a GitLab merge request, steps F1-F9; confirmation 1 (reviewer, Aaron or Alex) permanent, confirmation 2 (filled form) removable once reliable; `merge-to-master` gained --record-mr / --abandon-mr / --check and never pushes; eval `eval-merge-request.js` 27/27; plan audited by Fable 5.1 (12 findings, all built). Changed and named: the direct fast-forward + push and the local undo tag `mlk/pre-master-merge/<ver>` are retired (the undo point is now the unmerged MR); `demo-merge-to-master.js` deleted (it demonstrated the direct push). V8 and every Phase G rule unchanged.*
+
 *2026-10-23: Phase G (stag-env catch-up after the master merge) added, `release-prep.js stag-catchup`, guards in `init` + `merge-to-master`, eval `eval-stag-catchup.js` (#246964, asked 2026-08-10). DON'T #12 widened to name Phases F and G. Common pin = the release's own, in a separate commit, nexus-checked (miya same day; replaced a first "keep the env pin" draft). Other phases unchanged.*
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

@@ -18,7 +18,7 @@ retention: keep (this file) · the briefing itself is regenerate
    - `node lib/audit-briefing.js`
 2. Show the audit-briefing output **verbatim** — the five blocks, in that order. An empty block prints `none`; never drop a block.
 3. Below it, add at most **three short sentences** of Ruri judgment: the single most important item, why, and the one command or nod that resolves it. Nothing else — no re-narration of the blocks.
-4. If miya rules a row (RETIRE / KEEP / resolve watch / BUILD), do it in the same turn and cite the file or command.
+4. If miya rules a row (RETIRE / KEEP / resolve watch / BUILD), do it in the same turn and cite the file or command. Doing it is a system change: `system/INDEX.md` §The change route, ending on main the same turn (step 7).
 
 ## Banned
 - Re-describing the blocks in prose · adding sections the script did not print · running /system-check instead (that is the deep audit, invoked separately) · hiding an empty block.

@@ -24,6 +24,8 @@ const cases = [
   { name: 'de-close + S3 (db tool) + no list -> block', events: [tool('mcp__postgres-mlit-pg__query_database', ''), DE], expect: 'block' },
   { name: 'de-close + S2 (deliverable write) + no list -> block', events: [tool('Write', 'C:/x/eTanah-Upload-Flow-Handover.md'), DE], expect: 'block' },
   { name: 'de-close + S4 (trace intent) + no list -> block', events: [t('user', 'can you research how the file upload flow works from UI to DMS'), tool('Read', 'X.java'), DE], expect: 'block' },
+  { name: 'his trace word, then an injected skill line last -> still S4 -> block', events: [t('user', 'can you research how the file upload flow works from UI to DMS'), t('user', 'Base directory for this skill: x'), tool('Read', 'X.java'), DE], expect: 'block' },
+  { name: 'injected skill line carrying trace words, no word of his -> not S4 -> silent', events: [t('user', 'Base directory for this skill: x. how does the file upload flow work'), tool('Read', 'X.java'), DE], expect: 'silent' },
   { name: '2 file:line only (below threshold) -> silent', events: [t('assistant', 'Foo.java:10 and Bar.java:20 only'), DE], expect: 'silent' },
   // v2 router check (2026-09-30): bake homes must be files listed in etanah-knowledge/<state>/index.md
   { name: 'ROUTER: bake to routed LATENT-BUGS.md -> pass', router: ['LATENT-BUGS.md', 'BUG-BESTIARY.md'], events: [threeCites, t('assistant', '## Knowledge candidates\n| Discovery | Home |\n|---|---|\n| PPJK early mint | bake: LATENT-BUGS.md L16 |'), DE], expect: 'pass' },
