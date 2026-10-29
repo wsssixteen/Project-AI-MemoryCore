@@ -1,5 +1,12 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 20:05 — worktree `pembatalan-dropdown-popup-251828`, adhoc ADHOC-BPRZ-2026-1 (Penang IT AWAM BPRZ) closed ANSWERED and archived, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "pembatalan-dropdown-popup-251828", Penang BPRZ adhoc)
+- His ask: Penang AWAM BPRZ popup, "Pembatalan dropdown" shows nothing; ticket maybe under Izz. Screen confirmed: tab Maklumat Perizaban > popup Maklumat Plot.
+- Finding: the plot popup lists (No. Lot/PT, No Lot Bersebelahan, Tempat) are built from the saved Maklumat Tanah rows (`etanah-awam` PelupusanService.java:4725-4782). IT record 430 has no No Lot Bersebelahan (row 201 mklmt_tmbhn blank), so that list is empty. By design per BA spec 286972. No Izz ticket matches.
+- miya: "no, it is okay" → closed ANSWERED, route ANSWER. Register Penang A6 ANSWERED; Task folder 7 → Archive; block → active-archive.txt. Audit 30/30 PASS (agent's run; my own re-run is blocked by the adhoc-brief-first gate).
+- Open: nothing for this adhoc. archive-quest needed `--allow-stub` (no Bounty section on an answered adhoc).
 **Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
