@@ -8,7 +8,7 @@ footprint: per-turn: 0 new processes, runs inside the stop-reply-shape bundle, u
 
 **What fires when**: Stop — my reply reports creating or changing a system part (a system path on the same line as built / created / added / updated / changed / refined / new)
 
-**Contract**: block unless the reply has at least one heading that opens with a bracketed kind: [Rule|Workflow|Feature|Tool|Memory|Kernel|Project ...]
+**Contract** (v3, 2026-10-28): block unless the reply has at least one heading `## System › <kind> (new|changed)` with one table under it, one row per part; block when the same kind is headed twice (the 2026-10-28 reply carried four `System › Memory` headings, miya: "if it is under memory, just put it in a single table").
 
 **Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.
 

@@ -345,22 +345,40 @@ mlk/release/<ver>  ──push──▶ origin
         └────────── merge ──────────▶ mlk/master        ← WE do this, gated on BA's confirmation
 ```
 
-**Run it through the script — no hand-run git** (built 2026-07-28, same session as the slip):
+**mlk/master is a PROTECTED branch since 2026-10-29** (push refused: "You are not allowed to push code to
+protected branches on this project"). The release reaches master ONLY through a GitLab merge request that
+Aaron or Alex merges. The script never pushes, checks out, merges or tags; it measures, prints the form,
+stores the MR, and checks the merge. Picture: `.claude/skills/release-mlk-plp/diagram.png`.
 
-```powershell
-node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved
-```
+Run every command from the MemoryCore MAIN folder (the state file `domain/release-mlk-plp/state/` and
+`servers.local.json` live there, not in a session folder).
 
-It refuses unless `phase=pushed`, re-fetches, asserts `origin/mlk/release/<ver>` still equals the
-pushed head, tolerates a dirty tree **only** when no dirty path intersects the release delta,
-tags `mlk/pre-master-merge/<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
-re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
+| # | Who | Step | Exact action |
+|---|---|---|---|
+| F1 | みや | says BAQA passed | his words are the V8 nod |
+| F2 | Ruri | prepare | `node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved` → paste its MERGE REQUEST FORM block. Refusal = stop and show it (hotfix on master, release moved). Reviewer usernames missing → after みや signs in, read the project's Members page in Edge, show him the two usernames, write them into `gitlab.reviewers`, run F2 again |
+| F3 | みや | 🛑 **CONFIRMATION 1 — permanent**: pick the reviewer | AskUserQuestion, options = the form's reviewer line only (Aaron · Alex), plus the form block as preview |
+| F4 | Ruri | right after his pick, in the SAME turn, both at once (2026-10-29 per みや: "You do not need to wait for master merge, you can even run both merge to master and merge to staging both at once"; the table confirmation is removed) | (a) `merge-to-master --release <ver> --create-mr --reviewer <name> --confirm`: refuses if an MR is already open; POSTs through the GitLab API with `gitlab.token` (git-ignored `servers.local.json`, never printed); description always `Need assistance to merge. Thank you.`; reads back source · target · title · description · reviewer · squash OFF · delete source OFF · state opened · commit count, one ✓/✗ each; records the URL. Any ✗ = stop and show it. (b) Phase G `stag-catchup --release <ver> --ticket <num>` dry run then `--push`: its source is the release branch while master waits for the reviewer |
+| F5 | Ruri | one reply | the MR link + the read-back table + the stag-env result + build branch `mlk/stag-env` |
+| F6 | Aaron or Alex | approve and merge in GitLab | merge commit or fast-forward; never squash |
+| F7 | Ruri | on みや's "merged" | `merge-to-master --release <ver> --check` → `merged-to-master`. Staging is already done: the MR merge commit does not count as stag-env behind (`stag-catchup.js` measure counts non-merge commits) |
+
+| `--check` result | Meaning | Action |
+|---|---|---|
+| exit 0 | master holds the release tip (merge commit or fast-forward) | Phase G |
+| exit 3 | not merged yet | wait; show the MR link |
+| exit 2 "squash or rebase" | files arrived without the commits | ask the reviewer to revert and merge again with a merge commit |
+| exit 2 "moved after the MR was prepared" | someone pushed to the release branch | re-verify the release, prepare again |
+
+Reviewer away → re-run `--record-mr` with the other name. MR closed without merging → `--abandon-mr`, then
+F2 again. Reviewer usernames sit in the main folder's `servers.local.json` → `gitlab.reviewers`, read once
+from the GitLab project Members page, never guessed; a placeholder username is refused.
 
 | Gate | Rule |
 |---|---|
-| 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: the command dies without `--ba-approved`. |
-| Who | **Us** (みや + Ruri) for `etanah-pelupusan`. |
-| Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. |
+| 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: prepare dies without `--ba-approved`. |
+| Who | **Us** (みや + Ruri) open the merge request for `etanah-pelupusan`; Aaron or Alex merge it. |
+| Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. Never a direct push to `mlk/master` (`release-mlk-plp-push-gate` blocks it). |
 
 🚨 **This is where AWAM and PLP DIVERGE — do not carry one repo's topology onto the other:**
 
@@ -377,8 +395,9 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 **The release is not done until `mlk/stag-env` holds it.** A ticket deploy to stag-env rebuilds staging from that branch; if it lacks the release, staging silently loses every released ticket. みや asked for this step on 2026-08-10; it stayed a todo row, and on 2026-10-23 stag-env sat 21 commits behind 1.8.4 (#218977 #284544 #274266 + the version bump).
 
 ```
-merge-to-master (F) ──▶ stag-catchup (G) ──▶ stag build + deploy card (deploy skill §5)
-                         └─ origin/mlk/master → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
+BA passed ──▶ merge request (F) ┐ same turn, both at once (2026-10-29 per みや)
+          └──▶ stag-catchup (G) ┘──▶ stag build branch mlk/stag-env
+                 └─ origin/mlk/release/<ver> → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
 ```
 
 ```powershell
@@ -464,6 +483,8 @@ Then emit the two-host stag build + deploy card (deploy skill §5, one command p
 - **No ad-hoc git for releases** — every branch/merge/push goes through `release-prep.js`.
 - **`status` anytime**: `node domain/release-mlk-plp/release-prep.js status --release <ver>`.
 - Resume after interruption: state survives in `domain/release-mlk-plp/state/release-<ver>.json`.
+
+*2026-10-29: Phase F rewritten per みや after the 1.9.0 push to mlk/master was refused (protected branch): the release lands through a GitLab merge request, steps F1-F9; confirmation 1 (reviewer, Aaron or Alex) permanent, confirmation 2 (filled form) removable once reliable; `merge-to-master` gained --record-mr / --abandon-mr / --check and never pushes; eval `eval-merge-request.js` 27/27; plan audited by Fable 5.1 (12 findings, all built). Changed and named: the direct fast-forward + push and the local undo tag `mlk/pre-master-merge/<ver>` are retired (the undo point is now the unmerged MR); `demo-merge-to-master.js` deleted (it demonstrated the direct push). V8 and every Phase G rule unchanged.*
 
 *2026-10-23: Phase G (stag-env catch-up after the master merge) added, `release-prep.js stag-catchup`, guards in `init` + `merge-to-master`, eval `eval-stag-catchup.js` (#246964, asked 2026-08-10). DON'T #12 widened to name Phases F and G. Common pin = the release's own, in a separate commit, nexus-checked (miya same day; replaced a first "keep the env pin" draft). Other phases unchanged.*
 

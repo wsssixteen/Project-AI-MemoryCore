@@ -213,6 +213,20 @@ process.stdin.on('end', () => {
         }
       }
 
+      // 2026-10-29 per みや: a system edit runs the change route (system/INDEX.md §The change route).
+      // ADVISORY only, entry side; the commit step has no gate.
+      const hasSC = convo.includes('Launching skill: system-change') || /"skill"\s*:\s*"system-change"/.test(convo);
+      if (!hasSC && !bypassConsult) {
+        logFire(filePath, 'allowed-advisory', 'system-change not loaded');
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: { hookEventName: 'PreToolUse', additionalContext: [
+            '⚙️  design-consult-gate (advisory): a system change runs the change route.',
+            '   → Invoke /system-change (steps in system/INDEX.md §The change route; step 7 lands on main this turn).',
+          ].join('\n') },
+        }));
+        process.exit(0);
+      }
+
       logFire(filePath, 'allowed');
       process.exit(0);
     }

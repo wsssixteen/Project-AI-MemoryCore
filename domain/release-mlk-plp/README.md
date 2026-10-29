@@ -24,11 +24,12 @@ no keys). Stop-points V1-V3. PLP-only; duplicate as `release-<state>-<module>` f
 | Push guard | `domain/release-mlk-plp-push-gate/*.check.hook.js` | PreToolUse Bash — blocks raw release pushes |
 | **Scope counter-rail** | `domain/release-mlk-plp-scope-gate/*.check.hook.js` | PreToolUse Edit\|Write — blocks ANY etanah-pelupusan edit while a release is in flight |
 | Eval (script, e2e) | `domain/release-mlk-plp/eval.js` | scratch repo + planted conflict + counter-rail — 15 fixtures |
-| Eval (stag catch-up) | `domain/release-mlk-plp/eval-stag-catchup.js` | scratch repos + nexus metadata fixture + compile stub — 32 fixtures |
+| Eval (stag catch-up) | `domain/release-mlk-plp/eval-stag-catchup.js` | scratch repos + nexus metadata fixture + compile stub — 33 fixtures |
+| **Phase F merge request** (2026-10-29: mlk/master protected) | `release-prep.js merge-to-master` --ba-approved / --record-mr / --abandon-mr / --check · eval `eval-merge-request.js` (27 fixtures) · picture `.claude/skills/release-mlk-plp/diagram.png` | after BA pass; never pushes; `gitlab.web` + `gitlab.reviewers` in `servers.local.json` |
 | Eval (recon) | `domain/release-mlk-plp/eval-recon.js` | offline verdict matrix + the 2 real 2026-07-16 misses — 17 fixtures |
 | Evals (hooks) | sibling folders' `*.eval.js` | 8 (push) + 6 (ask) + 11 (scope) fixtures |
 | Config (gitignored) | `servers.local.json` · `redmine.local.json` | infra endpoints + API key — `.example` twins are committed |
-| State | `domain/release-mlk-plp/state/release-<ver>.json` | phase ledger: planned→branched→merged→verified→pushed |
+| State | `domain/release-mlk-plp/state/release-<ver>.json` | phase ledger: planned→branched→merged→verified→pushed→mr-pending→merged-to-master |
 | Log | `log.jsonl` (each folder) | per command / per hook fire |
 
 **Hard guards (DOs side)**: PLP-only origin check · release regex `mlk/release/x.y[.z]` · clean-tree ·

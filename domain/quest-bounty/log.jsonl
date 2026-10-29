@@ -224,3 +224,16 @@
 {"ts":"2026-10-21T08:35:14.108Z","qa":"QA-285871","kind":"wrong-fix","n":1,"was":"adhoc fix (ADHOC-PT-2026-13): KPPD section removed only when KPPD does Pengesahan; fill list taken from new template only","why":"independent review + PROD data: PPD -> PTNH path (3 PROD rows) left an empty KPPD section; Minit Bebas made before deploy lost both sign blocks","learned":"a template restructure must walk every flow path in the DB (previous tugasan peranan) and every in-flight stored document, not only the paths the BA named"}
 {"ts":"2026-10-21T08:41:40.584Z","qa":"ADHOC-PT-2026-13","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-21T08:41:46.297Z","qa":"ADHOC-PT-2026-13","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"adhoc/pt-2026-13","allow_stub_reason":"superseded by QA-285871, harvest happens on the ticket"}
+{"ts":"2026-10-28T06:16:04.358Z","qa":"ADHOC-UPP-2026-2","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-28T06:34:31.339Z","qa":"ADHOC-UPP-2026-2","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"work and lessons belong to ticket 285768 (miya 2026-10-28: this is under ticket 285768); harvest at QA-285768 Phase 2"}
+{"ts":"2026-10-29T04:35:10.113Z","qa":"ADHOC-PRBB-2026-19","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T04:35:25.167Z","qa":"ADHOC-PRBB-2026-19","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc answered to BA; findings live in register row A79; knowledge write-back only on miya's ask"}
+{"ts":"2026-10-29T09:13:40.887Z","qa":"QA-287292","kind":"wrong-fix","n":1,"was":"letters re-dated to BA's 30/9 and 20/10 (twice, once with matching Hijri)","why":"miya ruled the letter date is the generation date; BA's dates were not used","learned":"a PROD letter patch keeps the date the letter was generated; ask only when the BA asks for a different date, and say the conflict in the first reply"}
+{"ts":"2026-10-29T09:19:28.260Z","qa":"QA-287292","kind":"wrong-fix","n":1,"verdict":"phrase:.claude/skills/patch-mlk-doc/SKILL.md 'Re-dating a generated letter' (commit 813a5f64)"}
+{"ts":"2026-10-29T09:19:36.218Z","qa":"QA-287292","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T09:19:41.195Z","qa":"ADHOC-MCL-2026-2","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T09:19:59.227Z","qa":"ADHOC-MCL-2026-2","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc ticketed as ES 287346; fix unverified, knowledge distill deferred to QA-287346 Phase-2 close"}
+{"ts":"2026-10-29T09:23:18.196Z","qa":"ADHOC-PPTPB-2026-6","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T11:38:19.430Z","qa":"QA-286988","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T11:39:36.5706475Z","qa":"QA-286988","harvests":{"quest":true,"system":2,"knowledge":2},"refinement":"proposed","banked_sha":null}
+{"ts":"2026-10-29T11:39:39.605Z","qa":"QA-286988","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}

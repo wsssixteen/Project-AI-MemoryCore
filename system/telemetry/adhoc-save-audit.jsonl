@@ -444,3 +444,31 @@
 {"ts":"2026-10-27T03:31:06.663Z","id":"ADHOC-PT-2026-15","outcome":"pass","fails":[],"dur_ms":55}
 {"ts":"2026-10-27T12:13:59.130Z","id":"ADHOC-PRBB-2026-17","outcome":"pass","fails":[],"dur_ms":48}
 {"ts":"2026-10-29T04:35:50.265Z","id":"ADHOC-PRBB-2026-19","outcome":"pass","fails":[],"dur_ms":52}
+{"ts":"2026-10-28T03:50:40.665Z","id":"ADHOC-PRBB-2026-18","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-10-28T06:14:18.677Z","id":"ADHOC-UPP-2026-2","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":39}
+{"ts":"2026-10-28T06:16:11.780Z","id":"ADHOC-UPP-2026-2","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":48}
+{"ts":"2026-10-28T06:34:37.840Z","id":"ADHOC-UPP-2026-2","outcome":"pass","fails":[],"dur_ms":49}
+{"ts":"2026-10-28T08:58:19.309Z","id":"ADHOC-MCL-2026-1","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":37}
+{"ts":"2026-10-28T08:58:28.834Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":44}
+{"ts":"2026-10-28T09:16:48.598Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":54}
+{"ts":"2026-10-28T09:18:36.641Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":52}
+{"ts":"2026-10-28T09:21:43.561Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":39}
+{"ts":"2026-10-28T09:23:50.852Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":39}
+{"ts":"2026-10-28T09:23:50.997Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-10-28T09:24:09.803Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":47}
+{"ts":"2026-10-28T09:34:03.333Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-10-28T09:40:18.014Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-10-28T09:41:08.905Z","id":"ADHOC-MCL-2026-1","outcome":"pass","fails":[],"dur_ms":51}
+{"ts":"2026-10-29T01:45:25.476Z","id":"ADHOC-PLTP-2026-3","outcome":"pass","fails":[],"dur_ms":38}
+{"ts":"2026-10-29T04:34:57.006Z","id":"ADHOC-PRBB-2026-19","outcome":"fail","fails":["block: open ↔ file location","qa_doc: Match Keys \"aplikasi\" line","task folder: a closed adhoc is archived"],"dur_ms":64}
+{"ts":"2026-10-29T04:35:08.312Z","id":"ADHOC-PRBB-2026-19","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":67}
+{"ts":"2026-10-29T04:35:11.088Z","id":"ADHOC-PRBB-2026-19","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":100}
+{"ts":"2026-10-29T04:35:25.356Z","id":"ADHOC-PRBB-2026-19","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-10-29T08:01:00.563Z","id":"ADHOC-MCL-2026-2","outcome":"pass","fails":[],"dur_ms":54}
+{"ts":"2026-10-29T09:19:41.995Z","id":"ADHOC-MCL-2026-2","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":107}
+{"ts":"2026-10-29T09:19:59.542Z","id":"ADHOC-MCL-2026-2","outcome":"pass","fails":[],"dur_ms":80}
+{"ts":"2026-10-29T09:23:18.343Z","id":"ADHOC-PPTPB-2026-7","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":35}
+{"ts":"2026-10-29T09:23:31.375Z","id":"ADHOC-PPTPB-2026-7","outcome":"pass","fails":[],"dur_ms":48}
+{"ts":"2026-10-29T09:30:21.523Z","id":"ADHOC-BPRZ-2026-1","outcome":"fail","fails":["register: row A6 cites ADHOC-BPRZ-2026-1","register: status ↔ block status","task folder: exists"],"dur_ms":74}
+{"ts":"2026-10-29T09:30:35.934Z","id":"ADHOC-BPRZ-2026-1","outcome":"pass","fails":[],"dur_ms":63}
+{"ts":"2026-10-29T09:39:51.657Z","id":"ADHOC-BPRZ-2026-1","outcome":"pass","fails":[],"dur_ms":46}

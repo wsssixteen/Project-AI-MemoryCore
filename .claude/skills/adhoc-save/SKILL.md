@@ -24,7 +24,7 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 ## Adhoc title (ProTime) — the ONE rule (v2, 2026-10-14 per みや; read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12)
 Every adhoc gets a **title**: the short line みや would type in ProTime himself. The `protime` skill and the 23:00 run of `domain/protime-plan` WRITE it into his ProTime, so it must read as his.
 
-**The line = `<ENV> (<STATE>) - <title>`** (his format, given 2026-10-14). Stored `title=` has no env or state; `protimeLine` in `domain/protime-plan/protime-plan.js` adds both from the block's `env=` and `state=`. ENV = `PROD` · `Internal` (MLIT / internal) · `Staging` (STG). STATE = `MLK` · `TRG` · `PNG` · `PRK` · `SGR` · `KDH` · `WP`, always written.
+**The line = `<STATE> (<ENV>) - <title>`** (his format, given 2026-10-29: "MLK (PROD/Internal) - <very short description/keyword>"; it replaces the env-first form of 2026-10-14). Stored `title=` has no env or state; `protimeLine` in `domain/protime-plan/protime-plan.js` adds both from the block's `env=` and `state=`, and rewrites an older env-first title state first. STATE = `MLK` · `TRG` · `PNG` · `PRK` · `SGR` · `KDH` · `WP`, always written first. ENV = `PROD`, or `Internal` for every environment that is not PROD (staging, MLIT / internal, training: his words "Internal is for all environments ... whatever that is not PROD").
 
 Three line shapes. The first that fits wins:
 
@@ -33,14 +33,14 @@ Three line shapes. The first that fits wins:
 | Work on a ticket that is not his own, or a user question on his ticket | `<number> - <action>` · no env, no state | `246923 - Review & deploy` · `268173 - Assist debug` · `282275 - Assist Hasil` · `281650 - Clarify to user` |
 | A BA asked for data, a script or a check | `Assist BA - <what>` · no env, no state | `Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah` · `Assist BA - Query to patch Tarikh Tamat permit` |
 | His own task, not about a screen or an environment (setup, training, documentation, Redmine updates, a release). Reading code to answer a question about a system is NOT this shape: it keeps env and state | plain action line · no env, no state | `Setup clone for Penang project` · `Set up GitLab` · `Update Redmine details (Root Cause, Solutions, etc) for tickets ...` · `Baseline Pelupusan 1.8.1` |
-| Anything else | `<ENV> (<STATE>) - <title>` | `PROD (MLK) - Missing Tujuan in Borang 4Ae` · `Internal (PNG) - Check SPOC service data save from Awam` |
+| Anything else | `<STATE> (<ENV>) - <title>` | `MLK (PROD) - Missing Tujuan in Borang 4Ae` · `PNG (Internal) - Check SPOC service data save from Awam` |
 
 The title:
 - Says what the user sees, not the mechanism. Mine `PLP dashboard ralat Invalid path TestGis` → his `MLK internal server issue (infra migration)`. Mine `PRBB Ganti Hari bayaran royalti` → his `PRBB cannot proceed due to previous fees`.
 - Ends on, or carries, a plain English problem word: `issue` · `missing` · `error` · `page error` · `cannot proceed` · `wrong`. Mine `AWAM slip permohonan gagal jana` → his `AWAM - Slip permohonan page error`; mine `... tandatangan pecah` → his `... tandatangan issue`. A Malay phrase only when the screen itself says it: `tak papar`, `tiada dalam senarai`, `kosong`.
 - An ask opens with the verb: `Check ...` · `Patch ...` · `Verify ...` · `Retrieve ...` · `Create ...`. A check he did opens or ends with `check`: `Keluasan issue check`, `Missing Jabatan Teknikal check`.
 - Names the urusan first when there is one (`PRBB`, `MLPS`, `PPTPB`), then the screen or form as the screen names it (`Borang 4Ae`, `surat keputusan`, `laporan tanah`, `Kuantiti Disyorkan`).
-- 3 to 8 words, at most 60 characters. No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
+- Very short: a description or keyword, 3 to 8 words, at most 60 characters (2026-10-29: "very short description/keyword"). No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
 - Keeps the words the screen or the BA used for the problem when they are short: `tak papar`, `kosong`, `cannot proceed`. Mine `MLPS Borang 4Ae cop PDT Jasin missing` → his `MLPS Borang 4Ae cop tak papar`; mine `PRBB Maklumat Siasatan No Lot & Luas missing` → his `PRBB lot luas laporan tanah kosong`.
 - Sentence case as he types it: first word capital, urusan and form names as written on screen.
 - A deploy for a ticket (staging, internal, common version change) is `<number> - Assist <what>`, never `Deploy ...`: the work is the merge checks plus the deploy (2026-10-28 per みや). `286315 - Assist staging deployment` · `286654 - Assist common testing on internal`.
@@ -72,6 +72,28 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 | 2 | **END THE TURN with the brief**: `Title:` line, the finding, the evidence with its SELECTs, then **ONE picture of the finding** (`explain-diagram` skill, rendered by `node lib/diagram-render.js`, Read and looked at, sent with `SendUserFile`; written in the BA's words so it can go with the reply; a round with nothing to draw writes `Diagram: none (<reason>)`), then **`## Reply to BA` with two versions, Short then Full** (Pena profile `whatsapp-dev` + module `plain`; a round with nothing for the BA writes `BA reply: none (<reason>)`), then Next steps. Every root cause found ends with both, unasked (2026-10-28 per みや, ADHOC-MCL-2026-1). The Stop half of `domain/adhoc-brief-first/` blocks a brief without them, also when the save agent was started in the same turn with no marker line. Close it with the line `Saving in the background next: <ADHOC-ID>`. Nothing is saved and no agent is started before this reply. A text written in the middle of a turn is not always shown or recorded; the closing reply is. | main thread |
 | 3 | The stop check sees that line and asks for the save. Start ONE background agent (`Agent`, `model: sonnet`, `run_in_background: true`). Its prompt opens with the line `[skip-brief-first: background save agent]` and carries the ADHOC id, the title, the env, the Task folder name, every file to MOVE, the register row text and the full quest doc text, and tells it to run "Each round" below until the audit is green. Then end with ONE line: `save started in the background for <ADHOC-ID>`. | background |
 | 4 | When the agent reports, check its audit line against disk (`node lib/adhoc-save-audit.js <ADHOC-ID>`) and give みや ONE line: `adhoc saved → <ADHOC-ID>: audit N/N PASS`. | main thread |
+
+## Adhoc route — how every brief ends (2026-10-29 per みや, ADHOC-MCL-2026-2; logic audited by Fable 5.1)
+
+Every brief carries ONE line just before `## Reply to BA`: `Adhoc route: <ROUTE> — <evidence>`. The route comes from the FIX LADDER rung that passed, never from the BA's words. The Reply to BA (Short and Full) ends with the matching ask.
+
+| Route | Pick it when | Ask at the end of the Reply to BA |
+|---|---|---|
+| `ANSWER` | The BA asked a question; the data or the behaviour is explained and nothing is broken (also "the fix exists, it waits for deploy") | none |
+| `USER-STEP` | Rung 1 passes: `User-step:` ENABLED, traced for this record | the steps |
+| `PATCH` | Rung 2: the data is wrong, the code is right, `After-state:` checked | PROD: "Mohon TSO buka tiket patch data". Other envs: we patch it ourselves |
+| `ALTER` | The permohonan sits on the wrong tugasan or its flow ended; ALTER-TICKET-PLAYBOOK row A4 says Alter Flow or Initiate→Alter | PROD: "Mohon TSO buka tiket alter ke tugasan <X>". Other envs: we alter it ourselves |
+| `CODE-FIX` | Rungs 3/4: the code is wrong (our own regression included) and no patch shape exists | "Mohon TSO buka tiket untuk pembetulan kod", on every env |
+| `OWNED-ELSEWHERE` | Another module, team or infra owns it. A module boundary needs the `Input check:` line clean; infra needs the error line | name the owner |
+| `CR` | The BA reported it as a bug, but the screen does what the requirement says | "Mohon BA buka tiket CR" |
+
+- **Suffix `+ CODE-FIX`** goes after `PATCH` or `ALTER` when the code keeps making new bad records. Show the sweep count. Example: `Adhoc route: PATCH + CODE-FIX — 1 permit patched, 98 PRBB permits share the empty unit`.
+- **Mid-investigation round**: `Adhoc route: none (<reason>)`.
+- **Ticket asked** (PATCH/ALTER on PROD, CODE-FIX, CR): set block `status=hold` and `issue_one_liner` to say "waiting TSO ticket". Promote it when the number arrives (section "Ticket arrives"). Archive hold only when miya asks for it (step 1c).
+- **Same line in the qa_doc**: `- Route : <ROUTE> — <evidence>` under `## Issue Summary`. The audit checks it for adhocs opened from 2026-10-30 on.
+- **Quest tickets** emit the same names at quest Phase 0 step 6f.
+- **Gate**: the Stop half of `domain/adhoc-brief-first/` blocks a brief without the line.
+- **Banned**: a route picked from the BA's wording · a ticket ask on a non-PROD patch or alter we can run ourselves · `CODE-FIX` without saying why no patch shape exists.
 
 - Anything else that can wait runs the same way, AFTER the brief and in the background: moving his files, memory notes, register and knowledge edits, a slip row, a skill edit, a commit.
 - No agent tool in the session: after the brief the save-set may be written on the main thread.
