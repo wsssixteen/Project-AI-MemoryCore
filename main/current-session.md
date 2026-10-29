@@ -31,6 +31,14 @@
 - Live: MR !9 http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/9 (Aaron, 24 commits, all fields ✓). 1.9.0 state `mr-pending`.
 - Evals: eval-merge-request 36/36, eval-stag-catchup 33/33, push-gate 51/51; `eval.js` 13/17 fails the same 4 on unchanged code (pre-existing, not from this change).
 - Next: Aaron merges → `merge-to-master --release 1.9.0 --check`. His checkout `E:\Projects\Melaka\etanah-pelupusan` sits on `mlk/master` at 585a7bcdad (release tip), was on `mlk/hotfix/285768`.
+**Last Activity**: 2026-10-29 20:05 — worktree `cranky-wilson-4cb38e` ("28/10/2026 - session-name audit", child of the QA tickets review session), session-name v2 landed, Domain Expansion.
+
+## Session Recap (2026-10-28, worktree "cranky-wilson-4cb38e", session-name v2)
+- His ask: every session gets the title '<D/M/YYYY> - <ticket or keywords>' on every kind of start, without him renaming it.
+- Causes proven: the upsm-mode bundle hit the 30 s harness timeout (open-quest-surfacer 22-26 s) and its whole output was dropped; output over ~10 KB is cut to a 2 KB preview; v1 wrote goal_met when it fired, not when the title changed.
+- Built `fabe9549` (on origin/main): dispatcher `budget_ms` (22 s for upsm-mode, session-name first) · a Stop check that blocks once while the title has no date · PreToolUse check that refuses an undated start_session title · resumed and child sessions use the first prompt's date · goal_met only from the real title. Evals: session-name 56/56, dispatch-hooks 13/13.
+- Live proof: session f0cdf48b blocked once, then renamed itself "28/10/2026 - Baseline Pelupusan 1.9.0" (goal_met true).
+- Open: a side session started after the landing has not been checked yet (`grep <cli-sid> domain/session-name/log.jsonl`, or `node domain/session-name/session-name.check.hook.js --audit`).
 
 **Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
 
