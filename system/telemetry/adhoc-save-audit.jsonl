@@ -472,3 +472,7 @@
 {"ts":"2026-10-29T09:30:21.523Z","id":"ADHOC-BPRZ-2026-1","outcome":"fail","fails":["register: row A6 cites ADHOC-BPRZ-2026-1","register: status ↔ block status","task folder: exists"],"dur_ms":74}
 {"ts":"2026-10-29T09:30:35.934Z","id":"ADHOC-BPRZ-2026-1","outcome":"pass","fails":[],"dur_ms":63}
 {"ts":"2026-10-29T09:39:51.657Z","id":"ADHOC-BPRZ-2026-1","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-10-29T12:01:35.520Z","id":"ADHOC-PPTPB-2026-6","outcome":"pass","fails":[],"dur_ms":247}
+{"ts":"2026-10-29T12:01:50.190Z","id":"ADHOC-BPRZ-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":60}
+{"ts":"2026-10-29T12:02:21.696Z","id":"ADHOC-BPRZ-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":65}
+{"ts":"2026-10-29T12:02:39.080Z","id":"ADHOC-BPRZ-2026-1","outcome":"pass","fails":[],"dur_ms":68}
