@@ -74,7 +74,7 @@
 
 ## Flowable (skill: bpmn-check)
 - [flowable](feedback_flowable_node_edge_trace.md) — trace real flows before picking a node; admin app; BPMN source; Petaling archive
-- [alter-tool](reference_flowable_alter_tool.md) — Melaka alters incl. PROD: Ruri runs alter.js; dry-run code → miya approves in chat → --approve; keeper.js holds the login
+- [alter-tool](reference_flowable_alter_tool.md) — Melaka alters: PROD = alter.js dry-run → miya approves the code → --approve; STG/MLIT Alter Flow = headless runner, no login; the tool-by-env table = playbook A5
 
 ## Redmine and writing for people (skills: list-redmine, redmine-phase1-prefill)
 - [redmine-board](feedback_esokongan_means_tracker.md) — eSOKONGAN = tracker; board script first; shared filter; BA vs TSO; delegated quests
@@ -87,7 +87,7 @@
 ## Etanah facts
 - [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk
 - [etanah-facts](reference_jasper_field_sources.md) — Jasper $F sources, kadar cukai duplicates, doc reset tool, DMS patch, #246512
-- [multi-ticket-sweep](reference_multi_ticket_sweep.md) — the /sweep design + evidence lives in five places; cite all five
+- [multi-ticket-sweep](reference_multi_ticket_sweep.md) — /sweep is built: skill + domain/sweep (audit Tool, run ledger); design history in five places, cite all five
 
 ## MemoryCore repo and rituals (skill: domain-expansion)
 - [personality-growth-design](project_personality_growth_design.md) — Ruri personality growth design (proposed 2026-10-28, not built): main/personality/ README + picture; read before touching her personality or DE step 3

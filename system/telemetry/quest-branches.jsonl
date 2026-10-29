@@ -10,3 +10,7 @@
 {"ts":"2026-10-27T12:15:15.081Z","num":"286462","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":6530}
 {"ts":"2026-10-27T12:15:23.722Z","num":"286315","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":8248}
 {"ts":"2026-10-27T13:38:44.174Z","num":"264355","branches":2,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":1553}
+{"ts":"2026-10-29T09:14:01.159Z","num":"287292","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":12151}
+{"ts":"2026-10-29T11:37:05.475Z","num":"286988","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":7278}
+{"ts":"2026-10-29T11:38:12.707Z","num":"286988","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":4496}
+{"ts":"2026-10-29T13:47:26.006Z","num":"286646","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":62275}

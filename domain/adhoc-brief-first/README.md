@@ -1,7 +1,8 @@
 # adhoc-brief-first
 
 symptom: 2026-10-13 miya: please fix this step, you must brief me first before saving or anything else that should be done in the background
-goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
+goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
+diagram: domain/adhoc-brief-first/diagram.png (refined 2026-10-28: the brief also owes one picture of the finding and the BA reply, checked even when the save agent starts with no marker line)
 goal_signal: an adhoc turn ends with the brief and has no main-thread save-set write before it
 retention: rotate monthly
 footprint: per-tool: 1 node process per Write, Edit, PowerShell or Bash call, about 40 MB for under 100 ms
@@ -58,3 +59,7 @@ Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (af
 | 25 | hooks run from the MAIN checkout, so a worktree edit of this gate is not live until main is pulled | accepted-risk: stated in the reply at ship time; pull main after the push |
 | 26 | two sessions saving adhocs at once | handled: each call reads only its own transcript |
 | 27 | `lib/adhoc-brief-first.js` deleted or renamed | accepted-risk: the hook throws at require, the runtime logs it and does not block |
+
+## Route line (2026-10-29, per miya, ADHOC-MCL-2026-2; logic audited by Fable 5.1)
+
+The Stop check also blocks a brief with no `Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>` line (PATCH/ALTER may add `+ CODE-FIX`; `none (<reason>)` for a round with no finding). Names and pick rules: `.claude/skills/adhoc-save/SKILL.md` section "Adhoc route". Fixtures R1-R8 in `eval.js`. Spec preservation: the BA-reply, picture, After-state, User-step and save-agent checks and their order are unchanged; additive.

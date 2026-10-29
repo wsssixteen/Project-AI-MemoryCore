@@ -53,3 +53,5 @@ Next:     <decision: proceed / broaden / pivot — one line>
 ---
 
 *Atomic primitive skill. Built Phase 3 (2026-05-23). First-time-formalized — previously a soft prose rule that didn't fire reliably.*
+
+- 2026-10-29 (from the 2026-08-20 assessment file, in git history; recovered 2026-10-29): A 0-count query is not evidence until a positive control runs (a per-office count, or the variant without the failing filter); the Agihan-Kepada trace shipped 2 wrong answers (flag_aktif = true vs 'Y').

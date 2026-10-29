@@ -114,7 +114,7 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   if (/\bmlk\/master\b/.test(gp[1])) {
     return {
       fired: true, blocked: true,
-      blockReason: '⛔ release-mlk-plp-push-gate v2: manual push of mlk/master is BANNED — master moves only via release-prep.js merge-to-master --release <ver> --ba-approved (V8: BA baseline pass first). Bypass: RELEASE_GATE_BYPASS in the command.',
+      blockReason: '⛔ release-mlk-plp-push-gate v2: manual push of mlk/master is BANNED — master is protected on GitLab and moves only through a merge request (release-prep.js merge-to-master --release <ver> --ba-approved prints it; V8: BA baseline pass first). Bypass: RELEASE_GATE_BYPASS in the command.',
     };
   }
   const m = REF_RE.exec(cmd);

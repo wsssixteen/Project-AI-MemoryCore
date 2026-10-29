@@ -34,6 +34,10 @@ const cases = [
   ['word "news" not the verb "new" -> pass', 'The news in system/INDEX.md is nothing.', 'pass'],
   ['heading text mid-line, not at start -> block', 'See ## System › Feature › x\nAdded domain/x/.', 'block'],
   ['old [Feature · new] bracket shape -> block', '## [Feature · new] x\nAdded domain/x/.', 'block'],
+  // v3 (2026-10-28): one heading per kind, one table
+  ['the 2026-10-28 reply: System › Memory headed four times -> block', '## System › Memory › main/main-memory.md (changed)\nAdded a row to etanah-knowledge/melaka/STATE-FACTS.md.\n## System › Memory › main/current-session.md (changed)\nrow\n## System › Memory › diary (changed)\nrow\n## System › Memory › observation-log (changed)\nrow\n## System › Kernel › slips ledger (changed)\nrow', 'block'],
+  ['one heading per kind with a table of parts -> pass', '## System › Memory (changed)\n| Name | Parent | Change |\n|---|---|---|\n| main-memory.md | main/ | relationship row added |\n| 2026-10-28.md | daily-diary/ | session added |\n\n## System › Kernel (changed)\n| Name | Change |\n|---|---|\n| slips ledger | 5 proposals |', 'pass'],
+  ['same kind, singular then plural -> block', '## System › Feature › a (new)\nAdded domain/a/.\n## System › Features › b (new)\nAdded domain/b/.', 'block'],
 ];
 
 let pass = 0, fail = 0;

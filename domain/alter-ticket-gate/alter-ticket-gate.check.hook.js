@@ -28,6 +28,8 @@ const MAIN_ROOT = ROOT.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]?$/,
 const ACTIVE_PATH = process.env.ALTER_GATE_ACTIVE_PATH
   || [path.join(ROOT, 'quest', 'active.txt'), path.join(MAIN_ROOT, 'quest', 'active.txt')].find(p => fs.existsSync(p))
   || path.join(ROOT, 'quest', 'active.txt');
+const ARCHIVE_PATH = process.env.ALTER_GATE_ARCHIVE_PATH || path.join(path.dirname(ACTIVE_PATH), 'active-archive.txt');
+const TASKS_ROOT = process.env.ALTER_GATE_TASKS_ROOT || (() => { try { return states.tasksRoot(); } catch (_) { return ''; } })();
 const KNOWLEDGE_ROOT = process.env.ALTER_GATE_KNOWLEDGE_ROOT
   || [path.join(ROOT, 'projects', 'coding-projects', 'active', 'etanah-knowledge'),
       path.join(MAIN_ROOT, 'projects', 'coding-projects', 'active', 'etanah-knowledge')].find(p => fs.existsSync(p))
@@ -52,7 +54,7 @@ const ALTER_STRONG = /initiate\s*(?:&(?:amp;)?|and|\+|-)\s*alter|InitiateBPMFlow
 // DFT serahan ids (07MH412/2026 · 04MH109/2026 · 07N209/2022) — an alter relay may name only the serahan.
 const SERAHAN_ID = /\b\d{2}[A-Z]{1,4}\d{1,6}\/\d{4}\b/;
 // Ask signals — "alter" as a request about a token/tugasan/ID. \balter\b never matches "alternative"/"alteration".
-const ALTER_ASK = /\b(?:tolong|please|mohon|boleh|can|help|kindly|sila|need\s+to|nak)\b[^.\n]{0,40}\balter\b|\balter(?:ed|ing)?\b\s*(?:the\s+|this\s+|semula\s+|balik\s+)?(?:id\b|permohonan|tugasan|ke\s|to\s|balik|semula|flow\b|token|process|SPI\b|SKM\b|[A-Z]{2,6}\b\s*[-–(])|\b(?:pindah(?:kan)?|kembalikan|undur(?:kan)?)\s+(?:tugasan|token|process|ke\s+tugasan)\b|\bmove\s+(?:the\s+)?(?:token|process)\b|\balter\s*id\b/i;
+const ALTER_ASK = /\b(?:tolong|please|mohon|boleh|can|help|kindly|sila|need\s+to|nak|request|minta|untuk)\b[^.\n]{0,40}\balter\b|\balter(?:ed|ing)?\b\s*(?:the\s+|this\s+|semula\s+|balik\s+)?(?:id\b|permohonan|tugasan|ke\s|to\s|balik|semula|flow\b|token|process|SPI\b|SKM\b|[A-Z]{2,6}\b\s*[-–(])|\b(?:pindah(?:kan)?|kembalikan|undur(?:kan)?)\s+(?:tugasan|token|process|ke\s+tugasan)\b|\bmove\s+(?:the\s+)?(?:token|process)\b|\balter\s*id\b|\balter\s+PT[A-Z]{2,4}\/|\balter\s+\d{2}[A-Z]{1,4}\d{1,6}\/\d{4}/i;
 // Terengganu ids carry a second 2-digit block (PTTRG/02/01/L/PT/2026/343); urusan kods may hold "_" — same shape as lib/states.js permohonanRegex().
 const PERMOHONAN_ID = /\bPT([A-Z]{2,4})\/\d{2}(?:\/\d{2})?\/[A-Z]\/[A-Z0-9_]+\/\d{4}\/\d+/;
 const TICKET_RE = /\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|Redmine|ticket|issue|II|ES|ESOKONGAN)\s*#?\s*(\d{5,7})\b/i;
@@ -61,24 +63,70 @@ const BYPASS = /\[skip-alter-gate:\s*[^\]]+\]/i;
 const PLAYBOOK_READ = /"file_path"\s*:\s*"[^"]*ALTER-TICKET-PLAYBOOK\.md"/;
 const OWN_OUTPUT = /alter-ticket-gate|ALTER-TICKET GATE/;
 
-function readActiveBlock(qaNum) {
+function blockFrom(file, qaNum) {
   const st = {};
   try {
-    const text = fs.readFileSync(ACTIVE_PATH, 'utf8');
-    const blocks = text.split(/^(?=qa=)/m);
+    const blocks = fs.readFileSync(file, 'utf8').split(/^(?=qa=)/m);
     const head = new RegExp(`^qa=(?:QA-)?${qaNum}\\b`);
     const block = blocks.find(b => head.test(b));
-    if (!block) return st;
-    block.split('\n').forEach(l => { const i = l.indexOf('='); if (i > -1) st[l.slice(0, i).trim()] = l.slice(i + 1).trim(); });
+    if (block) block.split('\n').forEach(l => { const i = l.indexOf('='); if (i > -1) st[l.slice(0, i).trim()] = l.slice(i + 1).trim(); });
   } catch (_) { /* absent */ }
   return st;
 }
+// Task folder on disk, open or archived, any state: "<n>. <TYPE> #<num> - …" (the only local home of the tracker + subject)
+let FOLDERS = null;   // every state folder + Archive, listed once per run
+function folderOnDisk(qaNum) {
+  if (!TASKS_ROOT) return null;
+  if (!FOLDERS) {
+    FOLDERS = [];
+    try {
+      for (const st of fs.readdirSync(TASKS_ROOT)) {
+        for (const dir of [path.join(TASKS_ROOT, st), path.join(TASKS_ROOT, st, 'Archive')]) {
+          try { for (const n of fs.readdirSync(dir)) FOLDERS.push([n, dir]); } catch (_) { /* absent */ }
+        }
+      }
+    } catch (_) { /* absent */ }
+  }
+  const re = new RegExp(`^\\d+\\.\\s+\\S+\\s+#${qaNum}\\b`);
+  const hit = FOLDERS.find(([n]) => re.test(n));
+  return hit ? path.join(hit[1], hit[0]) : null;
+}
+// active.txt → active-archive.txt → the Task folder on disk (a ticket not yet synced, or already archived)
+function readActiveBlock(qaNum) {
+  let st = blockFrom(ACTIVE_PATH, qaNum), from = 'active.txt';
+  if (!st.qa) { st = blockFrom(ARCHIVE_PATH, qaNum); from = 'active-archive.txt'; }
+  if (!st.task_folder || !fs.existsSync(st.task_folder)) { const f = folderOnDisk(qaNum); if (f) { st.task_folder = f; from = 'the Task folder on disk'; } }
+  st._from = st.task_folder ? from : '';
+  return st;
+}
 function bareTicket(prompt) {
-  try {
-    const text = fs.readFileSync(ACTIVE_PATH, 'utf8');
-    for (const n of (prompt.match(/\b\d{5,7}\b/g) || [])) if (new RegExp('^qa=(?:QA-)?' + n + '\\b', 'm').test(text)) return n;
-  } catch (_) { /* absent */ }
+  let text = '';
+  for (const f of [ACTIVE_PATH, ARCHIVE_PATH]) { try { text += fs.readFileSync(f, 'utf8') + '\n'; } catch (_) { /* absent */ } }
+  for (const n of (prompt.match(/\b\d{5,7}\b/g) || [])) if (new RegExp('^qa=(?:QA-)?' + n + '\\b', 'm').test(text) || folderOnDisk(n)) return n;
   return null;
+}
+// Env(s) of the alter: every env the prompt names, plus prod whenever the Task folder says PROD (a stray "stg" in
+// the prompt must never hide the approval-code row on a PROD ticket); no prompt env → the folder's env; else unknown.
+function envsIn(t) {
+  const out = [];
+  if (/\bprod(?:uction)?\b/i.test(t)) out.push('prod');
+  if (/\b(?:stg[12]?|staging|mlkstg)\b/i.test(t)) out.push('stg');
+  if (/\b(?:mlit|mlkit)\b/i.test(t)) out.push('mlit');
+  return out;
+}
+function resolveEnv(prompt, folderName) {
+  const p = envsIn(prompt), f = folderName ? envsIn(folderName) : [];
+  const envs = p.length ? [...new Set([...(f.includes('prod') ? ['prod'] : []), ...p])] : f;
+  const src = p.length ? (f.includes('prod') && !p.includes('prod') ? 'prompt + Task folder name' : 'prompt') : f.length ? 'Task folder name' : 'no env evidence';
+  return { env: envs.length ? envs.join('+') : 'unknown', src };
+}
+// Melaka A5: the tool for the env(s), first. The full table is the playbook's A5 row (one home).
+function melakaA5(env) {
+  const prod = `PROD → node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env prod --action <…> --id <ID> --target <KOD> --dry-run --headless → APPROVAL CODE → show みや the plan + code → same command + --approve <code> (prod-alter-gate); the AFTER check must print VERIFIED; logged out (exit 4) → ask him for: node keeper.js --login --env prod`;
+  const low = `STG/MLIT → Alter Flow: the headless runner, no login (cd E:\\Dev\\scripts\\FlowableAlter\\runner; .\\run.ps1 alter-flow --env <stg|mlit> --id <ID> --target <KOD> = plan, + --run = alter + DB check, RESULT PASS; boot 2-7 min, created_by=SYSTEM, deny-list in runner README) · Initiate & Alter: alter.js --env <stg|mlit> (logged out → Edge mode, edge-agent.js); never ask みや to log in for STG/MLIT`;
+  const e = env.split('+');
+  const rows = env === 'unknown' ? [prod, low] : [...(e.includes('prod') ? [prod] : []), ...(e.some(x => x !== 'prod') ? [low] : [])];
+  return `     A5 ⬜ RUN IT YOURSELF (env=${env}) — ${rows.join(' ║ ')}. Full table: playbook A5. ASSIGNEE = agihan default; NEVER add nextUser / nextUser<KOD> — report the holder from the AFTER rows`;
 }
 function readBrief(folder) {
   if (!folder) return '';
@@ -141,12 +189,16 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
   const context = qaNum || PERMOHONAN_ID.test(prompt) || PERMOHONAN_ID.test(priorTurns) || SERAHAN_ID.test(prompt);
   if (!context) return { fired: false };
 
-  const where = [['prompt', prompt], ['ticket brief', brief + ' ' + (st.issue_one_liner || '')], ['prior turn', priorTurns]];
+  const folderName = st.task_folder ? path.basename(st.task_folder) : '';
+  const where = [['prompt', prompt], ['ticket brief', folderName + '\n' + brief + ' ' + (st.issue_one_liner || '')], ['prior turn', priorTurns]];
   let signal = null, src = null;
   for (const [name, text] of where) { const s = signalIn(text); if (s) { signal = s; src = name; break; } }
   if (!signal) return { fired: false };
 
-  const { state, src: stateSrc } = resolveState(st, [prompt, brief, priorTurns]);
+  const resolved = resolveState(st, [prompt, brief, priorTurns]);
+  const state = resolved.state;
+  const stateSrc = st._from && /active\.txt/.test(resolved.src)
+    ? (st._from === 'the Task folder on disk' ? resolved.src.replace(/active\.txt task_folder/, st._from) : resolved.src.replace('active.txt', st._from)) : resolved.src;
   const row = STATE_MAP[state];
   // The knowledge folder is untracked and lives in BOTH the worktree and the main checkout (OneDrive copies that
   // can lag each other) — a file present in either copy is not "missing".
@@ -155,30 +207,35 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
   const stateFileExists = row ? knowledgeRoots.some(k => fs.existsSync(path.join(k, row.file))) : false;
   const alreadyRead = PLAYBOOK_READ.test(tail) || (data.transcript_path ? playbookReadInSession(String(data.transcript_path)) : false);
   const label = qaNum ? `QA #${qaNum}` : 'ad-hoc alter relay (no ticket)';
+  const { env, src: envSrc } = resolveEnv(prompt, folderName);
+  const tracker = /^\d+\.\s+II\s+#\d+\b.*\(PROD\)\s*$/i.test(folderName) ? 'Internal Issue (PROD)' : null;
 
-  try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), qa: qaNum || null, state, state_src: stateSrc, signal, signal_src: src, mode: alreadyRead ? 'reminder' : 'full', outcome: 'fired' }) + '\n'); } catch (_) { /* never block */ }
+  try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), qa: qaNum || null, state, state_src: stateSrc, signal, signal_src: src, env, env_src: envSrc, tracker, mode: alreadyRead ? 'reminder' : 'full', outcome: 'fired' }) + '\n'); } catch (_) { /* never block */ }
 
   if (alreadyRead) {
-    const run = state === 'melaka' ? ' Melaka A5 = run it yourself: alter.js --dry-run → APPROVAL CODE → みや approves → --approve <code> (E:\\Dev\\scripts\\FlowableAlter\\README.md).' : '';
+    const e = env.split('+'), hasProd = env === 'unknown' || e.includes('prod'), hasLow = env === 'unknown' || e.some(x => x !== 'prod');
+    const run = state === 'melaka' ? ` Melaka A5 (env=${env}) =` + (hasProd ? ' PROD: alter.js --dry-run → APPROVAL CODE → みや approves → --approve <code>.' : '')
+      + (hasLow ? ' STG/MLIT Alter Flow: headless runner .\\run.ps1 alter-flow (no login) · Init&Alter: alter.js / Edge mode.' : '') + ' Table: playbook A5.' : '';
     return { fired: true, blocked: false, contextOut: `🔀 alter-ticket-gate: ALTER layer already loaded this session (state=${state}) — rows A0–A6 + the §5 reply format still apply; re-read ${row ? row.file : 'the state file'} if the target node or action changed.${run}\n` };
   }
 
   const lines = [
-    `🔀 ALTER-TICKET GATE — ${label} · state=${state} (from ${stateSrc}) · signal="${signal}" in ${src}`,
+    `🔀 ALTER-TICKET GATE — ${label} · state=${state} (from ${stateSrc}) · env=${env} (from ${envSrc})${tracker ? ' · tracker=' + tracker : ''} · signal="${signal}" in ${src}`,
     `   MANDATORY READS this session, BEFORE any node pick, runbook, or reply:`,
     `     1. ${PLAYBOOK_REL}   ← procedure A0–A6 + the fixed reply formats (§5)`,
     row ? `     2. projects/coding-projects/active/etanah-knowledge/${row.file}   ← ${row.note || (stateFileExists ? "this state's alter mechanics — read it in full" : '⬜ NOT WRITTEN — derive from the playbook + the state DB MCP + the state checkout, then write it')}${stateFileExists ? '' : '   ⚠️ FILE MISSING — write it from the playbook before proceeding'}`
         : `     2. ⚠️ state UNKNOWN — ask みや which state; never default to Melaka silently`,
     `   EMIT the rows as ✓/⬜ (a skipped row must be VISIBLE):`,
     `     A0 ⬜ RESOLVE words → objects: "ID Permohonan" → aplikasi_id · urusan · pejabat; "tugasan X" → ind_tgsn kod(s) under THAT urusan; each "serahan" → its own aplikasi + hubungan_aliran_kerja_id`,
-    `     A1 ⬜ LIVE-PROCESS CHECK: umm_aliran_kerja (process ids) · umm_a_tgsn flag_aktif='Y' · umm_tgsn_semasa · header status — THEN the ENGINE (engine schema, or the page's ID Process dropdown after Cari): Tamat/0-active is NOT proof the process ended (#275847)`,
+    `     A1 ⬜ LIVE-PROCESS CHECK: umm_aliran_kerja (process ids) · umm_a_tgsn flag_aktif='Y' · umm_tgsn_semasa · header status — THEN the ENGINE (engine schema, or the page's ID Process dropdown after Cari): Tamat/0-active is NOT proof the process ended (#275847)` +
+      (state === 'melaka' ? ` · Melaka stg/mlit, no page: node E:\\Dev\\scripts\\FlowableAlter\\alter.js live --env <stg|mlit> --id <ID> (app rows + engine tasks; NOT CONSISTENT = a live umm_a_tgsn row with no engine task, or the reverse)` : ''),
     `     A2 ⬜ BIRTH CHECK: integration child (hubungan set) vs counter/standalone (hubungan NULL, KodPemula=PEMULA_ABK) — decides whether "re-run X to regenerate Y" is a mechanism at all`,
     `     A3 ⬜ NODE EDGE-TRACE table for the target (grep receiveUserTask(&quot;KOD&quot; in <state>/flowables-bpmn/<KEY>.bpmn20.xml — dump if absent); OUTGOING edge = intended next step? twins by edges, never by name`,
     `     A3b ⬜ VARIABLE TRACE for a sub-flow target: node domain/alter-ticket-gate/subflow-trace.js <bpmn-dir> <parent.bpmn20.xml> <callActivityId> — the callActivity NAME is a label; the in-mapped variables (nextUrusan, flagSemakanPemohonan, …) decide what the child does`,
     `     A4 ⬜ ACTION DECISION: Alter Flow (live) | Initiate→Alter (ended, node in LATEST model) | NOT EXECUTABLE (no process / node absent / born elsewhere) — one row, evidence per cell`,
     state === 'melaka'
-      ? `     A5 ⬜ RUN IT YOURSELF (2026-10-21): node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <…> --id <ID> --target <KOD> … --dry-run --headless → PLAN + APPROVAL CODE (prod) → show みや the plan table + code (AskUserQuestion option "Approve <code>") → same command + --approve <code>; prod-alter-gate blocks it without his approval; the built-in AFTER check must print VERIFIED. Logged out (exit 4) → ask him for: node keeper.js --login --env prod. Procedure: E:\\Dev\\scripts\\FlowableAlter\\README.md. ASSIGNEE = agihan default; NEVER add nextUser / nextUser<KOD> — report the holder from the AFTER rows`
-      : `     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence. ASSIGNEE = agihan default (previous holder of that tugasan kod, else peranan); NEVER add nextUser / nextUser<KOD> to pin an officer — verify the assignee AFTER`,
+      ? melakaA5(env)
+      :`     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence. ASSIGNEE = agihan default (previous holder of that tugasan kod, else peranan); NEVER add nextUser / nextUser<KOD> to pin an officer — verify the assignee AFTER`,
     `     A6 ⬜ REPLY in みや's voice (.claude/auto-memory/feedback_ticket_writing_style.md speech collection; playbook §5.1) | not-executable options block · Redmine: fill every field that exists on the form (Root Cause (DEV) per feedback_redmine_rootcause_format), skip only absent ones — BA register, no file:line / SQL / engine ids`,
     `   Bypass: [skip-alter-gate: <reason>]`,
     '',

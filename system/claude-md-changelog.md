@@ -10,6 +10,54 @@
 
 ---
 
+## v1.98 — 2026-10-29 (per みや, 286655)
+
+- **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.
+- **Paired**: deploy SKILL §5b, where his test photos are found (session images folder, PicturesScreenshots, clipboard) and a photo not on disk is never a question.
+- **Trigger**: I asked him to save a Pengesahan photo into 2. Fix and stopped on a refused tool call. His words: "do not ask me when you have done it many times ... take note when there are blockers ... people use AI to save time".
+- **Spec preservation**: additive. Rules 0-6 unchanged; rule 2 (no asking-back for searchable facts) and rule 3 (enumerate-then-pursue) keep their text, rule 7 names the two cases they missed (an own step, a refused call) and adds the log row.
+
+## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
+
+His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".
+
+| Place | Before | After |
+|---|---|---|
+| §System map | 3 bullets | + every system change runs `/system-change`; steps owned by `system/INDEX.md` §The change route |
+| §Delegation Economy table | no row for system changes | + row: a system change is designed and decided on the highest model; a slip row or urgent fix is never held for a switch |
+| `system/INDEX.md` | §Change record defined "a system change" as Rule · Workflow · Feature · Kernel | rulings 13-14 · §The change route (8 steps + 7 lanes) · one definition = all seven kinds |
+
+- Spec preservation: additive. The §Change record definition is widened from 4 kinds to 7, and the old text is replaced by a pointer to the new definition (named here).
+
+---
+
+## v1.96 — 2026-10-28 (per みや, the system map picture boot-loaded)
+
+His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
+
+| Place | Before | After |
+|---|---|---|
+| CLAUDE.md, after Boot Order | no overview picture | §System map: picture `system/INDEX.diagram.png` + text `system/INDEX.md`; name first; redraw in the same turn as any part added, moved, renamed or removed; send the PNG on ask |
+| `system/INDEX.md` §Change record | no row for the map picture | row: part added/moved/renamed/removed → redraw + `diagram-census --check system/INDEX.md` |
+| `system/INDEX.diagram.html` + `.png` | none | new, Rule 17 diagram of the map (7 kinds + 9 unclaimed root entries) |
+
+- Spec preservation: additive; no rule removed or reworded.
+
+---
+
+## v1.95 — 2026-10-28 (per みや, Etanah adhoc / quest diagram shape)
+
+His words: *"Please add this into the skill/phrase inside CLAUDE.md that invokes this diagram skill ... Under the specific etanah adhoc quest workflow, it will design it based on the business workflow but not overdoing it ... Make it based on urusan flow & to highlight the variable/keyword/value of concern ... you've dropped the important 2 steps, turun milik and pindah milik."*
+
+| Place | Before | After |
+|---|---|---|
+| §Explanation PILLAR | general diagram rule only | + one sentence: Etanah adhoc / quest = urusan flow, one lane per module, only steps that make or show the value, the value highlighted; pointer to `explain-diagram` §2b |
+| `.claude/skills/explain-diagram/SKILL.md` | §1-§4 | + §2b Etanah issue: 5 rules (urusan lanes · fold tugasan sub-steps · never drop the step that creates the value · highlight the value · no sentences in boxes) |
+
+Spec preservation: every v1.94 PILLAR clause kept word for word (picture default, 2-box chat line, diagram first, banned list, order). Additive.
+
+---
+
 ## v1.94 — 2026-10-28 (per みや, Brief rule dropped)
 
 His words: *"I suppose yeah, drop the brief rule."* · earlier the same day: *"Also remove the 'Brief' section. Whatever you've told me at the start is already the brief. To show our objective has been done for that step."*

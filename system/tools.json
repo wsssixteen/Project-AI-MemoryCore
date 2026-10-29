@@ -676,6 +676,54 @@
         "last": ""
       },
       "status": "unused"
+    },
+    {
+      "id": "sweep-audit",
+      "answers": "How did this sweep run go: cost, defects, and what to refine",
+      "call": "node domain/sweep/audit.js run --tickets <t,t> --since <iso> --write",
+      "home": "domain/sweep/",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-10-29"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "flowable-alter-js",
+      "answers": "Run a Flowable alter on the Alter page (PROD with an approval code, STG/MLIT with a saved session)",
+      "call": "node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <...> --id <ID> --target <KOD> --dry-run",
+      "home": "FlowableAlter alter.js (E:DevscriptsFlowableAlter, outside git)",
+      "groups": [
+        "flow"
+      ],
+      "state_scope": "Melaka",
+      "footprint": "on-demand: 1 node + 1 Edge, ~300 MB, ends with the run",
+      "status": "rare",
+      "usage": {
+        "sessions": 3,
+        "last": "2026-10-29"
+      }
+    },
+    {
+      "id": "flowable-alter-runner",
+      "answers": "Alter Flow on STG/MLIT with no login, verified from the DB",
+      "call": "E:\\Dev\\scripts\\FlowableAlter\\runner\\run.ps1 alter-flow --env <stg|mlit> --id <ID> --target <KOD> [--run]",
+      "home": "FlowableAlter runner (E:DevscriptsFlowableAlter\runner, outside git)",
+      "groups": [
+        "flow"
+      ],
+      "state_scope": "Melaka",
+      "footprint": "on-demand: 1 java, ~2 GB, 2-7 min boot, ends with the run",
+      "status": "rare",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-10-29"
+      }
     }
   ],
   "unused_scripts_2026-10-06": {
