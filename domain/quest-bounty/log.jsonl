@@ -237,3 +237,6 @@
 {"ts":"2026-10-29T11:38:19.430Z","qa":"QA-286988","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-29T11:39:36.5706475Z","qa":"QA-286988","harvests":{"quest":true,"system":2,"knowledge":2},"refinement":"proposed","banked_sha":null}
 {"ts":"2026-10-29T11:39:39.605Z","qa":"QA-286988","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-29T12:01:12.178Z","qa":"ADHOC-PPTPB-2026-6","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"Answered: hand bold lost at Selesai repopulation; lasting auto-bold shipped under 286315; other keputusan phrases carried by ADHOC-PPTPB-2026-7"}
+{"ts":"2026-10-29T12:02:20.503Z","qa":"ADHOC-BPRZ-2026-1","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-29T12:02:38.415Z","qa":"ADHOC-BPRZ-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc answered, no issue; finding already in ADHOC-REGISTER A6, nothing new to harvest"}
