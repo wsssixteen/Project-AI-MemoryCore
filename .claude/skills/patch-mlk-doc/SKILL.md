@@ -100,6 +100,11 @@ No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome o
 3. **Every field, not only the ones the ticket names**: a `-` or blank field gets its real value (285768: peranan from the signer's role in the urusan's module).
 4. **Render, then check every letter**: `python -I domain/patch-mlk-doc/letter-check.py --letter <patched> --original <downloaded> --pdf <render> --expect-change <tag or tag#n> --removed <tags> --allow-empty <tags> --signature <png>` prints PASS for STANDARD (only declared tags changed, Malay dates) · ALIGNMENT (signature and QR on one row, name below, left edges aligned) · DATA (no `-`, blank or `( )`). FAIL = fix and re-run before the hand-back.
 
+## Re-dating a generated letter (2026-10-29 per みや, #287292 + #285768)
+- The letter's date is the date it was GENERATED (proof: the Hijri "Bersamaan" line inside the stored file, filled at generation from JAKIM e-solat, and the signing tugasan's finish date). The Hijri line then needs no change.
+- A BA asking for a different date (e.g. the permohonan date): show both dates side by side in the FIRST reply and let みや pick. Never re-date silently to the BA's date.
+- Two tickets on the same letters = one patch: say "3 documents, not 6" first.
+
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
 - **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. The handed `<num>.sql` has no JOIN anyway (single-table UPDATE pinned by `dokumen_revision_id`).
 - **The UPDATE stays schema-qualified `ET_DMS.`** — the patching team runs it connected to their own default schema; qualifying is their convention.
