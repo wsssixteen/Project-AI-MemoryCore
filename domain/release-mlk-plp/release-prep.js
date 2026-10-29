@@ -839,7 +839,7 @@ function mrPrepare(st, a) {
     `  source      ${st.branch}`,
     `  target      mlk/master`,
     `  title       ${title}`,
-    `  description (empty)`,
+    `  description as GitLab pre-fills it — left as is, shown to みや for approval`,
     `  reviewer    one of: ${gl.reviewers.map(r => `${r.name} (@${r.username})`).join(' · ')}`,
     `  assignee    (empty)`,
     `  draft       OFF`,
