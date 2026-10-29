@@ -183,6 +183,20 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   check('M34 no token → refused before any call', r.status === 2 && /no gitlab\.token/.test(all(r)), all(r));
   mock.kill();
 
+  // staging caught up from the release branch BEFORE the reviewer merges: the later MR merge commit
+  // on master must not count as "stag-env behind" (2026-10-29 per みや: run both at once)
+  const relS = newRelease('9.9.25', [['s9.txt', 's9\n']]);
+  sh(repo, ['fetch', '-q', 'origin']);
+  sh(repo, ['checkout', '-q', '-B', 'st', 'origin/mlk/master']);
+  sh(repo, ['merge', '-q', '--no-ff', '-m', 'stag catch-up', relS]);
+  sh(repo, ['push', '-q', '-f', 'origin', 'HEAD:mlk/stag-env']);
+  sh(repo, ['checkout', '-q', '-B', 'mm', 'origin/mlk/master']);
+  sh(repo, ['merge', '-q', '--no-ff', '-m', "Merge branch 'mlk/release/9.9.25' into 'mlk/master'", relS]);
+  sh(repo, ['push', '-q', 'origin', 'HEAD:mlk/master']);
+  sh(repo, ['checkout', '-q', 'mlk/hotfix/1']); sh(repo, ['fetch', '-q', 'origin']);
+  const ms = require('./stag-catchup.js').measure(repo, 'mlk/stag-env', 'origin/mlk/master');
+  check('M35 staging caught up from the release first → the later master merge commit is not "behind"', ms.behind === 0, JSON.stringify(ms));
+
   const logRows = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-40).map(l => { try { return JSON.parse(l); } catch (_) { return {}; } });
   check('M27 log rows: prepared · recorded · waiting · ok', ['mr-prepared', 'mr-recorded', 'mr-waiting', 'mr-abandoned', 'ok'].every(k => logRows.some(x => x.cmd === 'merge-to-master' && x.result === k)), JSON.stringify(logRows.map(x => x.result)));
 } catch (e) {
