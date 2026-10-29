@@ -40,6 +40,7 @@ const DISCOVERY_SCHEMA = { type: 'object', required: ['symptom', 'ticketType', '
 
 const KNOWLEDGE_SCHEMA = { type: 'object', required: ['alwaysLoaded', 'conditionalLoaded', 'analogs'], properties: {
   alwaysLoaded: { type: 'array', items: { type: 'string' } }, conditionalLoaded: { type: 'array', items: { type: 'string' } }, routingReason: { type: 'string' },
+  alterLayerLoaded: { type: 'boolean', description: 'true when the ALTER LAYER files were read (flowable layer or an alter ask)' },
   analogs: { type: 'array', items: { type: 'object', required: ['ticket', 'whatItDid'], properties: { ticket: { type: 'string' }, whatItDid: { type: 'string' }, fileLine: { type: 'string' } } } } } }
 
 const FINDING_SCHEMA = { type: 'object', required: ['dimension', 'finding', 'confidence'], properties: {
@@ -52,10 +53,13 @@ const NOTES_SCHEMA = { type: 'object', required: ['written', 'notesPath', 'conte
   written: { type: 'boolean' }, notesPath: { type: 'string' }, content: { type: 'string' },
   testData: { type: 'array', items: { type: 'object', required: ['urusan', 'permohonanId', 'pengguna'], properties: { urusan: { type: 'string' }, permohonanId: { type: 'string' }, pengguna: { type: 'string' }, tugasan: { type: 'string' } } } } } }
 
-const SYNTH_SCHEMA = { type: 'object', required: ['fixShape', 'confidence', 'reproAchieved', 'seniorBlocker', 'qaDocWritten'], properties: {
+const SYNTH_SCHEMA = { type: 'object', required: ['fixShape', 'confidence', 'reproAchieved', 'seniorBlocker', 'qaDocWritten', 'alterCommand'], properties: {
   rootCauseOrAsk: { type: 'string' }, fixShape: { type: 'string' }, blastRadius: { type: 'string' }, verificationOracle: { type: 'string' },
   reproAchieved: { type: 'string', description: 'Y | N | n/a (enhancement)' }, confidence: { type: 'string' },
-  seniorBlocker: { type: 'string', description: 'only if solving genuinely stalled; else "none" — we solve, we do not manufacture questions' }, qaDocWritten: { type: 'boolean' } } }
+  seniorBlocker: { type: 'string', description: 'only if solving genuinely stalled; else "none" — we solve, we do not manufacture questions' }, qaDocWritten: { type: 'boolean' },
+  alterLayerLoaded: { type: 'boolean', description: 'true when the fix-shape is a token move and the ALTER LAYER was read before writing it' },
+  alterCommand: { type: 'string', description: 'token-move fix only: A4 action · env · target node id + kod · the exact tool command from playbook A5; else "n/a"' } } }
+const ALTER_LAYER = `the ALTER LAYER: projects/coding-projects/active/etanah-knowledge/ALTER-TICKET-PLAYBOOK.md (rows A0-A6, A5 = the tool table by env) · the state's alter file named in that playbook's §0 · for Melaka also E:\\Dev\\scripts\\FlowableAlter\\README.md (alter.js: PROD dry-run → approval code → --approve) and E:\\Dev\\scripts\\FlowableAlter\\runner\\README.md (headless runner: STG/MLIT Alter Flow with no login; refuses PROD; no Initiate & Alter)`
 
 const base = `Quest Phase 0 for Etanah ticket ${t.qa}. READ-ONLY on all etanah code — the ONLY writes allowed are "1. <NNN NNN>.txt" and the QA-NNN.md doc, and only by the agents explicitly told to write them. Codebase root: ${t.codebaseRoot}. Task folder: ${t.taskFolder}. Quest protocol (READ the cited sections — never work from memory): ${PROTO}. etanah-knowledge dir: ${t.knowledgeDir}. DB MCP: ${t.dbMcp} (load via ToolSearch).`
 
@@ -80,6 +84,7 @@ const knowledge = await agent(`${base}
 Per ${PROTO}, the paragraph that starts "etanah-knowledge tiered load at Phase 0" and the tier table under it (about line 103; find it by that phrase, the line number drifts):
 - ALWAYS load + summarize from ${t.knowledgeDir}: index.md (it maps every file of THIS state's folder — follow it), STATE-FACTS.md, DOMAIN-GLOSSARY.md, MODULE-ARCHITECTURE.md, BUG-BESTIARY.md, LATENT-BUGS.md, DEFERRED-CRITICAL-ISSUES.md. A file that does not exist in this state's folder is skipped and NAMED as absent — never substituted with another state's copy.
 - CONDITIONAL by layer "${discovery.layerGuess}" + the symptom: load the matching layer file(s) — DATABASE (DB) / FLOWABLE-WORKFLOWS or FLOWABLE-KNOWLEDGE (workflow) / JSF-WIRING (UI) / FLOW-TRACES (deep-debug) / FRONTEND-PATTERNS (UI enhancement) / URUSAN-FLOW (cross-urusan) / PERANAN-MAP (role) / TEST-PERMOHONAN-INDEX (test data) / ENV-ARCHITECTURE (which DB + MCP).
+- ALTER: when the layer is "flowable" OR the subject / brief / Task folder name asks to move a tugasan or token (alter, Initiate & Alter, pindahkan tugasan; e.g. tracker Internal Issue (PROD) "Request untuk Alter …"), ALSO read ${ALTER_LAYER}. Set alterLayerLoaded=true and list those files in conditionalLoaded.
 - Find the closest WORKING ANALOG ticket(s) for "${discovery.symptom}" — search projects/coding-projects QA docs + BUG-BESTIARY + this state's ${t.knowledgeDir}/urusan/<KOD>-TICKETS.md precedent file when it exists. Cite ticket + what it did + file:line/commit.
 Return what you loaded, the routing reason, and the analogs.`,
   { ...READ, label: 'knowledge-load', phase: 'KnowledgeLoad', schema: KNOWLEDGE_SCHEMA })
@@ -136,6 +141,7 @@ Inputs:
 - Recon: ${JSON.stringify(recon)}
 - Adversarial verdicts: ${JSON.stringify(verdicts)}
 - Notes.txt: ${JSON.stringify(notes)}
+TOKEN-MOVE FIX: if the fix-shape you reach moves a workflow token (Alter Flow · Initiate & Alter · a variable-only unblock), even when the ticket never said "alter" (#277926), FIRST read ${ALTER_LAYER} (skip only what KnowledgeLoad already read: alterLayerLoaded=${knowledge && knowledge.alterLayerLoaded ? 'true' : 'false'}), then write the fix-shape as A4 action + env + target node id and kod + the exact tool command from playbook A5, and copy that into alterCommand. Set alterLayerLoaded=true. Not a token move → alterCommand "n/a".
 Produce: the fix-shape (file:line + what changes), the blast-radius (codebase-only${isPelupusan ? ', other states excluded' : ', multi-state-aware'}), the verification oracle (how we will KNOW it is fixed), repro-achieved Y/N (bugs), a confidence level (honest), and a seniorBlocker ONLY if solving genuinely stalled (else "none" — the goal is to SOLVE, not manufacture questions to ask).`,
   { label: 'synthesis', phase: 'Synthesize', agentType: 'general-purpose', schema: SYNTH_SCHEMA, model: 'opus' })
 
