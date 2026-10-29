@@ -217,6 +217,32 @@ for (const [id, w] of [['F93', 'submitted'], ['F94', 'send it'], ['F95', 'pass']
 }
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('wait, do not send yet')]) }, STAGE);
 check('F99 "wait, do not send yet" → BLOCK', blocked(r), r.out.slice(0, 200));
+// v1.7 (2026-10-29, #261986): five submits he had ordered were blocked; harness lines were read as his words.
+const meta = t => JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: [{ type: 'text', text: t }] } });
+const goalCmd = a => user(`<command-name>/goal</command-name>\n<command-message>goal</command-message>\n<command-args>${a}</command-args>`);
+const submitWith = lines => run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript(lines) }, STAGE);
+r = submitWith([user('WHY THE FUCK YOU ARE NOT SUBMITTING IT YOU STUPID FUCKER!!!')]);
+check('F100 REPLAY 261986 "WHY ... ARE NOT SUBMITTING IT" → Submit allowed (complaint = order)', !blocked(r) && /Submit approved/.test(r.out), r.out.slice(0, 200));
+r = submitWith([goalCmd("do not stop until you've fucking posted the redmine you stupid fuck."), meta('A session-scoped Stop hook is now active with condition: "do not stop until you\'ve fucking posted the redmine". Briefly acknowledge')]);
+check('F101 REPLAY 261986 /goal "do not stop until you\'ve posted" + harness notice → Submit allowed', !blocked(r), r.out.slice(0, 200));
+r = submitWith([user('SEND THE FUCKING REDMINE'), meta('Base directory for this skill: C:\\x\\.claude\\skills\\redmine-phase1-prefill')]);
+check('F102 a loaded skill text after "SEND" is skipped → Submit allowed', !blocked(r), r.out.slice(0, 200));
+r = submitWith([user('hmm'), meta('Base directory for this skill: post it, submit it')]);
+check('F103 go-words only inside a harness/skill line → BLOCK (never his words)', blocked(r), r.out.slice(0, 200));
+r = submitWith([goalCmd('do not post it yet')]);
+check('F104 /goal args "do not post it yet" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user("don't submit")]);
+check('F105 "don\'t submit" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('stop, do not send it')]);
+check('F106 "stop, do not send it" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('why did you post it without asking')]);
+check('F107 "why did you post it without asking" → still a go-word sentence: documented accepted-risk (allowed)', !blocked(r), r.out.slice(0, 200));
+r = submitWith([user('never post on my behalf')]);
+check('F108 "never post on my behalf" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = submitWith([user('hold on, let me read it before you send')]);
+check('F109 "hold on, let me read it before you send" → BLOCK (no go-word)', blocked(r), r.out.slice(0, 200));
+r = submitWith([meta('A session-scoped Stop hook is now active with condition: "submit it"')]);
+check('F110 only a harness line, no human line → BLOCK', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.querySelector('.attributes').innerText" }, transcript_path: transcript([user('check the ticket')]) }, STAGE);
 check('F70 DOM read of the issue page → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "fetch('https://example.com/api/x.json')" }, transcript_path: transcript([user('x')]) }, STAGE);
