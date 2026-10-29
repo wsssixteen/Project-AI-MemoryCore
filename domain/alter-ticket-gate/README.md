@@ -1,11 +1,15 @@
-goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote alter-ticket-gate)
+goal_status: confirmed (2026-10-29, v1.2 per miya: alter layer loaded at Phase 0 + on Internal Issue (PROD) alter tickets)
 symptom: #275847 2026-09-04 Perak: Ammar 'can help alter to SPI Semakan Permohonan' — quest hard-coded melaka knowledge, no alter-page/verify/reply layer existed; #277926 2026-09-03 Melaka: Initiate&Alter picked the wrong SKM twin by name
 goal: advisory: inject the state-routed ALTER layer (ALTER-TICKET-PLAYBOOK + <state>/FLOWABLE-ALTER file) + the A0-A6 deterministic rows + the fixed reply format; state resolved from Task folder / permohonan-ID prefix
 goal_signal: the UserPromptSubmit fire produced: advisory: inject the state-routed ALTER layer (ALTER-TICKET-PLAYBOOK + <state>/F
 retention: rotate monthly
-# alter-ticket-gate (hook-only Feature, v1.0 — born 2026-09-04 via core/forge.js)
+footprint: per-prompt: 1 node process (UserPromptSubmit), reads active.txt + active-archive.txt + up to 2 Tasks folder listings per state, ~40 MB for <300 ms
+self_audit: each fire writes a log.jsonl row (state, env, tracker, signal, mode); the eval asserts the rendered A5 row against the env
+diagram: domain/alter-ticket-gate/diagram.png
+state-scoped: yes, keyed by lib/states.js (alter file per state); A5 tool rows are Melaka-only, other states keep the runbook row
+# alter-ticket-gate (hook-only Feature, v1.2 — born 2026-09-04 via core/forge.js)
 
-**What fires when**: `UserPromptSubmit` — the prompt names a ticket / permohonan ID (or a prior assistant turn does) AND an **alter signal** is found in the prompt, the ticket brief (`0. Brief/Description.txt` + `History.txt` + active.txt one-liner), or the prior assistant turns of this session's transcript.
+**What fires when**: `UserPromptSubmit` — the prompt names a ticket / permohonan ID (or a prior assistant turn does) AND an **alter signal** is found in the prompt, the ticket brief (the Task folder NAME = Redmine subject + tracker bracket, `1. Brief/Description.txt` + `History.txt`, the active.txt one-liner). The ticket is found in `quest/active.txt` → `quest/active-archive.txt` → the Task folder on disk (open or `Archive\`), so an archived or not-yet-synced ticket still loads, or the prior assistant turns of this session's transcript.
 
 **Contract (ADVISORY, never blocks)**: inject the state-routed ALTER layer — `etanah-knowledge/ALTER-TICKET-PLAYBOOK.md` + the state's mechanics file — plus the 7 deterministic rows A0–A6 and the fixed reply format. Once the playbook has been `Read` this session it degrades to a one-line reminder (no bloat).
 
@@ -14,13 +18,16 @@ retention: rotate monthly
 | Piece | File | Role |
 |---|---|---|
 | Hook | `alter-ticket-gate.check.hook.js` | UserPromptSubmit advisory; state resolution; layer + rows injection |
-| Eval | `alter-ticket-gate.eval.js` | 20 fixtures in a temp sandbox (env overrides `ALTER_GATE_ACTIVE_PATH` / `ALTER_GATE_KNOWLEDGE_ROOT`) |
-| Log | `log.jsonl` | `{ts, qa, state, state_src, signal, signal_src, mode: full\|reminder, outcome}` per fire |
+| Eval | `alter-ticket-gate.eval.js` | 43 checks: sandbox fixtures (env overrides `ALTER_GATE_ACTIVE_PATH` / `ALTER_GATE_ARCHIVE_PATH` / `ALTER_GATE_TASKS_ROOT` / `ALTER_GATE_KNOWLEDGE_ROOT`) + R1/R2 real replay on the live Tasks folders |
+| Eval (Phase 0) | `phase0-alter.eval.js` | runs the real `.claude/workflows/quest-phase0.js` with stub agents; KnowledgeLoad and Synthesize carry the alter layer |
+| Diagram | `diagram.html` + `diagram.png` | the flow, the changed steps marked |
+| Log | `log.jsonl` | `{ts, qa, state, state_src, signal, signal_src, env, env_src, tracker, mode: full\|reminder, outcome}` per fire |
 | Knowledge (procedure) | `projects/coding-projects/active/etanah-knowledge/ALTER-TICKET-PLAYBOOK.md` | A0–A6 · action decision · verify signature · reply formats |
 | Knowledge (per state) | `melaka/FLOWABLE-KNOWLEDGE.md` §6/§6b/§11.5 · `perak/FLOWABLE-ALTER.md` · others ⬜ | page mechanics, creds pointer, verify dialect, BPMN sources |
-| Nuke marker | `NUKE-MARKER.md` | rollback recipe (retire 2026-10-04) |
 
 **Layer choice (Rule 7)**: hook-only. The procedure is knowledge (a playbook the hook points at), not a skill — a skill would duplicate the quest skill's phase machinery; the gate's job is only *load the right layer at the right moment, per state*. Promote to a Stop-side block only if a hand-back ships an alter without the A-rows (observed slip → evidence).
+
+**Env + A5 (v1.2)**: env = the prompt's own word (prod / stg / mlit) → else the Task folder name (`(PROD)` bracket, `MLKSTG`, `MLKIT`) → else `unknown`. Melaka A5 prints only that env's tool; the full table lives in the playbook's A5 row (one home): PROD = alter.js dry-run → approval code → `--approve`; STG/MLIT Alter Flow = the headless runner (no login); Initiate & Alter = alter.js or Edge mode. The runner is never printed for env=prod (eval G2, G9). Tracker `Internal Issue (PROD)` is read from the folder name (`NNN. II #<num> … (PROD)`) and logged; it fires only with an alter word, since data patches and code bugs share that tracker (eval G4, R2).
 
 **Trigger moment (Rule 8)**: UserPromptSubmit guarded by a tight predicate (ticket/permohonan context **and** an alter signal). Not SessionStart (no ticket yet), not every-turn bloat (predicate + reminder mode). The "Rubric decided it is an alter" case (#277926 never said alter) is caught from the transcript tail on the NEXT user turn — execution needs みや's turn anyway, so the advisory arrives before any click.
 
@@ -76,6 +83,9 @@ Result at ship (2026-09-04): **20/20 green** (F2 = #275847 replay, F3 = #277926 
 | 24 | Another hook echoes the bypass token in its help text | accepted-risk — token requires a `:` reason and only prompt/assistant lines count; help text of other hooks is system/user-role |
 
 ## History
+
+- 2026-10-29 v1.2 — per みや (/goal: load the alter knowledge at quest Phase 0 when the ticket is flowable, and on Internal Issue (PROD) alter tickets). Ticket lookup falls back to active-archive.txt and the Task folder on disk; the folder name is scanned; env + tracker resolved and logged; Melaka A5 prints the tool for that env (headless runner for STG/MLIT Alter Flow, never for PROD); `request/minta/untuk … alter` and `alter PT<STATE>/…` count as asks; `quest-phase0.js` KnowledgeLoad + Synthesize read the alter layer (eval `phase0-alter.eval.js`). NUKE-MARKER retired (fired many times, no rollback). Fable audit 2 (result, FAIL on 1 major) applied: a PROD-folder ticket always prints the prod row, a prompt naming other envs adds theirs (env=prod+stg, eval G8 G13 G14); alter <serahan> counts as an ask (G15); the header names where the block came from (G16); folder listing once per run; SYNTH_SCHEMA requires alterCommand; P6 scans every agent() call. Plan audited by Fable 5.1 (FAIL → all findings applied). Spec-preservation: the A0–A4/A6 rows, reminder mode, bypass token, state cascade and Perak runbook A5 are unchanged; the v1.1 Melaka A5 text (alter.js for every env) is replaced by the env-routed row, named here.
+- 2026-09-30 → 10-28 v1.1 rows (eval F9b, F21–F24): Terengganu 7-segment id, assignee rule, voice memory, Melaka run-it-yourself A5, alter.js live in A1.
 
 - 2026-09-04 v1.0 — born (#275847 Perak + #277926 Melaka). Companion knowledge: `ALTER-TICKET-PLAYBOOK.md` (new), `perak/FLOWABLE-ALTER.md` (new), Melaka §6 pointer line.
 
