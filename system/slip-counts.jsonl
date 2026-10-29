@@ -1471,6 +1471,14 @@
 {"ts":"2026-10-27T17:43:30.377Z","category":"A5"}
 {"ts":"2026-10-27T17:34:22.840Z","category":"A1"}
 {"ts":"2026-10-27T17:34:23.709Z","category":"A1"}
+{"ts":"2026-10-29T06:18:26.868Z","category":"delegation/worktree-path"}
+{"ts":"2026-10-29T06:50:19.577Z","category":"reask/redundant"}
+{"ts":"2026-10-29T07:37:37.206Z","category":"verify/looked-not-checked"}
+{"ts":"2026-10-29T08:29:43.702Z","category":"spec-source/override-miya"}
+{"ts":"2026-10-29T11:02:53.726Z","category":"incomplete-check"}
+{"ts":"2026-10-29T11:33:35.797Z","category":"claim-without-verify"}
+{"ts":"2026-10-29T11:46:11.703Z","category":"spec-not-followed"}
+{"ts":"2026-10-29T12:44:25.697Z","category":"incomplete-check"}
 {"ts":"2026-10-28T04:29:34.897Z","category":"release-baseline-as-deploy-blocker"}
 {"ts":"2026-10-28T04:36:30.255Z","category":"deploy-card-missing-evidence-line"}
 {"ts":"2026-10-28T06:37:44.261Z","category":"session-name-not-applied"}
@@ -1585,3 +1593,4 @@
 {"ts":"2026-10-29T18:15:47.211Z","category":"A2"}
 {"ts":"2026-10-29T18:20:31.210Z","category":"claim-verification"}
 {"ts":"2026-10-29T18:21:15.628Z","category":"A2"}
+{"ts":"2026-10-29T18:22:31.593Z","category":"blocker"}
