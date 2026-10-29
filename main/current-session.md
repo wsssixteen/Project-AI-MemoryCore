@@ -15,6 +15,13 @@
 - **"164"**: no open ticket ends in 164. Ask miya for the full number.
 - **Slip**: the Redmine edit page froze Chrome for about 20 minutes while redmine-write-gate (STAGE-ONLY until 2026-10-30) blocked the API. I fought the page before telling him about the gate. He submitted the form himself.
 - **Linked sessions**: session-name-fix (cranky-wilson, DE done, 6a478ade on main) · alter-sim (cool-hopper, waits on his "add it" and a staging permohonan for a real-vs-preview compare).
+**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
+- 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
+- Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
+- System: hotfix skill gained "Hotfix deployment" H1-H4 + the infra team's template, ticket line = number only. Knowledge: pemegang permit/lesen name = `ind_pemegang_permit_lesen.nama_pemegang` (DATABASE.md).
+- Open: bounty proposal (worktree guard blocks Edit on main-only untracked quest files) waits for miya's ruling. Work worktree `E:\Dev\etanah-work\etanah-pelupusan-hotfix-285768` and `wt-common-285768` kept until his yes.
 
 **Last Activity**: 2026-10-29 21:00 — worktree `redmine-issue-287292-1cfb39`, quest 287292 (PROD document patch, UPP Surat Makluman Pembatalan) closed through Phase 2 and archived, Domain Expansion.
 
