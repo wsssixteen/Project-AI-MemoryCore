@@ -31,15 +31,17 @@ For explaining a change to an existing part, the four rows + flow with the one c
 
 ## 2b. Etanah issue (adhoc · quest): draw the urusan flow, mark the value (2026-10-28 per みや, ADHOC-MCL-2026-1)
 
-| Rule | Banned |
-|---|---|
-| The drawing follows the **business urusan flow**, not the code: one lane per module (Pendaftaran · Portal Awam · Pelupusan …), the lane label says which module | a code chain (`Form :413 → Service :1464`) as the issue picture |
-| Keep only the steps that **make or show the value of concern**; a lane already names the module, so its tugasan sub-steps fold into one box (Perserahan + Kemasukan + Keputusan → one "Pindahmilik" box, logins as its small line) | a box per tugasan when the tugasan does not touch the value |
-| Never drop the step that **creates** the value, however long the flow (ADHOC-MCL-2026-1: Turun Milik and Pindahmilik made the split shares) | cutting the cause steps to save boxes |
-| **Highlight the value itself** (the variable, keyword or value: e.g. `MOHD TAUFIK 1/2` twice) in the accent colour, at the step where it starts and where it shows wrong; a now ✗ / expected ✓ pair at the end | highlighting a whole step when the value is the point |
-| Box text = labels and values only, no sentences | sentences inside boxes |
+**The rule**: draw the **business urusan flow**, not the code: one lane per module (Pendaftaran · Portal Awam · Pelupusan …). Layout, colours and checks stay as sections 2 and 3 already set them; only the details below change.
 
-Example: `domain/adhoc-brief-first/diagram.html` shows the adhoc order; the MCL simulation picture (Pendaftaran lane: Asal → Pindahmilik → owner rows ✗; Portal lane: Carian Rasmi → MCL Tab 2 → now ✗ / expected ✓) is the shape.
+| Detail | Do | Banned |
+|---|---|---|
+| Steps | only the steps that make or show the value of concern; tugasan sub-steps fold into one box (Perserahan + Kemasukan + Keputusan → one "Pindahmilik" box, logins as its small line); **never drop the step that creates the value** (ADHOC-MCL-2026-1: Turun Milik and Pindahmilik made the split shares) | a box per tugasan · cutting the cause steps to save boxes |
+| Which box to highlight | the box where the value starts wrong and the box where it shows wrong, nothing else | a highlighted step that does not hold the value |
+| Which values to show | the value of concern only, written as the screen shows it (`MOHD TAUFIK 1/2`) | every field of the row |
+| The action beside the value | the urusan that made each row, beside it, small and grey (`MOHD TAUFIK 1/2   Pindahmilik 2012`), so two rows that look the same are told apart | identical rows with no source |
+| Text | labels and values only, short; a now ✗ / expected ✓ pair at the end | sentences inside boxes |
+
+Example: the MCL simulation picture (Pendaftaran lane: Asal · Pindahmilik 2012 → Pindahmilik baru → owner rows, each with its urusan; Portal lane: Carian Rasmi → MCL Tab 2 → now ✗ / expected ✓).
 
 ## 3. Picture route (diagram-design)
 
