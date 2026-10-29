@@ -1,4 +1,14 @@
-# Current Session
+#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "stoic-ramanujan-634076", 286655 MLPS/OMLPS Tarikh Jadual)
+- 286655: Maklumat Jadual at Penyediaan Borang 4Ae dan L1e keeps the saved Tarikh Mula/Akhir after Simpan (MLPS + OMLPS; QA 262778 old-date reset kept). Commit 75381bb3a7 on mlk/esokongan/286655, merged int-env fa244fa194.
+- miya tested MLPS on internal PTMLK/02/L/MLPS/2026/5 (27/05/2025 to 31/12/2028 kept after Simpan, Borang 4Ae line (1) matches, Pengesahan KPPD 21:30 matches). OMLPS not tested (no OMLPS app at that tugasan on internal).
+- Redmine journal #6 (22:23, miya clicked Submit): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani. The 2 red-boxed photos in `2. Fix` did NOT attach (upload tokens lost when the form re-rendered); add them on his nod.
+- System: CLAUDE.md v1.98 Disposition 7 (own steps run without asking; blockers logged and routed around) + deploy §5b photo finding (37e702ed).
+- Slips: asked him to save a photo I could find myself; redmine-write-gate could not see "submit it" sent as a huge pasted block (read "(none)") and blocked the Submit twice.
+- Open: attach the 2 photos to 286655; ticket onto the planned-release list; OMLPS untested.
+
+ Current Session
 
 **Last Activity**: 2026-10-29 22:20 — worktree `suspicious-nash-ce350d` (child of "Sweep 3 tickets + audit"), 286610 MCL Notis 5A + tempoh pajakan handed to BA, quest Phase 1 closed, Domain Expansion.
 
@@ -19,19 +29,4 @@
 - Slips: told him to test on staging when the BA env is internal ("are you broken?"). Gates read a mid-turn or app message as his last message (falsifier ledger, redmine-write-gate submit), so his approvals were missed twice.
 - Open: ticket onto the planned-release list; kaunter (SPOC) route and draft p_aplikasi 68769 not covered by this fix (BA told).
 
-**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
-- 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
-- Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
-- System: hotfix skill gained "Hotfix deployment" H1-H4 + the infra team's template, ticket line = number only. Knowledge: pemegang permit/lesen name = `ind_pemegang_permit_lesen.nama_pemegang` (DATABASE.md).
-- Open: bounty proposal (worktree guard blocks Edit on main-only untracked quest files) waits for miya's ruling. Work worktree `E:\Dev\etanah-work\etanah-pelupusan-hotfix-285768` and `wt-common-285768` kept until his yes.
-**Last Activity**: 2026-10-29 21:25 — worktree `esokongan-quest-sweep-2bce09` (branch claude/qa-tickets-review-9d166c), 262027 handed to BA, quest saved, Domain Expansion.
-
-## Session Recap (2026-10-23 → 2026-10-29, worktree "esokongan-quest-sweep-2bce09", tickets 262027 and 261986)
-- **262027 (PSBS Surat Keputusan PTG kepada PDT Tolak, rework cycle 2)**: fix on mlk/qa/262027v2 (54d8ffedb3, afe270b690), merged int-env + stag-env. Staging runs release 1.9.0 (baseline, no 262027), so the test ran on internal PTMLK/01/L/PSBS/2026/8. Redmine 2026-10-29 21:02: Resolved, Nurul Amirah Nadiah, 100%, note + internal Tolak PDF. Quest status=closed (Phase 1); archive waits for Redmine Closed. KPI P-262027-B4-20261023 pending BA verify.
-- **261986 (Risalat MMKN RAHSIA header)**: next. miya wants it re-looked from the start. Phase 0 done earlier; Rubric, Apply, Test not done; nothing moved this session.
-- **"164"**: no open ticket ends in 164. Ask miya for the full number.
-- **Slip**: the Redmine edit page froze Chrome for about 20 minutes while redmine-write-gate (STAGE-ONLY until 2026-10-30) blocked the API. I fought the page before telling him about the gate. He submitted the form himself.
-- **Linked sessions**: session-name-fix (cranky-wilson, DE done, 6a478ade on main) · alter-sim (cool-hopper, waits on his "add it" and a staging permohonan for a real-vs-preview compare).
 **Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
