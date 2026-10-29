@@ -87,7 +87,7 @@
 ## Etanah facts
 - [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk
 - [etanah-facts](reference_jasper_field_sources.md) — Jasper $F sources, kadar cukai duplicates, doc reset tool, DMS patch, #246512
-- [multi-ticket-sweep](reference_multi_ticket_sweep.md) — the /sweep design + evidence lives in five places; cite all five
+- [multi-ticket-sweep](reference_multi_ticket_sweep.md) — /sweep is built: skill + domain/sweep (audit Tool, run ledger); design history in five places, cite all five
 
 ## MemoryCore repo and rituals (skill: domain-expansion)
 - [personality-growth-design](project_personality_growth_design.md) — Ruri personality growth design (proposed 2026-10-28, not built): main/personality/ README + picture; read before touching her personality or DE step 3

@@ -9,7 +9,7 @@
 | B1 | Technical & Domain Knowledge | 1 | 2026-05-31 |
 | B2 | Quality of Work | 1 | 2026-10-23 |
 | B3 | Delivery & Planning | 0 | - |
-| B4 | Ownership & Initiative | 3 | 2026-10-23 |
+| B4 | Ownership & Initiative | 4 | 2026-10-29 |
 | B5 | Communication | 0 | - |
 | B6 | Teamwork & Collaboration | 1 | 2026-10-23 |
 | C1 | Code Quality & Engineering Practice | 0 | - |
@@ -41,6 +41,7 @@ _No rows yet._
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-10-29 | #286988 | Fixed the PROD alter tool so it could click the alter page on real PROD, then ran both PROD alters and checked them in the database. | E:\Dev\scripts\FlowableAlter\logs\2026-10-29\2026-10-29T04-31-13-953Z-prod-alter-flow-PTMLK_02_L_PLPS_2026_20.json · PROD umm_a_tgsn 2912684 + 2912688 |
 | 2026-10-23 | #246964 | Found that the fix the BA tested had never reached release 1.8.4, which MLKSTG runs. | commit 6feb2525c6 is not an ancestor of origin/mlk/release/1.8.4 (64f94fc790) |
 | 2026-07-09 | #269437 | Fixed the orphan-document case beyond the ticket, which unblocked Papar regeneration for all 21 urusans that create a document. | commit 33cdeed6e6 · PelupusanReportUtil.java:288 |
 | 2026-05-31 | #253053 | Caught stale test IDs in the brief, found the real test application, and surfaced that the risalat delete helper is dead code in Melaka. | projects/coding-projects/archive/QA-253053/QA-253053.md |

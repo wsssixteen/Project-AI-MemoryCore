@@ -89,7 +89,9 @@ function latestPassedRelease(repo) {
 
 // The read-only measurement every caller shares (stag-catchup --check, init guard, merge-to-master hint).
 function measure(repo, env, source) {
-  const behind = Number(out(repo, ['rev-list', '--count', `origin/${env}..${source}`]));
+  // merge commits do not count: the reviewer's MR merge on master carries no content stag-env lacks
+  // when stag-env was caught up from the release branch in the same turn (2026-10-29 per みや)
+  const behind = Number(out(repo, ['rev-list', '--count', '--no-merges', `origin/${env}..${source}`]));
   return { env, source, behind, envTip: out(repo, ['rev-parse', `origin/${env}`]), tickets: behind ? ticketsIn(repo, `origin/${env}..${source}`) : [] };
 }
 
