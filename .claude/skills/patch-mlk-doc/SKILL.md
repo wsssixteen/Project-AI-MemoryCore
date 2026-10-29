@@ -67,15 +67,15 @@ More than one file = ONE box: "these files", then every `lokasi_fail` on its own
 | `2. Fix\<lokasi_fail basename>` (e.g. `LAIN-37140956_1.main`) | the BA's edited docx, renamed — the attachment infra drops in place |
 
 **Banned** (2026-10-02 per みや, #282198): any `PATCH-REQUEST-*.txt` or other descriptive file · a `.txt` script. Script naming is `<num>.sql`, always (`feedback_script_file_naming`). The infra copy texts below live in CHAT only, never in a file.
-The reply's FIRST lines are the full Windows paths of both files.
+The reply's FIRST line is the full Windows path of the `2. Fix\` folder, ONCE; then one file name per line (2026-10-29 per みや, 285768: he uploads them all from that folder). A full path repeated per file is banned.
 
 **Two SEPARATE copy boxes, one per infra group. Not ordered, not numbered** (fixed 2026-10-02 per みや, #282198).
 Each box holds only what he pastes. Banned inside a box: "STEP 1/2", "after infra confirms", the attachment name, any explanation.
 Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_patch_infra_handoff` data patch).
 
-Replace document (he attaches the edited docx):
+Upload document (he attaches the edited docx; the word is "upload", never "replace", per miya 2026-10-29):
 ```
-Hi infra, please help to replace document for MLK PROD. Thank you.
+Hi infra, please help to upload document for MLK PROD. Thank you.
 #<num>: <URUSAN> - <one short outcome sentence>.
 
 <lokasi_fail>
@@ -91,8 +91,19 @@ UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_I
 ```
 No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
 
-**The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. Every file named in the reply carries its FULL Windows path — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
+**The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. The folder is named by its FULL Windows path once, then the file names under it — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
 **Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>` must print PASS.
+
+**When I edit the letter myself (no BA file) — 2026-10-29 per みや, 285768: "I think you just butchered this part. Not aligned, no peranan filled."**
+1. **Standard first**: put each value where the system's own layout puts it. Read the strategy class that fills the template (tag, image size, which cell), never the first box whose name matches (285768: the signature belongs beside the QR in the table, not in the empty block above it).
+2. **A date on a letter = the date that letter was generated**, read from the letter itself (Hijri line, QR, ADO name, DMS revision), never argued from the ticket text.
+3. **Every field, not only the ones the ticket names**: a `-` or blank field gets its real value (285768: peranan from the signer's role in the urusan's module).
+4. **Render, then check every letter**: `python -I domain/patch-mlk-doc/letter-check.py --letter <patched> --original <downloaded> --pdf <render> --expect-change <tag or tag#n> --removed <tags> --allow-empty <tags> --signature <png>` prints PASS for STANDARD (only declared tags changed, Malay dates) · ALIGNMENT (signature and QR on one row, name below, left edges aligned) · DATA (no `-`, blank or `( )`). FAIL = fix and re-run before the hand-back.
+
+## Re-dating a generated letter (2026-10-29 per みや, #287292 + #285768)
+- The letter's date is the date it was GENERATED (proof: the Hijri "Bersamaan" line inside the stored file, filled at generation from JAKIM e-solat, and the signing tugasan's finish date). The Hijri line then needs no change.
+- A BA asking for a different date (e.g. the permohonan date): show both dates side by side in the FIRST reply and let みや pick. Never re-date silently to the BA's date.
+- Two tickets on the same letters = one patch: say "3 documents, not 6" first.
 
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
 - **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. The handed `<num>.sql` has no JOIN anyway (single-table UPDATE pinned by `dokumen_revision_id`).

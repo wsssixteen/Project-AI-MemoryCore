@@ -29,6 +29,20 @@ One sentence of answer, then one drawing. Nothing he did not ask for.
 
 For explaining a change to an existing part, the four rows + flow with the one changed step marked: `.claude/reply-shape-spec.md` §3d.
 
+## 2b. Etanah issue (adhoc · quest): draw the urusan flow, mark the value (2026-10-28 per みや, ADHOC-MCL-2026-1)
+
+**The rule**: draw the **business urusan flow**, not the code: one lane per module (Pendaftaran · Portal Awam · Pelupusan …). Layout, colours and checks stay as sections 2 and 3 already set them; only the details below change.
+
+| Detail | Do | Banned |
+|---|---|---|
+| Steps | only the steps that make or show the value of concern; tugasan sub-steps fold into one box (Perserahan + Kemasukan + Keputusan → one "Pindahmilik" box, logins as its small line); **never drop the step that creates the value** (ADHOC-MCL-2026-1: Turun Milik and Pindahmilik made the split shares) | a box per tugasan · cutting the cause steps to save boxes |
+| Which box to highlight | the box where the value starts wrong and the box where it shows wrong, nothing else | a highlighted step that does not hold the value |
+| Which values to show | the value of concern only, written as the screen shows it (`MOHD TAUFIK 1/2`) | every field of the row |
+| The action beside the value | the urusan that made each row, beside it, small and grey (`MOHD TAUFIK 1/2   Pindahmilik 2012`), so two rows that look the same are told apart | identical rows with no source |
+| Text | labels and values only, short; a now ✗ / expected ✓ pair at the end | sentences inside boxes |
+
+Example: the MCL simulation picture (Pendaftaran lane: Asal · Pindahmilik 2012 → Pindahmilik baru → owner rows, each with its urusan; Portal lane: Carian Rasmi → MCL Tab 2 → now ✗ / expected ✓).
+
 ## 3. Picture route (diagram-design)
 
 1. Skill file: the `diagram-design` skill when loaded; in a session started before its install, read `%USERPROFILE%\.claude\plugins\cache\diagram-design\diagram-design\<version>\skills\diagram-design\SKILL.md` and its type reference by hand. Not installed at all → install it first (`.claude/auto-memory/project_installed_skills.md` has the command).

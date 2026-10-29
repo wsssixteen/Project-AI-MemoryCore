@@ -77,7 +77,7 @@ git commit -m "quest-bounty QA-<num> — harvest + <refinement or 'no refinement
 git push origin HEAD            # worktree branch
 git push origin HEAD:main       # FF MemoryCore main
 ```
-FF-only on main; on divergence, surface + merge before retry. Emit `Banked — QA-<num>: <SHA> → origin/main`. Append one line to `domain/quest-bounty/log.jsonl`.
+FF-only on main; on divergence, surface + merge before retry. Then `node lib/land-on-main.js <SHA>` so the main folder has it (`system/INDEX.md` §The change route step 7). Emit `Banked — QA-<num>: <SHA> → origin/main`. Append one line to `domain/quest-bounty/log.jsonl`.
 
 ## Skill-card
 

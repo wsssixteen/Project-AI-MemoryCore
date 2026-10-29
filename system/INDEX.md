@@ -84,11 +84,45 @@ Why: a 357-session scan (2026-08-06 to 2026-10-06) showed lookup tools that were
 
 Decisions 10 to 12 are Ruri's defaults under ruling 9 and are open to his re-ruling. Checked by `node lib/tool-registry.js check` (born through `core/forge.js` 2026-10-14; test `lib/tool-registry.eval.js` 33/33): every row has its keys, a known group, a home on disk, a status that matches its usage, and no codemap or Atlas home. `node lib/tool-registry.js for <group>` prints the Tools of a group, most used first. The etanah lookup hint (`domain/etanah-intake-gate/`, LOOKUP lane) names the list on every lookup prompt, so the Tool is picked from it and not by habit (2026-10-14, eval 54/54). Not built: the usage refresh (re-count from the turn ledger); a router that picks the Tool by itself; any file move (root `tools/` stays a pending orphan in `system/FOLDER-STRUCTURE.md`).
 
+### The change route and Capabilities (みや, 2026-10-29, after the Fable 5.1 Foundations audit)
+
+| # | Ruling | State at ruling time |
+|---|---|---|
+| 13 | The change route's step list is OWNED HERE, by Rules (§The change route below), not by its skill. This re-rules default 6 for this one Workflow, so Rules govern every change to Rules. The skill `/system-change` holds the order and the position only, and carries no copy of the steps. | none of the 7 change paths ended on main; 5 files each defined "a system change" differently |
+| 14 | **Capabilities** = Workflows + Features + Tools (Layers 2-3), the group between Rules above, Memory beside and Kernel below. The word was already used for Layer 3; it now spans Layer 2 too. | the group had no name ("blue box", 2026-10-28) |
+
+## The change route — every system change, whatever started it (owned here; `/system-change` runs it)
+
+**A system change** = any change to a part of the seven kinds in the map above. This is the one definition: `design-consult-gate`, `system-edit-gate`, `system-change-title` and the daily-commit memory point here.
+
+| Step | What | Done when |
+|---|---|---|
+| 1 Enter | say the model in the first line (CLAUDE.md §Delegation Economy: the highest model decides a system change; a slip row or an urgent fix is never held for a model switch) · name the part's kind and home on the map picture `system/INDEX.diagram.png` · `system-rules` + `system-design` loaded (`design-consult-gate`) | kind and home named |
+| 2 Inventory + flow | `system-rules` Rule 1 · `system-design` Flow first: the existing flow drawn, the one changed step marked | picture shown |
+| 3 Nod | his nod on the design. Standing nod, no new ask: a correction he gave, a memory rule he stated, an audit finding he said go on, slip escalations he ordered acted on. A Workflow step change or a new part needs its own nod | nod quoted |
+| 4 Build in the lane | the lane table below; the lane keeps its own detail | the lane's checks pass |
+| 5 Verify | eval run (system-design Rule 6 v1.2) · self-audit (Rule 16) · `node lib/diagram-census.js --check <part>` (Rule 17) · a CLAUDE.md change: its version number is not already used on `main` (`git show main:.claude/CLAUDE.md`) | all green |
+| 6 Record | the §Change record rows below · `node lib/watch.js add` BEFORE the commit · the map picture redrawn when a part was added, moved, renamed or removed | rows written |
+| 7 Land, same turn | commit by built index (`Co-Authored-By: Ruri`) → `git fetch` + merge `origin/main` → `git push origin HEAD:main` → `node lib/land-on-main.js <commit>`. REFUSED → check the main folder has nothing staged and no dirty copy of the files, merge local `main` into the branch, resolve, push again, then `git -C <main folder> merge --ff-only origin/main` | GitHub main SHA = main-folder HEAD, both shown |
+| 8 Report | `## System › <Kind> (new|changed)` tables (`.claude/reply-shape-spec.md` §3i) | `system-change-title` passes |
+
+Position: the route runs inside one turn, so its position is the turn's task list. A route paused across turns writes `system-change step N` into `main/current-session.md`.
+
+| Trigger (his words, 2026-10-28) | Lane: where step 4's detail lives |
+|---|---|
+| "update anything in CLAUDE.md" | `domain/claude-md-watch/README.md` pipeline + the version stamp and `system/claude-md-changelog.md` |
+| "change something in a workflow" | the Workflow's own skill (ruling 6) |
+| "refine something about our memory system" | `domain/memory-write-gate/README.md` |
+| "create a new function" | `core/forge.js new` / `install` + `system-design` Rules 6-17 |
+| an audit, and his go | the `/system-audit` or `/system-check` finding list |
+| "check the audit logs and slip logs and act on it straight away" | `core/slips.js` + `system/slip-dashboard.md` (gitignored; `node core/slips.js` regenerates it when absent) → `auto-skill-on-mistake` |
+| a correction | `auto-skill-on-mistake` Steps 1-6 |
+
 ## Change record — every system change is saved at the moment it is made (みや, 2026-10-05)
 
 His words: "keep creating artifacts for your reference every time a system change" · "I do not want to rely simply on domain expansion to save anything that is important … save every time you updated something. So that you will know the history and purpose and reason behind it."
 
-A system change = any change to a Rule, Workflow, Feature or Kernel part in the map above. It is not done until each row below that applies is written, in the same turn as the change. Domain Expansion only checks these; it is never the first place a change is recorded.
+A system change = as defined in §The change route above (step 6 of that route writes these rows). It is not done until each row below that applies is written, in the same turn as the change. Domain Expansion only checks these; it is never the first place a change is recorded.
 
 | What is recorded | Where (existing ledger, nothing new) | When |
 |---|---|---|
@@ -102,6 +136,7 @@ A system change = any change to a Rule, Workflow, Feature or Kernel part in the 
 | An appraisal (KPI) moment: a colleague's commit found as the cause, a fix never shipped, a wrong patch caught, cross-team help, own rework (added 2026-10-23 per みや) | `node domain/kpi/kpi.js add` → `main/kpi-moments.jsonl`; page `main/kpi-tracker.md` is generated (skill `kpi`, Feature `domain/kpi/`) | the moment it happens; Phase 2 Step 2 adds any missed one |
 | A Project changed (its code, its plan, its state) | that project's own folder: a `VERSIONS.md` row with the commit · `PROJECT.md` state and its `Last updated:` line · `ROADMAP.md` status (added 2026-10-08 per みや) · in shape 2 also `START.md` state and next step, a `DECISIONS.md` row per decision (`domain/project-load/project.js decide`) and, for a delegated session, its `reports\<session-name>.md` (added 2026-10-17, the project system) | same turn as the change; `lib/save-rules.js` fails Domain Expansion when the project's repo moved and these did not, when START.md lacks a section, or when a delegated report is older than its session's last change |
 | The picture | the artifact for that area, republished to the same URL | same turn |
+| A part added, moved, renamed or removed | the map picture `system/INDEX.diagram.html` + `.png` (redraw, then `node lib/diagram-census.js --check system/INDEX.md`); CLAUDE.md §System map points here (added 2026-10-28 per みや) | same turn |
 
 Artifacts (private pages on claude.ai, republished in place; the source HTML is rebuilt from this map and the handover when a session no longer has it):
 

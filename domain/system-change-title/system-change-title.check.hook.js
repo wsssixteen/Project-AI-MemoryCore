@@ -11,6 +11,8 @@
 // PASS: no system change · at least one breadcrumb heading
 // BYPASS: [skip-system-change-title: <reason>] · FAIL-OPEN on any error
 // v2 (2026-10-27, miya): signal (a) added (mandatory after any system edit); heading = breadcrumb, not "[Kind · new]"
+// v3 (2026-10-28, miya): ONE heading per KIND (`## System › Memory (changed)`) with ONE table, one row per part;
+//    the same kind headed twice in one reply BLOCKS ("duplicates of System › Memory tables")
 // Runs inside the stop-reply-shape bundle (lib/dispatch-hooks.js), not a standalone registration (system-rules Rule 7)
 // Log: domain/system-change-title/log.jsonl
 'use strict';
@@ -20,6 +22,18 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 const BYPASS = /\[skip-system-change-title:\s*[^\]\s][^\]]*\]/i;
 const KINDS = 'Rules?|Workflows?|Features?|Tools?|Memory|Kernel|Projects?';
 const HEADING = new RegExp('^\\s*#{1,6}\\s*System\\s*(?:›|>|»|->)\\s*(?:' + KINDS + ')\\b', 'im');
+const HEADING_ALL = new RegExp('^\\s*#{1,6}\\s*System\\s*(?:›|>|»|->)\\s*(' + KINDS + ')\\b', 'img');
+
+// v3: the kind headed more than once in one reply, or null.
+function repeatedKind(body) {
+  const seen = {};
+  for (const m of String(body || '').matchAll(HEADING_ALL)) {
+    const k = m[1].toLowerCase().replace(/s$/, '');
+    seen[k] = (seen[k] || 0) + 1;
+    if (seen[k] > 1) return m[1];
+  }
+  return null;
+}
 const SYS = '(?:domain[\\\\/][\\w-]+|lib[\\\\/][\\w-]+\\.js|core[\\\\/][\\w-]+\\.js|\\.claude[\\\\/](?:skills|hooks)[\\\\/]|\\.claude[\\\\/](?:CLAUDE|reply-shape-spec|personality)\\.md|\\.claude[\\\\/]settings\\.json|system[\\\\/][\\w.-]+|auto-memory[\\\\/]|etanah-knowledge[\\\\/]|quest[\\\\/][\\w-]+\\.js)';
 const SYS_PATH_TEXT = new RegExp('(?:^|[\\s`\'"(\\[])' + SYS, 'i');
 const SYS_PATH_FILE = new RegExp(SYS, 'i');
@@ -68,6 +82,8 @@ function evaluate(text, edited) {
     }
   }
   if (!hit) return { verdict: 'pass', reason: 'no-system-change' };
+  const twice = repeatedKind(body);
+  if (twice) return { verdict: 'block', reason: 'kind headed twice: ' + twice, line: 'System › ' + twice + ' appears more than once' };
   if (HEADING.test(body)) return { verdict: 'pass', reason: 'breadcrumb-heading-present' };
   return { verdict: 'block', reason: edited.length ? 'system files edited, no breadcrumb heading' : 'system change reported, no breadcrumb heading', line: hit.slice(0, 160) };
 }
@@ -80,9 +96,9 @@ function main() {
   const r = evaluate(turn.text, turn.edited);
   log({ verdict: r.verdict, reason: r.reason, edited: turn.edited.length });
   if (r.verdict === 'block') {
-    process.stdout.write(JSON.stringify({ decision: 'block', reason: '⛔ system-change-title: you changed the system this turn, but no heading shows where the change sits.\n   Seen: "' + r.line + '"\n   Give each changed part its own heading: `## System › <Rule|Workflow|Feature|Tool|Memory|Kernel|Project> › <parent, if any> › <name> (new|changed)`, then one diagram or table and one short sentence (reply-shape-spec §3i).\n   ⚡ DELTA ONLY: re-send just those headed sections, not the whole reply.\n   Not a system change? [skip-system-change-title: <reason>]' }));
+    process.stdout.write(JSON.stringify({ decision: 'block', reason: '⛔ system-change-title: you changed the system this turn, but the reply does not show where each change sits, one table per kind.\n   Seen: "' + r.line + '"\n   ONE heading per KIND: `## System › <Rule|Workflow|Feature|Tool|Memory|Kernel|Project> (new|changed)`, then ONE table, one row per part: Name · Parent · New or changed · one line (reply-shape-spec §3i). Never the same kind headed twice.\n   ⚡ DELTA ONLY: re-send just those headed sections, not the whole reply.\n   Not a system change? [skip-system-change-title: <reason>]' }));
   }
 }
 
 if (require.main === module) { try { main(); } catch (_) { /* fail-open */ } }
-module.exports = { evaluate, readTurn };
+module.exports = { evaluate, readTurn, repeatedKind };

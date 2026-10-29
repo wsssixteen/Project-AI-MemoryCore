@@ -38,7 +38,7 @@ Order, every time, no exception:
 3. Commit the fix on that branch.
 4. THEN merge --no-ff into mlk/stag-env, and cherry-pick / merge into mlk/int-env.
 
-**Banned**: committing or cherry-picking a fix DIRECTLY onto mlk/int-env or mlk/stag-env with no ticket branch behind it. This session (#279711, #279787, 2026-09-17) both fixes went straight to int-env with no ticket branch and never reached staging — the board went blind and BA could not retest. みや: *"always create the fixes in a fucking branch before merging into any main branches."*
+**Banned**: committing or cherry-picking a fix DIRECTLY onto mlk/int-env or mlk/stag-env with no ticket branch behind it. This session (#279711, #279787, 2026-09-17) both fixes went straight to int-env with no ticket branch and never reached staging — the board went blind and BA could not retest. みや: *"always create the fixes in a branch before merging into any main branches."* (angry)
 
 **Why the branch must exist**: it is the single source the env merges pull from; without it a rework has nothing to reset (see the 279615 v2 mess), staging never gets the fix, and the commit is orphaned on one env. Pairs with (merged above) and [[feedback-commit-deploy-runbook]].
 
@@ -66,7 +66,7 @@ Merges into `mlk/master` are always `git merge --no-ff <branch>`. A fast-forward
 
 **Why:** 2026-09-04, #277697. I fast-forwarded `mlk/master` onto `0b7b5cff37`. SourceTree showed only the 3 Sep commit date, no merge line, no 4 Sep entry. miya: *"This is a problem for managers checking if their employees are doing work… now hidden due to this fast-forwarding thing."* Then: *"no-ff rule from now on."*
 
-**How to apply:** `release-prep.js merge-to-master` now does `--no-ff` behind a drift guard. Both local etanah repos carry `branch.mlk/master.mergeoptions=--no-ff`. For a branch-owner-ordered manual merge, checkout master, `git merge --no-ff <branch>`, push, then bypass the push gate with the reason. Related: [[feedback-commit-deploy-runbook]] · [[feedback-commit-deploy-runbook]].
+**How to apply:** since 2026-10-29 pelupusan `mlk/master` is protected: a release lands through a GitLab merge request (`release-prep.js merge-to-master` prepares it, Aaron or Alex merges; a merge commit satisfies this rule, a squash is refused by `--check`). Both local etanah repos carry `branch.mlk/master.mergeoptions=--no-ff`. For a branch-owner-ordered manual merge, checkout master, `git merge --no-ff <branch>`, push, then bypass the push gate with the reason. Related: [[feedback-commit-deploy-runbook]] · [[feedback-commit-deploy-runbook]].
 
 ---
 

@@ -69,6 +69,17 @@ r = run(GUARDED_PATH, [
 ]);
 check('T6 stale assistant token -> BLOCK', r.deny === true, r.out.slice(0, 60));
 
+// T7/T8 (2026-10-29): consult passed but /system-change not loaded -> allowed WITH the route advisory;
+// loaded -> allowed, no advisory. The commit step itself is never gated.
+const CONSULTED = [
+  { role: 'assistant', text: 'Launching skill: system-rules' },
+  { role: 'assistant', text: 'Launching skill: system-design' },
+];
+r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED]);
+check('T7 no /system-change -> allowed + route advisory rendered', r.deny === false && /system-change/.test(r.out) && /additionalContext/.test(r.out), r.out.slice(0, 80));
+r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change' }]);
+check('T8 /system-change loaded -> allowed, no advisory', r.deny === false && !/system-change/.test(r.out), r.out.slice(0, 80));
+
 // ================= Stop side: proposal judge (2026-09-30, slip design-not-universal) =================
 const pj = require('./proposal-judge.js');
 function tr(entries) {

@@ -10,6 +10,61 @@
 
 ---
 
+## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
+
+His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".
+
+| Place | Before | After |
+|---|---|---|
+| §System map | 3 bullets | + every system change runs `/system-change`; steps owned by `system/INDEX.md` §The change route |
+| §Delegation Economy table | no row for system changes | + row: a system change is designed and decided on the highest model; a slip row or urgent fix is never held for a switch |
+| `system/INDEX.md` | §Change record defined "a system change" as Rule · Workflow · Feature · Kernel | rulings 13-14 · §The change route (8 steps + 7 lanes) · one definition = all seven kinds |
+
+- Spec preservation: additive. The §Change record definition is widened from 4 kinds to 7, and the old text is replaced by a pointer to the new definition (named here).
+
+---
+
+## v1.96 — 2026-10-28 (per みや, the system map picture boot-loaded)
+
+His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
+
+| Place | Before | After |
+|---|---|---|
+| CLAUDE.md, after Boot Order | no overview picture | §System map: picture `system/INDEX.diagram.png` + text `system/INDEX.md`; name first; redraw in the same turn as any part added, moved, renamed or removed; send the PNG on ask |
+| `system/INDEX.md` §Change record | no row for the map picture | row: part added/moved/renamed/removed → redraw + `diagram-census --check system/INDEX.md` |
+| `system/INDEX.diagram.html` + `.png` | none | new, Rule 17 diagram of the map (7 kinds + 9 unclaimed root entries) |
+
+- Spec preservation: additive; no rule removed or reworded.
+
+---
+
+## v1.95 — 2026-10-28 (per みや, Etanah adhoc / quest diagram shape)
+
+His words: *"Please add this into the skill/phrase inside CLAUDE.md that invokes this diagram skill ... Under the specific etanah adhoc quest workflow, it will design it based on the business workflow but not overdoing it ... Make it based on urusan flow & to highlight the variable/keyword/value of concern ... you've dropped the important 2 steps, turun milik and pindah milik."*
+
+| Place | Before | After |
+|---|---|---|
+| §Explanation PILLAR | general diagram rule only | + one sentence: Etanah adhoc / quest = urusan flow, one lane per module, only steps that make or show the value, the value highlighted; pointer to `explain-diagram` §2b |
+| `.claude/skills/explain-diagram/SKILL.md` | §1-§4 | + §2b Etanah issue: 5 rules (urusan lanes · fold tugasan sub-steps · never drop the step that creates the value · highlight the value · no sentences in boxes) |
+
+Spec preservation: every v1.94 PILLAR clause kept word for word (picture default, 2-box chat line, diagram first, banned list, order). Additive.
+
+---
+
+## v1.94 — 2026-10-28 (per みや, Brief rule dropped)
+
+His words: *"I suppose yeah, drop the brief rule."* · earlier the same day: *"Also remove the 'Brief' section. Whatever you've told me at the start is already the brief. To show our objective has been done for that step."*
+
+| Place | Before | After |
+|---|---|---|
+| §Explanation | line "📋 BRIEF AT THE END OF EVERY REPLY (2026-10-23 per みや)" | removed |
+| `.claude/reply-shape-spec.md` §3g | live rule | marked RETIRED, body kept as history |
+
+- Not touched: the adhoc "Brief first" order (`adhoc-save` skill) and the `/brief` start-of-work skill. They are different products.
+- Spec preservation: the v1.92 rule is retired by name; no other rule changed.
+
+---
+
 ## v1.93 — 2026-10-27 (per みや, pictures replace story diagrams)
 
 His words: *"Beautiful, that is really really helpful. I would like to integrate using this diagram into our workflows, I guess we're starting with replacing the current story diagram."* · then *"Yes, update the three story-diagram mentions in CLAUDE.md to point at the picture default, through the CLAUDE.md change pipeline."*
@@ -451,4 +506,9 @@ Added 2026-05-13 per みや.
 
 ## v1.76 (2026-09-30 — merged after main's v1.75)
 - Disposition +rule 6 NEVER ASSUME / never state a guess as fact; stored formats copied word for word. Per miya after #256334 (guessed server-log path + rewritten infra format). Additive; no spec dropped.
+
+
+## 2026-10-28 — memory cleanup (no rule change)
+
+Per みや: every quote that held a swear word, in memory, diary, skills, system and domain files, is rewritten as his anger or frustration. New gate domain/memory-clean-words/ + save rule mem-no-swearing (word list lib/clean-words.js). Spec preservation: wording only; no rule, step, trigger or banned clause changed. Skills stamped: auto-skill-on-mistake, bpmn-check, release-mlk-plp, system-design; protocol: expansion-protocol.md.
 

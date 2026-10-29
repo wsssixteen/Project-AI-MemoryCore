@@ -32,7 +32,7 @@ check('F4 replay: POST_MODULE phase failure',
 check('F5 replay: "cannot start my local server"',
   fire('I want to continue debugging why I cannot start my local server, there is still an issue'), 'did not fire');
 check('F6 replay: "THE SAME ISSUE IS HAPPENING"',
-  fire('THE SAME FUCKING ISSUE IS HAPPENING, the war deployment failed again'), 'did not fire');
+  fire('THE SAME OLD ISSUE IS HAPPENING, the war deployment failed again'), 'did not fire');
 check('F7 plain: jboss not deploying',
   fire('jboss is not deploying the war, what is the problem'), 'did not fire');
 

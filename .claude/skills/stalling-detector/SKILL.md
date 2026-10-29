@@ -1,6 +1,6 @@
 ---
 name: stalling-detector
-description: After みや has given an explicit "proceed" / "implement" / "go" / "do it" instruction, choice-offering and "want me to (a) X or (b) Y?" framings are BANNED — implement now, report after. Use any time Ruri's first instinct after an explicit-go is to deliberate or offer choices. Triggers — "just do it", "proceed", "go ahead", "implement", "stop offering choices", "stop asking", "what the fuck just do it", "you're stalling", "stalling detector". Built Phase 4 (2026-05-23) atomic Honesty primitive.
+description: After みや has given an explicit "proceed" / "implement" / "go" / "do it" instruction, choice-offering and "want me to (a) X or (b) Y?" framings are BANNED — implement now, report after. Use any time Ruri's first instinct after an explicit-go is to deliberate or offer choices. Triggers — "just do it", "proceed", "go ahead", "implement", "stop offering choices", "stop asking", "what, just do it", "you're stalling", "stalling detector". Built Phase 4 (2026-05-23) atomic Honesty primitive.
 metadata:
   type: honesty-primitive
   sub-layer: honesty
@@ -59,7 +59,7 @@ When a diagnostic skill (`/verify`, `claim-verification`, `system-check`, `predi
 
 ## Source slip (2026-05-22 QA-261986)
 
-みや: "proceed / fix all / I want to test now" (multiple times). Ruri responded with scope-analysis + "(a) attempt now / (b) close session" choice-offers instead of implementing. みや: "what the fuck why didn't you just implement". Stalling-via-deliberation after explicit go is the failure mode this skill catches.
+みや: "proceed / fix all / I want to test now" (multiple times). Ruri responded with scope-analysis + "(a) attempt now / (b) close session" choice-offers instead of implementing. みや: "why didn't you just implement" (frustrated). Stalling-via-deliberation after explicit go is the failure mode this skill catches.
 
 ## Cross-references
 

@@ -66,9 +66,9 @@ Format: short bullet per gap with a one-line "what to do" suggestion. みや dec
 
 > Restored 2026-09-22 (system-check run 3): committed 2026-07-28 (`2940eb07`), silently deleted 2026-08-03 (`25a0379c`) when a stale OneDrive conflict copy overwrote this file before a `git add -A`. The `-PJNBRidhwan` copy preserved it. Boot check `system-audit` CHECK 9 now lists conflict copies so this cannot recur silently.
 
-**みや, verbatim**: *"MAKE IT FUCKING EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"*
+**みや, verbatim**: *"MAKE IT EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"* (angry)
 
-Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence.
+Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence. Then (4) `node lib/land-on-main.js <HEAD>` from the session folder, so the main FOLDER has it too; REFUSED → `system/INDEX.md` §The change route step 7.
 
 **Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway · treating "auto-commit + push" as advisory · **skipping or scoping down the ritual itself** (added 2026-10-08): a `⏭` covers ONE step, never the whole Domain Expansion, and "another live session owns today's diary or session file" is never a reason. Every session appends its own entry and runs its own full DE.
 
@@ -205,14 +205,20 @@ surfaced today".
 ### Required output — two parts, both written, not just spoken
 
 **(a) ASSESSMENT** — what this session actually showed, measured, with the instance that proves each
-point. Append to (or create) `system/agentic-ticket-workflow-assessment-<YYYY-MM-DD>.md`. Name failure
-classes; each class carries the concrete instance. **Banned**: aspirational prose with no instance.
+point: the five-axis table in the DE reply and in the session recap (`main/current-session.md`); each
+proposal row of (b) carries its own instance. **No file.** `system/` holds the constitution and the
+ledgers (`system/FOLDER-STRUCTURE.md`); the dated `system/agentic-ticket-workflow-assessment-<date>.md`
+files are RETIRED 2026-10-28 per みや (62 files in 12 weeks, 3 clobbered by a second session on the
+same day, read by no script; "would you find a single note file inside the Windows System folder?").
+`system-edit-gate` v1.4 denies a Write that would create any file under `system/`. Name failure
+classes; each class carries the concrete instance. **Banned**: aspirational prose with no instance ·
+a per-session or dated file anywhere under `system/`.
 
 **(b) BRAINSTORM** — forward ideas, including ones this session did not force. Each idea gets a row in
 the weekly-audit feed so it is actually ruled on rather than admired:
 
 ```
-node core/slips.js add --type proposal --category <A1|A2|A3|A4|A5> --evidence "<idea + its eval case>" --caught-by self
+node core/slips.js add --type proposal --category <A1|A2|A3|A4|A5> --evidence "<instance this session + idea + its eval case>" --caught-by self
 ```
 
 These surface in `system/slip-dashboard.md` under **💡 Open proposals**. The weekly audit rules each
@@ -308,7 +314,7 @@ freshness ≤12h); (C3) `main/current-session.md` exceeds 500 lines (trim skippe
 2026-08-21 evening) `node quest/redmine-reconcile.js` did not run this session (action=reconcile-ran
 row ≤12h in the gate's log.jsonl) — the Redmine board-truth step. **Why C4**: 2026-08-21 boot showed
 20 "open" blocks while Redmine had 0 assigned-open; DE had NO Redmine step, so active.txt rotted for
-weeks (みや: *"Domain expansion doesn't check against redmine for the fucking tickets?"*). The
+weeks (みや: *"Domain expansion doesn't check against redmine for the tickets?"* (frustrated)). The
 reconcile script prints divergence (Redmine-done/reassigned blocks still open locally) + missing
 (assigned-open with no block) and logs the run; closes/archives stay みや-approved, never automatic.
 Network failure still logs the row — an offline evening never deadlocks DE. Bypass
@@ -432,3 +438,6 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 *Updated 2026-05-22 — added step (0b) worktree/branch sync check (みや): detect worktree-vs-main + pull origin/main early if a worktree branch is behind. Earlier 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*
 *Last updated: 2026-05-30 — Step 11 (Worktree & branch close): retired sub-parts (c) Sweep stale worktrees / (d) Delete merged stale branches / (e) current-worktree flag — that cleanup now runs AUTOMATICALLY + SILENTLY at SessionStart via `worktree-cleanup-boot.js` (v1.2, which now also removes merged `claude/*` worktree directories, not just branches). DE retains only (a) verify-main-current + (b) salvage-unmerged-content. Per みや: a deterministic SessionStart hook fires 100% of the time and keeps session-end lean.*
 *Updated 2026-05-26 — Step 4 wording updated to use the new 3-section diary template (Sessions / Index / Closing) per `daily-diary/diary-format.md`. Empty Index sub-categories omitted at render. `diary-format-gate.js` Stop hook validates the 3 H2s (warn-only). Phase 1 of diary redesign per `~/.claude/plans/yes-very-much-catches-squishy-cake.md`.*
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

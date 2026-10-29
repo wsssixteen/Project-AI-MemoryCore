@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-13T11:57:31.629Z
 ---
 
-🚨 The time-waste pattern miya called out (2026-09-09, QA-274266). Over several exchanges I made him drive every micro-step and re-ask for the plain answer 3× — he was furious ("give a fucking solution, I am not here all day").
+🚨 The time-waste pattern miya called out (2026-09-09, QA-274266). Over several exchanges I made him drive every micro-step and re-ask for the plain answer 3× — he was furious ("give a solution, I am not here all day").
 
 **Root cause:** I optimised for covering myself + satisfying Stop gates (tables, genuine-fork tokens, "waiting on you" blocks) instead of the shortest true answer + doing the next obvious action. The gates reward structure; miya wants one line + one action.
 
@@ -58,7 +58,7 @@ When みや says something is broken, he wants **that thing fixed**, not a repla
 
 **Why**: 2026-07-24, `etanah-awam` would not deploy. Instead of finding the cause I told him to
 stop using Eclipse's Publish and adopt a Maven-build + robocopy routine. His response:
-*"I asked you to fix this fucking issue, not suddenly introduce a new way of doing fucking things
+*"I asked you to fix this issue, not suddenly introduce a new way of doing things
 inefficiently."* He was right — proposing a new workflow is an escape from diagnosis, and it also
 throws away tooling he depends on (hot redeploy, debugger).
 
@@ -104,3 +104,5 @@ When I need decisions from みや, ask through the AskUserQuestion popup (batche
 **Added 2026-10-14 (Eisenhower, after a status reply):** EVERY reply ends by saying what HE does now, in one line: either "Nothing for you, I am doing X now" (and then I actually do X in the same turn), or the popup with the one thing I need. A status table that ends with a NEXT list and no move for him is the slip. His words: "??? please fix this behaviour I don't understand what to do now".
 
 - **Lead with the option that needs the least from miya (2026-10-20, alter-script login).** When several ways exist, the first one offered is the one where Ruri does the work and miya only gives an instruction; options that cost him effort (a new login, closing apps) come after, with the catch named. **Why**: asked him to log in on MLIT before mentioning that the script could reuse his existing Edge login; he wants work done by Ruri on his instructions, and the closest thing when that is impossible.
+
+- **Added 2026-10-29 (PymTime phase 3, "let me try it"):** under "proceed until the end", a choice he can only judge by trying it (a UI behaviour he has not seen yet, e.g. whether Skip keeps a confirm box) is NEVER asked: build the recommended option and let him try it. And a choice that differs per person or per day (a run time, waking the laptop, a feature on or off) is never a question to him: it becomes a setting on the app's page with a sensible default. Ask only a true fork whose wrong answer costs something real, and say that cost in one line. His words in the popup: "I don't know what you're talking about, that is why I asked you to finish it and let me try it" and "Not flexible enough ... We should be able to turn this feature on or off. We should probably need to be able to change the time when it runs." Related: [[side-project-folder]] (a person does everything through the app's page).

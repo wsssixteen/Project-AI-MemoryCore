@@ -36,7 +36,7 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 
 ## Step 2 — hand-off discipline (modeler click-paths for miya)
 
-- Identify every arrow by **source-node → target-node pair**, never by label alone (two arrows can share a label/condition — the "which fucking arrow" incident).
+- Identify every arrow by **source-node → target-node pair**, never by label alone (two arrows can share a label/condition — the "which arrow" incident (he was frustrated)).
 - One instruction per arrow · state the Default-flow tick explicitly · name what must NOT be touched.
 - After miya applies: get the exported XML (or re-pull the model) and re-run Step 0 on it — the APPLIED model is the truth, not my spec.
 
@@ -50,3 +50,6 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 ## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
 
 - `.claude/auto-memory/feedback_flowable_node_edge_trace.md` — trace real sequence flows before picking a node, Flowable admin app (diagram + variable edit), BPMN source + export recipe, Petaling archive
+
+*Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+

@@ -53,6 +53,44 @@ check('P7 same reply, the row has its own heading → pass', r.status === 0, 'ex
 r = run('The fix is ready to publish on staging today.\n\n**Next steps**\n\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | Publish on staging | The BA can then test the fix on the real flow. | "go" |\n');
 check('P8 no headings, row words in the text above → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
 
+// ── v3: quest reply that asks him to decide carries a picture (2026-10-29 miya on 286655) ──
+function runP(text, turn, tickets, extra) { return spawnSync(process.execPath, [HOOK], { input: JSON.stringify(Object.assign({ _testText: text, _testTurn: turn, _testTickets: tickets }, extra || {})), encoding: 'utf8', timeout: 30000 }); }
+const TK = ['286655', '262027'];
+const quest = '## 4. OMLPS decision\nNo OMLPS app sits at PB on STG1, so 286655 OMLPS cannot be tested in the browser.\n\n## Next steps\n\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | OMLPS decision | No OMLPS app is ready to test, so either we create one or you accept the risk. | New app / Accept risk |\n';
+const png = { kind: 'tool', name: 'SendUserFile', input: '{"files":["C:\\\\x\\\\286655-decide.png"]}' };
+r = runP(quest, [{ kind: 'text', text: 'x' }], TK);
+check('Q1 the 2026-10-29 286655 reply, no picture this turn → block naming the ticket', r.status === 2 && /286655/.test(r.stderr) && /explain-diagram/.test(r.stderr) && /DELTA ONLY/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = runP(quest, [png], TK);
+check('Q2 same reply, PNG sent with SendUserFile this turn → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = runP(quest + '\nDiagram: none (commit go-ahead only; the picture went out last turn)\n', [], TK);
+check('Q3 Diagram: none (<reason>) line → pass', r.status === 0, 'exit=' + r.status);
+r = runP(quest + '\nDiagram: none ()\n', [], TK);
+check('Q4 Diagram: none with an empty reason → block', r.status === 2, 'exit=' + r.status);
+r = runP(quest.replace(/286655/g, '111111'), [], TK);
+check('Q5 ticket not an active quest → pass', r.status === 0, 'exit=' + r.status);
+r = runP(quest, [], []);
+check('Q6 no active quests at all → pass', r.status === 0, 'exit=' + r.status);
+r = runP('286655 is on staging now.', [], TK);
+check('Q7 quest mention but no Next steps table → pass', r.status === 0, 'exit=' + r.status);
+r = runP(quest.replace(/286655/g, '1286655'), [], TK);
+check('Q8 ticket number only inside a longer number → pass', r.status === 0, 'exit=' + r.status);
+r = runP(quest, [{ kind: 'tool', name: 'SendUserFile', input: '{"files":["C:\\\\x\\\\286655.sql"]}' }], TK);
+check('Q9 a non-image file sent → still block', r.status === 2, 'exit=' + r.status);
+r = runP(quest, [{ kind: 'tool', name: 'Read', input: '{"file_path":"C:\\\\x\\\\286655-decide.png"}' }], TK);
+check('Q10 PNG only Read, never sent → block', r.status === 2, 'exit=' + r.status);
+r = runP(quest, [], TK, { stop_hook_active: true });
+check('Q11 second stop in the same turn (stop_hook_active) → pass, blocks once only', r.status === 0, 'exit=' + r.status);
+r = runP(quest + '\n[skip-next-steps-shape: miya asked for text only]', [], TK);
+check('Q12 bypass token → pass', r.status === 0, 'exit=' + r.status);
+r = runP('Example:\n```\n## Next steps\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | 286655 | a b c d e f | x |\n```\n286655 noted.', [], TK);
+check('Q13 Next steps only inside a code fence → pass', r.status === 0, 'exit=' + r.status);
+r = runP('```\nDiagram: none (quoted)\n```\n' + quest, [], TK);
+check('Q14 Diagram: none only inside a code fence → still block', r.status === 2, 'exit=' + r.status);
+r = runP(quest, [{ kind: 'tool', name: 'SendUserFile', input: '{"files":["C:\\\\x\\\\286655-flow.JPG"]}' }], TK);
+check('Q15 upper-case .JPG sent → pass', r.status === 0, 'exit=' + r.status);
+r = run(quest);
+check('Q16 no transcript path (real hook call without one) → fail-open pass', r.status === 0, 'exit=' + r.status);
+
 // P6 — broken stdin → fail-open
 r = spawnSync(process.execPath, [HOOK], { input: 'not json {{', encoding: 'utf8', timeout: 30000 });
 check('P6 broken stdin → fail-open exit 0', r.status === 0, 'exit=' + r.status);
