@@ -1548,6 +1548,8 @@ umm_a_permit_lesen.no_permit_lesen ──(by value)──► ind_permit_lesen.pe
 find referencing tables by COLUMN NAME (`permit_lesen_id`, `versi_permit_lesen_id`), never by FK.
 Safe clear order: NULL the app row's number+versi first, then delete children, then the induk row.
 
+**Pemegang permit / lesen name (verified stg1 2026-10-29)**: `ind_pemegang_permit_lesen.nama_pemegang`, one row per versi, linked by `versi_mula_id` / `versi_akhir_id` -> `ind_versi_permit_lesen.versi_permit_lesen_id` -> `permit_lesen_id`. `umm_a_permit_lesen` and `ind_permit_lesen` hold no holder name (only `nama_operator`, `nama_tapak`). Code: `PelupusanMaklumatPemohonHelper.java:3325` (entity `PemegangPermitLesen`, `versiAkhir`). Query: `SELECT nama_pemegang FROM ind_pemegang_permit_lesen WHERE versi_akhir_id IN (SELECT versi_permit_lesen_id FROM ind_versi_permit_lesen WHERE permit_lesen_id = <id>)`.
+
 **First-year lesen dates (#279882, OMLPS, PROD 2026-09-15)**: the dates printed for year 1 live in `ind_versi_permit_lesen` (`versi_dok = 0`, `trkh_mula` / `trkh_tamat`), reached through `ind_permit_lesen.no_permit_lesen`; `ind_permit_lesen` itself holds blank dates; `umm_a_permit_lesen` holds the application-side renewal dates and must not be touched for a year-1 correction. Script: `1. Tasks\Melaka\Archive\209. DP #279882 ...\2. Fix\279882.sql`.
 
 **Pelan replace on PROD (#279793, MLPS L1e, 2026-09-18, done by Nik Muhammad Akram)**: 4 tables, 6 columns, one row each: `et_dms.dokumen_revision` (`nama_fail`, `lokasi_fail`, `lokasi_fail_pdf`), `et_dms.dokumen` (`nama_dokumen`), `et_main.skg_dok` (`nama_fail`), `et_main.umm_a_dok_keluaran` (`nama`); the new file goes under `WORM/PERMIT/<pejabat>/4A - LMS/<file ref with / as ~>/`. Source: the #279793 Redmine journal 2026-09-18.
@@ -1681,6 +1683,7 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 | Individu / Syarikat | either | `jns_no_id` 452 JNKP_BARU / 456 JNSYKT |
 - TRAP: PRBB pemohon rows ALWAYS carry `jns_pihak_bkptg_id = 625` (JENPPM) — 432/433 on MLIT, owner or not. Never use it to find the owner.
 - Code: `PelupusanExcelReaderHelper.java:4310-4318` → `PihakBerkepentinganRepository.findByJenisPBKodInAndDhdVersiBerkuatkuasa` (etanah-common :42).
+- TRAP (2026-10-28, ADHOC-MCL-2026-1, PROD-proven): one person can hold SEVERAL in-force Pemilik rows on the same hakmilik version (one per transfer, e.g. TMAMT then PMT each give an heir 1/6). Same name on two in-force rows is NOT a duplicate: check `syer_pembilang` / `syer_penyebut` and sum per IC before calling it wrong (there 6 x 1/6 = 1, each heir 1/3 = the carian rasmi). Carian rasmi merges by name and sums; AWAM MCL lists every row as one pemohon.
 
 ## 31. PRBB: where No. Lot and Luas are kept (2026-10-09, ADHOC-PRBB-2026-12, MLIT-proven)
 | Data | Table.column | Note |

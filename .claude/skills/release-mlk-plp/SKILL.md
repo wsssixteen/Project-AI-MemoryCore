@@ -358,12 +358,10 @@ Run every command from the MemoryCore MAIN folder (the state file `domain/releas
 | F1 | みや | says BAQA passed | his words are the V8 nod |
 | F2 | Ruri | prepare | `node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved` → paste its MERGE REQUEST FORM block. Refusal = stop and show it (hotfix on master, release moved). Reviewer usernames missing → after みや signs in, read the project's Members page in Edge, show him the two usernames, write them into `gitlab.reviewers`, run F2 again |
 | F3 | みや | 🛑 **CONFIRMATION 1 — permanent**: pick the reviewer | AskUserQuestion, options = the form's reviewer line only (Aaron · Alex), plus the form block as preview |
-| F4 | Ruri | fill the form in Edge (Claude in Chrome) | open the form's `open` URL. Not signed in → stop, ask みや to sign in (never type a password). An "already exists" banner → take that MR's URL to F7, no second MR. Set: title exactly the form's title · reviewer = his pick · assignee empty · draft OFF · Squash commits OFF · Delete source branch OFF. Anything GitLab PRE-FILLS by itself (e.g. the description, copied from a commit message) is LEFT AS IS and listed in the F5 table as "pre-filled by GitLab" for みや to approve (2026-10-29 per みや: "If Gitlab auto-fills, then tell me let me approve. We should probably leave if they want that auto-filled"). Type nothing outside the fields named here |
-| F5 | Ruri | read the form back, row by row against the form block | target project `etanah/etanah-pelupusan` · source · target · title field value · reviewer chip · assignee · draft · both checkboxes · every GitLab pre-filled value word for word · Commits tab count = `commits` · Changes tab count = `files` · no conflict banner. ANY mismatch → stop, show it, do not create |
-| F6 | みや | 🛑 **CONFIRMATION 2 — REMOVABLE** (みや removes it once this runs reliably) | screenshot of the filled form + the F5 read-back table → his yes |
-| F7 | Ruri | create + record | click Create merge request; read the MR page back (URL, title, state Open, reviewer); then `merge-to-master --release <ver> --record-mr <url> --reviewer <name>` |
-| F8 | Aaron or Alex | approve and merge in GitLab | merge commit or fast-forward; never squash |
-| F9 | Ruri | on みや's "merged" | `merge-to-master --release <ver> --check` → `merged-to-master` → Phase G |
+| F4 | Ruri | right after his pick, in the SAME turn, both at once (2026-10-29 per みや: "You do not need to wait for master merge, you can even run both merge to master and merge to staging both at once"; the table confirmation is removed) | (a) `merge-to-master --release <ver> --create-mr --reviewer <name> --confirm`: refuses if an MR is already open; POSTs through the GitLab API with `gitlab.token` (git-ignored `servers.local.json`, never printed); description always `Need assistance to merge. Thank you.`; reads back source · target · title · description · reviewer · squash OFF · delete source OFF · state opened · commit count, one ✓/✗ each; records the URL. Any ✗ = stop and show it. (b) Phase G `stag-catchup --release <ver> --ticket <num>` dry run then `--push`: its source is the release branch while master waits for the reviewer |
+| F5 | Ruri | one reply | the MR link + the read-back table + the stag-env result + build branch `mlk/stag-env` |
+| F6 | Aaron or Alex | approve and merge in GitLab | merge commit or fast-forward; never squash |
+| F7 | Ruri | on みや's "merged" | `merge-to-master --release <ver> --check` → `merged-to-master`. Staging is already done: the MR merge commit does not count as stag-env behind (`stag-catchup.js` measure counts non-merge commits) |
 
 | `--check` result | Meaning | Action |
 |---|---|---|
@@ -397,8 +395,9 @@ from the GitLab project Members page, never guessed; a placeholder username is r
 **The release is not done until `mlk/stag-env` holds it.** A ticket deploy to stag-env rebuilds staging from that branch; if it lacks the release, staging silently loses every released ticket. みや asked for this step on 2026-08-10; it stayed a todo row, and on 2026-10-23 stag-env sat 21 commits behind 1.8.4 (#218977 #284544 #274266 + the version bump).
 
 ```
-merge-to-master (F) ──▶ stag-catchup (G) ──▶ stag build + deploy card (deploy skill §5)
-                         └─ origin/mlk/master → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
+BA passed ──▶ merge request (F) ┐ same turn, both at once (2026-10-29 per みや)
+          └──▶ stag-catchup (G) ┘──▶ stag build branch mlk/stag-env
+                 └─ origin/mlk/release/<ver> → mlk/stag-env, in the WORK clone E:\Dev\etanah-work\<repo>
 ```
 
 ```powershell
