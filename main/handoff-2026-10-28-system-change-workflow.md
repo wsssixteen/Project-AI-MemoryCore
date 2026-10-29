@@ -77,3 +77,5 @@ One Workflow skill `/system-change` + Feature folder `domain/system-change/`; th
 1. A new `/system-change` skill, or fold the route into `system-design`.
 2. Entry: refine `design-consult-gate` to require `/system-change`, or skill description only.
 3. "System changes run on the highest model" in step 1 (also open in `main/current-session.md`; the child session quest-audit-fixes waits on it).
+
+> **2026-10-29 evening:** add to the follow-ups: memory rule 2b for `feedback_delta_correction_on_stop_block.md` (a plain-words question gets prose; a hook advisory on an already-backed turn gets no visible reply) was refused by memory-write-gate 4 times with the RULE-PLACEMENT line present; fix the gate first (proposal logged), then write the rule.

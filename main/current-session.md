@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
+- Built: Fable 5.1 Foundations audit (18 foundations, 12 conflicts, 0 of 7 change paths ended on main) → `/system-change` route owned by `system/INDEX.md` §The change route (rulings 13-14, group name Capabilities), skill + `domain/system-change/` (eval 21/21), design-consult-gate advisory (37/37), map picture boot-pointed (CLAUDE.md v1.96, v1.97). On GitHub main since `0cdf6ee6`.
+- miya's verdict at the end: talk to him like a person, not a report; answering a Stop hook in the middle of a conversation broke it. Child sessions felt like wasted time; this one was slow because the audit, two landing fights and robot replies, not because it was a child.
+- Not done (handover `main/handoff-2026-10-28-system-change-workflow.md` top note): `feedback_daily_commit.md` pointer · stale lines in auto-skill-on-mistake and design-consult-gate README · one path list for the 3 gates · version-stamp uniqueness check · the 9 unnamed root folders (his nod needed, most proposals are deletes).
+- Next: the parent session pulls main; the route's first real run is the live proof (watch `wmvta6ack`).
+
 **Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
 
 ## Session Recap (2026-10-29, worktree "sweep-orchestration-audit-39e710", /sweep audit + refinement)
@@ -18,14 +26,3 @@
 - New adhoc ADHOC-PPTPB-2026-7 (A81, archive hold, Task 337): waits for the CR ticket. ADHOC-PPTPB-2026-6 still open: archive-quest refused at the harvest gate (no Bounty section); needs miya's call (bounty or --allow-stub).
 - Open: blank-line Ulasan never tested (262 of 1023 PROD rows); requirement-index improvement (proposal logged).
 **Last Activity**: 2026-10-28 13:40 — PymTime phase 2 (self-check engine) DONE: Fable audit, its 3 majors fixed, committed locally as a68c18c (not pushed); next phase 3
-
-## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
-- **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
-- **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
-- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
-- **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
-- **Fable audit (his popup pick)**: 1 read-only Fable 5.1 auditor: 3 majors (READY despite failed days; a launcher switch re-registering a waiting run; a scheduled check closing an open page) + 12 minors. Fixed by an Opus fixer, proven; later-phase items filed under ROADMAP phases 3 and P.
-- **State**: committed `a68c18c` on main in `E:\Dev\scripts\PymTime` (local, not pushed; 5 unpushed commits now). Final proof: self-test 661 of 661, install sim 30 of 31 (the zip row), real tasks unchanged.
-- **Found**: his real tasks run FROM this repo (live install): the uncommitted build ran for real at 08:00 (reminder self-check filled the empty Drive link, wrote config.last-good.json, re-created shortcuts) and 09:24 (clock-in OK). PROJECT.md hard rule 10 added. Slips logged: model-tiering/fable-skipped, delegation/kill-rule-too-broad, resource-blindness/live-install-edited.
-- **Next**: phase 3 (page rebuild, with the weekly plan card and the Redmine key). Push only on his word. Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
-**Last Activity**: 2026-10-28 16:50 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow", child of the Baseline 1.9.0 session), design shown, saved for tomorrow's baseline.
