@@ -4,6 +4,162 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29, worktree "melaka-goal-quest-adhoc-297634", PRBB Tambah Kuantiti adhoc)
+- ADHOC-PRBB-2026-19 (A79, Task 333, archived): BA asked where PRBB Tambah Kuantiti Rekod Permohonan is stored. SPOC Rekod Permohonan lists permits only for jenis 6/7, so jenis 8 shows Tiada Rekod (SPOC read from local int-env 2026-10-13, newer work not verified). AWAM Rekod Pembaharuan reads the permit asal tables (ind_permit_lesen, ind_versi_permit_lesen, ind_pemegang_permit_lesen, umm_a_permit_lesen); new permohonan in umm_p_permit_lesen.mklmt_tmbhn. Verified on MLIT C01/2026/9.
+- Mistakes corrected by miya: misread BA's question (it was about the SPOC photo); first reply not in his style; said panel rows came from umm_p_permit_lesen.
+- miya's WA reply fact-checked (all correct) and rewritten in the list shape; Pena rule c56 (module table) = WhatsApp list: *Label*: value, then each table.column on its own line.
+- Save audit 29/29 PASS. Archive needed --allow-stub (no Bounty section in an adhoc qa_doc).
+- Open: write SPOC 6/7 rule + AWAM Rekod Pembaharuan sources to etanah-knowledge only if miya asks.
+**Last Activity**: 2026-10-29 19:55 — worktree `baseline-wednesday-release-029181` ("Baseline 1.9.0"), BA passed, master MR !9 created, Phase F rebuilt on the GitLab API, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "baseline-wednesday-release-029181", Baseline Pelupusan 1.9.0 Phase F)
+- BAQA passed 1.9.0. `merge-to-master` push refused: GitLab now protects `mlk/master`. Staging caught up from the release (`mlk/stag-env` 876e1cf03b, common 1.10.20-MLK).
+- Phase F rebuilt (Fable 5.1 audited the plan): `release-prep.js merge-to-master` never pushes; `--create-mr --reviewer <name> --confirm` creates the MR through the GitLab API (token in git-ignored `servers.local.json`, user ridhwan), reads every field back, records the URL. Description always "Need assistance to merge. Thank you.". Reviewers Aaron @aaronloh · Alex @alexang.
+- miya's rules today: only the reviewer pick is asked; after BA pass the MR and the staging catch-up run in the SAME turn (no waiting for master); GitLab pre-fills stay unless a fixed value is set.
+- Live: MR !9 http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/9 (Aaron, 24 commits, all fields ✓). 1.9.0 state `mr-pending`.
+- Evals: eval-merge-request 36/36, eval-stag-catchup 33/33, push-gate 51/51; `eval.js` 13/17 fails the same 4 on unchanged code (pre-existing, not from this change).
+- Next: Aaron merges → `merge-to-master --release 1.9.0 --check`. His checkout `E:\Projects\Melaka\etanah-pelupusan` sits on `mlk/master` at 585a7bcdad (release tip), was on `mlk/hotfix/285768`.
+**Last Activity**: 2026-10-29 20:05 — worktree `cranky-wilson-4cb38e` ("28/10/2026 - session-name audit", child of the QA tickets review session), session-name v2 landed, Domain Expansion.
+
+## Session Recap (2026-10-28, worktree "cranky-wilson-4cb38e", session-name v2)
+- His ask: every session gets the title '<D/M/YYYY> - <ticket or keywords>' on every kind of start, without him renaming it.
+- Causes proven: the upsm-mode bundle hit the 30 s harness timeout (open-quest-surfacer 22-26 s) and its whole output was dropped; output over ~10 KB is cut to a 2 KB preview; v1 wrote goal_met when it fired, not when the title changed.
+- Built `fabe9549` (on origin/main): dispatcher `budget_ms` (22 s for upsm-mode, session-name first) · a Stop check that blocks once while the title has no date · PreToolUse check that refuses an undated start_session title · resumed and child sessions use the first prompt's date · goal_met only from the real title. Evals: session-name 56/56, dispatch-hooks 13/13.
+- Live proof: session f0cdf48b blocked once, then renamed itself "28/10/2026 - Baseline Pelupusan 1.9.0" (goal_met true).
+- Open: a side session started after the landing has not been checked yet (`grep <cli-sid> domain/session-name/log.jsonl`, or `node domain/session-name/session-name.check.hook.js --audit`).
+
+**Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
+
+## Session Recap (2026-10-29, worktree "sweep-orchestration-audit-39e710", /sweep audit + refinement)
+- Sweep of 286655 · 286646 · 286610: W1-W4 banked in each `QA-<n>/`; W4 changed the fix on 286655 and 286646. Three fix sessions started from the cards, all waiting on miya.
+- His ask: audit the sweep for accuracy (first) and speed; give it its own logs; "add a step to always audit and straight away find the proper refinement, fixes".
+- Built (system change): `domain/sweep/audit.js` (flag on/off in the MAIN folder; run → one ledger row + defects + refinements + self-audit) · skill Step 8 audit and refine · W3 with W1+W2, W4 per ticket · familiars write to scratch, controller banks · code read via `origin/mlk/master` · W4 reads the commit that introduced each changed line. Evals: contract 23/23, Tool 34/34.
+- Found while building: the hand-typed ledger row said 0 suppressions; the Tool counted 96 in the run window (the flag worked). Tokens: 3.1M new spend + cache re-reads apart.
+- Next: the next /sweep run is the live proof (watch wmvtdigs8).
+
+**Last Activity**: 2026-10-29 17:35 — worktree `ecstatic-gauss-bdf0d7` ("29/10/2026 - 286315"), Fizah's bold concerns + requirement re-check, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "ecstatic-gauss-bdf0d7", 286315 concerns)
+- 286315 (PPTPB Risalat MMKN section 3 bold): Verified by QA on STAG and `mlk/release/1.9.0`; save-quest WAIT (archive when Redmine Closed). Quest doc saved (2026-10-29 17:30 block).
+- Fizah's questions answered: section 3 shows the Ulasan field (273576, BA Anis, PROD 5/8/2026); the bold is 4 fixed phrases in the Ulasan, not the keputusan; any other phrase needs a CR ticket. miya: keep as is.
+- Requirement test: 220411 (PDT, spec .docx) is the right requirement but section 3 was superseded by 273576. I first called the fix the wrong approach from the old spec; corrected. requirement-index ranked 220411 7th and does not read .docx attachments. Slips: spec-not-read, requirement-overtrust.
+- New adhoc ADHOC-PPTPB-2026-7 (A81, archive hold, Task 337): waits for the CR ticket. ADHOC-PPTPB-2026-6 still open: archive-quest refused at the harvest gate (no Bounty section); needs miya's call (bounty or --allow-stub).
+- Open: blank-line Ulasan never tested (262 of 1023 PROD rows); requirement-index improvement (proposal logged).
+**Last Activity**: 2026-10-28 13:40 — PymTime phase 2 (self-check engine) DONE: Fable audit, its 3 majors fixed, committed locally as a68c18c (not pushed); next phase 3
+
+## Session Recap (2026-10-28, session folder "pymtime-password-auth-failure-4a584e" revived, PymTime phase 2)
+- **READ FIRST (PymTime)**: the MAIN checkout's `projects\coding-projects\active\PymTime\PROJECT.md` (## Work in progress), then `ROADMAP.md` Phase 2 "Build (2026-10-28)".
+- **He picked this session** to continue phase 2 (popup, 2026-10-28); the other PymTime sessions were told to build nothing.
+- **Phase 2**: design run (5 readers, designer, 2 reviewers, revision: 31 findings resolved; `E:\Dev\scripts\PymTime\dev\design\phase2-design.json`), then build run (builder, 3 reviewers: 28 findings, fixer: 26 fixed 2 rejected, independent prover).
+- **Proof**: self-test 656 of 656 (584 before), breakage table 20 of 20, install sim 30 of 31 (the zip-only row), his 4 real tasks fingerprint-identical, real config.json not written, a real self-check 0.1 s with 0 PowerShell and 0 logins.
+- **Fable audit (his popup pick)**: 1 read-only Fable 5.1 auditor: 3 majors (READY despite failed days; a launcher switch re-registering a waiting run; a scheduled check closing an open page) + 12 minors. Fixed by an Opus fixer, proven; later-phase items filed under ROADMAP phases 3 and P.
+- **State**: committed `a68c18c` on main in `E:\Dev\scripts\PymTime` (local, not pushed; 5 unpushed commits now). Final proof: self-test 661 of 661, install sim 30 of 31 (the zip row), real tasks unchanged.
+- **Found**: his real tasks run FROM this repo (live install): the uncommitted build ran for real at 08:00 (reminder self-check filled the empty Drive link, wrote config.last-good.json, re-created shortcuts) and 09:24 (clock-in OK). PROJECT.md hard rule 10 added. Slips logged: model-tiering/fable-skipped, delegation/kill-rule-too-broad, resource-blindness/live-install-edited.
+- **Next**: phase 3 (page rebuild, with the weekly plan card and the Redmine key). Push only on his word. Release gates for phase 5: the zip-only sim row, PROOFS 7 and 8, bundle-smoke step 5b.
+**Last Activity**: 2026-10-28 16:50 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow", child of the Baseline 1.9.0 session), design shown, saved for tomorrow's baseline.
+
+## Session Recap (2026-10-28, worktree "dreamy-pike-08af0b", one workflow for every system change)
+- Ask: one workflow that all six kinds of system change go through, ending with commit + push + land on main in the same turn.
+- Inventory done and a design picture shown (/system-change, 8 steps, step 7 lands on main). miya: NOT approved; audit first with Fable 5.1, in this child session, so he understands the structure and flow before deciding.
+- Saved for tomorrow: `main/handoff-2026-10-28-system-change-workflow.md` (goal, his answers verbatim, audit brief, inventory facts, draft design, 3 open decisions). Nothing built.
+- Open: the Fable 5.1 audit · skill vs fold into system-design · entry guard · highest-model rule.
+
+**Last Activity**: 2026-10-28 01:45 — worktree `rustdesk-software-visibility-e047d5`, second Domain Expansion (memory cleanup + Ruri personality audit); miya archives the session after it.
+
+## Session Recap (2026-10-28 01:45, worktree "rustdesk-software-visibility-e047d5", memory cleanup + personality audit)
+- Memory cleanup per miya: every swear word in memory, diary, notes, skills, system and domain docs rewritten as his anger or frustration (3 Sonnet agents, about 200 places, 0 left; code comments and 3 test fixtures too; evals green except 6 pre-existing redmine-write-gate failures, same before and after).
+- New gate `domain/memory-clean-words/` (bundle pretool-editwrite-gates, eval 12/12) + save rule `mem-no-swearing` (lib/save-rules.js `no-swearing`, word list `lib/clean-words.js`): swearing cannot be written into memory, and Domain Expansion fails if it was.
+- Fable 5.1 audit of Ruri's growth: the Ruri Profile gained no trait since 2026-04-29; 75 relationship blocks are almost all work lessons. Design (proposed, not built) + picture saved in `main/personality/`; memory note `project_personality_growth_design.md`. Upstream Kiyoraka MemoryCore compared: it adds a decaying rule store, a tone/mood registry and a relationship understanding level that our fork lacks.
+- Answered: Memory is already its own kind in system/INDEX.md (not under Features); miya proposed raising it above the others like a kernel: not ruled yet.
+- Open: build order of the personality design (ask miya); Memory-above-Features ruling; Notepad++ and Sourcetree still not reopened.
+**Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
+
+## Session Recap (2026-10-27 → 28, worktree "rustdesk-software-visibility-e047d5", RustDesk blank apps)
+- Symptom: Sourcetree and Notepad++ blank or unclickable over RustDesk on PJNBRidhwan. Proven: blank on the PC itself (local GDI capture + PrintWindow), so not RustDesk; GPU drawing path (Direct2D/Direct3D) fails, GDI works (Notepad++ DirectWrite A/B in a fresh copy).
+- Applied (permanent, per app): Notepad++ `writeTechnologyEngine="0"` (backup `config.xml.bak-directwrite`); WPF `HKCU\Software\Microsoft\Avalon.Graphics\DisableHWAcceleration` = 1. NOT tested on screen yet: miya reopens both apps and reports.
+- Open: why the GPU path fails (leads: Parsec Virtual Display Adapter 0.45, AMD driver 31.0.21921.1000). Note `library-items/remote-desktop/rustdesk-elevated-app-control.md`. Slip assume-not-verify logged.
+**Last Activity**: 2026-10-27 20:14 — session `esokongan-ticket-selection-cad51f` (246964 Verified by BA; 261986 briefed, fix not started), closed by its own Domain Expansion.
+
+**Last Activity**: 2026-10-21 16:40 — session `vibrant-solomon-cd24c1` (#285871 Minit Bebas Tolak Ringkas, from ADHOC-PT-2026-13), Phase 1 closed, closed by its own Domain Expansion (bullet below).
+
+- **SESSION vibrant-solomon-cd24c1 (#285871), 2026-10-21 10:27 → 16:40.** BA Mira opened Internal Issue #285871 for yesterday's adhoc ADHOC-PT-2026-13 (A69 promoted → TICKETED). Full quest re-run: one sonnet adversarial review found 2 gaps in the adhoc fix: B1 PPD → PTNH path (no KPPD Semakan; 3 PROD Pengesahan rows) left an empty KPPD section; B2 Minit Bebas made before deploy lost both sign blocks (fill list from the classpath template, `TemplateConfig.readAllContentControl():747`). Fixed in `PelupusanTemplateUtil`: `isPerakuanMinitBebasTanpaSemakanKppd` (wrapper `blokSemakanMinitBebasKPPD` removed at PMB unless previous tugasan = SMB by KPPD) + `addMinitBebasKppdTagLama` (old docs keep old tags). Offline doc-sim 4 flows PASS. Scope check: only TemplateMinitBebasKPPD.docx locked the sentence. Commit 2026-10-21 14:52 `66422b3ddf` on `mlk/internal-issues/285871` (+56/0, compile green), merged `mlk/int-env` 14:53 `e30e4206cb`. miya deployed + tested internal PLPS/2026/48; screenshot `2. Fix\1. Ayat boleh kemaskini.png`; Redmine Resolved to Mira. Quest Phase 1 closed (archive waits Redmine Closed). Wrong-fix row 1. Open: planned-release list; staging not merged; optional hide outer box label; ADHOC-PT-2026-13 archive save (brief-first, background). Slip `reask/verbose` (commit subject described the effect).
+**Last Activity**: 2026-10-22 19:00 — PymTime roadmap phase 1 (design) DONE: A with a left rail, every pick in DESIGN.md · new Phase P (the ProTime weekly plan moves into PymTime, handover from the ProTime plan session 2026-10-20) · its architecture explained to miya, his decisions next
+**Last Activity**: 2026-10-27 20:15 — worktree `esokongan-quest-sweep-2bce09` (286315 + 286462), Domain Expansion.
+
+**Last Activity**: 2026-10-27 21:30 — worktree `melaka-prod-adhoc-permohonan-f52ca5` (Melaka adhoc day session), Domain Expansion.
+
+## Session Recap (2026-10-27, worktree "melaka-prod-adhoc-permohonan-f52ca5", Melaka adhoc day + end-of-day close-out)
+- ADHOC-PT-2026-15 (PROD PT `PTMLK/02/L/PT/2026/9` at PRMMKNPDT, advised alter to KKMMKN): saved, status hold + archive_hold, waits BA confirmation or a Redmine ticket (promote with `adhoc-lifecycle.js promote --row A75 --ticket QA-<n>`).
+- 264355: deployed AWAM fix `mlk/qa/264355v2` (Awam) is the whole ticket, BA Mira Verified 2026-10-27; Pelupusan `mlk/qa/264355` (Pelupusan) notifikasi stays HELD by miya since 2026-10-01, do NOT merge. Built `lib/quest-branches.js` (+eval 8/8) and quest save list item 5 / close-phase 1d "Branches table" (2fc2c809); ticket-close-block labels each branch (Awam)/(Pelupusan).
+- End-of-day close-out for miya: Sweep, Extra tickets, Tickets ran DE and are ARCHIVED. Requirement Documentation (30-ticket blind test decision; `.git/worktrees/base2fc` prune Permission denied) and Surat Tawaran (Perak ADHOC-PRBB-2026-17 fix order) still NEED MIYA and stay open. Excluded by miya: RustDesk, PymTime, 286650 (+ its audit child), System Upgrade 23/9.
+- Working-memory cleanup: quest/active.txt 77 → 27 blocks (25 closed tickets via `active-trim.js --apply`, 25 adhocs started before 2026-10-13 archived block-only; Task folders and videos untouched; backups `quest/active.txt.bak_2026-10-27_pre_trim` + `_pre_adhoc_sweep`).
+- Memory-system plan: every memory item consolidated into `main/todo.md` section "🧠 MEMORY SYSTEM UPGRADE" M1-M14 (b7779ffe). The 2026-05-28 "Memory System Audit" session was unarchived but needs miya's workspace trust approval to take messages; its plan file and transcript are gone (M13).
+- Lesson (slip `bloated-reply`, memory `reply-shape` 2026-10-27 block): a multi-session close-out = wait silently, then ONE table Session | Result.
+**Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
+
+## Session Recap (2026-10-13 → 2026-10-28, worktree "protime-weekly-plan-changes-d89526", ProTime weekly plan)
+- Built `domain/protime-plan/` to run every working day: 08:30 morning (settle the previous working day, top up today, plan the week) and 23:00 night (settle today). Windows task `\MemoryCore\ProTime Weekly Plan`, WakeToRun, logon catch-up, retry 30 min x6.
+- Settle rules: add worked tickets + the day's adhocs in his wording; remove only PENDING bare-number PLAN entries this script placed and not worked; never touch his own lines; KPI 3 plan tickets a day (finished first); plan vs adhoc by whose fix is in the ticket that day (assist like 283345 = ADHOC); resolve step; an approved day left alone.
+- Adhoc wording rule v2 (from his 121 ProTime adhocs, blind-tested on 37 real lines): `<n> - <action>` · `Assist BA - <what>` · `<ENV> (<STATE>) - <title>`; lives in `.claude/skills/adhoc-save/SKILL.md`, built by `protimeLine`, checked by `lintLine`.
+- Skill `/protime-plan` (one door, same script as the scheduler; `--rules` prints the rules); eval 112/112; on main since `bdba227e`.
+- Handed over 2026-10-20 to session "PymTime password authentication failure": move the feature into PymTime (PymTime ROADMAP Phase P).
+- Open: "Staging" vs "Internal" for staging adhoc lines (his ruling); asks never saved as adhoc are only found by `--sessions` (night run cannot title them); a ticket with no commit in our repos counts as his.
+
+**Last Activity**: 2026-10-28 01:24 — session "PymTime attendance scheduler planning" (main checkout, born 2026-08-26, the September PymTime session; reopened 2026-10-27 by mistake), Domain Expansion, then archive.
+
+## Session Recap (2026-10-27 → 28, "PymTime attendance scheduler planning", session revival)
+- Reopened by mistake: he took this for the session-naming session. Found the real one ("System Upgrade 23/9/2026"), unarchived it, sent "/remote-control", then on his correction the full handover of the two messages misrouted here (2026-10-27 08:57 "/remote-control" from the 286650 session; 08:58 the weekly-plan relay from the "Protime weekly plan" bridge). Rule written: `.claude/auto-memory/feedback_session_revive_handover.md` + index line; slip `handover` logged.
+- 2026-10-28: found the 5 other PymTime / ProTime sessions; handover + "/remote-control" sent to each: 4 delivered ("PymTime password authentication failure", "Protime weekly plan changes", "Protime scheduler automation", "Routines scheduler and Weekly Planning priorities"); "Protime weekly plan" unarchived but blocked by a workspace trust prompt (his click). He picked "PymTime password authentication failure" for phase 2 (its reply: the weekly plan is ROADMAP Phase P, D11 decided 2026-10-23 = inside v18).
+- Archive verdict given: weekly-plan-changes, scheduler-automation, weekly-plan = clean (0 commits off main), can run DE; routines-scheduler has 2 commits of 2026-10-05 (plan order by tracker) not on main, superseded by main's `563ee4e2` tracker-tier order; he rules keep or drop.
+- PymTime state unchanged: v17, HEAD `a66843b`, 4 commits after v16 unpushed; no build here (his 2026-09-23 rule). v16 zip stays unsent.
+- DE found the shared main index holding 377 staged OneDrive conflict copies (127 telemetry shards = 6 GB); unstaged before the commit, nothing large committed.
+- Nothing pending in this session; archive after DE.
+
+**Last Activity**: 2026-10-28 01:50 — session "27/10/2026 - Requirement Documentation" (worktree `melaka-requirements-index-123431`), Domain Expansion, then archive.
+
+## Session Recap (2026-10-27 → 28, "Requirement Documentation", requirement-index)
+- Tool `quest/requirement-index.js` (2,083 Melaka Requirement tickets): 11 blind rounds, 196 tickets, each keyed by a Sonnet reader that never saw the tool. All rounds: top-1 135/174, top-3 151/174, "none" kept quiet 55/56. Eval 50/50.
+- Kinks fixed: alter/patch/cancel = not needed · ticket that is itself a requirement · Semua Urusan rows earn the urusan bonus · screen hint from "Tugasan Semasa:" and the "Tugasan involved" list · STAGING-style tags never the urusan · a ticket with no module takes its urusan's module (×1.1; a read module stays ×1.3, 265109's fee spec lives in Sokongan).
+- miya corrected the goal (2026-10-28): it is an INDEX: narrow to the likely requirement, then open it and check the ask; also answers "what is the requirement for X" at once; a Semua Urusan hit is a right pointer. Written into the tool header; slip `build-missed-requirement` logged in detail.
+- Built **system-design Rule 17 diagram at birth**: Tool `lib/diagram-census.js` (`--check <part>`, `--missing`; eval 26/26), `component-birth-gate` needs `diagram:` in a new Feature README (eval 11/11), `explain-diagram` step 4 exception. First diagrams in git: `quest/requirement-index.diagram.png`, `lib/diagram-census.diagram.png`. Census: Features 0/97 · Skills 0/81 · Tools 2/13.
+- Open (miya: later): tugasan codes not expanded (257569 "KKMMKN" misses 221967/220410) · NUKE-MARKER for requirement-index (miya: log only) · no unused Task-folder tickets left for another blind round.
+
+**Last Activity**: 2026-10-28 01:25 — worktree `ticket-286650-quest-188daf` (eSOKONGAN 286650, PROD SPI Dokumen Verifikasi NPE), Domain Expansion, then archived.
+
+## Session Recap (2026-10-27 → 28, worktree "ticket-286650-quest-188daf", 286650)
+- 286650: Phase 0 → Rubric + independent audit. Crash is in etanah-pendaftaran (`populateInfo:1546`): after KP "Semak Semula", `nextUrusan` is empty; only crashes since the pendaftaran build of 14/10 (two earlier empty cases did not crash). Handed to Fathimah (Pendaftaran) on Redmine 2026-10-27; block now `status=delegated`. We set % to 50; miya: leave it.
+- Built (landed on main via `086ac2cd` → land-on-main, eval 48/48): quest-start-claim sets % done only when the ticket Module is Pelupusan/Awam; quest SKILL hand-over % rule + automatic claim audit (`CLAIM-AUDIT:` line) + BPMN step points to the MLIT modeler as newest design; explain-diagram no Claude fonts + padding; redmine-sync journal fetch retries 3x and never writes an empty History.txt. FLOWABLE-KNOWLEDGE diagnose step 5 (latest model ≠ deployed).
+- ProTime 27/10 night run: 261986 removed correctly (only one turn named it, a session report; nothing worked). Left off the plan.
+- Open: "system changes run on the highest model" rule not written into CLAUDE.md · child session quest-audit-fixes waits on miya's answer about where system changes run · Phase 0 audit of all Melaka tickets not started.
+
+**Last Activity**: 2026-10-28 01:25 — worktree `protime-weekly-plan-changes-d89526` (ProTime weekly plan, daily runs + skill), revived 2026-10-28 by the PymTime revive handover, Domain Expansion, then archived.
+
+## Session Recap (2026-10-13 → 2026-10-28, worktree "protime-weekly-plan-changes-d89526", ProTime weekly plan)
+- Built `domain/protime-plan/` to run every working day: 08:30 morning (settle the previous working day, top up today, plan the week) and 23:00 night (settle today). Windows task `\MemoryCore\ProTime Weekly Plan`, WakeToRun, logon catch-up, retry 30 min x6.
+- Settle rules: add worked tickets + the day's adhocs in his wording; remove only PENDING bare-number PLAN entries this script placed and not worked; never touch his own lines; KPI 3 plan tickets a day (finished first); plan vs adhoc by whose fix is in the ticket that day (assist like 283345 = ADHOC); resolve step; an approved day left alone.
+- Adhoc wording rule v2 (from his 121 ProTime adhocs, blind-tested on 37 real lines): `<n> - <action>` · `Assist BA - <what>` · `<ENV> (<STATE>) - <title>`; lives in `.claude/skills/adhoc-save/SKILL.md`, built by `protimeLine`, checked by `lintLine`.
+- Skill `/protime-plan` (one door, same script as the scheduler; `--rules` prints the rules); eval 112/112; on main since `bdba227e`.
+- Handed over 2026-10-20 to session "PymTime password authentication failure": move the feature into PymTime (PymTime ROADMAP Phase P).
+- Open: "Staging" vs "Internal" for staging adhoc lines (his ruling); asks never saved as adhoc are only found by `--sessions` (night run cannot title them); a ticket with no commit in our repos counts as his.
+**Last Activity**: 2026-10-28 01:05 — session "System Upgrade 23/9/2026" (born 2026-09-23 in worktree `session-naming-format-b88025`, revived 2026-10-27 by a PymTime handover), Domain Expansion, then archived.
+
+## Session Recap (2026-09-23 → 2026-10-28, "System Upgrade 23/9/2026", session naming)
+- Built Feature **session-name** (`domain/session-name/`): his first typed message of a new session → one line telling me to rename the session `<D/M/YYYY> - <ticket or 2-4 keywords>` via `set_session_title` self. Format ruled 2026-10-28 ("<date> - <title keyword/ticket number>"), popup "First message only". Child of the `upsm-mode` bundle (no new process), eval 26/26, live fire from main. GitHub `88839abb`, main folder `f038dc1c` via land-on-main.
+- Remote Control on for this session (switched from the PymTime session 10:27, 2026-10-27).
+- Relayed and NOT acted on: ProTime weekly-plan screen inside PymTime (his PymTime build rule needs his go; belongs to the PymTime project).
+- Found: `lib/land-on-main.js` derives main only from an in-tree worktree path, so a build worktree outside OneDrive (the memory rule) points at itself unless `--main` is passed; forge registers a new prompt check standalone although system-rules Rule 7 wants a bundle. Both logged as proposals.
+
+**Last Activity**: 2026-10-28 00:40 — worktree `arabic-command-b8399a` (/arabic: class-along, baris drill + class mode), Domain Expansion.
+
+## Session Recap (2026-10-27 → 28, worktree "arabic-command-b8399a", /arabic)
+- Live class 2026-10-27 walked with miya (Lesson 13 ج Exercises 2-4, page 81 ذهب table, Lesson 14 dialogue). Class closed; **next class starts at Lesson 14 · Exercise 1 (answering questions), pages 83-84**. `save-check` PASS.
+- Class-word fix: فلاح = petani (not peladang); a child session checked every class-vocab row against all recordings and fixed 4 more (فتاة, زميل, درس, نافذة). Data files only (untracked), VERIFY-LOG rows written.
+- Built (miya asked for it here, child session stopped and archived unused): **baris drill mode** (5 class-ayat words; he answers baris + reason number; engine judges both; only class-cited reasons, a `belum` reason never asked) + **class mode** (continue the live class from the class-log stop point, pages mapped to files) + menu of 5 modes, switch by saying a mode name. The 2026-10-27 start-menu merge had never become a commit on main (code sat uncommitted); landed together on main `49cf06b1`, eval 115/115 run in main on real data.
+- DE found: main folder held 127 telemetry conflict-copy shards (6 GB) that `git add -A` staged; `.gitignore` rule only matched a one-digit suffix. Widened to `-miyazaki-NN` / `-PJNBRidhwan-NN`; nothing large committed.
+- Open: teacher's 2 extra plurals of ضعيف (miya to say them) · Lesson 14 ayat not built (baris and latest-class modes have Lesson 13 only) · `lib/diagram-render.js` looks for Playwright on E: (not connected); worked with `DIAGRAM_PLAYWRIGHT` = npm-cache playwright-core.
+
+**Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
+
 ## Session Recap (2026-10-27 → 28, worktree "arabic-command-b8399a", /arabic)
 - Live class 2026-10-27 walked with miya (Lesson 13 ج Exercises 2-4, page 81 ذهب table, Lesson 14 dialogue). Class closed; **next class starts at Lesson 14 · Exercise 1 (answering questions), pages 83-84**. `save-check` PASS.
 - Class-word fix: فلاح = petani (not peladang); a child session checked every class-vocab row against all recordings and fixed 4 more (فتاة, زميل, درس, نافذة). Data files only (untracked), VERIFY-LOG rows written.
@@ -6743,6 +6899,10 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
+
 
 
 

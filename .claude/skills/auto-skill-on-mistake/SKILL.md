@@ -244,6 +244,8 @@ At any skill / hook / Power / feature build (the Step 3a/3b/3c/4 emit), ALWAYS s
 
 ### Step 6 — Visible report
 
+**Order + ending**: this skill is the correction lane, step 4 of `system/INDEX.md` §The change route. Before this report, run that route's steps 5-7: verify, record, land on main the same turn.
+
 Emit a 3-line summary at the END of the chat response that triggered this skill:
 
 ```

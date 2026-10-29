@@ -10,6 +10,20 @@
 
 ---
 
+## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
+
+His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".
+
+| Place | Before | After |
+|---|---|---|
+| §System map | 3 bullets | + every system change runs `/system-change`; steps owned by `system/INDEX.md` §The change route |
+| §Delegation Economy table | no row for system changes | + row: a system change is designed and decided on the highest model; a slip row or urgent fix is never held for a switch |
+| `system/INDEX.md` | §Change record defined "a system change" as Rule · Workflow · Feature · Kernel | rulings 13-14 · §The change route (8 steps + 7 lanes) · one definition = all seven kinds |
+
+- Spec preservation: additive. The §Change record definition is widened from 4 kinds to 7, and the old text is replaced by a pointer to the new definition (named here).
+
+---
+
 ## v1.96 — 2026-10-28 (per みや, the system map picture boot-loaded)
 
 His words: *"I want that engraved into your very consciousness and awareness. That should be inside your Claude.MD ... that photo needs to be keep tracked so that I can easily ask you next time and you can update it."*
