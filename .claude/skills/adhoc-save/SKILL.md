@@ -73,6 +73,28 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 | 3 | The stop check sees that line and asks for the save. Start ONE background agent (`Agent`, `model: sonnet`, `run_in_background: true`). Its prompt opens with the line `[skip-brief-first: background save agent]` and carries the ADHOC id, the title, the env, the Task folder name, every file to MOVE, the register row text and the full quest doc text, and tells it to run "Each round" below until the audit is green. Then end with ONE line: `save started in the background for <ADHOC-ID>`. | background |
 | 4 | When the agent reports, check its audit line against disk (`node lib/adhoc-save-audit.js <ADHOC-ID>`) and give みや ONE line: `adhoc saved → <ADHOC-ID>: audit N/N PASS`. | main thread |
 
+## Adhoc route — how every brief ends (2026-10-29 per みや, ADHOC-MCL-2026-2; logic audited by Fable 5.1)
+
+Every brief carries ONE line just before `## Reply to BA`: `Adhoc route: <ROUTE> — <evidence>`. The route comes from the FIX LADDER rung that passed, never from the BA's words. The Reply to BA (Short and Full) ends with the matching ask.
+
+| Route | Pick it when | Ask at the end of the Reply to BA |
+|---|---|---|
+| `ANSWER` | The BA asked a question; the data or the behaviour is explained and nothing is broken (also "the fix exists, it waits for deploy") | none |
+| `USER-STEP` | Rung 1 passes: `User-step:` ENABLED, traced for this record | the steps |
+| `PATCH` | Rung 2: the data is wrong, the code is right, `After-state:` checked | PROD: "Mohon TSO buka tiket patch data". Other envs: we patch it ourselves |
+| `ALTER` | The permohonan sits on the wrong tugasan or its flow ended; ALTER-TICKET-PLAYBOOK row A4 says Alter Flow or Initiate→Alter | PROD: "Mohon TSO buka tiket alter ke tugasan <X>". Other envs: we alter it ourselves |
+| `CODE-FIX` | Rungs 3/4: the code is wrong (our own regression included) and no patch shape exists | "Mohon TSO buka tiket untuk pembetulan kod", on every env |
+| `OWNED-ELSEWHERE` | Another module, team or infra owns it. A module boundary needs the `Input check:` line clean; infra needs the error line | name the owner |
+| `CR` | The BA reported it as a bug, but the screen does what the requirement says | "Mohon BA buka tiket CR" |
+
+- **Suffix `+ CODE-FIX`** goes after `PATCH` or `ALTER` when the code keeps making new bad records. Show the sweep count. Example: `Adhoc route: PATCH + CODE-FIX — 1 permit patched, 98 PRBB permits share the empty unit`.
+- **Mid-investigation round**: `Adhoc route: none (<reason>)`.
+- **Ticket asked** (PATCH/ALTER on PROD, CODE-FIX, CR): set block `status=hold` and `issue_one_liner` to say "waiting TSO ticket". Promote it when the number arrives (section "Ticket arrives"). Archive hold only when miya asks for it (step 1c).
+- **Same line in the qa_doc**: `- Route : <ROUTE> — <evidence>` under `## Issue Summary`. The audit checks it for adhocs opened from 2026-10-30 on.
+- **Quest tickets** emit the same names at quest Phase 0 step 6f.
+- **Gate**: the Stop half of `domain/adhoc-brief-first/` blocks a brief without the line.
+- **Banned**: a route picked from the BA's wording · a ticket ask on a non-PROD patch or alter we can run ourselves · `CODE-FIX` without saying why no patch shape exists.
+
 - Anything else that can wait runs the same way, AFTER the brief and in the background: moving his files, memory notes, register and knowledge edits, a slip row, a skill edit, a commit.
 - No agent tool in the session: after the brief the save-set may be written on the main thread.
 - **Gate**: `domain/adhoc-brief-first/`. Before the brief it BLOCKS a save-set write and the start of the save agent (PreToolUse). At the end of the turn it asks for the save agent when the brief carries the `Saving in the background next:` line (stop bundle). Evals: `node domain/adhoc-brief-first/adhoc-brief-first.eval.js` · `node domain/adhoc-brief-first/eval.js`. After-the-fact check of a session: `node lib/adhoc-brief-first.js --latest`.
