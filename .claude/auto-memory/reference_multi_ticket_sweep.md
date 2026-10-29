@@ -18,6 +18,8 @@ The 2026-07-27 night sweep (5 tickets × 4 waves × 19 Opus familiars) produced 
 | 4 | `main/todo.md` Q1 | 2 rows — BUILD `/sweep` · the orchestration-mode gate fix (its **prerequisite**) |
 | 5 | `main/current-session.md` | the session block with the per-ticket queue + the traps table |
 
+**Current state (2026-10-29)**: BUILT. The procedure is `.claude/skills/sweep/SKILL.md`; the Feature is `domain/sweep/` (README, evals). Each run's cost, defects and refinements are one row in `domain/sweep/log.jsonl`, written by `node domain/sweep/audit.js run ... --write` at close; Step 8 audits and refines every run. Rows 1-5 below are design history.
+
 **Load-bearing facts** (so they survive even if a file is moved):
 - 16 prior attempts; **every success was hand-specified by みや**; every attempt to make it reusable became a todo row. **Five unbuilt orchestration rows: todo Q1 items 35 · 37 · 39 · 69 · 136. Zero shipped multi-item components.**
 - The parts exist (`redmine-sync --create` · `familiar`+`quest` · Delegation Economy + `agent-spend-gate` · `archive-quest.js` · `/goal`); the **assembly** is what's missing.

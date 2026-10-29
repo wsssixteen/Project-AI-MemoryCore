@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
+
+## Session Recap (2026-10-29, worktree "sweep-orchestration-audit-39e710", /sweep audit + refinement)
+- Sweep of 286655 · 286646 · 286610: W1-W4 banked in each `QA-<n>/`; W4 changed the fix on 286655 and 286646. Three fix sessions started from the cards, all waiting on miya.
+- His ask: audit the sweep for accuracy (first) and speed; give it its own logs; "add a step to always audit and straight away find the proper refinement, fixes".
+- Built (system change): `domain/sweep/audit.js` (flag on/off in the MAIN folder; run → one ledger row + defects + refinements + self-audit) · skill Step 8 audit and refine · W3 with W1+W2, W4 per ticket · familiars write to scratch, controller banks · code read via `origin/mlk/master` · W4 reads the commit that introduced each changed line. Evals: contract 23/23, Tool 34/34.
+- Found while building: the hand-typed ledger row said 0 suppressions; the Tool counted 96 in the run window (the flag worked). Tokens: 3.1M new spend + cache re-reads apart.
+- Next: the next /sweep run is the live proof (watch wmvtdigs8).
+
 **Last Activity**: 2026-10-29 17:35 — worktree `ecstatic-gauss-bdf0d7` ("29/10/2026 - 286315"), Fizah's bold concerns + requirement re-check, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "ecstatic-gauss-bdf0d7", 286315 concerns)
