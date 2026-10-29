@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
+- Built: Fable 5.1 Foundations audit (18 foundations, 12 conflicts, 0 of 7 change paths ended on main) → `/system-change` route owned by `system/INDEX.md` §The change route (rulings 13-14, group name Capabilities), skill + `domain/system-change/` (eval 21/21), design-consult-gate advisory (37/37), map picture boot-pointed (CLAUDE.md v1.96, v1.97). On GitHub main since `0cdf6ee6`.
+- miya's verdict at the end: talk to him like a person, not a report; answering a Stop hook in the middle of a conversation broke it. Child sessions felt like wasted time; this one was slow because the audit, two landing fights and robot replies, not because it was a child.
+- Not done (handover `main/handoff-2026-10-28-system-change-workflow.md` top note): `feedback_daily_commit.md` pointer · stale lines in auto-skill-on-mistake and design-consult-gate README · one path list for the 3 gates · version-stamp uniqueness check · the 9 unnamed root folders (his nod needed, most proposals are deletes).
+- Next: the parent session pulls main; the route's first real run is the live proof (watch `wmvta6ack`).
+**Last Activity**: 2026-10-29 20:05 — worktree `melaka-goal-quest-adhoc-297634`, adhoc ADHOC-PRBB-2026-19 answered + saved, Domain Expansion.
+
 ## Session Recap (2026-10-29, worktree "melaka-goal-quest-adhoc-297634", PRBB Tambah Kuantiti adhoc)
 - ADHOC-PRBB-2026-19 (A79, Task 333, archived): BA asked where PRBB Tambah Kuantiti Rekod Permohonan is stored. SPOC Rekod Permohonan lists permits only for jenis 6/7, so jenis 8 shows Tiada Rekod (SPOC read from local int-env 2026-10-13, newer work not verified). AWAM Rekod Pembaharuan reads the permit asal tables (ind_permit_lesen, ind_versi_permit_lesen, ind_pemegang_permit_lesen, umm_a_permit_lesen); new permohonan in umm_p_permit_lesen.mklmt_tmbhn. Verified on MLIT C01/2026/9.
 - Mistakes corrected by miya: misread BA's question (it was about the SPOC photo); first reply not in his style; said panel rows came from umm_p_permit_lesen.
@@ -6899,6 +6906,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
