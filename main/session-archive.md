@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", the Submit-it block audit)
+- **Ask** (miya, angry): audit why a simple "Submit it" blocked me all day; check the slip logs; find a universal solution for system-change / system-rules / system-design so no gate is ever built like this again.
+- **Found**: 7 approval gates each had their own copy of a "last user line" reader. Today the last user line was a skill's text, a system-reminder, a Stop-hook notice or the /goal notice, and "do not stop until you've posted" read as a refusal. `domain/redmine-write-gate/log.jsonl` 14:01 to 14:09: 5 refusals of one ordered Submit (261986). 286646: commit refused 4 times after his waiver. 22 files parsed user lines themselves.
+- **Built**: system-rules Rule 8 "One ask, then obey" (v1.5) · `lib/his-words.js` the one reader (`hisMessages` · `lastHis` · `decide`; eval 44/44; `--audit` clean) · `design-consult-gate` own-reader rider (R1 to R10, 47/47) · `redmine-write-gate` v1.8 on the reader, 8 messages back, repeat block = slip row (112/118; the 6 reds pre-exist: quest-start-claim shape drift, proposal logged) · `falsifier-ran-check` waiver window (58/58) · 3 Sonnet agents moved 20 gates onto the reader or marked them · prod-alter S12 flipped · 5 diagrams (Rule 17).
+- **Open**: `lib/quest-start-claim.js` no longer matches redmine-write-gate's standing-claim shape (F74 to F76, F82, F85 red since before today). STAGE-ONLY window for Redmine API posts ends 2026-10-30 by his 2026-10-19 ruling.
+
+**Last Activity**: 2026-10-29 22:20 — worktree `suspicious-nash-ce350d` (child of "Sweep 3 tickets + audit"), 286610 MCL Notis 5A + tempoh pajakan handed to BA, quest Phase 1 closed, Domain Expansion.
+
 ## Session Recap (2026-10-29, worktree "suspicious-nash-ce350d", 286610 Notis 5A + Tempoh Pajakan)
 - 286610: report.config.json Notis 5A PSKN5A list += STATUS_PENYEDIAAN_BARU (Jana Semula rebuilds unsigned) · TemplateSuratKeputusanLulusMCL.docx row b) Tempoh Pajakan = static "Selama-lamanya". Commit e76c26d9ab on mlk/esokongan/286610, merged int-env 12b6d2306c, miya deployed mlit.
 - miya tested Isu 1 on internal (PTMLK/02/L/PLTP/2026/7, nazli): Peraku signed -> Jana Semula -> Baru unsigned -> Selesai -> signed. PASSED. Isu 2 checked at template level only (Word render); not run on internal.
@@ -6964,6 +6972,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
