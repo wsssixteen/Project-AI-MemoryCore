@@ -1,5 +1,15 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 22:20 — worktree `suspicious-nash-ce350d` (child of "Sweep 3 tickets + audit"), 286610 MCL Notis 5A + tempoh pajakan handed to BA, quest Phase 1 closed, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "suspicious-nash-ce350d", 286610 Notis 5A + Tempoh Pajakan)
+- 286610: report.config.json Notis 5A PSKN5A list += STATUS_PENYEDIAAN_BARU (Jana Semula rebuilds unsigned) · TemplateSuratKeputusanLulusMCL.docx row b) Tempoh Pajakan = static "Selama-lamanya". Commit e76c26d9ab on mlk/esokongan/286610, merged int-env 12b6d2306c, miya deployed mlit.
+- miya tested Isu 1 on internal (PTMLK/02/L/PLTP/2026/7, nazli): Peraku signed -> Jana Semula -> Baru unsigned -> Selesai -> signed. PASSED. Isu 2 checked at template level only (Word render); not run on internal.
+- Redmine journal 4 (22:11): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani + 3 screenshots. Quest status=closed; archive waits for Redmine Closed.
+- Internal-only path: on int-env Notis 5A goes through the Report API (285171, 03f5c01e0a); the test passed through it.
+- Slips: git fetch in miya's repo; test scenario without starting state; doc-sim cannot boot (Spring "Only one AsyncAnnotationBeanPostProcessor"). redmine-write-gate read "do not stop until you've submitted" as a refusal (SUBMIT_DENIAL :68) and blocked his /goal approval twice.
+- Open: ticket onto the planned-release list; 4 BA questions (cop+QR side effect, PT/PSBS/PLTP scope, row a) Jenis Hakmilik, label wording) unanswered.
+
 **Last Activity**: 2026-10-29 21:52 — worktree `jovial-kepler-a07ba6` (child of "Sweep 3 tickets + audit"), 286646 MCL strata check handed to BA, quest Phase 1 closed, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "jovial-kepler-a07ba6", 286646 MCL strata)
