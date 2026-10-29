@@ -80,3 +80,4 @@
 {"ts":"2026-10-29T11:44:43.917Z","commit":"ea47e8a7","outcome":"LANDED","exit":0,"dur_ms":14527}
 {"ts":"2026-10-29T11:40:04.637Z","commit":"b5e531b0986817cd50610a8d1c8759ca01276fb6","outcome":"LANDED","exit":0,"dur_ms":4711}
 {"ts":"2026-10-29T12:01:55.213Z","commit":"2a0d6e6925a306e8360664a267344ae9b24cefb8","outcome":"LANDED","exit":0,"dur_ms":16441}
+{"ts":"2026-10-29T12:17:27.188Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":19289}
