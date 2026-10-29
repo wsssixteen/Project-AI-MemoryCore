@@ -1697,3 +1697,7 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - Tugasan PLT (Penyediaan Laporan Tanah) and its Maklumat Siasatan screen are teknikal (`MLK_TKL_ST`), not pelupusan.
 - Same table for the other pelupusan urusan (MLIT 2026, row in `umm_a_permohonan_tnh` with lot + luas): PT, PLPS, PLTP, PPTPB, MCL, MLPS, PSBS, PRZ, BPRZ, PPJK, PRU, RPPLP, PDBB, PLBP, OPRBB, OPLPS, OPPTPB, OMLPS. No row at all: UPS_PLP, UPP, UTBPB, OPLBP, PNL.
 - JSON key `idHkmlk` exists only on PRBB (48 of 111) and PDBB (5 of 16). Other hakmilik-based urusan link the hakmilik through `umm_a_hkmlk.id_hkmlk` only.
+
+- 2026-10-29 (from the 2026-10-20 assessment file, in git history; recovered 2026-10-29): Jadual 1 points h/i/j come from UMM_P_HKMLK_LAIN, which has no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK (QA-284884).
+
+- 2026-10-29 (from the 2026-10-05 assessment file, in git history; recovered 2026-10-29): Template processing stamps umm_a_dok_keluaran.a_tgsn_id with the tugasan that last PROCESSED the document (PelupusanTemplateUtil.saveDocuments); an existing document is reprocessed in place, never rebuilt from the template.
