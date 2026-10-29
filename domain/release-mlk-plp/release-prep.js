@@ -872,6 +872,54 @@ function mrRecord(st, a) {
   mrSelfAudit(st);
 }
 
+// --create-mr --reviewer <name> [--confirm]: create the MR through the GitLab API (token in gitlab.token, never printed).
+// Without --confirm it only prints the table of what will be sent (the removable confirmation step).
+async function mrCreate(st, a) {
+  if (st.phase !== 'mr-pending' || !st.mr) die(`CREATE-MR REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
+  if (st.mr.url) die(`CREATE-MR REFUSED — an MR is already recorded: ${st.mr.url} (--abandon-mr first if it was closed)`, 2);
+  const gl = gitlabConfig();
+  const cfg = JSON.parse(fs.readFileSync(CONFIG, 'utf8')).gitlab || {};
+  if (!cfg.token) die(`CREATE-MR REFUSED — no gitlab.token in ${CONFIG}`, 2);
+  const rv = gl.reviewers.find(r => r.name.toLowerCase() === String(a.reviewer || '').toLowerCase() || r.username.toLowerCase() === String(a.reviewer || '').replace(/^@/, '').toLowerCase());
+  if (!rv) die(`CREATE-MR REFUSED — --reviewer must be one of: ${gl.reviewers.map(r => r.name).join(', ')}`, 2);
+  const want = { source_branch: st.branch, target_branch: 'mlk/master', title: st.mr.title, description: MR_DESCRIPTION, squash: false, remove_source_branch: false };
+  const table = [
+    `MERGE REQUEST TO CREATE — release ${st.release}`,
+    `  project     ${st.mr.project}`, `  source      ${want.source_branch}`, `  target      ${want.target_branch}`,
+    `  title       ${want.title}`, `  description ${want.description}`, `  reviewer    ${rv.name} (@${rv.username})`,
+    `  assignee    (none)`, `  squash      OFF`, `  delete src  OFF`, `  commits     ${st.mr.expectedCommits}`, `  files       ${st.mr.expectedFiles}`];
+  if (!('confirm' in a)) { console.log(table.join('\n') + `\nnothing sent — on みや's yes: add --confirm`); return; }
+  const base = `${gl.web}/api/v4`, pid = encodeURIComponent(st.mr.project);
+  const api = async (method, p, body) => {
+    const r = await fetch(base + p, { method, headers: { 'PRIVATE-TOKEN': cfg.token, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+    const j = await r.json().catch(() => null);
+    if (!r.ok) die(`GitLab ${method} ${p} → HTTP ${r.status}: ${JSON.stringify(j).slice(0, 300)}`, 2);
+    return j;
+  };
+  const open = await api('GET', `/projects/${pid}/merge_requests?state=opened&source_branch=${encodeURIComponent(want.source_branch)}&target_branch=${encodeURIComponent(want.target_branch)}`);
+  if (open.length) die(`CREATE-MR REFUSED — already open: ${open[0].web_url} → record it: --record-mr ${open[0].web_url} --reviewer ${rv.name}`, 2);
+  const users = await api('GET', `/users?username=${encodeURIComponent(rv.username)}`);
+  if (!users.length) die(`CREATE-MR REFUSED — GitLab has no user @${rv.username}; fix gitlab.reviewers`, 2);
+  const mr = await api('POST', `/projects/${pid}/merge_requests`, { ...want, reviewer_ids: [users[0].id] });
+  // read back from GitLab, field by field, before recording
+  const back = await api('GET', `/projects/${pid}/merge_requests/${mr.iid}`);
+  const commits = await api('GET', `/projects/${pid}/merge_requests/${mr.iid}/commits?per_page=100`);
+  const checks = [
+    ['source', back.source_branch, want.source_branch], ['target', back.target_branch, want.target_branch],
+    ['title', back.title, want.title], ['description', back.description, want.description],
+    ['reviewer', (back.reviewers || []).map(u => u.username).join(','), rv.username],
+    ['squash', String(!!back.squash), 'false'], ['delete src', String(!!back.force_remove_source_branch), 'false'],
+    ['state', back.state, 'opened'], ['commits', String(commits.length), String(st.mr.expectedCommits)]];
+  const bad = checks.filter(([, got, exp]) => got !== exp);
+  console.log(checks.map(([k, got, exp]) => `  ${got === exp ? '✓' : '✗'} ${k.padEnd(11)} ${got}${got === exp ? '' : `  (expected ${exp})`}`).join('\n'));
+  st.mr.url = back.web_url; st.mr.iid = back.iid; st.mr.reviewer = { name: rv.name, username: rv.username }; st.mr.recordedAt = new Date().toISOString();
+  saveState(st);
+  log('merge-to-master', st.release, bad.length ? 'mr-created-mismatch' : 'mr-created', { url: back.web_url, reviewer: rv.name, mismatch: bad.map(b => b[0]) });
+  if (bad.length) die(`MR created but ${bad.length} field(s) differ — fix them on ${back.web_url} before the reviewer merges`, 2);
+  console.log(`✅ MR !${back.iid} created and read back · reviewer ${rv.name}\n   ${back.web_url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  mrSelfAudit(st);
+}
+
 function mrAbandon(st) {
   if (st.phase !== 'mr-pending' || !st.mr) die(`ABANDON-MR REFUSED — phase is ${st.phase}, no open merge request is recorded`, 2);
   const was = st.mr.url;
@@ -951,6 +999,7 @@ function cmdMergeToMaster(a) {
   if (!BRANCH_RE.test(st.branch)) die(`MERGE-TO-MASTER REFUSED — branch "${st.branch}" fails the release pattern`, 2);
   ensureRepo(st.repo);
   if ('check' in a) return mrCheck(st);
+  if ('create-mr' in a) return mrCreate(st, a);
   if ('record-mr' in a) return mrRecord(st, a);
   if ('abandon-mr' in a) return mrAbandon(st);
   return mrPrepare(st, a);

@@ -143,6 +143,46 @@ try {
   r = prep(['merge-to-master', '--release', '9.9.22', '--ba-approved']);
   check('M26 master ahead of the release → refused, names the hotfix', r.status === 2 && /hotfix on master/.test(all(r)) && state('9.9.22').phase === 'pushed', all(r));
 
+  // --create-mr through a mock GitLab API (separate process, so the sync script calls can reach it)
+  const mockJs = path.join(tmp, 'mock-gitlab.js'), mockLog = path.join(tmp, 'mock.log'), portFile = path.join(tmp, 'mock.port');
+  fs.writeFileSync(mockJs, `const http=require('http');const fs=require('fs');let mr=null;
+const srv=http.createServer((q,s)=>{let b='';q.on('data',d=>b+=d);q.on('end',()=>{fs.appendFileSync(${JSON.stringify(mockLog)},q.method+' '+q.url+' tok='+q.headers['private-token']+'\\n');
+const j=o=>{s.writeHead(200,{'Content-Type':'application/json'});s.end(JSON.stringify(o));};const u=q.url;
+if(q.method==='POST'){const x=JSON.parse(b);mr={iid:7,web_url:'http://127.0.0.1:'+srv.address().port+'/gitlab/etanah/etanah-pelupusan/-/merge_requests/7',state:'opened',source_branch:x.source_branch,target_branch:x.target_branch,title:x.title,description:x.description,squash:x.squash,force_remove_source_branch:x.remove_source_branch,reviewers:[{username:'aaron'}]};return j(mr);}
+if(u.includes('/users?'))return j([{id:42,username:'aaron'}]);
+if(u.includes('/commits'))return j([{},{}]);
+if(u.includes('merge_requests?'))return j(mr?[mr]:[]);
+if(u.includes('/merge_requests/7'))return j(mr);
+s.writeHead(404);s.end('{}');});});
+srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String(srv.address().port)));
+`);
+  const mock = require('child_process').spawn(process.execPath, [mockJs], { stdio: 'ignore' });
+  const sleep = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+  for (let i = 0; i < 100 && !fs.existsSync(portFile); i++) sleep(50);
+  const port = fs.readFileSync(portFile, 'utf8').trim();
+  const mockWeb = `http://127.0.0.1:${port}/gitlab`;
+  writeCfg({ gitlab: { web: mockWeb, project: PROJECT, token: 'glpat-TESTTOKEN', reviewers: [{ name: 'Aaron', username: 'aaron' }] } });
+  newRelease('9.9.23', [['c1.txt', 'c1\n'], ['c2.txt', 'c2\n']]);
+  sh(repo, ['checkout', '-q', 'mlk/hotfix/1']);
+  // master moved (hotfix 200 landed above) → the new release branched from that master, so prepare passes
+  r = prep(['merge-to-master', '--release', '9.9.23', '--ba-approved']);
+  check('M28 prepare for the API release', r.status === 0, all(r));
+  r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron']);
+  const posts = () => (fs.existsSync(mockLog) ? fs.readFileSync(mockLog, 'utf8') : '').split('\n').filter(l => l.startsWith('POST')).length;
+  check('M29 --create-mr without --confirm shows the table and sends nothing', r.status === 0 && /MERGE REQUEST TO CREATE/.test(all(r)) && /nothing sent/.test(all(r)) && posts() === 0 && !fs.existsSync(mockLog), all(r));
+  r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
+  check('M30 --confirm creates the MR, reads it back, records it', r.status === 0 && posts() === 1 && /MR !7 created and read back/.test(all(r)) && state('9.9.23').mr.url.endsWith('/merge_requests/7') && !/✗/.test(all(r)), all(r));
+  check('M31 the token is sent as a header and never printed', !/glpat-TESTTOKEN/.test(all(r)) && /tok=glpat-TESTTOKEN/.test(fs.readFileSync(mockLog, 'utf8')), all(r));
+  r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
+  check('M32 a second create is refused (MR already recorded)', r.status === 2 && /already recorded/.test(all(r)) && posts() === 1, all(r));
+  prep(['merge-to-master', '--release', '9.9.23', '--abandon-mr']);
+  r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
+  check('M33 an MR already open on GitLab is found, not duplicated', r.status === 2 && /already open/.test(all(r)) && posts() === 1, all(r));
+  writeCfg({ gitlab: { web: mockWeb, project: PROJECT, reviewers: [{ name: 'Aaron', username: 'aaron' }] } });
+  r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
+  check('M34 no token → refused before any call', r.status === 2 && /no gitlab\.token/.test(all(r)), all(r));
+  mock.kill();
+
   const logRows = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-40).map(l => { try { return JSON.parse(l); } catch (_) { return {}; } });
   check('M27 log rows: prepared · recorded · waiting · ok', ['mr-prepared', 'mr-recorded', 'mr-waiting', 'mr-abandoned', 'ok'].every(k => logRows.some(x => x.cmd === 'merge-to-master' && x.result === k)), JSON.stringify(logRows.map(x => x.result)));
 } catch (e) {
