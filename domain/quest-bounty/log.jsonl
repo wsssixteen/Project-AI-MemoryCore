@@ -241,3 +241,4 @@
 {"ts":"2026-10-29T12:02:20.503Z","qa":"ADHOC-BPRZ-2026-1","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-29T12:02:38.415Z","qa":"ADHOC-BPRZ-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc answered, no issue; finding already in ADHOC-REGISTER A6, nothing new to harvest"}
 {"ts":"2026-10-29T12:42:12.474Z","qa":"QA-287292","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-29T18:14:16.664Z","qa":"QA-282587","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"0229aee7d913ba3590cfd92e2bc4a1f08ab1e31f","branch":"mlk/internal-issues/282587"}
