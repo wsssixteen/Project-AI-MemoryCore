@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
+- 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
+- Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
+- System: hotfix skill gained "Hotfix deployment" H1-H4 + the infra team's template, ticket line = number only. Knowledge: pemegang permit/lesen name = `ind_pemegang_permit_lesen.nama_pemegang` (DATABASE.md).
+- Open: bounty proposal (worktree guard blocks Edit on main-only untracked quest files) waits for miya's ruling. Work worktree `E:\Dev\etanah-work\etanah-pelupusan-hotfix-285768` and `wt-common-285768` kept until his yes.
+
 **Last Activity**: 2026-10-29 21:00 — worktree `redmine-issue-287292-1cfb39`, quest 287292 (PROD document patch, UPP Surat Makluman Pembatalan) closed through Phase 2 and archived, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "redmine-issue-287292-1cfb39", 287292 PROD letter patch)
@@ -17,10 +25,3 @@
 - miya: "no, it is okay" → closed ANSWERED, route ANSWER. Register Penang A6 ANSWERED; Task folder 7 → Archive; block → active-archive.txt. Audit 30/30 PASS (agent's run; my own re-run is blocked by the adhoc-brief-first gate).
 - Open: nothing for this adhoc. archive-quest needed `--allow-stub` (no Bounty section on an answered adhoc).
 **Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
-- Built: Fable 5.1 Foundations audit (18 foundations, 12 conflicts, 0 of 7 change paths ended on main) → `/system-change` route owned by `system/INDEX.md` §The change route (rulings 13-14, group name Capabilities), skill + `domain/system-change/` (eval 21/21), design-consult-gate advisory (37/37), map picture boot-pointed (CLAUDE.md v1.96, v1.97). On GitHub main since `0cdf6ee6`.
-- miya's verdict at the end: talk to him like a person, not a report; answering a Stop hook in the middle of a conversation broke it. Child sessions felt like wasted time; this one was slow because the audit, two landing fights and robot replies, not because it was a child.
-- Not done (handover `main/handoff-2026-10-28-system-change-workflow.md` top note): `feedback_daily_commit.md` pointer · stale lines in auto-skill-on-mistake and design-consult-gate README · one path list for the 3 gates · version-stamp uniqueness check · the 9 unnamed root folders (his nod needed, most proposals are deletes).
-- Next: the parent session pulls main; the route's first real run is the live proof (watch `wmvta6ack`).
-**Last Activity**: 2026-10-29 20:05 — worktree `melaka-goal-quest-adhoc-297634`, adhoc ADHOC-PRBB-2026-19 answered + saved, Domain Expansion.
