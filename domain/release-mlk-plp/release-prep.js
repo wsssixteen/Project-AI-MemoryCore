@@ -782,6 +782,7 @@ function cmdPush(a) {
 // The browser half (fill the form, read it back, the two confirmations) lives in the skill, Phase F.
 const CONFIG = process.env.RELEASE_MLK_PLP_CONFIG || path.join(__dirname, 'servers.local.json');
 const MR_TITLE = ver => `Release Pelupusan ${ver}`;
+const MR_DESCRIPTION = 'Need assistance to merge. Thank you.';   // fixed text, per みや 2026-10-29
 function gitlabConfig() {
   const cfg = fs.existsSync(CONFIG) ? JSON.parse(fs.readFileSync(CONFIG, 'utf8')) : {};
   const g = cfg.gitlab || {};
@@ -825,7 +826,7 @@ function mrPrepare(st, a) {
   const files = gitOut(st.repo, ['diff', '--name-only', `origin/mlk/master...origin/${st.branch}`]).split('\n').filter(Boolean);
   const title = MR_TITLE(st.release);
   const enc = encodeURIComponent;
-  const newUrl = `${gl.web}/${project}/-/merge_requests/new?merge_request%5Bsource_branch%5D=${enc(st.branch)}&merge_request%5Btarget_branch%5D=${enc('mlk/master')}&merge_request%5Btitle%5D=${enc(title)}`;
+  const newUrl = `${gl.web}/${project}/-/merge_requests/new?merge_request%5Bsource_branch%5D=${enc(st.branch)}&merge_request%5Btarget_branch%5D=${enc('mlk/master')}&merge_request%5Btitle%5D=${enc(title)}&merge_request%5Bdescription%5D=${enc(MR_DESCRIPTION)}`;
   const prior = st.mr || {};
   st.phase = 'mr-pending';
   st.mr = { releaseTip, masterAtPrepare: gitOut(st.repo, ['rev-parse', 'origin/mlk/master']), expectedCommits, expectedFiles: files.length, files,
@@ -839,7 +840,7 @@ function mrPrepare(st, a) {
     `  source      ${st.branch}`,
     `  target      mlk/master`,
     `  title       ${title}`,
-    `  description as GitLab pre-fills it — left as is, shown to みや for approval`,
+    `  description ${MR_DESCRIPTION}`,
     `  reviewer    one of: ${gl.reviewers.map(r => `${r.name} (@${r.username})`).join(' · ')}`,
     `  assignee    (empty)`,
     `  draft       OFF`,
