@@ -73,9 +73,9 @@ The reply's FIRST line is the full Windows path of the `2. Fix\` folder, ONCE; t
 Each box holds only what he pastes. Banned inside a box: "STEP 1/2", "after infra confirms", the attachment name, any explanation.
 Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_patch_infra_handoff` data patch).
 
-Replace document (he attaches the edited docx):
+Upload document (he attaches the edited docx; the word is "upload", never "replace", per miya 2026-10-29):
 ```
-Hi infra, please help to replace document for MLK PROD. Thank you.
+Hi infra, please help to upload document for MLK PROD. Thank you.
 #<num>: <URUSAN> - <one short outcome sentence>.
 
 <lokasi_fail>
