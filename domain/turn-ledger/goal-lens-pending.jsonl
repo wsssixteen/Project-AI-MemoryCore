@@ -832,3 +832,7 @@
 {"ts":"2026-10-29T11:26:41.761Z","turn_id":"3250c460-31","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
 {"ts":"2026-10-29T11:38:40.138Z","turn_id":"cdb12974-33","feature":"prod-alter-gate","goal":"a PROD alter runs only on a plan miya approved in chat, bound to the exact plan code"}
 {"ts":"2026-10-29T11:55:32.785Z","turn_id":"af91154d-22","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-10-29T11:58:48.585Z","turn_id":"46d054e2-14","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-10-29T12:00:17.795Z","turn_id":"f3b42c74-5","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-10-29T12:03:23.812Z","turn_id":"46d054e2-15","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-10-29T12:03:29.496Z","turn_id":"67c3aae7-3","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}

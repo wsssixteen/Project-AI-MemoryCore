@@ -194,5 +194,11 @@
 {"ts":"2026-10-29T11:50:59.535Z","parts":35,"pass":85,"fail":11,"unruled":3,"skip":0,"dur_ms":434008,"partial":false}
 {"ts":"2026-10-29T11:51:58.429Z","parts":13,"pass":47,"fail":4,"unruled":0,"skip":0,"dur_ms":5431,"partial":false}
 {"ts":"2026-10-29T11:53:26.897Z","parts":13,"pass":51,"fail":0,"unruled":0,"skip":0,"dur_ms":11119,"partial":false}
+<<<<<<< HEAD
 {"ts":"2026-10-29T12:07:50.919Z","parts":15,"pass":62,"fail":1,"unruled":0,"skip":0,"dur_ms":23996,"partial":false}
 {"ts":"2026-10-29T12:08:48.303Z","parts":15,"pass":63,"fail":0,"unruled":0,"skip":0,"dur_ms":25914,"partial":false}
+=======
+{"ts":"2026-10-29T12:02:53.758Z","parts":16,"pass":63,"fail":1,"unruled":0,"skip":0,"dur_ms":16745,"partial":false}
+{"ts":"2026-10-29T12:05:42.777Z","parts":16,"pass":64,"fail":0,"unruled":0,"skip":0,"dur_ms":40090,"partial":false}
+{"ts":"2026-10-29T12:02:37.482Z","parts":16,"pass":57,"fail":0,"unruled":1,"skip":0,"dur_ms":12834,"partial":false}
+>>>>>>> origin/main
