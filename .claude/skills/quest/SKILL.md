@@ -346,6 +346,7 @@ Rules: English, like miya's own notes · greet the LIVE assignee (re-sync Redmin
 
 ### 🗣️ Plain first — DEFAULT for every quest briefing and explanation (added 2026-09-29 per みや, #282061)
 
+**Story picture FIRST, every hand-back (2026-10-29 per みや, #286988: "use diagram skill to explain, always. Like tell me like a story.")**: `→ Skill: explain-diagram`, a rendered picture, looked at, sent. Two rows. Top row, "What happened": (1) where the permohonan is now (tugasan + login) → (2) what went wrong there (the value of concern highlighted) → (3) where it must go. Bottom row, "What we do": (4) our action, named as alter / init-alter / patch / code fix, with one line on why not the others, in the accent colour → (5) what happens after. One sentence, then the details. **Banned**: a Phase 0 or Rubric hand-back that opens with tables or numbered sections and no picture.
 Open with 1-2 plain sentences that give the cause in everyday words, before any diagram, table, class name or file:line. Example: *"The duplicate happens because of a logic error. The system only looks for an unpaid bill, but the bill was already paid."* THEN the details: a simple flow diagram, then a short Q → A table, and the technical site LAST on its own line. **Banned**: opening with a trace, a table or code · mixing the plain cause and the technical path in one paragraph.
 
 ### 📋 Everything on this ticket — MANDATORY after Rubric and in every brief (added 2026-09-29 per みや, #282061)

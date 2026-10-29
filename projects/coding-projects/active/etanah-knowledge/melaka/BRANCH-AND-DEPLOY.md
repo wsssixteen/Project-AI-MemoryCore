@@ -228,3 +228,10 @@ Workflow: `.claude/skills/hotfix/SKILL.md` (fired by the etanah-intake-gate HOTF
 because nothing documented it; the derivation then missed `mlk/int-env` because the Redmine ticket
 was never read. The ticket said *"merge into mlk/int-env and mlk/stag-env branch and deploy the
 changes in MLIT and MLKSTAG - Awam."* **Read the ticket before deriving anything.**
+
+## Protected mlk/master (pelupusan), verified 2026-10-29
+- A push to mlk/master is refused: `remote: GitLab: You are not allowed to push code to protected branches on this project`.
+- A release reaches master through a GitLab merge request (Maintainers Aaron @aaronloh, Alex @alexang merge). Tool: `release-prep.js merge-to-master --create-mr --reviewer <name> --confirm` (API, token in git-ignored servers.local.json). First one: MR !9 (1.9.0).
+- GitLab web lives under `http://10.16.63.27/gitlab` (the bare host answers 404). A new-MR form pre-fills the description from a commit message.
+- Staging (mlk/stag-env) is caught up from the release branch in the same turn; the later MR merge commit does not count as staging behind.
+
