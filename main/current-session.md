@@ -8,6 +8,15 @@
 - miya's WA reply fact-checked (all correct) and rewritten in the list shape; Pena rule c56 (module table) = WhatsApp list: *Label*: value, then each table.column on its own line.
 - Save audit 29/29 PASS. Archive needed --allow-stub (no Bounty section in an adhoc qa_doc).
 - Open: write SPOC 6/7 rule + AWAM Rekod Pembaharuan sources to etanah-knowledge only if miya asks.
+**Last Activity**: 2026-10-29 19:55 — worktree `baseline-wednesday-release-029181` ("Baseline 1.9.0"), BA passed, master MR !9 created, Phase F rebuilt on the GitLab API, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "baseline-wednesday-release-029181", Baseline Pelupusan 1.9.0 Phase F)
+- BAQA passed 1.9.0. `merge-to-master` push refused: GitLab now protects `mlk/master`. Staging caught up from the release (`mlk/stag-env` 876e1cf03b, common 1.10.20-MLK).
+- Phase F rebuilt (Fable 5.1 audited the plan): `release-prep.js merge-to-master` never pushes; `--create-mr --reviewer <name> --confirm` creates the MR through the GitLab API (token in git-ignored `servers.local.json`, user ridhwan), reads every field back, records the URL. Description always "Need assistance to merge. Thank you.". Reviewers Aaron @aaronloh · Alex @alexang.
+- miya's rules today: only the reviewer pick is asked; after BA pass the MR and the staging catch-up run in the SAME turn (no waiting for master); GitLab pre-fills stay unless a fixed value is set.
+- Live: MR !9 http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/9 (Aaron, 24 commits, all fields ✓). 1.9.0 state `mr-pending`.
+- Evals: eval-merge-request 36/36, eval-stag-catchup 33/33, push-gate 51/51; `eval.js` 13/17 fails the same 4 on unchanged code (pre-existing, not from this change).
+- Next: Aaron merges → `merge-to-master --release 1.9.0 --check`. His checkout `E:\Projects\Melaka\etanah-pelupusan` sits on `mlk/master` at 585a7bcdad (release tip), was on `mlk/hotfix/285768`.
 
 **Last Activity**: 2026-10-29 18:10 — worktree `sweep-orchestration-audit-39e710`, /sweep 286655 286646 286610 done, then the sweep audit Tool + audit-and-refine step built (system change).
 
