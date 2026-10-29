@@ -1471,6 +1471,11 @@
 {"ts":"2026-10-27T17:43:30.377Z","category":"A5"}
 {"ts":"2026-10-27T17:34:22.840Z","category":"A1"}
 {"ts":"2026-10-27T17:34:23.709Z","category":"A1"}
+{"ts":"2026-10-28T04:29:34.897Z","category":"release-baseline-as-deploy-blocker"}
+{"ts":"2026-10-28T04:36:30.255Z","category":"deploy-card-missing-evidence-line"}
+{"ts":"2026-10-28T06:37:44.261Z","category":"session-name-not-applied"}
+{"ts":"2026-10-28T08:24:08.314Z","category":"reask/buried-answer"}
+{"ts":"2026-10-29T11:26:21.595Z","category":"reask/redundant"}
 {"ts":"2026-10-29T10:05:26.952Z","category":"diagram-skipped-at-decision"}
 {"ts":"2026-10-28T02:58:42.243Z","category":"model-tiering/fable-skipped"}
 {"ts":"2026-10-28T03:01:53.885Z","category":"deploy/tickets-bundled"}
@@ -1550,3 +1555,8 @@
 {"ts":"2026-10-29T13:36:49.262Z","category":"A1"}
 {"ts":"2026-10-29T13:36:51.278Z","category":"A2"}
 {"ts":"2026-10-29T13:53:11.064Z","category":"A1"}
+{"ts":"2026-10-29T13:28:28.966Z","category":"redmine-write"}
+{"ts":"2026-10-29T13:29:13.115Z","category":"A1"}
+{"ts":"2026-10-29T13:29:14.071Z","category":"A2"}
+{"ts":"2026-10-29T13:29:14.827Z","category":"A3"}
+{"ts":"2026-10-29T13:29:16.018Z","category":"A4"}
