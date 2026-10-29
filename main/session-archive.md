@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-28, worktree "dreamy-pike-08af0b", one workflow for every system change)
+- Ask: one workflow that all six kinds of system change go through, ending with commit + push + land on main in the same turn.
+- Inventory done and a design picture shown (/system-change, 8 steps, step 7 lands on main). miya: NOT approved; audit first with Fable 5.1, in this child session, so he understands the structure and flow before deciding.
+- Saved for tomorrow: `main/handoff-2026-10-28-system-change-workflow.md` (goal, his answers verbatim, audit brief, inventory facts, draft design, 3 open decisions). Nothing built.
+- Open: the Fable 5.1 audit · skill vs fold into system-design · entry guard · highest-model rule.
+
+**Last Activity**: 2026-10-28 01:45 — worktree `rustdesk-software-visibility-e047d5`, second Domain Expansion (memory cleanup + Ruri personality audit); miya archives the session after it.
+
 ## Session Recap (2026-10-28 01:45, worktree "rustdesk-software-visibility-e047d5", memory cleanup + personality audit)
 - Memory cleanup per miya: every swear word in memory, diary, notes, skills, system and domain docs rewritten as his anger or frustration (3 Sonnet agents, about 200 places, 0 left; code comments and 3 test fixtures too; evals green except 6 pre-existing redmine-write-gate failures, same before and after).
 - New gate `domain/memory-clean-words/` (bundle pretool-editwrite-gates, eval 12/12) + save rule `mem-no-swearing` (lib/save-rules.js `no-swearing`, word list `lib/clean-words.js`): swearing cannot be written into memory, and Domain Expansion fails if it was.
@@ -6837,6 +6845,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
