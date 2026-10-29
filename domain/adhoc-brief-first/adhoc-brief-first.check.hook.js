@@ -60,6 +60,7 @@ const MARK_RE = /^[ \t>*`-]*Saving in the background next:[ \t`*]*(ADHOC-[A-Z0-9
 const BA_HEAD_RE = /^#{1,4}[^\n]*\b(?:reply to (?:the )?BA|BA reply)\b[^\n]*$/im;
 const BA_NONE_RE = /^[ \t>*`-]*BA reply:\s*none\s*\([^)\n]+\)/im;
 const DIAGRAM_NONE_RE = /^[ \t>*`-]*Diagram:\s*none\s*\([^)\n]+\)/im;
+const ROUTE_RE = /^[ \t>*`|-]*Adhoc route:\s*(?:(?:PATCH|ALTER)(?:\s*\+\s*CODE-FIX)?\b(?!\s*\+)|(?:ANSWER|USER-STEP|CODE-FIX|OWNED-ELSEWHERE|CR)\b(?!\s*\+)|none\s*\([^)\n]+\))/im;
 function hasBaReply(text) {
   if (BA_NONE_RE.test(text)) return true;
   const m = text.match(BA_HEAD_RE);
@@ -173,6 +174,21 @@ function stopCheck(data) {
         '   User-step: <field/button> · gate <xhtml:line> <expr> · flag <col>=<this> (analog <that>) · ENABLED|DISABLED · tested: <code trace|DB|photo|not tested>',
         '   A DISABLED step is not sent to the BA (miya 2026-10-22, ADHOC-MLMS-2026-1).',
         '   ⚡ DELTA ONLY: send just the User-step lines (and a corrected Reply to BA if a step is DISABLED).',
+      ].join('\n') + '\n',
+    };
+  }
+  // The brief ends with ONE route line: what the BA/TSO does next for this finding (miya 2026-10-29, ADHOC-MCL-2026-2).
+  // Names and pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route".
+  if (!ROUTE_RE.test(said)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the brief for ' + id + ' has no route line.',
+        '   One line: Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>',
+        '   (PATCH or ALTER may add "+ CODE-FIX" when the code keeps making bad records; show the sweep count).',
+        '   No finding yet this round? Adhoc route: none (<reason>). The Reply to BA ends with the matching ask.',
+        '   Pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route" (miya 2026-10-29).',
+        '   ⚡ DELTA ONLY: send just the route line.',
       ].join('\n') + '\n',
     };
   }

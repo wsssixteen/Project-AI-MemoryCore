@@ -86,19 +86,25 @@ eq('S48 typed by him, not worked -> NEVER removed', settle({ existing: { plan: [
 eq('S49 placed by the script but he edited the text -> never removed', settle({ existing: { plan: [E(10, '274323 - 50%')], adhoc: [] }, worked: [], mine: mineIds([10]) }).remove, []);
 eq('S50 placed by the script and he marked it RESOLVED -> never removed', settle({ existing: { plan: [E(10, '274323', 'RESOLVED')], adhoc: [] }, worked: [], mine: mineIds([10]) }).remove, []);
 eq('S51 Redmine unreachable (canRemove false) -> nothing removed', settle({ existing: { plan: [E(10, '274323')], adhoc: [] }, worked: [], mine: mineIds([10]), canRemove: false }).remove, []);
-eq('S52 adhoc of the day missing -> added', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - MLPS Borang 4Ae cop tak papar'] }).addAdhoc, ['PROD (MLK) - MLPS Borang 4Ae cop tak papar']);
+eq('S52 adhoc of the day missing -> added', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['MLK (PROD) - MLPS Borang 4Ae cop tak papar'] }).addAdhoc, ['MLK (PROD) - MLPS Borang 4Ae cop tak papar']);
 eq('S53 adhoc he already typed in near-same words -> not added again', settle({ existing: { plan: [], adhoc: [E(3, 'PROD - TRG - PLPS SKM tiada dalam senarai')] }, adhocs: ['PROD - TRG - PLPS tugasan SKM tiada dalam inbox'] }).addAdhoc, []);
-eq('S54 the same adhoc twice in one run -> added once', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - PRBB surat keputusan tandatangan issue', 'PROD (MLK) - PRBB surat keputusan tandatangan issue'] }).addAdhoc.length, 1);
+eq('S54 the same adhoc twice in one run -> added once', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['MLK (PROD) - PRBB surat keputusan tandatangan issue', 'MLK (PROD) - PRBB surat keputusan tandatangan issue'] }).addAdhoc.length, 1);
+eq('S54a an entry written in the older form is the same adhoc as its new-form line -> not added again', settle({ existing: { plan: [], adhoc: [E(5, 'Staging (MLK) - MLPS Borang 4Ae Tandatangan error')] }, adhocs: ['MLK (Internal) - MLPS Borang 4Ae Tandatangan error'] }).addAdhoc, []);
 eq('S55 an adhoc entry is never removed', settle({ existing: { plan: [], adhoc: [E(4, '283286')] }, worked: [], mine: mineIds([4]) }).remove, []);
 
 eq('S56 two different adhocs are not the same', sameTitle('PROD - PRBB surat keputusan tandatangan issue', 'PROD - MLPS Borang 4Ae cop tak papar'), false);
 eq('S57 env and state words alone do not make two titles the same', sameTitle('PROD - MLK - No Lesen missing', 'PROD - MLK - Peranan KPT missing'), false);
-eq('S58 ProTime line: PROD + title', protimeLine({ env: 'PROD', title: 'MLPS Borang 4Ae cop tak papar' }), 'PROD (MLK) - MLPS Borang 4Ae cop tak papar');
-eq('S59 ProTime line: MLIT is written Internal', protimeLine({ env: 'MLIT', title: 'PRBB lot luas laporan tanah kosong' }), 'Internal (MLK) - PRBB lot luas laporan tanah kosong');
-eq('S60 ProTime line: staging', protimeLine({ env: 'MLKSTG', title: 'PT tugasan PSJT error' }), 'Staging (MLK) - PT tugasan PSJT error');
-eq('S61 ProTime line: the state goes in brackets after the env', protimeLine({ env: 'PROD', state: 'terengganu', title: 'PLPS tugasan SKM missing' }), 'PROD (TRG) - PLPS tugasan SKM missing');
-eq('S62 ProTime line: Melaka is written MLK', protimeLine({ env: 'PROD', state: 'melaka', title: 'No Lesen date issue' }), 'PROD (MLK) - No Lesen date issue');
-eq('S63 ProTime line: a title that already opens with an env word is kept', protimeLine({ env: 'MLKSTG', title: 'Internal (PLP) - PPTPB sewa tahunan peraturan hardcoded' }), 'Internal (PLP) - PPTPB sewa tahunan peraturan hardcoded');
+eq('S58 ProTime line: PROD + title', protimeLine({ env: 'PROD', title: 'MLPS Borang 4Ae cop tak papar' }), 'MLK (PROD) - MLPS Borang 4Ae cop tak papar');
+eq('S59 ProTime line: MLIT is written Internal', protimeLine({ env: 'MLIT', title: 'PRBB lot luas laporan tanah kosong' }), 'MLK (Internal) - PRBB lot luas laporan tanah kosong');
+eq('S60 ProTime line: staging is written Internal (miya 2026-10-29)', protimeLine({ env: 'MLKSTG', title: 'PT tugasan PSJT error' }), 'MLK (Internal) - PT tugasan PSJT error');
+eq('S61 ProTime line: the state goes first, the env in brackets', protimeLine({ env: 'PROD', state: 'terengganu', title: 'PLPS tugasan SKM missing' }), 'TRG (PROD) - PLPS tugasan SKM missing');
+eq('S62 ProTime line: Melaka is written MLK', protimeLine({ env: 'PROD', state: 'melaka', title: 'No Lesen date issue' }), 'MLK (PROD) - No Lesen date issue');
+eq('S63 ProTime line: a title in the older env-first form is rewritten state first', protimeLine({ env: 'MLKSTG', title: 'Internal (PLP) - PPTPB sewa tahunan peraturan hardcoded' }), 'MLK (Internal) - PPTPB sewa tahunan peraturan hardcoded');
+eq('S63a ProTime line: older staging form -> Internal, state kept', protimeLine({ env: 'MLKSTG', title: 'Staging (PNG) - X page error' }), 'PNG (Internal) - X page error');
+eq('S63b ProTime line: older "PROD - TRG - ..." form -> TRG (PROD)', protimeLine({ env: 'PROD', title: 'PROD - TRG - PLPS SKM tiada dalam senarai' }), 'TRG (PROD) - PLPS SKM tiada dalam senarai');
+eq('S63c ProTime line: a title already state first is kept', protimeLine({ env: 'PROD', state: 'melaka', title: 'PNG (Internal) - Check SPOC service data save from Awam' }), 'PNG (Internal) - Check SPOC service data save from Awam');
+eq('S63d ProTime line: training is written Internal', protimeLine({ env: 'training', state: 'Perak', title: 'PT tugasan missing' }), 'PRK (Internal) - PT tugasan missing');
+eq('S63e ProTime line: Putrajaya is written WP', protimeLine({ env: 'PROD', state: 'Putrajaya', title: 'PT tugasan missing' }), 'WP (PROD) - PT tugasan missing');
 eq('S64 ProTime line: unknown env -> title alone', protimeLine({ env: 'CODE', title: 'AWAM senarai semak module check' }), 'AWAM senarai semak module check');
 eq('S65 ProTime line: no title -> empty, never invented', protimeLine({ env: 'PROD' }), '');
 
@@ -115,21 +121,23 @@ eq('S73 today\'s night row with a removal -> FILLED', statusOf([{ day: '2026-10-
 eq('S74 yesterday\'s row does not count for today', statusOf([{ day: '2026-10-12', run: 'morning', mode: 'live', result: 'ok', created: [{ id: 1 }] }], new Date('2026-10-13T12:00:00')).verdict, 'DID NOT RUN');
 eq('S75 Saturday -> NOT DUE YET', statusOf([], new Date('2026-10-17T12:00:00')).verdict, 'NOT DUE YET');
 
-eq('S76 ProTime line: his own example (Penang, internal)', protimeLine({ env: 'MLIT', state: 'penang', title: 'Check SPOC service data save from Awam' }), 'Internal (PNG) - Check SPOC service data save from Awam');
+eq('S76 ProTime line: his own example (Penang, internal)', protimeLine({ env: 'MLIT', state: 'penang', title: 'Check SPOC service data save from Awam' }), 'PNG (Internal) - Check SPOC service data save from Awam');
 // ---- the line check: his real lines pass, my known-wrong lines fail (2026-10-14) ----
 const { lintLine, MANUAL, manualArgsError, rulesText } = require('./protime-plan.js');
-const HIS = ['Assist BA - Query to patch Tarikh Tamat permit', 'Assist BA - Patch Tujuan permit', 'Internal (MLK) - PDF viewer error, document not showing',
-  '281650 - Clarify to user', 'Internal (PNG) - Check SPOC service data save from Awam', 'Setup clone for Penang project', 'Staging (MLK) - MLPS Borang 4Ae Tandatangan error',
-  '246923 - Review & deploy', '264355 & 274266 - Debug & delegate to junior.', 'Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah', 'PROD (MLK) - Missing Tujuan in Borang 4Ae',
-  'PROD (TRG) - PLPS SKM tiada dalam senarai', 'Baseline Pelupusan 1.8.1', 'Update Redmine details (Root Cause, Solutions, etc) for tickets 276584, 276549'];
+// his lines, the env lines in his format of 2026-10-29 (state first, PROD or Internal)
+const HIS = ['Assist BA - Query to patch Tarikh Tamat permit', 'Assist BA - Patch Tujuan permit', 'MLK (Internal) - PDF viewer error, document not showing',
+  '281650 - Clarify to user', 'PNG (Internal) - Check SPOC service data save from Awam', 'Setup clone for Penang project', 'MLK (Internal) - MLPS Borang 4Ae Tandatangan error',
+  '246923 - Review & deploy', '264355 & 274266 - Debug & delegate to junior.', 'Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah', 'MLK (PROD) - Missing Tujuan in Borang 4Ae',
+  'TRG (PROD) - PLPS SKM tiada dalam senarai', 'Baseline Pelupusan 1.8.1', 'MLK Baseline Pelupusan 1.8.1', 'Update Redmine details (Root Cause, Solutions, etc) for tickets 276584, 276549'];
 eq('S77 every line he keyed or approved passes the line check', HIS.filter(l => lintLine(l).length).map(l => l + ' -> ' + lintLine(l).join(';')), []);
 const BAD = ['PROD - TRG - PLPS SKM tiada dalam senarai', 'Staging - PT tugasan PSJT ralat buka', 'AWAM slip permohonan gagal jana', 'Internal - PLP dashboard ralat Invalid path TestGis',
-  '281650 - Answer user questions', 'PROD (MLK) - NPE at MlkBorang4CeForm.initMklmt()', 'Assist BA - Retrieve PRBB Permit &amp; Tugasan', 'PROD (MLK) - Wrong data PTMLK/02/L/PT/2026/7', '', 'PROD (XYZ) - Something wrong'];
+  '281650 - Answer user questions', 'MLK (PROD) - NPE at MlkBorang4CeForm.initMklmt()', 'Assist BA - Retrieve PRBB Permit &amp; Tugasan', 'MLK (PROD) - Wrong data PTMLK/02/L/PT/2026/7', '', 'PROD (XYZ) - Something wrong',
+  'Staging (MLK) - PT tugasan PSJT error', 'Internal (PNG) - Check SPOC service data save from Awam', 'PROD (MLK) - Missing Tujuan in Borang 4Ae', 'MLK (Staging) - PT tugasan PSJT error', 'MLK - PT tugasan PSJT error', 'XYZ (PROD) - Something wrong'];
 eq('S78 every known-wrong line is refused', BAD.filter(l => !lintLine(l).length), []);
-eq('S79 a run never writes an adhoc line that breaks his format', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['Staging - PT tugasan PSJT ralat buka', 'PROD (MLK) - PT tugasan PSJT error'] }).addAdhoc, ['PROD (MLK) - PT tugasan PSJT error']);
+eq('S79 a run never writes an adhoc line that breaks his format', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['Staging - PT tugasan PSJT ralat buka', 'MLK (PROD) - PT tugasan PSJT error'] }).addAdhoc, ['MLK (PROD) - PT tugasan PSJT error']);
 eq('S80 --add-adhoc refuses a bad line before any login', /line refused/.test(manualArgsError('--add-adhoc', ['2026-10-14', 'PROD - TRG - X missing'])), true);
 eq('S81 --add-plan needs a 6-digit ticket', manualArgsError('--add-plan', ['2026-10-14', '12345']) !== null, true);
-eq('S82 --rename needs a numeric entry id', manualArgsError('--rename', ['2026-10-14', 'abc', 'PROD (MLK) - X issue']) !== null, true);
+eq('S82 --rename needs a numeric entry id', manualArgsError('--rename', ['2026-10-14', 'abc', 'MLK (PROD) - X issue']) !== null, true);
 eq('S83 a good --resolve passes the argument check', manualArgsError('--resolve', ['2026-10-14', '284775']), null);
 eq('S84 a bad date is refused', manualArgsError('--show', ['14-10-2026']) !== null, true);
 
@@ -148,10 +156,10 @@ eq('S89 --rules prints the times that are really in task.xml', [...xml.matchAll(
 eq('S90 the scheduled launcher runs the same script the skill runs', /protime-plan\.js"" --auto --live --once --notify/.test(fsE.readFileSync(pathE.join(__dirname, 'run-hidden.vbs'), 'utf8')), true);
 const ADHOC_SKILL = (() => { try { return fsE.readFileSync(pathE.join(__dirname, '..', '..', '.claude', 'skills', 'adhoc-save', 'SKILL.md'), 'utf8'); } catch (_) { return ''; } })();
 const ruleSection = (ADHOC_SKILL.split('## Adhoc title (ProTime)')[1] || '').split('\n## ')[0];
-const ruleExamples = [...ruleSection.matchAll(/his `([^`]+)`|\| `([^`]+)` ·|`((?:PROD|Internal|Staging) \([A-Z]+\) - [^`]+)`/g)].map(m => m[1] || m[2] || m[3]).filter(x => /^(\d{6}|Assist BA|PROD|Internal|Staging)\b/.test(x));
+const ruleExamples = [...ruleSection.matchAll(/his `([^`]+)`|\| `([^`]+)` ·|`((?:MLK|TRG|PNG|PRK|SGR|KDH|WP) \((?:PROD|Internal)\) - [^`]+)`/g)].map(m => m[1] || m[2] || m[3]).filter(x => /^(\d{6}|Assist BA)\b|^(MLK|TRG|PNG|PRK|SGR|KDH|WP) \(/.test(x));
 eq('S91 the wording rule still has its examples', ruleExamples.length >= 4, true);
 eq('S92 every full line in the wording rule passes the script line check', ruleExamples.filter(l => !/<|\.\.\./.test(l) && lintLine(l).length), []);
-eq('S93 the wording rule names the same format the script writes', ruleSection.includes('`<ENV> (<STATE>) - <title>`') && protimeLine({ env: 'PROD', state: 'melaka', title: 'X' }) === 'PROD (MLK) - X', true);
+eq('S93 the wording rule names the same format the script writes', ruleSection.includes('`<STATE> (<ENV>) - <title>`') && protimeLine({ env: 'PROD', state: 'melaka', title: 'X' }) === 'MLK (PROD) - X', true);
 
 // ---- plan or adhoc, and resolve (miya 2026-10-14) ----
 const { ownerOfDay, toResolve } = require('./protime-plan.js');
@@ -174,7 +182,7 @@ eq('S105 adhoc waiting on infra -> not resolved', RS.includes(5), false);
 eq('S106 plain adhoc of the day -> resolved', RS.includes(6), true);
 eq('S107 a line he typed himself -> never resolved by the run', RS.includes(7), false);
 eq('S109 the run skips a day he approved line by line (no add, remove or resolve)', /if \(approvedDays\.has\(d\)\) \{ console\.log\(`\$\{d\}: approved by him line by line - left alone`\); continue; \}/.test(require('fs').readFileSync(require('path').join(__dirname, 'protime-plan.js'), 'utf8')), true);
-eq('S108 an approved day is left alone: settle adds no adhoc there', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - X issue'], approvedDay: true }).addAdhoc, []);
+eq('S108 an approved day is left alone: settle adds no adhoc there', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['MLK (PROD) - X issue'], approvedDay: true }).addAdhoc, []);
 
 // ---- the 3-ticket KPI at night (miya 2026-10-14: 284831 should not have been added to a day already holding 4) ----
 const FULL = { plan: [E(1, '284544'), E(2, '284775'), E(3, '240907'), E(4, '283960')], adhoc: [] };

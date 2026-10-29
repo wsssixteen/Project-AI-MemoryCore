@@ -25,7 +25,9 @@ const setNexus = vers => fs.writeFileSync(nexus, `<metadata><versioning><version
 // compile stub: records each tree it was asked to compile; fails while the flag file exists
 const compileStub = path.join(tmp, 'compile-stub.js'), compiled = path.join(tmp, 'compiled.txt'), failFlag = path.join(tmp, 'compile-fail.flag');
 fs.writeFileSync(compileStub, `const fs=require('fs');fs.appendFileSync(${JSON.stringify(compiled)},process.argv[2]+'\\n');process.exit(fs.existsSync(${JSON.stringify(failFlag)})?1:0);`);
-const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json'),
+const gitlabCfg = path.join(tmp, 'servers.local.json');
+fs.writeFileSync(gitlabCfg, JSON.stringify({ gitlab: { web: 'http://gitlab.test/gitlab', project: 'etanah/etanah-pelupusan', reviewers: [{ name: 'Aaron', username: 'aaron' }] } }));
+const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json'), RELEASE_MLK_PLP_CONFIG: gitlabCfg,
   STAG_CATCHUP_WORK_ROOT: workRoot, STAG_CATCHUP_LOG: logFile, STAG_CATCHUP_NEXUS_METADATA: nexus,
   STAG_CATCHUP_COMPILE: JSON.stringify([process.execPath, compileStub]) };
 
@@ -170,8 +172,13 @@ try {
   fs.mkdirSync(stateDir, { recursive: true });
   fs.writeFileSync(path.join(stateDir, 'release-9.9.11.json'), JSON.stringify({ release: '9.9.11', branch: 'mlk/release/9.9.11', repo: plp, tickets: [], phase: 'pushed', headSha: relG }));
   sh(plp, ['checkout', '-q', '-B', 'mlk/master', 'origin/mlk/master']);
+  // mlk/master is protected (2026-10-29): prepare prints the MR form; the reviewer's merge is simulated by a push here.
+  const masterBefore = tip('mlk/master');
   r = prep(['merge-to-master', '--release', '9.9.11', '--ba-approved']);
-  check('S29 merge-to-master ends with the mandatory stag-catchup step', r.status === 0 && /NEXT \(mandatory\).*stag-catchup --release 9\.9\.11 --push/.test(all(r)), `exit=${r.status} ${all(r).slice(-400)}`);
+  check('S29a prepare prints the merge-request form and pushes nothing', r.status === 0 && /MERGE REQUEST FORM/.test(all(r)) && /Release Pelupusan 9\.9\.11/.test(all(r)) && tip('mlk/master') === masterBefore, `exit=${r.status} ${all(r).slice(-400)}`);
+  sh(plp, ['push', '-q', 'origin', `${relG}:refs/heads/mlk/master`]);
+  r = prep(['merge-to-master', '--release', '9.9.11', '--check']);
+  check('S29 --check after the merge ends with the mandatory stag-catchup step', r.status === 0 && /NEXT \(mandatory\).*stag-catchup --release 9\.9\.11 --push/.test(all(r)), `exit=${r.status} ${all(r).slice(-400)}`);
   r = prep(['stag-catchup', '--check', '--release', '9.9.11']);
   check('S30 after Phase F the source is mlk/master', r.status === 3 && /release 9\.9\.11 is in origin\/mlk\/master/.test(all(r)), `exit=${r.status} ${all(r)}`);
 

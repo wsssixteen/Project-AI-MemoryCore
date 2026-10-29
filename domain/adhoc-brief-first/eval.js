@@ -17,7 +17,9 @@ const U = text => L({ type: 'user', message: { role: 'user', content: text } });
 const UM = text => L({ type: 'user', isMeta: true, message: { role: 'user', content: text } });
 const AT = text => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text }] } });
 const AU = (name, input) => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + (++seq), name, input }] } });
-const BODY = 'Title: MLKSTG - MLPS tandatangan Borang 4Ae ralat GIS\n' + 'The Tandatangan click fails because the licence write to GIS fails. '.repeat(8);
+const ROUTE = '\nAdhoc route: OWNED-ELSEWHERE — GIS host unreachable from staging, Input check correct\n';
+const BODY = 'Title: MLKSTG - MLPS tandatangan Borang 4Ae ralat GIS\n' + 'The Tandatangan click fails because the licence write to GIS fails. '.repeat(8) + ROUTE;
+const BODY_NR = BODY.replace(ROUTE, '\n');
 const BA = '\n## Reply to BA\n**Short**\n```\nCuba klik semula.\n```\n**Full**\n```\nLicence tak sampai GIS. Cuba klik semula.\n```\nUser-step: Tandatangan button · gate PB4AE.xhtml:88 rendered=#{mb.sign} · flag sign=true (analog true) · ENABLED · tested: code trace\n';
 // ADHOC-MLMS-2026-1 second miss (2026-10-22): the BA was told to fill a field that is disabled for this record
 const MLMS_BA = '\n## Reply to BA\n**Short**\n```\nMaklumat Plot kosong. Cuba minta user klik Tambah Kawasan dulu, isi luas dan unit, Simpan, then Hantar.\n```\n**Full**\n```\nTambah Kawasan, isi luas dan unit luas, then Simpan.\n```\n';
@@ -95,6 +97,16 @@ expectPass('M2 no marker, save agent started, BA reply + picture: passes', run([
 expectPicBlock('M3 no marker, save agent started, BA reply but no picture blocks', run([ASK, QUERY, AT(BODY + BA), AGENT], false));
 expectPass('M4 no marker, an Explore agent only: not an adhoc brief', run([ASK, QUERY, AT(BODY), OTHER_AGENT], false));
 expectPass('M5 no marker, save agent started in an EARLIER turn does not hold this turn', run([ASK, AT(BODY), AGENT, U('ok'), AT('Noted.')], false));
+// ADHOC-MCL-2026-2 (2026-10-29): the brief must end with what the BA/TSO does next (ticket, alter, patch, nothing)
+const expectRouteBlock = (n, r) => check(n, blocked(r) && /no route line/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectRouteBlock('R1 brief with BA reply + picture but no route line blocks', run([ASK, QUERY, AT(BODY_NR + BA + MARK), AGENT]));
+expectPass('R2 "Adhoc route: CODE-FIX — ..." passes', run([ASK, AT(BODY_NR + '\nAdhoc route: CODE-FIX — listener method missing on the MCL page bean, no patch shape\n' + BA + MARK), AGENT]));
+expectPass('R3 "PATCH + CODE-FIX" suffix passes', run([ASK, AT(BODY_NR + '\nAdhoc route: PATCH + CODE-FIX — 1 row patched, 98 permits same shape\n' + BA + MARK), AGENT]));
+expectPass('R4 "Adhoc route: none (<reason>)" passes', run([ASK, AT(BODY_NR + '\nAdhoc route: none (still tracing, no finding yet)\n' + BA + MARK), AGENT]));
+expectRouteBlock('R5 an unknown route word blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: CODE-TICKET — x\n' + BA + MARK), AGENT]));
+expectRouteBlock('R6 "+ CODE-FIX" on its own route word (CR + CODE-FIX) blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: CR + CODE-FIX — x\n' + BA + MARK), AGENT]));
+expectRouteBlock('R7 the route line quoted only inside hook feedback (meta) does not count', run([ASK, AT(BODY_NR + BA + MARK), UM('Adhoc route: ANSWER — meta'), AGENT]));
+expectRouteBlock('R8 "Adhoc route: none" with no reason blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: none\n' + BA + MARK), AGENT]));
 let r = spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env });
 check('S9 malformed stdin exits 0', r.status === 0, 'exit=' + r.status);
 expectPass('S10 no transcript path: fail-open', run(undefined));

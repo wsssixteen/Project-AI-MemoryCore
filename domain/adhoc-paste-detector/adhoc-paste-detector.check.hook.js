@@ -135,6 +135,8 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '     3. Code fix → working analog + Build-match (PROD footer = local, behind 0)',
     '     4. Permanent / larger fix → every caller and urusan sharing the path',
     '     The first rung that passes is the answer. Show each rung ruled out and why (e.g. "rung 1 out: luas disabled, kwsnAsal=false").',
+    '     The brief ENDS with "Adhoc route: <ANSWER|USER-STEP|PATCH|ALTER|CODE-FIX|OWNED-ELSEWHERE|CR> — <evidence>" and the',
+    '     Reply to BA ends with its ask (TSO ticket for code / PROD patch / PROD alter). Table: adhoc-save skill, "Adhoc route".',
     '',
     '   MANDATORY scaffold (all in this turn, AFTER the brief, in the background):',
     '     0. LOAD CONTEXT FIRST — read etanah-knowledge/' + rec.knowledge_dir + '/ADHOC-TRIAGE.md and CLASSIFY each ask',

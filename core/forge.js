@@ -18,6 +18,9 @@
  *        --retention ... --footprint ... --nod "<authorization>" [--allow-relative] [--no-smoke]
  *        (2026-10-05: brings an EXISTING loose hook into domain/<name>/ unchanged — see forgeInstall)
  *
+ * Forge is step 4 of system/INDEX.md §The change route; it never runs git. The route's step 7
+ * commits, pushes and lands the born part on main the same turn.
+ *
  * Exit codes: 0 ok · 2 hard failure (a birth step failed → nothing half-lands: files are
  * removed, settings restored) · 3 collision (refine-first: use `forge refine` or
  * --override-collision "<reason>").

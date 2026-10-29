@@ -18,6 +18,7 @@ Any change to `.claude/CLAUDE.md` (and any boot-loaded protocol file) follows th
 | | 5. Version stamp + changelog entry same edit | CLAUDE.md §Version-bump discipline (unchanged) |
 | **AFTER** | 6. Gates re-run | `node .claude/hooks/boot-required-read-gate.js` + `node .claude/hooks/system-audit.js` + `node lib/eval-battery.js` — green-or-classified only |
 | | 7. **Register the watch** | `node lib/watch.js add --target .claude/CLAUDE.md --observe "<the SPECIFIC behavior that must still happen>" --sessions 3` — SHA-anchored rollback pre-printed |
+| **LAND** | 7b. Commit, push, land on main this turn | `system/INDEX.md` §The change route step 7 (this pipeline is step 4 of that route) |
 | **NEXT BOOTS** | 8. Self-alert until resolved | this Feature's SessionStart hook emits every active watch + its one-line revert; `resolve <id> ok|anomaly` closes it |
 
 ## Rollback (the SOLID part)

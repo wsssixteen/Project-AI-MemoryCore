@@ -1,5 +1,6 @@
 {
-  "_note": "Copy to servers.local.json (GITIGNORED) and fill the real internal endpoints. Never commit the filled file.",
+  "_note": "Copy to servers.local.json (GITIGNORED) and fill the real internal endpoints. Never commit the filled file. gitlab.reviewers usernames are read from the GitLab project Members page, never guessed.",
   "build": { "host": "<build-server-ip>", "user": "<ssh-user>", "dir": "<build-scripts-dir>", "script": "./build-pelupusan.sh", "choice": "stag" },
-  "deploy": { "host": "<deploy-server-ip>", "user": "<ssh-user>", "dir": "<deploy-scripts-dir>", "script": "./deploy-pelupusan.sh" }
+  "deploy": { "host": "<deploy-server-ip>", "user": "<ssh-user>", "dir": "<deploy-scripts-dir>", "script": "./deploy-pelupusan.sh" },
+  "gitlab": { "web": "http://<gitlab-host>/gitlab", "reviewers": [ { "name": "Aaron", "username": "<GitLab username>" }, { "name": "Alex", "username": "<GitLab username>" } ] }
 }
