@@ -10,6 +10,13 @@
 
 ---
 
+## v1.98 — 2026-10-29 (per みや, 286655)
+
+- **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.
+- **Paired**: deploy SKILL §5b, where his test photos are found (session images folder, PicturesScreenshots, clipboard) and a photo not on disk is never a question.
+- **Trigger**: I asked him to save a Pengesahan photo into 2. Fix and stopped on a refused tool call. His words: "do not ask me when you have done it many times ... take note when there are blockers ... people use AI to save time".
+- **Spec preservation**: additive. Rules 0-6 unchanged; rule 2 (no asking-back for searchable facts) and rule 3 (enumerate-then-pursue) keep their text, rule 7 names the two cases they missed (an own step, a refused call) and adds the log row.
+
 ## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
 
 His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".
