@@ -1475,6 +1475,7 @@
 {"ts":"2026-10-28T04:36:30.255Z","category":"deploy-card-missing-evidence-line"}
 {"ts":"2026-10-28T06:37:44.261Z","category":"session-name-not-applied"}
 {"ts":"2026-10-28T08:24:08.314Z","category":"reask/buried-answer"}
+{"ts":"2026-10-29T11:26:21.595Z","category":"reask/redundant"}
 {"ts":"2026-10-29T10:05:26.952Z","category":"diagram-skipped-at-decision"}
 {"ts":"2026-10-28T02:58:42.243Z","category":"model-tiering/fable-skipped"}
 {"ts":"2026-10-28T03:01:53.885Z","category":"deploy/tickets-bundled"}

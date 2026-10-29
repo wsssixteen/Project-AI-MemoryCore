@@ -74,7 +74,7 @@
 
 ## Flowable (skill: bpmn-check)
 - [flowable](feedback_flowable_node_edge_trace.md) — trace real flows before picking a node; admin app; BPMN source; Petaling archive
-- [alter-tool](reference_flowable_alter_tool.md) — Melaka alters incl. PROD: Ruri runs alter.js; dry-run code → miya approves in chat → --approve; keeper.js holds the login
+- [alter-tool](reference_flowable_alter_tool.md) — Melaka alters: PROD = alter.js dry-run → miya approves the code → --approve; STG/MLIT Alter Flow = headless runner, no login; the tool-by-env table = playbook A5
 
 ## Redmine and writing for people (skills: list-redmine, redmine-phase1-prefill)
 - [redmine-board](feedback_esokongan_means_tracker.md) — eSOKONGAN = tracker; board script first; shared filter; BA vs TSO; delegated quests
