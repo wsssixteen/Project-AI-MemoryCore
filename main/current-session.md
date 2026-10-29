@@ -1,5 +1,20 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "dreamy-pike-08af0b", one system-change route)
+- Built: Fable 5.1 Foundations audit (18 foundations, 12 conflicts, 0 of 7 change paths ended on main) → `/system-change` route owned by `system/INDEX.md` §The change route (rulings 13-14, group name Capabilities), skill + `domain/system-change/` (eval 21/21), design-consult-gate advisory (37/37), map picture boot-pointed (CLAUDE.md v1.96, v1.97). On GitHub main since `0cdf6ee6`.
+- miya's verdict at the end: talk to him like a person, not a report; answering a Stop hook in the middle of a conversation broke it. Child sessions felt like wasted time; this one was slow because the audit, two landing fights and robot replies, not because it was a child.
+- Not done (handover `main/handoff-2026-10-28-system-change-workflow.md` top note): `feedback_daily_commit.md` pointer · stale lines in auto-skill-on-mistake and design-consult-gate README · one path list for the 3 gates · version-stamp uniqueness check · the 9 unnamed root folders (his nod needed, most proposals are deletes).
+- Next: the parent session pulls main; the route's first real run is the live proof (watch `wmvta6ack`).
+**Last Activity**: 2026-10-29 20:05 — worktree `melaka-goal-quest-adhoc-297634`, adhoc ADHOC-PRBB-2026-19 answered + saved, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "melaka-goal-quest-adhoc-297634", PRBB Tambah Kuantiti adhoc)
+- ADHOC-PRBB-2026-19 (A79, Task 333, archived): BA asked where PRBB Tambah Kuantiti Rekod Permohonan is stored. SPOC Rekod Permohonan lists permits only for jenis 6/7, so jenis 8 shows Tiada Rekod (SPOC read from local int-env 2026-10-13, newer work not verified). AWAM Rekod Pembaharuan reads the permit asal tables (ind_permit_lesen, ind_versi_permit_lesen, ind_pemegang_permit_lesen, umm_a_permit_lesen); new permohonan in umm_p_permit_lesen.mklmt_tmbhn. Verified on MLIT C01/2026/9.
+- Mistakes corrected by miya: misread BA's question (it was about the SPOC photo); first reply not in his style; said panel rows came from umm_p_permit_lesen.
+- miya's WA reply fact-checked (all correct) and rewritten in the list shape; Pena rule c56 (module table) = WhatsApp list: *Label*: value, then each table.column on its own line.
+- Save audit 29/29 PASS. Archive needed --allow-stub (no Bounty section in an adhoc qa_doc).
+- Open: write SPOC 6/7 rule + AWAM Rekod Pembaharuan sources to etanah-knowledge only if miya asks.
 **Last Activity**: 2026-10-29 19:55 — worktree `baseline-wednesday-release-029181` ("Baseline 1.9.0"), BA passed, master MR !9 created, Phase F rebuilt on the GitLab API, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "baseline-wednesday-release-029181", Baseline Pelupusan 1.9.0 Phase F)
