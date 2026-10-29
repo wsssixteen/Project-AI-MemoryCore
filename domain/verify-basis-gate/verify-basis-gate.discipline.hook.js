@@ -29,6 +29,7 @@ function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().t
 function parse(tp) {
   let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return null; }
   const lines = raw.split(/\r?\n/).filter(Boolean).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean);
+  // his-words: not an approval reader — only finds the turn boundary
   let lastUser = -1;
   for (let i = lines.length - 1; i >= 0; i--) {
     const m = lines[i].message || lines[i];

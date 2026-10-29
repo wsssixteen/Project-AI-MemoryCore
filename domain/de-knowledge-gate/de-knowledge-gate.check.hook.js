@@ -30,6 +30,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+const { isInjected } = require(path.join(ROOT, 'lib', 'his-words.js'));
 const LOG = path.resolve(__dirname, 'log.jsonl');
 
 const DE_CLOSE = /Domain Expansion\s*[—–-]+\s*closed|Barrier settles/i;
@@ -81,7 +82,7 @@ function computeSignals(events) {
   for (const e of events) {
     if (e.kind === 'text') {
       if (e.role === 'assistant') { let m; FILE_LINE.lastIndex = 0; while ((m = FILE_LINE.exec(e.text)) !== null) files.add(m[1].toLowerCase() + ':' + m[2]); }
-      if (e.role === 'user' && TRACE_INTENT.test(e.text)) s4 = true;
+      if (e.role === 'user' && !isInjected(e.text) && TRACE_INTENT.test(e.text)) s4 = true;
     } else if (e.kind === 'tool') {
       if (DB_TOOL.test(e.name)) s3 = true;
       if (/write|artifact/i.test(e.name) && DELIVERABLE_PATH.test(e.path)) s2 = true;

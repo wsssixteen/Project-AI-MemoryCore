@@ -23,23 +23,7 @@ const { execSync } = require('child_process');
 const FOREIGN_DIR = process.env.FOREIGN_CHECK_STATE_DIR || path.join(ROOT, 'domain', 'release-mlk-plp', 'state');
 // Explicit push approval in miya's own words; negated / question forms ("who asked you to push") never match.
 const PUSH_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never|why|who|asks? you to)\s)\b(push it|push now|go ahead and push|yes,? push|ok,? push|boleh push|pushkan|\[push-ok\])\b/i;
-function lastUserText(tp) {
-  let tail = '';
-  try {
-    const size = fs.statSync(tp).size, want = 400000;
-    const fd = fs.openSync(tp, 'r'); const buf = Buffer.alloc(Math.min(size, want));
-    fs.readSync(fd, buf, 0, buf.length, Math.max(0, size - buf.length)); fs.closeSync(fd);
-    tail = buf.toString('utf8');
-  } catch (_) { return ''; }
-  const ls = tail.split('\n').filter(l => /"type"\s*:\s*"user"/.test(l));
-  for (let i = ls.length - 1; i >= 0; i--) {
-    let o; try { o = JSON.parse(ls[i]); } catch (_) { continue; }
-    const c = o && o.message && o.message.content;
-    if (typeof c === 'string') return c;
-    if (Array.isArray(c)) { const t = c.filter(x => x && x.type === 'text').map(x => x.text); if (t.length) return t.join('\n'); }
-  }
-  return '';
-}
+const { decide } = require(path.join(ROOT, 'lib', 'his-words.js'));
 const GOOD_VER = /^\d+\.\d+(\.\d+)?$/;
 
 runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
@@ -60,7 +44,7 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   // v4 (2026-09-30, #256334 AWAM): approval comes ONLY from miya's own last message — a token I type
   // myself is not approval (I bypassed this gate twice with RELEASE_GATE_BYPASS and pushed to another
   // team's release branch without telling him).
-  const approved = PUSH_APPROVAL.test(lastUserText(data.transcript_path || ''));
+  const approved = !!data.transcript_path && decide(data.transcript_path, { approve: PUSH_APPROVAL, action: /\bpush\w*/i }).verdict === 'approve';
   // v4: another team's repo (anything but etanah-pelupusan) pushing a shared branch needs BOTH a
   // foreign-merge-check report for the exact HEAD being pushed AND miya's explicit push approval.
   // v5 (2026-10-02): the repo is named by its origin remote via lib/git-target.js, never by its folder

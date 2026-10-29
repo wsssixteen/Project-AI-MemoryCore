@@ -23,6 +23,7 @@ function readTranscript(transcriptPath) {
 // Only what happened AFTER the most recent user message counts — a prior turn's
 // fan-out (already reported on) must not re-trigger the advisory on a later turn.
 function scanSinceLastUser(entries) {
+  // his-words: not an approval reader — only finds the turn boundary
   let lastUserIdx = -1;
   for (let i = entries.length - 1; i >= 0; i--) {
     if (entries[i].type === 'user') { lastUserIdx = i; break; }

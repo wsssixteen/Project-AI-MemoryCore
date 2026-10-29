@@ -12,7 +12,7 @@ const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 
-const NOT_A_TURN_START = /^\s*(<system-reminder>|<task-notification|Stop hook feedback)/i;
+const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));
 const STG_TOOL = /^mcp__postgres-mlkstg(1?)-pg__/;
 const WRITE_SQL = /\b(insert|update|delete|alter|drop|truncate|create|grant|revoke|merge)\b/i;
 const STATE = process.env.STG_BLOCK_STATE || path.join(ROOT, 'system', 'melaka-env-state.json');
@@ -20,22 +20,6 @@ const STATE = process.env.STG_BLOCK_STATE || path.join(ROOT, 'system', 'melaka-e
 // The switch. Unreadable or unset = stg2 is ON (the rule before the switch existed: stg1 guarded).
 function liveSchema() {
   try { const s = JSON.parse(fs.readFileSync(STATE, 'utf8')).melaka_staging_schema; return /^stg[12]$/.test(s) ? s : 'stg2'; } catch (_) { return 'stg2'; }
-}
-
-function lastUserText(transcriptPath) {
-  let raw; try { raw = fs.readFileSync(transcriptPath || '', 'utf8'); } catch (_) { return null; }
-  let last = null;
-  for (const line of raw.split('\n')) {
-    let o; try { o = JSON.parse(line); } catch (_) { continue; }
-    if (!o || typeof o !== 'object' || o.isMeta) continue;
-    const m = o.message && typeof o.message === 'object' ? o.message : o;
-    if ((m.role || o.type) !== 'user') continue;
-    let c = m.content;
-    if (typeof c === 'string') c = [{ type: 'text', text: c }];
-    if (!Array.isArray(c)) continue;
-    for (const b of c) if (b && b.type === 'text' && typeof b.text === 'string' && !NOT_A_TURN_START.test(b.text)) last = b.text;
-  }
-  return last;
 }
 
 function sqlOf(ti) {
@@ -55,7 +39,7 @@ runHook({ name: 'stg1-block', event: 'PreToolUse' }, (input) => {
   const schema = m[1] ? 'stg1' : 'stg2';
   const on = liveSchema();
   if (schema === on) return { fired: false };
-  const said = lastUserText(data.transcript_path);
+  const said = lastHis(data.transcript_path);
   if (said && new RegExp('\\b' + schema + '\\b', 'i').test(said)) return { fired: true, blocked: false, contextOut: 'stg1-block: allowed, miya named ' + schema + ' in his message. Still announce: "Read from ' + schema + ': <what and why>".\n' };
   if (WRITE_SQL.test(sqlOf(data.tool_input))) return { fired: true, blocked: true, blockReason:
     '⛔ stg1-block: write-like SQL on ' + schema + ' refused (staging switch = ' + on + ').\n' +

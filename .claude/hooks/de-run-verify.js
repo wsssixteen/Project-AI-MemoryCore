@@ -52,20 +52,18 @@ process.stdin.on('end', () => {
     if ((function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, BYPASS)) return process.exit(0);
 
     // Collect the LAST user message text + all assistant text.
-    let lastUser = '';
+    let lastUser = require(path.resolve(__dirname, '..', '..', 'lib', 'his-words.js')).lastHis(data.transcript_path);
     let allText = '';
     for (const line of transcript.split(/\r?\n/)) {
       if (!line.trim()) continue;
       let obj;
       try { obj = JSON.parse(line); } catch (_) { continue; }
-      const role = obj.role || obj.type || (obj.message && obj.message.role);
       let text = '';
       const content = (obj.message && obj.message.content) || obj.content;
       if (typeof content === 'string') text = content;
       else if (Array.isArray(content)) text = content.map(c => (typeof c === 'string' ? c : c.text || '')).join(' ');
       if (!text) continue;
       allText += '\n' + text;
-      if (role === 'user') lastUser = text; // keep overwriting → ends on the last user turn
     }
 
     const wrapSignal = WRAP_RX.test(lastUser);

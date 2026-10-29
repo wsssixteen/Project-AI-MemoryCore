@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One reader of his words: his order stands, the app's lines never count · Flowchart</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow { font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Kernel · lib/his-words.js</p>
+    <h1>One reader of his words: his order stands, the app's lines never count</h1>
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="d-title d-desc">
+      <title id="d-title">One reader of his words: his order stands, the app's lines never count</title>
+      <desc id="d-desc">A gate hands the transcript to lib/his-words.js. The reader keeps only miya's own lines (typed, /goal words, mid-turn, popup answers), drops the app's lines (skill text, reminders, hook notices, summaries), walks his messages newest first up to eight back, judges each (a hold denies, a question decides nothing, a no beside the verb denies, a go-word approves) and returns a verdict the gate acts on. A separate audit lists any gate that keeps its own reader.</desc>
+      <defs>
+        <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/></pattern>
+        <marker id="a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="aa" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <rect width="100%" height="100%" fill="url(#dots)" opacity="0.55"/>
+      <line x1="190" y1="92" x2="228" y2="92" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="330" y1="124" x2="330" y2="168" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#a)"/>
+      <rect x="323.3" y="140" width="53.4" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="350" y="150" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle" letter-spacing="0.08em">not his</text>
+      <line x1="430" y1="92" x2="468" y2="92" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <line x1="640" y1="92" x2="678" y2="92" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <line x1="780" y1="124" x2="780" y2="168" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="780" y1="234" x2="780" y2="278" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <rect x="20" y="60" width="170" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="105" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Transcript tail</text>
+      <text x="105" y="104" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">last 600 KB of the .jsonl</text>
+      <rect x="230" y="60" width="200" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="330" y="82" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Keep only his lines</text>
+      <text x="330" y="98" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">typed · /goal words · mid-turn</text>
+      <text x="330" y="111" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">popup answers</text>
+      <rect x="230" y="170" width="200" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="330" y="192" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Drop the app's lines</text>
+      <text x="330" y="208" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">skill text · reminder · hook notice</text>
+      <text x="330" y="221" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">summary · tool output · isMeta</text>
+      <rect x="470" y="60" width="170" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="555" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Newest first, 8 back</text>
+      <text x="555" y="104" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">an order stands until a later hold</text>
+      <rect x="680" y="60" width="200" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="780" y="82" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Judge each message</text>
+      <text x="780" y="98" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">hold → deny · question → skip</text>
+      <text x="780" y="111" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">no beside the verb → deny · go → ok</text>
+      <rect x="680" y="170" width="200" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="198" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Verdict to the gate</text>
+      <text x="780" y="214" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">approve · deny · none</text>
+      <rect x="680" y="280" width="200" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="308" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">The gate allows or blocks</text>
+      <text x="780" y="324" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">its own go-words, one block line</text>
+      <rect x="20" y="280" width="300" height="64" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+      <text x="170" y="302" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">node lib/his-words.js --audit</text>
+      <text x="170" y="318" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">lists a gate that keeps its own reader</text>
+      <text x="170" y="331" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">design-consult-gate refuses to write one</text>
+      <text x="40" y="402" fill="#4f5d75" font-size="11" font-style="italic" font-family="'Segoe UI', Arial, sans-serif">A gate passes its own words (approve · action · complaint). The reader owns what counts as his and what a no means.</text>
+    </svg>
+  </div>
+</body>
+</html>

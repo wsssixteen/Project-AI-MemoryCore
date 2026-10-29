@@ -28,7 +28,7 @@ const TRIAL_LOG = path.join(__dirname, 'haiku-trial.jsonl');
 function logTrial(row) { try { fs.appendFileSync(TRIAL_LOG, JSON.stringify(Object.assign({ ts: new Date().toISOString() }, row)) + '\n'); } catch (_) {} }
 const NEEDS_REASON = new Set(['opus', 'fable']);
 const BYPASS = /\[skip-spend-gate:\s*[^\]\s][^\]]*\]/i;
-const NOT_A_TURN_START = /^\s*(<system-reminder>|<task-notification|Stop hook feedback)/i;
+const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));
 
 function transcriptTail(p) {
   try {
@@ -47,12 +47,8 @@ function readSession(transcriptPath) {
     const m = o && o.message;
     if (!m) continue;
     if (m.role === 'assistant' && typeof m.model === 'string' && /^claude-/.test(m.model) && !o.isSidechain) model = m.model;
-    if (m.role === 'user' && !o.isMeta) {
-      const t = typeof m.content === 'string' ? m.content
-        : Array.isArray(m.content) ? m.content.filter(x => x && x.type === 'text').map(x => x.text).join('\n') : '';
-      if (t && !NOT_A_TURN_START.test(t)) lastUser = t;
-    }
   }
+  lastUser = lastHis(String(transcriptPath));
   return { lastUser, model };
 }
 

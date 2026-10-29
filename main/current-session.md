@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-29 23:30 — worktree `common-version-1-10-20-mlk-c5ee8f` (second session), Submit-it block audit → system-rules Rule 8 + `lib/his-words.js`, landed on main.
+
+## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", the Submit-it block audit)
+- **Ask** (miya, angry): audit why a simple "Submit it" blocked me all day; check the slip logs; find a universal solution for system-change / system-rules / system-design so no gate is ever built like this again.
+- **Found**: 7 approval gates each had their own copy of a "last user line" reader. Today the last user line was a skill's text, a system-reminder, a Stop-hook notice or the /goal notice, and "do not stop until you've posted" read as a refusal. `domain/redmine-write-gate/log.jsonl` 14:01 to 14:09: 5 refusals of one ordered Submit (261986). 286646: commit refused 4 times after his waiver. 22 files parsed user lines themselves.
+- **Built**: system-rules Rule 8 "One ask, then obey" (v1.5) · `lib/his-words.js` the one reader (`hisMessages` · `lastHis` · `decide`; eval 44/44; `--audit` clean) · `design-consult-gate` own-reader rider (R1 to R10, 47/47) · `redmine-write-gate` v1.8 on the reader, 8 messages back, repeat block = slip row (112/118; the 6 reds pre-exist: quest-start-claim shape drift, proposal logged) · `falsifier-ran-check` waiver window (58/58) · 3 Sonnet agents moved 20 gates onto the reader or marked them · prod-alter S12 flipped · 5 diagrams (Rule 17).
+- **Open**: `lib/quest-start-claim.js` no longer matches redmine-write-gate's standing-claim shape (F74 to F76, F82, F85 red since before today). STAGE-ONLY window for Redmine API posts ends 2026-10-30 by his 2026-10-19 ruling.
+
 **Last Activity**: 2026-10-29 22:20 — worktree `suspicious-nash-ce350d` (child of "Sweep 3 tickets + audit"), 286610 MCL Notis 5A + tempoh pajakan handed to BA, quest Phase 1 closed, Domain Expansion.
 
 ## Session Recap (2026-10-29, worktree "suspicious-nash-ce350d", 286610 Notis 5A + Tempoh Pajakan)

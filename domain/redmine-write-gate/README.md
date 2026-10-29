@@ -185,3 +185,31 @@ self_audit: every fire writes a log.jsonl row (outcome, approval or last_user); 
 | 19 | API write inside the stage-only window with "post it" | kept (F56 BLOCK); v1.7 touches the browser branch only |
 | 20 | main folder runs the old gate until landed | handled: landed on main in the same turn (`lib/land-on-main.js`) |
 | 21 | an isMeta line carrying a real approval he typed | accepted-risk: the harness marks only its own injections isMeta; his typed lines are never isMeta in 8 transcript lines read |
+
+**v1.8 (2026-10-29, system-rules Rule 8)**: per みや, the same day, after the v1.7 fix landed ("find a universal solution ... so that you DO NOT EVER build a step or workflow or gate like this ever again"). The gate's own reader is gone; his words come from the ONE shared reader `lib/his-words.js` (`decide`): his typed lines, his `/goal` words, messages sent mid-turn and popup answers; never a skill's text, a reminder, a hook notice, a summary or an `isMeta` line. Three behaviour changes: (1) **his order stands** up to 8 of his messages back until he holds or refuses it later (v1.7 read only the last message, so a question or an unrelated line after "post it" blocked the click); (2) a no counts only in the **clause** that names the action (v1.7: within two words), so "do not ever, under any case, post" refuses and "do not stop until you've posted" orders; a **question decides nothing** (F107 flipped: "why did you post it without asking" now BLOCKS); a popup answer always decides; (3) a **second block of the same send within 30 min is the gate's defect**: it appends a `gate/repeat-block` row to `system/slips.jsonl` and says so in the block text. `SUBMIT_APPROVAL` also takes an imperative that names the Redmine ("upload to the redmine", "update the redmine"; "update yourself on the redmine" does not match). API branch: the same reader; a view-first hold anywhere in his message still forces staging. Spec preservation: stage-only window, browser API-call ban, bypass token, standing claim, status-only path, assistant self-approval ban and F1 to F106, F108 to F110 kept. Dropped and named: "last message only" (the defect itself) · F107's accepted-risk allow · `SUBMIT_DENIAL`'s two-word distance (replaced by the clause). Eval: F111 to F118 added; 111/118, the 7 reds (F29, F74 to F76, F82, F85 and none of mine) fail the same way on the v1.7 gate: `quest/ticket-load-verify.js` has gained network I/O and `lib/quest-start-claim.js` no longer matches the standing-claim shape, so the standing exemption is void on disk (proposal row logged 2026-10-29). Picture: `diagram.png` (one changed step marked).
+
+### v1.8 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | "post it", two questions, then the click (the 286646 shape) | fixture-added (F111 allow) |
+| 2 | "post it", then "wait, let me read the note first" | fixture-added (F112 BLOCK) |
+| 3 | "straight away upload to the redmine" (live 13:42) | fixture-added (F113 allow) |
+| 4 | "update yourself on the redmine tickets" (a read ask) | fixture-added (F114 BLOCK) |
+| 5 | "do not ever, under any case, post" | fixture-added (F115 BLOCK; v1.7 accepted-risk 18 closed) |
+| 6 | "SEND", a skill line, a reminder-only line (live 13:57) | fixture-added (F116 allow) |
+| 7 | the same send blocked twice in 30 min | fixture-added (F117: slip row + text) |
+| 8 | "post it", then /goal "do not stop until the ticket is posted" | fixture-added (F118 allow) |
+| 9 | "why did you post it without asking" | fixture flipped (F107 BLOCK) |
+| 10 | "No, I will post it myself" | handled by the reader's hold (`his-words` H11) |
+| 11 | "Yes, post + reassign" (comma inside the clause) | handled (`his-words` H12, F5) |
+| 12 | an approval 9 messages back | handled: outside the window (`his-words` W1) |
+| 13 | a popup "Not now" after an older "post it" | handled (`his-words` H3, F36) |
+| 14 | a queued message from an agent, not a human | handled (`his-words` N6) |
+| 15 | a compaction summary quoting "post it" | handled (`his-words` N4) |
+| 16 | the gate's own block text ("post it · submit") echoed as hook feedback | handled: hook feedback is never his (`his-words` N2) |
+| 17 | `lib/his-words.js` missing or broken | accepted-risk: the hook fails to load and the harness fails open for this call; `node lib/his-words.js --audit` and the eval are red the same day |
+| 18 | the eval's own replay strings trip the live gate when run directly | handled: run through `lib/eval-runner.js` (unchanged since v1.3) |
+| 19 | a slip row written for a repeat block inside an eval run | handled: `REDMINE_GATE_SLIPS` points the eval at a sandbox file |
+| 20 | his hold phrased in Malay ("tunggu", "belum lagi") | handled: in the reader's hold list; other Malay forms widen on a logged miss |
+| 21 | two sessions, two forms, one blocked in each within 30 min | accepted-risk: the repeat counter reads one log per checkout; two true first blocks read as a repeat, which costs one wrong slip row, never a wrong allow |

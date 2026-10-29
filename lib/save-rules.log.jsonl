@@ -211,3 +211,13 @@
 {"ts":"2026-10-29T13:59:42.964Z","parts":15,"pass":54,"fail":0,"unruled":0,"skip":0,"dur_ms":27392,"partial":false}
 {"ts":"2026-10-29T14:17:36.689Z","parts":11,"pass":49,"fail":0,"unruled":0,"skip":0,"dur_ms":8339,"partial":false}
 {"ts":"2026-10-29T14:18:08.847Z","parts":11,"pass":49,"fail":0,"unruled":0,"skip":0,"dur_ms":19464,"partial":false}
+{"ts":"2026-10-29T14:43:41.550Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":32,"partial":true}
+{"ts":"2026-10-29T14:43:41.682Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":33,"partial":true}
+{"ts":"2026-10-29T14:45:33.038Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":67,"partial":true}
+{"ts":"2026-10-29T14:45:33.388Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":63,"partial":true}
+{"ts":"2026-10-29T14:46:10.811Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":46,"partial":true}
+{"ts":"2026-10-29T14:46:10.989Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":45,"partial":true}
+{"ts":"2026-10-29T14:46:28.682Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":40,"partial":true}
+{"ts":"2026-10-29T14:46:28.841Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":39,"partial":true}
+{"ts":"2026-10-29T14:56:07.779Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":34,"partial":true}
+{"ts":"2026-10-29T14:56:07.914Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":33,"partial":true}

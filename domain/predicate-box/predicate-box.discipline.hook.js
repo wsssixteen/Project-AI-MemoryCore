@@ -103,6 +103,8 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
+const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));
 
 const LOG = process.env.PREDICATE_BOX_LOG || path.resolve(__dirname, 'log.jsonl');
 
@@ -140,7 +142,6 @@ function parseTranscript(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (e) { return null; }
   const lines = raw.split(/\r?\n/).filter(Boolean);
-  let lastUserText = '';
   const assistantTexts = [];
   const assistantAt = [];
   const mdWritten = [];
@@ -151,8 +152,7 @@ function parseTranscript(transcriptPath) {
     const msg = obj.message || obj;
     const role = msg.role || obj.type;
     const text = blockTextFromContent(msg.content);
-    if (role === 'user' && text.trim()) lastUserText = text; // keep overwriting -> last wins
-    else if (role === 'assistant' && text.trim()) { assistantTexts.push(text); assistantAt.push({ idx, text }); }
+    if (role === 'assistant' && text.trim()) { assistantTexts.push(text); assistantAt.push({ idx, text }); }
     if (role !== 'assistant' || !Array.isArray(msg.content)) return;
     for (const b of msg.content) {
       if (!b || b.type !== 'tool_use' || !EDIT_TOOLS.has(b.name) || !b.input) continue;
@@ -166,7 +166,7 @@ function parseTranscript(transcriptPath) {
       }
     }
   });
-  return { raw, lastUserText, assistantText: assistantTexts.join('\n'), assistantAt, mdWritten, javaEdits, lastJavaEditIdx, cleanupEdits, sourceEdits };
+  return { raw, lastUserText: lastHis(transcriptPath), assistantText: assistantTexts.join('\n'), assistantAt, mdWritten, javaEdits, lastJavaEditIdx, cleanupEdits, sourceEdits };
 }
 
 // A bypass reason is real only when it is not the placeholder from the help text.

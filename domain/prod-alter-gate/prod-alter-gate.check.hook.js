@@ -35,36 +35,8 @@ const segments = cmd => String(cmd).split(/\r?\n|;|&&|\|\||\|/).map(s => s.trim(
 // miya's approval: the code (dash optional) + an approval word, no negation in the same sentence
 const APPROVAL_WORD = /\b(?:approve[ds]?|approval|lulus(?:kan)?|go(?: ahead)?|proceed|run it|yes|ok(?:ay)?|setuju|boleh)\b/i;
 const NEGATION = /\b(?:don'?t|do not|jangan|never|not|wait|hold|stop|cancel|tak|tidak|no)\b/i;
-const POPUP_ANSWER = /^\s*Your questions have been answered:/;
-
-function lastUserText(transcriptPath) {
-  let tail = '';
-  try {
-    const size = fs.statSync(transcriptPath).size, want = 600000;
-    const fd = fs.openSync(transcriptPath, 'r'); const buf = Buffer.alloc(Math.min(size, want));
-    fs.readSync(fd, buf, 0, buf.length, Math.max(0, size - buf.length)); fs.closeSync(fd);
-    tail = buf.toString('utf8');
-  } catch (_) { return ''; }
-  const lines = tail.split('\n').filter(l => /"type"\s*:\s*"user"/.test(l));
-  for (let i = lines.length - 1; i >= 0; i--) {
-    let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }
-    if (obj && obj.isMeta) continue;                                   // harness-injected, not typed by him
-    const c = obj && obj.message && obj.message.content;
-    if (typeof c === 'string') return c;
-    if (Array.isArray(c)) {
-      const texts = c.filter(x => x && x.type === 'text').map(x => x.text);
-      if (texts.length) return texts.join('\n');
-      for (const x of c) {                                              // an AskUserQuestion answer IS his reply
-        if (!x || x.type !== 'tool_result') continue;
-        const t = typeof x.content === 'string' ? x.content
-          : Array.isArray(x.content) ? x.content.filter(y => y && y.type === 'text').map(y => y.text).join('\n') : '';
-        if (POPUP_ANSWER.test(t)) return [...t.matchAll(/"="([^"]*)"/g)].map(m => m[1]).join('\n'); // answers only
-      }
-      return '';                                                        // a plain tool_result turn: nothing he typed
-    }
-  }
-  return '';
-}
+const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));
+const lastUserText = lastHis; // his last message only (PROD safety); injected lines never replace it
 
 const norm = c => String(c || '').replace(/-/g, '').toUpperCase();
 function approves(text, code) {
