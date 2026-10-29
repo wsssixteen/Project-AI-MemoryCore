@@ -155,3 +155,33 @@ footprint: per-tool: 1 node per Bash/PowerShell call + 1 node per browser javasc
 | 20 | pressing Enter inside a staged text input submits the form | accepted-risk — staging sets `.value` by JS, never types keys into the form |
 | 21 | window expires silently on 2026-10-30 | handled — the date is in the block text and this README; lift or extend only on みや's nod |
 | 22 | main repo still runs v1.3 until merge | accepted-risk until the branch is merged to main |
+
+**v1.7 (2026-10-29, #261986)**: per みや (/goal: "find solutions that has been blocking you to post something we've already agreed on"). Five browser submits he had ordered were blocked (log.jsonl 14:01-14:07 UTC). Three causes, three fixes: (1) `lastUserText` read harness lines as his words: a `/goal` notice and a loaded skill's text (`isMeta: true`). It now skips `isMeta` lines and reads a slash command line as its `<command-args>`. (2) `SUBMIT_DENIAL` fired on any no-word up to 40 characters before a verb, so "do not stop until you've posted" and "why are you not submitting" counted as refusals. `don't / do not / never / stop / jangan` now void a go-word only within two words of the verb; `wait / hold on / not yet` keep the old sentence-wide reach. (3) `SUBMIT_COMPLAINT`: "why ... not submitting / posting / sending" counts as an order. Spec preservation: stage-only API ban, browser API-call ban, bypass token, assistant-line self-approval ban and every v1.1-v1.5 rule kept; F69, F92, F99 still BLOCK. Dropped: "stop" or "do not" more than two words before the verb as a refusal (the false positive itself). Eval 104/110: the 11 new fixtures F100-F110 pass; F29, F74-F76, F82, F85 fail the same way on the unchanged HEAD gate (93/99), so they come from `quest/ticket-load-verify.js` and `lib/quest-start-claim.js`, not this change.
+diagram: domain/redmine-write-gate/diagram.png
+self_audit: every fire writes a log.jsonl row (outcome, approval or last_user); the eval replays each blocked live message.
+
+### v1.7 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | "WHY ... ARE NOT SUBMITTING IT" (the live 261986 message) | fixture-added (F100 allow) |
+| 2 | /goal "do not stop until you've posted" + its harness notice | fixture-added (F101 allow) |
+| 3 | "SEND" then a loaded skill's text as the last user line | fixture-added (F102 allow) |
+| 4 | go-words only inside a harness or skill line | fixture-added (F103 BLOCK) |
+| 5 | /goal args "do not post it yet" | fixture-added (F104 BLOCK) |
+| 6 | "don't submit" | fixture-added (F105 BLOCK) |
+| 7 | "stop, do not send it" | fixture-added (F106 BLOCK) |
+| 8 | "why did you post it without asking" (a complaint about a post already made) | fixture-added (F107 allow), accepted-risk: the form is already gone once a post was made, so a second submit has nothing to send |
+| 9 | "never post on my behalf" | fixture-added (F108 BLOCK) |
+| 10 | "hold on, let me read it before you send" | fixture-added (F109 BLOCK) |
+| 11 | only a harness line, no human line | fixture-added (F110 BLOCK) |
+| 12 | "I don't approve current send yet" | kept (F69 BLOCK) |
+| 13 | "wait, do not send yet" | kept (F99 BLOCK) |
+| 14 | assistant line "I approve" | kept (F72 BLOCK) |
+| 15 | a pasted log quoting "submit it" inside his message | accepted-risk: his message is his words; a pasted quote with a go-word reads as approval, same as before v1.7 |
+| 16 | queued mid-turn words after a harness line | handled: queued_command attachments are collected before the isMeta skip, as in v1.5 |
+| 17 | a slash command with no `<command-args>` | handled: the whole line is read, as before |
+| 18 | "do not ever, under any case, post" (no-word three words away) | accepted-risk: falls outside two words; "never" or "don't post" is how he says no in the 8 log.jsonl rows read; widen if a miss is logged |
+| 19 | API write inside the stage-only window with "post it" | kept (F56 BLOCK); v1.7 touches the browser branch only |
+| 20 | main folder runs the old gate until landed | handled: landed on main in the same turn (`lib/land-on-main.js`) |
+| 21 | an isMeta line carrying a real approval he typed | accepted-risk: the harness marks only its own injections isMeta; his typed lines are never isMeta in 8 transcript lines read |

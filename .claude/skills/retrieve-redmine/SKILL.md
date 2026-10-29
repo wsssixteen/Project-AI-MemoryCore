@@ -112,3 +112,5 @@ Emit ONE table ranked by **ownership first** (ours > data-patch > reports-team/d
 *Born 2026-08-03 via core/forge.js per みや (session goal step 6), from the 11-ticket live run of the same shape. Eval: `domain/retrieve-redmine/eval.js`.*
 
 *2026-10-03 — Terengganu active per みや: the folder-verify line, the adhoc-register line and the familiar-prompt ground-truth line now read "the resolved state's value (`node lib/states.js show <state>`)". Spec-preservation: steps and order untouched; Melaka literals kept as the example.*
+
+- 2026-10-29 (from the 2026-08-05 assessment file, in git history; recovered 2026-10-29): Redmine search.json is dead on 172.16.90.169: a control query on a known term returned a blank body.

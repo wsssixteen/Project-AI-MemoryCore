@@ -328,7 +328,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 - ✅ 2026-06-04: `pre-action-check-gate.js` v1.2 — added Notes-file tool-only DENY (hard `permissionDecision: deny` on Write/Edit to `1. Tasks\Melaka\…\1. *.txt` → forces `node quest/notes.js`). Structural defender for `tool-choice-skip` 5th-cluster-strike (QA-264006 Notes hand-write). Merge-in-place into the existing gate (already fired on the Notes path) — no new hook, no new registration. notes.js bypasses (writes via Bash fs, not the Edit/Write tool).
 - ✅ Phase 3: `scout-completeness-gate.js` (NEW, UserPromptSubmit) — injects 100%-VERIFY clause + UC9 sibling-structure-read reminder on Scout/Recon trigger phrases
 - ✅ Phase 5: `silent-claim-drift-gate.js` v1.1 — Stage 5A advisory extensions: (a) scans for `→ Skill: <name>` tokens vs Skill tool calls; (b) scans Recon emits for HYPOTHESIS-vs-VERIFIED ratio (100%-VERIFY check); (c) scans system-component edits vs system/system-architecture.md edits (arch-doc-sync). All advisory in Stage 5A; Stage 5B (decision:block flip) deferred to future session after observation. Bypass tokens: `[skip-invoke <name>: <reason>]`, `[skip-100-verify: <reason>]`, `[skip-architecture-doc-update: <reason>]`.
-- ⏸ Phase 5 Stage 5B (DEFERRED): `silent-claim-drift-gate.js` flip from `additionalContext` advisory to `hookSpecificOutput.decision: "block"`. Dry-run scenarios at `system/hook-test-scenarios.md`.
+- ⏸ Phase 5 Stage 5B (DEFERRED): `silent-claim-drift-gate.js` flip from `additionalContext` advisory to `hookSpecificOutput.decision: "block"`. Dry-run scenarios at `system/hook-test-scenarios.md` (in git history; the gate has no eval file, so the scenarios become `silent-claim-drift-gate.eval.js` when 5B is built).
 - ⏸ `PlainFirstGate.js` hard-block upgrade (DEFERRED to Stage 5B alongside silent-claim-drift)
 
 ### 3.8 Changes 2026-06-20 (STG-PPTPB session — みや system-improvement batch)
@@ -349,7 +349,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 - ✅ **NEW Power `domain/review-etanah/`** + skill `.claude/skills/review-etanah/` — layered review orchestration: `/scan` (static) → built-in `/code-review` (etanah-rule-aware) → `/security-review` (SQLi/XSS/authz/PII). Ships `REVIEW.md` (canonical in `domain/review-etanah/`, active copy at the etanah repo root) so the built-in commands enforce our non-negotiables (schema-prefix, sibling-wiring, VO-instance, blast-radius). Inventory-first: built-ins already existed; this configures + composes, doesn't reimplement.
 - ✅ **`best-practices-consult-gate.js` extended** — now also fires on "add/create/build a feature/Power/capability" phrasing → reminds to invoke `/system-rules` + `/system-design` first (per みや: "add a feature" always means consult both; `design-consult-gate` hard-blocks the skill/hook edit otherwise). Merge-in-place, no new hook.
 - ✅ **superpowers** — marketplace index was stale (2026-04-20); refreshed via `claude plugin marketplace update`; superpowers confirmed installed + current at **5.1.0** (`install` idempotent, reports already-current).
-- 📋 **Research-only** → `system/research-proposals/2026-06-22-improvement-directions.md`: (a) **codebase-memory-mcp assessed REDUNDANT** with codegraph — not added (margin ≈ 0; does NOT replace grep, orthogonal); (b) 10 improvement directions brainstormed, top 4 deep-researched (DB-schema-aware entity validation · JSF/EL static check · Semgrep convention rules · past-ticket semantic retrieval). NOT built — proposal for みや.
+- 📋 **Research-only** → `system/research-proposals/2026-06-22-improvement-directions.md` (in git history): (a) **codebase-memory-mcp assessed REDUNDANT** with codegraph — not added (margin ≈ 0; does NOT replace grep, orthogonal); (b) 10 improvement directions brainstormed, top 4 deep-researched (DB-schema-aware entity validation · JSF/EL static check · Semgrep convention rules · past-ticket semantic retrieval). NOT built — proposal for みや.
 - §3.0 registry regenerated (`node system/sync-hook-catalog.js`): 59 → **60** registrations.
 
 **Total hook count after Phase 5 Stage 5A**: 40 unique files / 41 registrations (added `scout-completeness-gate.js` to UserPromptSubmit).
@@ -654,7 +654,7 @@ Three documented procedures cover the common change types. For change types not 
 ### 8.4 Modifying a Stop-hook predicate
 
 1. Document old vs new behaviour in §3 (this file) with version bump
-2. Update `system/hook-test-scenarios.md` (created in Phase 5) — add test cases for new edge cases
+2. Update the hook's eval file (`system/hook-test-scenarios.md`, created in Phase 5, is in git history) — add test cases for new edge cases
 3. Ship in advisory mode first (re-apply Stage 5A pattern): emit `additionalContext` only, NOT `decision: "block"`
 4. Observe N sessions (typically 1-3) for false-positive rate
 5. If acceptable → flip to `decision: "block"` (Stage 5B)
