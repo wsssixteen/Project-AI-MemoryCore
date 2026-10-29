@@ -17,6 +17,9 @@
  *           records HEAD sha (push refuses if HEAD moves after verify)
  *   push    ONLY when phase=verified AND HEAD unchanged AND branch matches
  *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>
+ *   merge-to-master  Phase F after BA pass. mlk/master is protected (2026-10-29): --ba-approved prints the
+ *           GitLab merge-request form spec (never pushes) · --record-mr <url> --reviewer <name> · --abandon-mr ·
+ *           --check confirms origin/mlk/master holds the release tip (exit 3 = not merged yet).
  *   stag-catchup  post-baseline: merge origin/mlk/master (or the release) into mlk/stag-env in the WORK
  *           clone; keep the env common pin unless the release common is outside its line (then stop);
  *           --push pushes + reads origin back. --check only measures (exit 3 = behind). See stag-catchup.js.
@@ -141,7 +144,7 @@ function assertMasterReflectsPrevRelease(st, a) {
   if (inMaster) { console.log(`· prev-release check: ${prev.release} IS in master ✓ (common ${prev.common})`); return; }
   const msg = `BRANCH REFUSED — previous release ${prev.release} is NOT merged into origin/mlk/master.\n` +
     `  Master is STALE: branching here silently DROPS ${prev.release}'s content (common ${prev.common} + its ticket fixes).\n` +
-    `  Fix: run \`merge-to-master --release ${prev.release} --ba-approved\` first (Phase F), then re-run branch.\n` +
+    `  Fix: finish Phase F for ${prev.release} first (merge request into mlk/master, then \`merge-to-master --release ${prev.release} --check\`), then re-run branch.\n` +
     `  Override only if you KNOW master is intentionally ahead: --stale-master-ack "<reason>".`;
   if (a && a['stale-master-ack']) { console.log(`⚠️  STALE MASTER overridden by --stale-master-ack "${a['stale-master-ack']}"`); return; }
   die(msg, 2);
@@ -768,56 +771,188 @@ function cmdPush(a) {
 }
 
 // Phase F — land the release on mlk/master AFTER BAQA baseline testing passes (V8).
-// PLP-ONLY. etanah-awam never merges to mlk/master (0 direct merges in its history); pelupusan
-// does, and it is OURS to run — not the release owner's. Established 2026-07-28 per みや after
-// 1.0.12 sat unmerged until Aaron fast-forwarded it himself (7a31a9a431, authored by aaron).
-// Shape is FAST-FORWARD, matching every prior release: origin/mlk/master === the release tip.
-function cmdMergeToMaster(a) {
-  const st = loadState(a.release);
-  if (st.phase !== 'pushed' && st.phase !== 'merged-to-master') die(`MERGE-TO-MASTER REFUSED — phase is ${st.phase}, expected pushed (the release branch must be on origin first)`, 2);
-  if (!BRANCH_RE.test(st.branch)) die(`MERGE-TO-MASTER REFUSED — branch "${st.branch}" fails the release pattern`, 2);
-  // presence-check, not truthiness: parseArgs eats the next token as a value, so a bare
-  // `--ba-approved` stores undefined — `in` makes the flag work with or without a value.
+// PLP-ONLY. Since 2026-10-29 mlk/master is a protected branch on GitLab ("You are not allowed to push
+// code to protected branches"): the release reaches it ONLY through a merge request that one of the
+// configured reviewers (Aaron or Alex) approves and merges. So this command NEVER checks out, merges,
+// tags or pushes. Four modes, one state machine (phase pushed → mr-pending → merged-to-master):
+//   --ba-approved              prepare: measure on origin, print the exact merge-request form spec
+//   --record-mr <url> --reviewer <name>   store the created MR (read back from GitLab by the skill)
+//   --abandon-mr               forget a closed MR (phase stays mr-pending; prepare again)
+//   --check                    confirm origin/mlk/master holds the release tip, then point at Phase G
+// The browser half (fill the form, read it back, the two confirmations) lives in the skill, Phase F.
+const CONFIG = process.env.RELEASE_MLK_PLP_CONFIG || path.join(__dirname, 'servers.local.json');
+const MR_TITLE = ver => `Release Pelupusan ${ver}`;
+function gitlabConfig() {
+  const cfg = fs.existsSync(CONFIG) ? JSON.parse(fs.readFileSync(CONFIG, 'utf8')) : {};
+  const g = cfg.gitlab || {};
+  const reviewers = Array.isArray(g.reviewers) ? g.reviewers.filter(r => r && r.name && r.username && !/^</.test(r.username)) : [];
+  const missing = [];
+  if (!g.web || !/^https?:\/\/\S+$/.test(g.web)) missing.push('gitlab.web');
+  if (!reviewers.length) missing.push('gitlab.reviewers (name + GitLab username, read from the project Members page)');
+  if (missing.length) die(`MERGE-TO-MASTER REFUSED — ${CONFIG} lacks ${missing.join(' + ')}. Add this block (usernames read from GitLab, never guessed):\n` +
+    JSON.stringify({ gitlab: { web: 'http://10.16.63.27/gitlab', reviewers: [{ name: 'Aaron', username: '<GitLab username>' }, { name: 'Alex', username: '<GitLab username>' }] } }, null, 2), 2);
+  return { web: g.web.replace(/\/+$/, ''), reviewers, project: g.project || null };
+}
+// GitLab project path from origin (scp form host:group/repo.git, or http(s)://host[/prefix]/group/repo.git).
+function gitlabProject(repo, gl) {
+  if (gl.project) return gl.project;
+  const url = gitOut(repo, ['remote', 'get-url', 'origin']);
+  let m = url.match(/^(?:[^@\/]+@)?[^:\/\\]+:(?!\/\/)(.+?)(?:\.git)?$/);
+  if (m && !/^[A-Za-z]$/.test(url.split(':')[0])) return m[1];
+  m = url.match(/^https?:\/\/[^\/]+(\/.+?)(?:\.git)?$/);
+  if (m) { const prefix = new URL(gl.web).pathname.replace(/\/+$/, ''); return m[1].replace(new RegExp('^' + prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/'), '').replace(/^\//, ''); }
+  die(`MERGE-TO-MASTER REFUSED — cannot read the GitLab project path from origin "${url}"; set gitlab.project in ${CONFIG}`, 2);
+}
+const isAncestor = (repo, a, b) => git(repo, ['merge-base', '--is-ancestor', a, b], true).status === 0;
+const countRange = (repo, range) => Number(gitOut(repo, ['rev-list', '--count', range]));
+
+function mrPrepare(st, a) {
+  if (st.phase !== 'pushed' && st.phase !== 'mr-pending') die(`MERGE-TO-MASTER REFUSED — phase is ${st.phase}, expected pushed (the release branch must be on origin first)`, 2);
+  // presence-check, not truthiness: parseArgs stores undefined for a bare `--ba-approved`.
   if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
-  ensureRepo(st.repo);
+  const gl = gitlabConfig();
+  const project = gitlabProject(st.repo, gl);
   fetchOrigin(st.repo);
   if (!remoteBranchExists(st.repo, st.branch)) die(`${st.branch} is not on origin — run \`push\` first`, 2);
-
-  // Dirty tree is TOLERATED (みや routinely has ticket work in flight) but ONLY when no dirty
-  // path intersects the release delta — otherwise the checkout would clobber or refuse.
-  const dirty = gitOut(st.repo, ['status', '--porcelain']).split('\n').filter(Boolean)
-    .map(l => l.slice(3).trim()).filter(Boolean);
-  const delta = gitOut(st.repo, ['diff', '--name-only', `origin/mlk/master...origin/${st.branch}`]).split('\n').filter(Boolean);
-  const clash = dirty.filter(f => delta.includes(f));
-  if (clash.length) die(`MERGE-TO-MASTER REFUSED — uncommitted changes collide with the release delta:\n  ${clash.join('\n  ')}\ncommit, stash, or revert those first`, 2);
-
   const releaseTip = gitOut(st.repo, ['rev-parse', `origin/${st.branch}`]);
   if (st.headSha && releaseTip !== st.headSha) die(`MERGE-TO-MASTER REFUSED — origin/${st.branch} (${releaseTip.slice(0, 10)}) != the pushed head (${st.headSha.slice(0, 10)}); someone moved the release branch`, 2);
-
-  git(st.repo, ['checkout', 'mlk/master']);
-  git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
-  const masterBefore = gitOut(st.repo, ['rev-parse', 'HEAD']);
-  const tag = `mlk/pre-master-merge/${st.release}`;
-  git(st.repo, ['tag', '-f', tag, masterBefore]);            // local undo point
-  git(st.repo, ['merge', '--ff-only', `origin/${st.branch}`]); // FF only — a non-FF means master drifted; stop and think
-  git(st.repo, ['push', 'origin', 'mlk/master']);
-
-  const remoteMaster = gitOut(st.repo, ['ls-remote', 'origin', 'refs/heads/mlk/master']).split(/\s+/)[0];
-  if (remoteMaster !== releaseTip) die(`push reported success but origin/mlk/master reads ${remoteMaster.slice(0, 10)}, expected ${releaseTip.slice(0, 10)} — investigate`);
-
-  st.phase = 'merged-to-master';
-  st.masterSha = remoteMaster;
-  st.masterMergedFrom = masterBefore;
+  const masterAhead = countRange(st.repo, `origin/${st.branch}..origin/mlk/master`);
+  if (masterAhead) die(`MERGE-TO-MASTER REFUSED — origin/mlk/master has ${masterAhead} commit(s) the release lacks (a hotfix landed after the release was cut):\n  ` +
+    gitOut(st.repo, ['log', '--oneline', `origin/${st.branch}..origin/mlk/master`]).split('\n').join('\n  ') +
+    `\n  Merge origin/mlk/master into ${st.branch}, re-verify, re-push, then prepare again.`, 2);
+  const expectedCommits = countRange(st.repo, `origin/mlk/master..origin/${st.branch}`);
+  if (!expectedCommits) { console.log(`✅ origin/mlk/master already holds ${st.branch} — run: merge-to-master --release ${st.release} --check`); return; }
+  const files = gitOut(st.repo, ['diff', '--name-only', `origin/mlk/master...origin/${st.branch}`]).split('\n').filter(Boolean);
+  const title = MR_TITLE(st.release);
+  const enc = encodeURIComponent;
+  const newUrl = `${gl.web}/${project}/-/merge_requests/new?merge_request%5Bsource_branch%5D=${enc(st.branch)}&merge_request%5Btarget_branch%5D=${enc('mlk/master')}&merge_request%5Btitle%5D=${enc(title)}`;
+  const prior = st.mr || {};
+  st.phase = 'mr-pending';
+  st.mr = { releaseTip, masterAtPrepare: gitOut(st.repo, ['rev-parse', 'origin/mlk/master']), expectedCommits, expectedFiles: files.length, files,
+    project, title, newUrl, url: prior.url || null, reviewer: prior.reviewer || null, preparedAt: new Date().toISOString() };
   saveState(st);
-  log('merge-to-master', st.release, 'ok', { from: masterBefore, to: remoteMaster });
+  log('merge-to-master', st.release, 'mr-prepared', { releaseTip, expectedCommits, expectedFiles: files.length });
+  const out = [
+    `MERGE REQUEST FORM — release ${st.release} (mlk/master is protected: a reviewer merges it)`,
+    `  open        ${newUrl}`,
+    `  project     ${project}`,
+    `  source      ${st.branch}`,
+    `  target      mlk/master`,
+    `  title       ${title}`,
+    `  description (empty)`,
+    `  reviewer    one of: ${gl.reviewers.map(r => `${r.name} (@${r.username})`).join(' · ')}`,
+    `  assignee    (empty)`,
+    `  draft       OFF`,
+    `  squash      OFF  (Squash commits unticked)`,
+    `  delete src  OFF  (Delete source branch unticked)`,
+    `  commits     ${expectedCommits}  (Commits tab must show exactly this)`,
+    `  files       ${files.length}  (Changes tab must show exactly this)`,
+    `  release tip ${releaseTip.slice(0, 10)}`,
+  ];
+  if (prior.url) out.push(`  ⚠️  an MR is already recorded: ${prior.url} — do NOT open a second one; --abandon-mr first if it was closed`);
+  out.push(`then: merge-to-master --release ${st.release} --record-mr <the created MR url> --reviewer <name>`);
+  console.log(out.join('\n'));
+  mrSelfAudit(st);
+}
+
+function mrRecord(st, a) {
+  if (st.phase !== 'mr-pending') die(`RECORD-MR REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
+  const gl = gitlabConfig();
+  const url = String(a['record-mr'] || '').trim().replace(/\/+$/, '');
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const m = url.match(new RegExp(`^${esc(gl.web)}/${esc(st.mr.project)}/-/merge_requests/(\\d+)$`));
+  if (!m) die(`RECORD-MR REFUSED — "${url}" is not a merge request of ${gl.web}/${st.mr.project} (expected …/-/merge_requests/<number>)`, 2);
+  const rv = gl.reviewers.find(r => r.name.toLowerCase() === String(a.reviewer || '').toLowerCase() || r.username.toLowerCase() === String(a.reviewer || '').replace(/^@/, '').toLowerCase());
+  if (!rv) die(`RECORD-MR REFUSED — --reviewer must be one of: ${gl.reviewers.map(r => r.name).join(', ')}`, 2);
+  st.mr.url = url; st.mr.iid = Number(m[1]); st.mr.reviewer = { name: rv.name, username: rv.username }; st.mr.recordedAt = new Date().toISOString();
+  saveState(st);
+  log('merge-to-master', st.release, 'mr-recorded', { url, reviewer: rv.name });
+  console.log(`✅ recorded MR !${m[1]} for ${st.branch} · reviewer ${rv.name} (@${rv.username})\n   ${url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  mrSelfAudit(st);
+}
+
+function mrAbandon(st) {
+  if (st.phase !== 'mr-pending' || !st.mr) die(`ABANDON-MR REFUSED — phase is ${st.phase}, no open merge request is recorded`, 2);
+  const was = st.mr.url;
+  st.mr.url = null; st.mr.reviewer = null; st.mr.iid = null;
+  saveState(st);
+  log('merge-to-master', st.release, 'mr-abandoned', { url: was });
+  console.log(`· forgot MR ${was || '(none recorded)'} — prepare again with --ba-approved`);
+}
+
+function mrCheck(st) {
+  if (st.phase === 'merged-to-master') { console.log(`✅ already merged-to-master (${(st.masterSha || '').slice(0, 10)})`); return; }
+  if (st.phase !== 'mr-pending' || !st.mr) die(`CHECK REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
+  fetchOrigin(st.repo);
+  const tip = st.mr.releaseTip;
+  // The reviewer may delete the source branch on merge: ancestry is tested on the recorded SHA, not the branch name.
+  if (remoteBranchExists(st.repo, st.branch)) {
+    const now = gitOut(st.repo, ['rev-parse', `origin/${st.branch}`]);
+    if (now !== tip && !isAncestor(st.repo, now, 'origin/mlk/master'))
+      die(`CHECK REFUSED — origin/${st.branch} moved after the MR was prepared (${tip.slice(0, 10)} → ${now.slice(0, 10)}):\n  ` +
+        gitOut(st.repo, ['log', '--oneline', `${tip}..${now}`]).split('\n').join('\n  ') + `\n  Re-verify the release, then prepare again (--ba-approved).`, 2);
+  }
+  const master = gitOut(st.repo, ['rev-parse', 'origin/mlk/master']);
+  if (!isAncestor(st.repo, tip, master)) {
+    // Squash or rebase merge: the content arrived but the release commits did not.
+    const files = st.mr.files || [];
+    const moved = master !== st.mr.masterAtPrepare;
+    const same = files.length && moved && git(st.repo, ['diff', '--quiet', tip, master, '--', ...files], true).status === 0;
+    if (same) die(`CHECK STOPPED — origin/mlk/master holds the release FILES but not its commits (squash or rebase merge).\n` +
+      `  stag-catchup and the next baseline's stale-master gate need the commits themselves.\n` +
+      `  Ask the reviewer to revert that merge and merge again with a merge commit (Squash commits off).`, 2);
+    console.log(`⏳ not merged yet — origin/mlk/master ${master.slice(0, 10)} does not hold the release tip ${tip.slice(0, 10)}`);
+    console.log(st.mr.url ? `   MR: ${st.mr.url} (reviewer ${st.mr.reviewer ? st.mr.reviewer.name : '?'})` : '   no MR recorded yet — create it, then --record-mr <url> --reviewer <name>');
+    const ahead = countRange(st.repo, `${tip}..${master}`);
+    if (ahead) console.log(`   ⚠️  master gained ${ahead} commit(s) since the release was cut — the MR may show a conflict`);
+    log('merge-to-master', st.release, 'mr-waiting', { master, tip });
+    process.exit(3);
+  }
+  const shape = master === tip ? 'fast-forward' : 'merge-commit';
+  st.phase = 'merged-to-master';
+  st.masterSha = master;
+  st.masterMergedFrom = st.mr.masterAtPrepare;
+  st.mergeShape = shape;
+  saveState(st);
+  log('merge-to-master', st.release, 'ok', { from: st.mr.masterAtPrepare, to: master, shape, mr: st.mr.url, goal_met: true });
   const leftCarry = require('./carry-over.js').prune(st.repo, 'origin/mlk/master');   // shipped carry-overs drop off
   if (leftCarry.length) console.log(`📌 carry-over still pending: ${leftCarry.map(c => '#' + c.ticket).join(', ')}`);
-  console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (ff from ${st.branch}) + pushed`);
-  console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master`);
+  console.log(`✅ origin/mlk/master ${master.slice(0, 10)} holds ${st.branch} (${shape}${st.mr.url ? `, ${st.mr.url}` : ''}) · phase=merged-to-master`);
+  // Local mlk/master follows only when that is safe; みや's checkout is never switched.
+  const cur = gitOut(st.repo, ['branch', '--show-current']);
+  if (cur !== 'mlk/master') {
+    const r = git(st.repo, ['fetch', 'origin', 'mlk/master:mlk/master'], true);
+    console.log(r.status === 0 ? '· local mlk/master updated to origin' : `· local mlk/master left as is (${(r.stderr || '').trim().split('\n').pop()})`);
+  } else if (!gitOut(st.repo, ['status', '--porcelain'])) {
+    const r = git(st.repo, ['merge', '--ff-only', 'origin/mlk/master'], true);
+    console.log(r.status === 0 ? '· local mlk/master (checked out) fast-forwarded to origin' : '· local mlk/master could not fast-forward — left as is');
+  } else console.log('· local mlk/master is checked out with changes — left as is; later: git merge --ff-only origin/mlk/master');
   // Post-baseline step (2026-10-23): the release is complete only once mlk/stag-env holds it.
   const m = require('./stag-catchup.js').measure(st.repo, 'mlk/stag-env', 'origin/mlk/master');
   if (m.behind) console.log(`🚨 NEXT (mandatory): origin/mlk/stag-env is ${m.behind} commit(s) behind — run \`stag-catchup --release ${st.release} --push\` in the work clone (the next baseline's init refuses until it ran)`);
   else console.log('✅ origin/mlk/stag-env already holds the release · release COMPLETE');
+}
+
+// Self-audit (system-design Rule 16): read the state back from disk and check it against the goal.
+function mrSelfAudit(st) {
+  const back = JSON.parse(fs.readFileSync(statePath(st.release), 'utf8'));
+  const fails = [];
+  if (back.phase !== 'mr-pending') fails.push(`phase ${back.phase}`);
+  if (!back.mr || back.mr.releaseTip !== st.mr.releaseTip) fails.push('release tip not stored');
+  if (!back.mr || back.mr.title !== MR_TITLE(st.release)) fails.push('title not stored');
+  if (!back.mr || !(back.mr.expectedCommits > 0)) fails.push('commit count not stored');
+  if (fails.length) die(`SELF-AUDIT FAIL — ${fails.join(' · ')}`);
+  console.log('· self-audit: state read back ✓');
+}
+
+function cmdMergeToMaster(a) {
+  const st = loadState(a.release);
+  if (!BRANCH_RE.test(st.branch)) die(`MERGE-TO-MASTER REFUSED — branch "${st.branch}" fails the release pattern`, 2);
+  ensureRepo(st.repo);
+  if ('check' in a) return mrCheck(st);
+  if ('record-mr' in a) return mrRecord(st, a);
+  if ('abandon-mr' in a) return mrAbandon(st);
+  return mrPrepare(st, a);
 }
 
 // stag-catchup — see stag-catchup.js. Runs in the work clone (E:\Dev\etanah-work\<repo>), never in みや's repo.

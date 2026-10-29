@@ -66,7 +66,7 @@ Merges into `mlk/master` are always `git merge --no-ff <branch>`. A fast-forward
 
 **Why:** 2026-09-04, #277697. I fast-forwarded `mlk/master` onto `0b7b5cff37`. SourceTree showed only the 3 Sep commit date, no merge line, no 4 Sep entry. miya: *"This is a problem for managers checking if their employees are doing work… now hidden due to this fast-forwarding thing."* Then: *"no-ff rule from now on."*
 
-**How to apply:** `release-prep.js merge-to-master` now does `--no-ff` behind a drift guard. Both local etanah repos carry `branch.mlk/master.mergeoptions=--no-ff`. For a branch-owner-ordered manual merge, checkout master, `git merge --no-ff <branch>`, push, then bypass the push gate with the reason. Related: [[feedback-commit-deploy-runbook]] · [[feedback-commit-deploy-runbook]].
+**How to apply:** since 2026-10-29 pelupusan `mlk/master` is protected: a release lands through a GitLab merge request (`release-prep.js merge-to-master` prepares it, Aaron or Alex merges; a merge commit satisfies this rule, a squash is refused by `--check`). Both local etanah repos carry `branch.mlk/master.mergeoptions=--no-ff`. For a branch-owner-ordered manual merge, checkout master, `git merge --no-ff <branch>`, push, then bypass the push gate with the reason. Related: [[feedback-commit-deploy-runbook]] · [[feedback-commit-deploy-runbook]].
 
 ---
 
