@@ -156,7 +156,7 @@ Not built: a gate that refuses a system-change commit when a row above is missin
 | `INDEX.md` (this file) | Master index — points to all sub-indexes + cross-refs | Phase 1 ✅ |
 | `tools.json` | The Tool registry — one row per Tool (what it answers · how to call · home · groups · state scope · footprint · usage · status) | 2026-10-06 ✅ |
 | `principles.md` | The 6 proto-system-layer principles + classified rest of 68 principles from personality.md / feedback files | Phase 1 ✅ |
-| `baseline-2026-05-23.md` | Pre-system-layer baseline measurement (slip count + corrections + INDEX validity) for comparative eval | Phase 0 ✅ |
+| baseline 2026-05-23 (numbers only; the file `baseline-2026-05-23.md` is in git history) | Pre-system-layer state for comparison: 48 documented slips per 14 days · ~5 corrections per session · 1 broken CLAUDE.md pointer of 17 · 8 scattered slip files · 11 skills · 12 hooks · CLAUDE.md 132 lines | Phase 0 ✅ |
 | `discipline-INDEX.md` | Sub-index for Discipline atomic primitive skills (Rubric / Predicate Box / Grep Rubric / Multi-dim evidence / Sycophancy Circuit-Breaker / Confidence Table) | Phase 1 skeleton ✅ → Phase 3 populates |
 | `honesty-INDEX.md` | Sub-index for Honesty atomic skills (claim-verification / task-assignment-honesty / stalling-detector / scope-anchor-echo / over-generalization-check / test-data-echo) + Identity-section reference in personality.md | Phase 1 skeleton ✅ → Phase 4 populates |
 | `enforcement-INDEX.md` | Sub-index for 6 Enforcement hooks (boot-required-read · pre-action-check · inventory-first · prose-default · silent-claim-drift · best-practices-not-consulted) | Phase 1 skeleton ✅ → Phase 2 populates |

@@ -39,3 +39,9 @@ Never call any `mcp__Claude_Browser__*` tool (preview_start with a url, navigate
 - **Personal IDE**: VS Code + Claude Code
 
 **Why:** みや corrected multiple times — never assume Zen Browser for work context. Zen is Firefox/Gecko-based, used at home only.
+
+- 2026-10-29 (from the 2026-09-04 assessment file, in git history; recovered 2026-10-29): Claude-in-Chrome tool channel: JS output truncates at about 1 KB, base64/hex blocked, downloads dropped after the first; move files by transferring coordinates as tokens (45 browser calls for 2 files).
+
+- 2026-10-29 (from the 2026-10-17 assessment file, in git history; recovered 2026-10-29): msedge --version prints nothing and opens into the running browser; headless Edge ignores widths under 492 px, so phone screenshots crop: measure the viewport with a probe page and use DevTools-protocol emulation.
+
+- 2026-10-29 (from the 2026-08-06 assessment file, in git history; recovered 2026-10-29): Google Sheets canvas grid: get_page_text and read_page return no cells, the gviz CSV endpoint bounces to /edit on a view-only doc, wheel-scroll and Page_Down are ignored; zoom to 50% + screenshot + region zoom works.

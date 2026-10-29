@@ -21,3 +21,5 @@ metadata:
 - **`OSError(22, 'An Application Control policy has blocked this file')`** (2026-09-30) = Windows **Smart App Control** blocking the unsigned `C:\Users\Ridhwan\AppData\Local\pgedge-postgres-mcp\pgedge-postgres-mcp.exe` (all postgres MCP down; oracle ones fine, they run on signed Python). Check `HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy` VerifiedAndReputablePolicyState (1 = On, 0 = Off) + CodeIntegrity event 3077. SAC has no allow-list: miya turns it Off (Windows Security, App & browser control) or I query through JDBC meanwhile (see [[feedback-staging-schema-stg2]]).
 
 Related: [[project_onedrive_worktrees]] · [[Inventory-first — take stock before acting]].
+
+- 2026-10-29 (from the 2026-10-20 assessment file, in git history; recovered 2026-10-29): When the task shows Running but the listener is dead (OSError WinError 64 in gateway.log), schtasks /run alone does nothing; /end then /run restores it; the session MCP tools stay failed until the session restarts.

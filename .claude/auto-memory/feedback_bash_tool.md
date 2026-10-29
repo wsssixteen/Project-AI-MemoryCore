@@ -16,3 +16,5 @@ Bash tool hangs for simple shell commands. Use dedicated tools instead for those
 - Reserve caution for interactive/blocking commands only (git rebase -i, long-running processes without timeout)
 - **Escaping trap (2026-09-04)**: the Bash tool collapses a doubled backslash to a single one and can mangle non-ASCII inside heredocs, so an inline `python - <<EOF` that writes `'\\n'` produces a real newline and breaks the file. For any generated script or text patch: Write the `.py` with the Write tool, use `chr(10)` / `chr(92)` for escapes, and never put `\\` in a heredoc.
 - **NUL trap (2026-09-28)**: in Git Bash, `> NUL` / `2>nul` writes a REAL file named NUL (Windows-reserved, OneDrive cannot sync it → "Rename 1 item?" popup). Use `/dev/null` in Bash, `$null` in PowerShell. Enforced by `domain/nul-redirect-gate` (PreToolUse Bash, blocks) + `system-audit.js` CHECK 10 (boot detect).
+
+- 2026-10-29 (from the 2026-08-21 assessment file, in git history; recovered 2026-10-29): Regex and JSON test fixtures go in files, never through shell quoting: a bash node -e test falsely proved a guard regex missed backslash paths.
