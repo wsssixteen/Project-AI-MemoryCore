@@ -7,6 +7,7 @@
     "domain/next-steps-shape/next-steps-shape.check.hook.js",
     "domain/handover-check-gate/handover-check-gate.check.hook.js",
     "domain/system-change-title/system-change-title.check.hook.js",
-    "domain/session-name/session-name.check.hook.js"
+    "domain/session-name/session-name.check.hook.js",
+    "domain/go-reask-gate/go-reask-gate.check.hook.js"
   ]
 }

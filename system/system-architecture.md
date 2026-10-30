@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 149 hook registrations across 6 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 158 hook registrations across 6 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -103,8 +103,10 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `save-quest-gate.check.hook.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
 | UserPromptSubmit | — | `session-items-manager.js` | ✓ |
+| UserPromptSubmit | — | `session-name.check.hook.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `skill-invocation-discipline-gate.js (bundle upsm-consult)` | ✓ |
 | UserPromptSubmit | — | `staging-schema-tracker.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `stale-hooks-warn.check.hook.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `ticket-gate.js` | ✓ |
 | UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
 | UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
@@ -128,6 +130,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `live-action-safety.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `logic-blast-radius.discipline.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `memory-clean-words.check.hook.js (bundle pretool-editwrite-gates)` | ✓ |
 | PreToolUse | Edit|Write|MultiEdit | `memory-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | ✓ |
 | PreToolUse | Bash | `nul-redirect-gate.check.hook.js` | ✓ |
@@ -140,11 +143,13 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
 | PreToolUse | AskUserQuestion | `question-self-contained.check.hook.js` | ✓ |
+| PreToolUse | mcp__claude-in-chrome__file_upload | `redmine-upload-path.check.hook.js` | ✓ |
 | PreToolUse | mcp__claude-in-chrome__javascript_tool|mcp__claude-in-chrome__computer|mcp__claude-in-chrome__browser_batch|mcp__Claude_Browser__javascript_tool|mcp__Claude_Browser__computer|mcp__Claude_Browser__browser_batch | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `release-mlk-plp-scope-gate.check.hook.js` | ✓ |
+| PreToolUse | mcp__ccd_session__start_session|mcp__ccd_session__hand_off_to_session | `session-name.check.hook.js` | ✓ |
 | PreToolUse | mcp__ccd_session__spawn_task | `spawn-task-folder-guard.check.hook.js` | ✓ |
 | PreToolUse | mcp__postgres-mlkstg1?-pg__.* | `stg1-block.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `system-edit-gate.js (bundle pretool-editwrite-gates)` | ✓ |
@@ -178,6 +183,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `falsifier-ran-check.check.hook.js` | ✓ |
 | Stop | — | `fix-photo.check.hook.js` | ✓ |
 | Stop | — | `full-address-trace-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
+| Stop | — | `go-reask-gate.check.hook.js (bundle stop-reply-shape)` | ✓ |
+| Stop | — | `handover-check-gate.check.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `next-steps-shape.check.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `notes-on-test-data.js` | ✓ |
 | Stop | — | `operational-follow-through.js` | ✓ |
@@ -195,9 +202,11 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `render-verify.check.hook.js` | ✓ |
 | Stop | — | `rootcause-format.check.hook.js` | ✓ |
 | Stop | — | `scope-claim-census.check.hook.js` | ✓ |
+| Stop | — | `session-name.check.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `show-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `silent-claim-drift-gate.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `sql-schema-verify.check.hook.js` | ✓ |
+| Stop | — | `system-change-title.check.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `template-cc-preflight.check.hook.js` | ✓ |
 | Stop | — | `terse-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
