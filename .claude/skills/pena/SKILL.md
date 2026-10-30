@@ -36,9 +36,9 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 
 | Profile | Use it for | Modules |
 |---|---|---|
-| `redmine-dev-mapping` | answer to another team's developer (table and column, how to read a value) | greet · lean · line · table · separate · script · proven |
-| `redmine-ba-pass` | passing a fix or patch to the BA | greet · lean · line · plain · proven |
-| `redmine-dev-fixlist` | fix list or findings for a developer | greet · lean · line · rojak · proven |
+| `redmine-dev-mapping` | answer to another team's developer (table and column, how to read a value) | greet · lean · line · table · separate · script · proven · topdown · attach |
+| `redmine-ba-pass` | passing a fix or patch to the BA | greet · lean · line · plain · proven · topdown · table · attach |
+| `redmine-dev-fixlist` | fix list or findings for a developer | greet · lean · line · rojak · proven · topdown · table · attach |
 | `redmine-rootcause` | Root cause and Solution fields | lean · line · plain · rojak · proven |
 | `infra-handoff` | message to infra | lean · line · proven |
 | `whatsapp-dev` | WhatsApp reply | lean · line · rojak · proven |

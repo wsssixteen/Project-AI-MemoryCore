@@ -13,7 +13,10 @@
       "Out-of-the-norm closing (Thank you in abundance. / Thank you & Godspeed.) = ONLY when the other person started that tone first, e.g. a ticket by Ammar Zakwan. Never as an opener of my own (miya 2026-10-27).",
       "His closings in 134 Redmine notes (May to Oct 2026): Thank you. 103 · Thanks 16 · Thank you very much 10 · with a name 3 · Terima kasih 2. Size alone does not decide: 17 large notes still end Thank you."
     ],
-    "banned": ["Hi <full Redmine name>", "any line after the closing"],
+    "banned": [
+      "Hi <full Redmine name>",
+      "any line after the closing"
+    ],
     "check": "greet"
   },
   "lean": {
@@ -27,7 +30,16 @@
       "Every draft reply to another person comes in 2 versions: SHORT first (1-2 lines, the answer only, e.g. \"Bukan id ni je... Isu ni akan jadi untuk semua permohonan yang isi tanah dimiliki.\"), then FULL. He picks one.",
       "A chat reply answers ONLY the question in the last message, in about 3 short fragments. No background on how it works today and no process line (change request, please confirm) unless that message asks for it (ADHOC-UPP-PDTJ: 5 lines cut to \"Sepatutnya waktu dijana. Waktu ADO sign tu ke. Jana semula load balik tarikh ADO sign.\")."
     ],
-    "banned": ["Everything ...", "As you can see", "Please note that", "DB-proven", "verified", "We will not", "raise a separate ticket", "is also older than"],
+    "banned": [
+      "Everything ...",
+      "As you can see",
+      "Please note that",
+      "DB-proven",
+      "verified",
+      "We will not",
+      "raise a separate ticket",
+      "is also older than"
+    ],
     "check": "lean"
   },
   "line": {
@@ -37,20 +49,29 @@
       "At most 2 sentences on one line.",
       "Related or continuing sentences share a line. A new point starts a new line.",
       "A sentence joined by jadi / so / sebab / bila that carries two facts is split.",
-      "Never list 3 or more ids or items inside one sentence. Use a list or summarise."
+      "Never list 3 or more ids or items inside one sentence. Use a list or summarise.",
+      "A paragraph is at most 3 short sentences. Then a blank line. (miya 2026-10-30, #239386 Redmine rules)"
     ],
-    "banned": ["3 or more sentences on one line", "a long sentence joined by jadi / so"],
+    "banned": [
+      "3 or more sentences on one line",
+      "a long sentence joined by jadi / so",
+      "a paragraph of 4 or more sentences"
+    ],
     "check": "line"
   },
   "table": {
     "title": "Tables for data",
-    "means": "Field, table and column data goes in a table. On Redmine that is a Textile table.",
+    "means": "Field, table and column data goes in a table. Any 2 or more items that share the same parts (urusan and error, before and after, step and result) go in a table, not sentences. On Redmine that is a Textile table.",
     "rules": [
+      "Always use a table when one fits: 2 or more items with the same parts are rows, the parts are columns. (miya 2026-10-30, #239386 Redmine rules)",
       "Field / Table / Column answers are a table, one row per field.",
       "Redmine tables: |_. Head |_. Head | then | cell | cell |.",
       "Column and table names inside a sentence go in @...@ on Redmine."
     ],
-    "banned": ["Table : / Column : label lines when a table fits"],
+    "banned": [
+      "Table : / Column : label lines when a table fits",
+      "3 or more label: value lines when a table fits"
+    ],
     "check": "table"
   },
   "separate": {
@@ -60,7 +81,9 @@
       "Order: opener, short explanation, tables, then Scripts as its own section.",
       "A script block never sits between two mapping tables."
     ],
-    "banned": ["a SQL block before the last mapping table"],
+    "banned": [
+      "a SQL block before the last mapping table"
+    ],
     "check": "separate"
   },
   "script": {
@@ -72,7 +95,12 @@
       "No JOIN. Resolve ids with a subquery.",
       "No schema prefix."
     ],
-    "banned": ["SELECT *", "JOIN", "et_main_xxx. prefix", "a whole script on one line"],
+    "banned": [
+      "SELECT *",
+      "JOIN",
+      "et_main_xxx. prefix",
+      "a whole script on one line"
+    ],
     "check": "script"
   },
   "proven": {
@@ -84,7 +112,11 @@
       "Check the code and a second environment before calling it true or test data.",
       "Self-audit before the hand-back: read the note as the reader. A frequency word must match the count (11 of 36 is not sometimes). A cause is named, never called a factor."
     ],
-    "banned": ["a rule sentence backed by one row", "sometimes / rarely / kadang-kadang where a count exists", "uncontrolled factors / certain cases with the factor not named"],
+    "banned": [
+      "a rule sentence backed by one row",
+      "sometimes / rarely / kadang-kadang where a count exists",
+      "uncontrolled factors / certain cases with the factor not named"
+    ],
     "check": "manual",
     "also": "vague",
     "ask": "For each sentence that states system behaviour: name the query or code line and the count behind it. Then the self-audit: does every how-often word match that count, and is every cause named in words the reader knows?"
@@ -97,7 +129,10 @@
       "No capital letters for emphasis.",
       "One fix per line, in the words of the screen."
     ],
-    "banned": ["File.java:123", "ClassName.method()"],
+    "banned": [
+      "File.java:123",
+      "ClassName.method()"
+    ],
     "check": "plain"
   },
   "rojak": {
@@ -109,7 +144,18 @@
       "Basically / Actually / so / just, not Ringkasnya / Oleh itu.",
       "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\"."
     ],
-    "banned": ["dihantar", "tidak dapat", "dipaparkan", "Ringkasnya", "Oleh itu", "Maaf atas kekeliruan", "nilai tetap", "Rujuk", "jadual", "ye"],
+    "banned": [
+      "dihantar",
+      "tidak dapat",
+      "dipaparkan",
+      "Ringkasnya",
+      "Oleh itu",
+      "Maaf atas kekeliruan",
+      "nilai tetap",
+      "Rujuk",
+      "jadual",
+      "ye"
+    ],
     "check": "rojak"
   },
   "hint": {
@@ -119,14 +165,18 @@
       "Each item: symptom, where to start, test data.",
       "No sentence that says why it breaks."
     ],
-    "banned": ["the finished SQL or diff", "the cause"],
+    "banned": [
+      "the finished SQL or diff",
+      "the cause"
+    ],
     "check": "manual",
     "ask": "Does any line say why it breaks or give the finished fix? Cut it."
   },
   "topdown": {
     "title": "Top-down explanation",
-    "means": "Explain from the highest view down. First the issue as the user sees it and where. Then one layer at a time, each cause in its own block, going down. Then where it is fixed. Last, what the reader checks to see it work.",
+    "means": "Separate the levels. First the issue or topic in one line. Then the overview: the whole picture in 1 to 3 short sentences or one table. Only then the details, one layer at a time going down to the fix, and last what the reader checks.",
     "rules": [
+      "Order: issue or topic (one line) > overview (whole picture, 1 to 3 short sentences or a table) > details. No detail line before the overview is done. (miya 2026-10-30, #239386 Redmine rules)",
       "Line after the greeting: the issue at the top view (screen, action, env, which urusan or module).",
       "Two or more causes: say how many, then one numbered block per cause, each opening with what the user sees for that cause.",
       "Inside a block, go down one layer per line: screen or action, then the data or flow, then the code. Class names and line numbers only on the lowest layer.",
@@ -135,8 +185,28 @@
       "Each block opens with what the user did, then what they saw. Before a part is used (langkah, turutan, tugasan), one short line says what it is. One fact per sentence, one sentence per line, a blank line between layers (miya 2026-10-30, #239386 second correction: 'jumping into the issue without explaining what is the issue').",
       "(miya 2026-10-30, #239386: explain top-down, from the issue at the top view, layer by layer to where we fix, and for them to check.)"
     ],
-    "banned": ["a class name, line number or fix in the first line after the greeting", "a hand-over with no line saying what the reader checks"],
+    "banned": [
+      "a class name, line number or fix in the first line after the greeting",
+      "a hand-over with no line saying what the reader checks"
+    ],
     "check": "manual",
-    "ask": "Read only the line after the greeting: does it say what the user sees and where, with no class name or line number? Does each cause go down one layer per line and close on the fix? Is the last line before the closing what the reader checks?"
+    "ask": "Read only the first lines: is the issue or topic one line, then a short overview of the whole, before any detail, class name or line number? Does each detail block open with what the user did and saw, and close on the fix? Is the last line before the closing what the reader checks?"
+  },
+  "attach": {
+    "title": "Attachments that explain",
+    "means": "Before writing an explanation, check every file we have (BA screenshots, video frames, server log, DB result, our fix file) for one that can show it instead. A red-boxed screenshot replaces the sentences it proves. The note then names what the picture shows, never only \"Refer attachment\".",
+    "rules": [
+      "Check every attachment we hold or can make (BA photo, video frame, log line, DB grid, fix file) before writing a sentence it could show. (miya 2026-10-30, #239386 Redmine rules)",
+      "A picture carries red boxes on exactly the part that proves the point.",
+      "A sentence that the boxed picture already proves is cut.",
+      "Point to it with what it shows: \"Attachment 2: the 5 common langkah boxed in the sidebar\", never only \"Refer attachment 2\".",
+      "Attachment files are saved in the cycle folder as <n>. <what it shows>.<ext> and uploaded from there."
+    ],
+    "banned": [
+      "Refer attachment N with no word on what it shows",
+      "a paragraph that explains what a held screenshot could show"
+    ],
+    "check": "manual",
+    "ask": "Which sentences could a screenshot, video frame, log line or DB grid we hold show instead? Make that picture (red boxes on the proof), cut those sentences, and name what each attachment shows."
   }
 }
