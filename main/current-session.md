@@ -1,3 +1,12 @@
+**Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
+
+## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
+- 287186: infra ran the resit-link patch (rows verified) · alter PL Kupon → 48.0 PYB4CE 08:15 (code A1E3-7EAD) · Redmine Resolved 100% to Amani with note · Closed on Redmine · archived.
+- 287233: alter PYSKN5A → PKPPT 02:44 (code 3480-80C1) · Closed by Idris 09:21 · % Done 100 at 10:49 on "Set 287233 100%" · archived.
+- System (all on main, last f4cf1ef6): go-reask-gate (new Stop gate) · stale-hooks-warn (new prompt advisory) · his-words reads past a compaction · redmine-write-gate takes "set <ticket> <n>%" and names the patch close on an approved Submit · playbook A7 CLOSE · quest 6c close line.
+- Slips: re-asked approval after his go; kept "do not update %" into Resolve; Submit blocked twice after compaction; patch tickets not closed after handover (all logged).
+- Open: proposal tracked — a quest doc born in a worktree lives only there (archive-quest refused until copied to main).
+
 **Last Activity**: 2026-10-30 02:25 — worktree `rubric-code-review-2f5201` (261986 session), 261986 saved (Phase 1 closed), Domain Expansion.
 
 ## Session Recap (2026-10-29 to 30, worktree "rubric-code-review-2f5201", 261986 PSBS Risalat MMKN)
@@ -16,15 +25,3 @@
 - Slips (4, logged): missed Wednesday lines · resolved 286988 before Redmine · mixed adhoc line format · said 261986 had no commit without checking git or other sessions.
 - Open: training script not schema-verified (no training DB MCP; all DB MCPs ECONNREFUSED); new tickets 287233 · 287186 · 287201 · 287164 have no branch yet; protime-plan check reads only today (parked).
 #**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "stoic-ramanujan-634076", 286655 MLPS/OMLPS Tarikh Jadual)
-- 286655: Maklumat Jadual at Penyediaan Borang 4Ae dan L1e keeps the saved Tarikh Mula/Akhir after Simpan (MLPS + OMLPS; QA 262778 old-date reset kept). Commit 75381bb3a7 on mlk/esokongan/286655, merged int-env fa244fa194.
-- miya tested MLPS on internal PTMLK/02/L/MLPS/2026/5 (27/05/2025 to 31/12/2028 kept after Simpan, Borang 4Ae line (1) matches, Pengesahan KPPD 21:30 matches). OMLPS not tested (no OMLPS app at that tugasan on internal).
-- Redmine journal #6 (22:23, miya clicked Submit): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani. The 2 red-boxed photos in `2. Fix` did NOT attach (upload tokens lost when the form re-rendered); add them on his nod.
-- System: CLAUDE.md v1.98 Disposition 7 (own steps run without asking; blockers logged and routed around) + deploy §5b photo finding (37e702ed).
-- Slips: asked him to save a photo I could find myself; redmine-write-gate could not see "submit it" sent as a huge pasted block (read "(none)") and blocked the Submit twice.
-- Open: attach the 2 photos to 286655; ticket onto the planned-release list; OMLPS untested.
-
- Current Session
-
-**Last Activity**: 2026-10-29 23:30 — worktree `common-version-1-10-20-mlk-c5ee8f` (second session), Submit-it block audit → system-rules Rule 8 + `lib/his-words.js`, landed on main.
