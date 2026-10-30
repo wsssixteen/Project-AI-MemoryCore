@@ -2,6 +2,7 @@
 
 symptom: 2026-09-28 #256334 miya: 'include the fix photo with red box you add into fix folder ... a step/behaviour you always do when talking about the UI, especially since BA have already provided the photos'
 goal: every UI-changing quest hand-back ships a red-box fix photo per changed screen in the cycle 2. Fix folder, so miya can upload it to Redmine without asking
+diagram: domain/fix-photo/diagram.png (v4 step marked)
 goal_signal: the hand-back reply carries one FIX-PHOTO: <path> line per changed screen and each path exists on disk
 goal_signal_regex: FIX-PHOTO:\s*`?[A-Za-z]:[\\/].*[\\/]2\. Fix[\\/].+\.(png|jpe?g)
 retention: rotate monthly
@@ -70,3 +71,18 @@ Keyword "test result" installed per miya: when his message carries "test result(
 The gate fires only when miya asked for a fix photo in his own words this session. A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it. Why: an unrequested marked-up BA screenshot was created for #282924 and read as a fake screenshot of the fix. Eval 46/46.
 
 - **One box per change (2026-10-22 per miya, #285768).** Draw exactly one box for each change the note or ticket names. Never box an unchanged field (no 'Kekal' boxes) and never box an empty spot where something was removed: a removal is said in the note, not drawn. Count the boxes against the note's changes before handing back.
+
+## v4 (2026-10-30, #287048)
+Per miya: "if I share with you screenshots that is related to the test scenario, you will save it into task fix folder, then highlight with red box ... and WILL attach to the ticket/upload to redmine. Ensure this will be done. eval & verify." The test-share trigger now also fires on "test scenario(s)" without "here", on "attach ... ticket/redmine", and on a message he sends while I am mid-turn (a `queued_command` attachment entry holds his text and images, not a user message). Same release: a valid FIX-PHOTO line. Reads its own lines with the marker `his-words: not an approval reader` because lib/his-words.js returns text only. Eval 69/69 (T18-T23 written red first). Spec kept: every v3 keyword and fixture unchanged; the "here test scenario" phrase is a subset of the new "test scenarios?" alternative.
+
+| # | v4 adversarial scenario (Rule 12) | Verdict |
+|---|---|---|
+| 1 | "test scenarios" + image | fixture T18 |
+| 2 | "attach these to redmine" + image | fixture T19 |
+| 3 | mid-turn message with image + keyword | fixture T20 |
+| 4 | mid-turn keyword, no image | fixture T21 silent |
+| 5 | mid-turn share then valid FIX-PHOTO | fixture T22 silent |
+| 6 | "attach" with no ticket/redmine word | fixture T23 silent |
+| 7 | "test scenario" in a question about a test plan, with a design image | accepted-risk: blocks once; one save or one skip line clears it |
+| 8 | mid-turn entry shape changes in a future app version | accepted-risk: falls back to v3 behaviour, no crash (walk is defensive) |
+
