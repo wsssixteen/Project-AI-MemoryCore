@@ -6,7 +6,7 @@
 - System on main: patch-mlk-doc (2+ files = one <num>.zip, deliverable-check takes several names, eval 26/26; letter date = created_date, ADO day banned; infra boxes #<num> only, no description, no instruction lines). Knowledge WORD-TEMPLATE-RENDERING corrected. Pena c65.
 - Slips: ba-spec-overridden, vague-term, wrong-rule-encoded, reask/redundant (QA-287292). I also held the upload for a BA answer after he said to do it straight away, and said "yesterday's patch wasn't wrong" before he corrected it.
 - Not verified: where infra's file names LAIN-40346432 / 40346446 / 40346447 came from (no PROD, stg1 or stg2 row, not on local disk); the content of the uploaded files in PROD, BA verify is the check.
-- Open: 285768 template fix prints each generation's day, so new letters show the ADO day, not the first-generated date; miya has not ruled. Infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
+- 285768 is finished: Closed, QA Verified STAG 2026-10-29, not an open item. Open: infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
 - Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
 
 **Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
