@@ -76,6 +76,8 @@ const SUBMIT_ACTION = /\b(?:approve|submit|send|post|pass|proceed|hantar|upload|
 const SUBMIT_COMPLAINT = /\bwhy\b[^.?!\n]{0,60}\bnot\s+(?:submit|send|post|pass|hantar)\w*/i;
 // A hold on a Redmine write, anywhere in his message: the reader's holds plus "view it first" shapes.
 const REDMINE_HOLD = new RegExp(HOLD.source + '|' + VIEW_FIRST.source, 'i');
+// After a patch ticket's handover is posted, the close runs in the same turn (close-phase, patch = Phase 1 + Phase 2). 287186/287233, 2026-10-30.
+const PATCH_CLOSE_NEXT = '   NEXT, same turn, no question: read the ticket back; when its quest block is ticket_type=patch (Internal Issue (PROD) · Data Patching (PROD) · PROD-CR · alter), run close-phase now: node lib/save-quest.js <QA>, then Phase 1 + Phase 2 (archive).\n';
 const hisSubmitWords = tp => decide(tp, { approve: SUBMIT_APPROVAL, action: SUBMIT_ACTION, complaint: SUBMIT_COMPLAINT, hold: REDMINE_HOLD, bypass: BYPASS });
 const hisPostWords = (tp, approve, action) => decide(tp, { approve, action, hold: REDMINE_HOLD, bypass: BYPASS });
 // A second block of the same action in one task is the gate's defect, not his (Rule 8d): it is logged as a slip.
@@ -170,7 +172,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
     if (his.verdict === 'approve') {
       const said = his.via === 'bypass' ? 'bypass' : (lastB.match(SUBMIT_APPROVAL) || lastB.match(SUBMIT_COMPLAINT) || [his.via])[0];
       logRow({ outcome: 'allowed', surface: 'browser-submit', approval: said, back: his.back });
-      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${said}")\n` };
+      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${said}")\n` + PATCH_CLOSE_NEXT };
     }
     const prior = repeatBlock('browser-submit');
     logRow({ outcome: 'blocked', surface: 'browser-submit', why: his.verdict === 'deny' ? 'his ' + his.via : 'no order found', last_user: lastB.slice(0, 120), repeat: prior });
