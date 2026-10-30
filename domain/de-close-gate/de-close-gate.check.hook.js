@@ -18,6 +18,7 @@
 // NOD: miya 2026-08-21 — "audit DE, list non-critical steps and MAKE THEM CRITICAL".
 //   C8 SAVE RULES RAN: the latest full action=save-rules-ran row (12h) carries fail=0 (lib/save-rules.js, DE step 12.7).
 //   C9 SAVE-QUEST DONE: every touched QA ticket has a lib/save-quest.js run this session and its stage was done (DE step 2d).
+//   C10 SESSION FINDINGS ROUTED: each class lib/session-audit.js finds in this transcript has a reply line "<class> → <home>" (DE step 7.4).
 // PASS (silent): not-DE-close · bypass · all conditions hold
 // BYPASS: [skip-de-close-gate: <reason>] in the last assistant text
 // TEST HOOK: input JSON `_testEvents` overrides transcript parse; `_testActiveText`,
@@ -241,6 +242,14 @@ function checkC9(events, saveQuestLines, sessionStartMs, now) {
   return { pass: !missing.length && !undone.length, missing, undone };
 }
 
+// C10 — SESSION FINDINGS ROUTED (2026-10-30, per miya, audit of the audit: DE's scripts caught 0 of 13 failures of the session).
+// lib/session-audit.js reads the transcript; each finding class needs one reply line "<class> → <home or why none>".
+function checkC10(events, findings) {
+  const replyLines = events.filter(e => e.kind === 'text' && e.role === 'assistant').flatMap(e => String(e.text).split(/\r?\n/));
+  const unrouted = [...new Set((findings || []).map(f => f.class))].filter(c => !replyLines.some(l => l.includes(c) && /→/.test(l)));
+  return { pass: unrouted.length === 0, unrouted };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -254,8 +263,9 @@ function evaluate(events, disk) {
   const c7 = checkC7(events, disk.activeText, disk.archiveText, disk.sessionStartMs || 0, disk.qaDocMtimes);
   const c8 = checkC8(disk.gateLogLines, disk.now);
   const c9 = checkC9(events, disk.saveQuestLines || [], disk.sessionStartMs || 0, disk.now);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass && c9.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8, c9 };
-  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8, c9 };
+  const c10 = checkC10(events, disk.findings);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass && c9.pass && c10.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10 };
 }
 
 function readDisk() {
@@ -300,6 +310,8 @@ function buildBlockReason(r) {
     '   Fix: node lib/save-rules.js — paste its header + table, fix every FAIL, re-run until 0 FAIL, then re-close.');
   if (r.c9 && !r.c9.pass) rows.push('C9 SAVE-QUEST (DE step 2d): ' + [r.c9.missing.length && ('no verdict this session: ' + r.c9.missing.join(', ')), r.c9.undone.length && ('stage not done: ' + r.c9.undone.join(', '))].filter(Boolean).join(' · '),
     '   Fix: node lib/save-quest.js <QA> per ticket, do its stage (close-phase skill), re-run it; an unfinished quest gets a reply line "Phase 1 not ready: <QA> <what is missing>".');
+  if (r.c10 && !r.c10.pass) rows.push('C10 SESSION FINDINGS NOT ROUTED (DE step 7.4): ' + r.c10.unrouted.join(', '),
+    '   Fix: node lib/session-audit.js, then one reply line per class: <class> → <home: knowledge/tool/gate/workflow/memory file, or why none>, then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -330,11 +342,14 @@ if (require.main === module) {
     if (Array.isArray(data._testSaveQuestLines)) disk.saveQuestLines = data._testSaveQuestLines;
     if (typeof data._testSessionStartMs === 'number') disk.sessionStartMs = data._testSessionStartMs;
     else { const first = events.find(e => e.ts); disk.sessionStartMs = first && Date.parse(first.ts) || 0; }
+    // C10 only reads the transcript at a close; a failure in the audit script never blocks a close.
+    if (Array.isArray(data._testFindings)) disk.findings = data._testFindings;
+    else if (DE_CLOSE.test(lastAssistantText(events)) && data.transcript_path) { try { disk.findings = require(path.join(ROOT, 'lib', 'session-audit.js')).auditTranscript(data.transcript_path); } catch (_) { disk.findings = []; } }
 
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length))].filter(Boolean).join(' '));
+      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length)), r.c10 && !r.c10.pass && ('C10:' + r.c10.unrouted.length)].filter(Boolean).join(' '));
       if (secondStop) return { fired: true, blocked: false };
       return { fired: true, blocked: true, blockReason: text };
     }
@@ -343,4 +358,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, checkC10, editedSystemFiles };
