@@ -1,3 +1,13 @@
+**Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
+- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
+- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
+- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
+- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
+- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
+- Open: nothing from this session. No ticket worked.
+- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
 **Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
 
 ## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
