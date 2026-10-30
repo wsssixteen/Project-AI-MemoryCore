@@ -1594,3 +1594,6 @@
 {"ts":"2026-10-29T18:20:31.210Z","category":"claim-verification"}
 {"ts":"2026-10-29T18:21:15.628Z","category":"A2"}
 {"ts":"2026-10-29T18:22:31.593Z","category":"blocker"}
+{"ts":"2026-10-30T02:49:45.123Z","category":"verify-before-claim"}
+{"ts":"2026-10-30T02:49:45.645Z","category":"blocker"}
+{"ts":"2026-10-30T03:29:41.307Z","category":"workflow-skip"}
