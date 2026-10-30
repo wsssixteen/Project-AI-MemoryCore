@@ -20,6 +20,22 @@
   },
   "tools": [
     {
+      "id": "session-audit",
+      "answers": "What went wrong in this session, from its transcript (failed reads, slow repeats, query misses, ignored gates)",
+      "call": "node lib/session-audit.js [--transcript <path>] [--until \"<text>\"] [--json]",
+      "home": "lib/session-audit.js",
+      "groups": [
+        "audit"
+      ],
+      "state_scope": "state-agnostic",
+      "footprint": "on-demand: 1 node, under 1 s, no process left",
+      "usage": {
+        "sessions": 0,
+        "last": null
+      },
+      "status": "active"
+    },
+    {
       "id": "knowledge-index",
       "answers": "Which knowledge file holds this fact",
       "call": "Read <state>/index.md, pick the file by SCOPE",
