@@ -251,3 +251,5 @@
 {"ts":"2026-10-30T08:27:02.802Z","qa":"QA-287273","kind":"wrong-fix","n":1,"verdict":"knowledge:BUG-BESTIARY.md"}
 {"ts":"2026-10-30T08:33:29.095Z","qa":"ADHOC-MCL-2026-3","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-30T08:33:56.767Z","qa":"ADHOC-MCL-2026-3","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"findings carried into QA-287509 doc; knowledge distilled at QA-287509 Phase 2, not mid-quest"}
+{"ts":"2026-10-30T08:41:12.914Z","qa":"QA-287292","kind":"wrong-fix","n":2,"was":"letters patched to 19, 19 and 21 Oktober, the ADO regeneration day, read from the Hijri line and the SMPPP finish date","why":"BA returned it 2026-10-30: Document Maintenance created_date is 30/9, 30/9, 20/10; miya: choose when the document was first generated","learned":"a PROD letter patch uses the date the document was first generated, umm_a_dok_keluaran.created_date, with Hijri set to that day from e-Solat"}
+{"ts":"2026-10-30T08:41:59.701Z","qa":"QA-287292","kind":"wrong-fix","n":2,"verdict":"phrase:.claude/skills/patch-mlk-doc/SKILL.md Re-dating a generated letter (commit 1d784946)"}
