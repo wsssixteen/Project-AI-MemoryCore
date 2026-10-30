@@ -7,6 +7,16 @@
 - Open: Initiate & Alter in the runner needs an etanah repo change; alter-sim and the runner overlap, not ruled.
 
 **Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
+**Last Activity**: 2026-10-30 17:50 — worktree `sweep-orchestration-audit-39e710`, parent of the 286655 / 286646 / 286610 sweep; all three children archived; own Domain Expansion.
+
+## Session Recap (2026-10-29 to 30, worktree "sweep-orchestration-audit-39e710", sweep parent close)
+- Redmine live 2026-10-30: 286646 Verified (Nurul Amirah Nadiah, release 2/11) · 286655 Resolved (Amani) · 286610 Resolved (Amani). All WAIT per save-quest.
+- verify2 pass banked: `QA-<n>-verify2.md` in each quest folder. 286655 MLPS 92 / OMLPS 88 (miya accepted) · 286646 92 · 286610 92 / 92.
+- All three children ran their own DE and are archived.
+- System: sweep audit Tool + Step 8 landed 2026-10-29. Next real /sweep is the live proof (watch wmvtdigs8).
+- Open: 286655 test photos not attached to the ticket (the child asked miya; no answer seen).
+
+**Previous**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
 
 ## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
 - Answer: DE alone now does save quest, enforced. Save quest picks Close or Archive from live Redmine: not Closed = Phase 1 only, Closed = Phase 2 (Phase 1 first when still open), patch ticket past "in work" = both together.
