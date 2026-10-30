@@ -34,7 +34,10 @@ const ASK_RE = /\b(fix[- ]?photo|red[- ]?box|kotak merah)\b/i;
 //   ("test result(s)", "here test scenario", "here screenshot of test", "please save this") together with
 //   an image in the SAME message = save them into the Task folder now. The next long reply must carry a
 //   valid FIX-PHOTO line, whatever it is about (no hand-back / UI / etanah words needed).
-const TEST_SHARE_RE = /\b(test results?\b|here(?:'s| is)? (?:the )?test scenario|here(?:'s| is)? (?:the )?screenshots? of (?:the )?test|please save (?:this|these|it)\b)/i;
+// his-words: not an approval reader — detects an image share that must be saved; lib/his-words.js returns text only, no images
+// v4 (2026-10-30, #287048): also "test scenario(s)" alone, "attach ... ticket/redmine", and a message sent mid-turn
+//   (a queued_command attachment entry, where his text and images sit instead of a user message).
+const TEST_SHARE_RE = /\b(test results?\b|test scenarios?\b|here(?:'s| is)? (?:the )?screenshots? of (?:the )?test|please save (?:this|these|it)\b|attach\w*\b[^.\n]{0,40}\b(?:ticket|redmine)\b)/i;
 const HOOK_TEXT_RE = /FIX-PHOTO:|mark\.py|skip-fix-photo|Stop hook/;
 const BRIEF_IMG_RE = /[\\/](?:[01]\. )?Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;
 
@@ -57,6 +60,24 @@ function scan(raw) {
   for (const line of raw.split('\n')) {
     if (!line.trim()) continue;
     let obj; try { obj = JSON.parse(line); } catch (_) { continue; }
+    if (obj.type === 'attachment' && obj.attachment && obj.attachment.type === 'queued_command') {
+      const texts = []; let img = false;
+      const walk = (x) => {
+        if (!x) return;
+        if (typeof x === 'string') { texts.push(x); return; }
+        if (Array.isArray(x)) { x.forEach(walk); return; }
+        if (typeof x !== 'object') return;
+        if (x.type === 'image') img = true;
+        if (x.type === 'text' && typeof x.text === 'string') texts.push(x.text);
+        else for (const k of Object.keys(x)) if (k !== 'type' && typeof x[k] === 'object') walk(x[k]);
+      };
+      walk(obj.attachment.prompt);
+      for (const k of Object.keys(obj.attachment)) if (k !== 'prompt' && typeof obj.attachment[k] === 'object') walk(obj.attachment[k]);
+      texts.forEach(ask);
+      if (img) out.hasBaImage = true;
+      share(texts, img);
+      continue;
+    }
     const msg = obj.message || obj;
     const role = msg.role || obj.type;
     const c = msg.content;

@@ -113,6 +113,20 @@ r = run([PASTED, say('Redmine note for #256334: medan Perlu Surat Iringan dibuan
   check('T16 string-content message with "[Image: source:" marker + keyword → BLOCK', blocked(t), d(t));
   t = runNoAsk([shareMsg('the latest test results look odd, check the code'), plainReply]);
   check('T17 accepted-risk: "test results" in a question with an image still asks for the save → BLOCK', blocked(t), d(t));
+  // v4 (2026-10-30, #287048: "if I share with you screenshots that is related to the test scenario, you will save it ... and WILL attach to the ticket")
+  const midTurn = (prompt) => ({ type: 'attachment', attachment: { type: 'queued_command', prompt } });
+  t = runNoAsk([shareMsg('test scenarios done, attach to the ticket'), plainReply]);
+  check('T18 "test scenarios" without "here" + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('please attach these to redmine'), plainReply]);
+  check('T19 "attach ... redmine" + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([midTurn([{ type: 'text', text: 'here test scenario' }, { type: 'image', source: { type: 'base64', data: 'AAAA' } }]), plainReply]);
+  check('T20 mid-turn message (queued_command) with image + keyword → BLOCK', blocked(t), d(t));
+  t = runNoAsk([midTurn('test scenarios: all passed, no screenshot'), plainReply]);
+  check('T21 mid-turn keyword with NO image → silent', silent(t), d(t));
+  t = runNoAsk([midTurn([{ type: 'text', text: 'test scenario' }, { type: 'image', source: { type: 'base64', data: 'AAAA' } }]), say(plainReply.message.content[0].text + '\nFIX-PHOTO: ' + GOOD_PHOTO + ' ✓')]);
+  check('T22 mid-turn share then valid FIX-PHOTO → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('attach the BA photo later, this is the design'), plainReply]);
+  check('T23 "attach" with no ticket/redmine word + image → silent', silent(t), d(t));
 }
 
 // ── mark.py fixtures ─────────────────────────────────────────────────────────
