@@ -31,5 +31,10 @@ goal_signal (Stop side): every allowed-proposal row in log.jsonl has a clean UNI
 footprint: per-turn: runs inside the existing stop-claim-integrity bundle process, reads the transcript tail (max 20 MB), no new process.
 state-scoped: no, state-agnostic.
 
+**Own-reader rider (2026-10-29, system-rules Rule 8):** a Write or Edit to `.claude/hooks/*.js`, `domain/<x>/*.js` or `lib/*.js` (evals and `lib/his-words.js` itself excepted) whose new content parses transcript user lines (`"type":"user"`, `role === 'user'`, `isMeta`, `queued_command`, the popup-answer prefix) is DENIED unless the resulting file requires `lib/his-words.js` or carries the line `// his-words: not an approval reader — <why>`. The rider runs before the path guards, so it covers files the consult check does not. Bypass `[skip-own-reader: <why>]` (current-turn assistant text only). Why: 2026-10-29, five Submits he had ordered were refused because seven gates each read "the last user line" with their own reader. Eval R1 to R10 (47/47).
+diagram: domain/design-consult-gate/diagram.png
+self_audit: every fire writes a log.jsonl row (file · action · detail); the eval replays each rider shape and the 2026-08-21 self-disarm shape.
+
 **History:**
+- 2026-10-29 — own-reader rider added (Rule 8); diagram added (Rule 17). Spec preservation: consult check, eval rider, Stop-side judge and every bypass untouched; additive.
 - 2026-06-18 — created per みや. Routed through system-design + system-rules. Replaces the advisory consult-reminder in `system-edit-gate.js` (which only named the placeholder `system-design-router`, never blocked) and the WARN-only `self-gate-impulse.js` for the skill/hook case. `self-gate-impulse` retired the same day to avoid double-fire on these paths.

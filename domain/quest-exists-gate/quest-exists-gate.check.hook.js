@@ -64,6 +64,7 @@ function decide({ command, activeText, branch, folderExists, turnText }) {
   return { fire: true, block: false, ticket: t, repo };
 }
 
+// his-words: not an approval reader — finds the current turn start to scope the assistant bypass token
 function lastAssistantTurn(tp) {
   let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return ''; }
   const L = raw.split(/\r?\n/).filter(Boolean); let text = '';

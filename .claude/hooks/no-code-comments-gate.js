@@ -38,20 +38,7 @@ function commentLines(text) {
   );
 }
 
-function lastUserMessage(transcriptPath) {
-  try {
-    const lines = fs.readFileSync(transcriptPath, 'utf8').trim().split(/\r?\n/);
-    for (let i = lines.length - 1; i >= 0; i--) {
-      let ev; try { ev = JSON.parse(lines[i]); } catch (_) { continue; }
-      if (ev.type === 'user' && ev.message) {
-        const c = ev.message.content;
-        if (typeof c === 'string') return c;
-        if (Array.isArray(c)) return c.map(p => (typeof p === 'string' ? p : (p.text || ''))).join(' ');
-      }
-    }
-  } catch (_) {}
-  return '';
-}
+const { lastHis: lastUserMessage } = require(path.resolve(__dirname, '..', '..', 'lib', 'his-words.js'));
 
 let input = '';
 process.stdin.resume();

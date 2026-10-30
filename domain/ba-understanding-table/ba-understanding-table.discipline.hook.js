@@ -105,6 +105,7 @@ function readLastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
   const objs = raw.split(/\r?\n/).filter(Boolean).map(l => { try { return JSON.parse(l); } catch (_) { return null; } });
+  // his-words: not an approval reader — only finds the turn boundary
   let boundary = -1;
   for (let i = objs.length - 1; i >= 0; i--) {
     const o = objs[i]; if (!o) continue; const m = o.message || o;

@@ -87,6 +87,8 @@ rr = fx('Agent', { prompt: 'judge it', model: 'opus' });
 check('F21 Agent tool with opus → WARN (the plan row must say why), not block', warned(rr) && /DELEGATION PLAN row must say why/.test(rr.out), rr.out.slice(0, 200));
 rr = fx('Agent', { prompt: 'do a thing' }, transcript([user('run it [skip-spend-gate: one-off probe I asked for]')]));
 check('F22 bypass token in miya\'s LAST message → allowed, marked bypassed', rr.status === 0 && /bypassed by miya/.test(rr.out), rr.out.slice(0, 120));
+rr = fx('Agent', { prompt: 'do a thing' }, transcript([user('run it [skip-spend-gate: one-off probe I asked for]'), JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } }), user('Base directory for this skill: y')]));
+check('F22b his bypass token, then an injected skill line as last user line → still bypassed', rr.status === 0 && /bypassed by miya/.test(rr.out), rr.out.slice(0, 120));
 rr = fx('Agent', { prompt: 'do a thing' }, transcript([user('[skip-spend-gate: earlier run]'), asst('claude-opus-5-5'), user('ok now the next ticket')]));
 check('F23 bypass token only in an OLDER message → BLOCKED', blocked(rr), rr.out.slice(0, 120));
 rr = fx('Agent', { prompt: 'do a thing', description: '[skip-spend-gate: I say so]' }, transcript([user('go on')]));

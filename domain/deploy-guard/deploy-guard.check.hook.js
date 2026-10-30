@@ -44,6 +44,7 @@ function decide(command, turnText) {
 
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
+// his-words: not an approval reader — finds the current turn start to scope the assistant bypass token
 function lastAssistantTurn(tp) {
   let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return ''; }
   const L = raw.split(/\r?\n/).filter(Boolean); let text = '';

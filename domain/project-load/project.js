@@ -18,6 +18,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { isInjected } = require('../../lib/his-words.js');
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 function mainRootOf(root) {
@@ -240,7 +241,7 @@ function humanPrompts(file) {
     const origin = o.turnOrigin || o.promptSource || '';
     if (origin && !/^(human|sdk|user|cli)$/.test(origin)) continue;
     const text = entryText(o);
-    if (!text || /^<task-notification>/.test(text) || /^This session is being continued from a previous conversation/.test(text)) continue;
+    if (!text || /^<task-notification>/.test(text) || /^This session is being continued from a previous conversation/.test(text) || isInjected(text)) continue;
     out.push({ uuid: o.uuid || '', ts: o.timestamp || '', origin: origin || 'human', session: o.sessionId || '', text });
   }
   return out;

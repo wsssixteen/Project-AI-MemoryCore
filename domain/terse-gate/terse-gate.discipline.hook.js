@@ -31,22 +31,7 @@ const BOX = /[┌┐└┘├┤┬┴┼─│→↓►]/;
 
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
-// Last thing miya typed: a user entry with real text (tool results and reminder-only entries are skipped).
-function lastUserText(tp) {
-  let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return ''; }
-  const L = raw.split(/\r?\n/).filter(Boolean);
-  for (let i = L.length - 1; i >= 0; i--) {
-    let o; try { o = JSON.parse(L[i]); } catch (_) { continue; }
-    const m = o.message || o;
-    if ((m.role || o.type) !== 'user') continue;
-    const c = m.content; let t = '';
-    if (typeof c === 'string') t = c;
-    else if (Array.isArray(c)) t = c.filter(b => b && b.type === 'text').map(b => b.text).join('\n');
-    t = t.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '').trim();
-    if (t) return t;
-  }
-  return '';
-}
+const { lastHis: lastUserText } = require(path.join(process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..'), 'lib', 'his-words.js')); // his last message; injected lines never count
 const QUESTION = /\?\s*$|^(why|how|what|where|which|is|are|does|do|did|can|will|so)\b/i;
 // He asked for something that is long by nature: no cap.
 const WANTS_DETAIL = /\b(list|board|tickets?|table|steps?|scenario|brief|status|summary|detail(s|ed)?|full|everything|all|explain|audit|compare|plan|code|script|show|walk|trace|draft|write)\b/i;

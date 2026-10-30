@@ -9,12 +9,12 @@ const path = require('path');
 const crypto = require('crypto');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+const { isInjected } = require(path.join(ROOT, 'lib', 'his-words.js'));
 
 const LOG = path.join(ROOT, 'domain', 'memory-write-gate', 'log.jsonl');
 const MEMORY_RE = /[\\/]\.claude[\\/]auto-memory[\\/][^\\/]+\.md$/i;
 const TOOLS = new Set(['Edit', 'Write', 'MultiEdit', 'NotebookEdit']);
 const EXEMPT_TYPES = new Set(['user', 'project', 'reference']);
-const NOT_A_TURN_START = /^\s*(<system-reminder>|<task-notification|Stop hook feedback)/i;
 const BAD_WORD = /^[\s`'".,;:\-?!*_]*(todo|tbd|n\/?a|na|\?+|-+|\.+)[\s`'".,;:\-?!*_]*$/i;
 const PLACEHOLDER = /<[^<>\n]{1,80}>/;
 const BYPASS_RE = /\[skip-memory-write:\s*([^\]]+?)\s*\]/gi;
@@ -58,7 +58,7 @@ function readTurn(transcriptPath) {
     for (const b of c) {
       if (!b || typeof b !== 'object') continue;
       if (b.type === 'text' && typeof b.text === 'string') {
-        if (role === 'user') ev.push({ k: 'u', text: b.text, real: !o.isMeta && !NOT_A_TURN_START.test(b.text) });
+        if (role === 'user') ev.push({ k: 'u', text: b.text, real: !o.isMeta && !isInjected(b.text) });
         else if (role === 'assistant') ev.push({ k: 'a', text: b.text });
       } else if (b.type === 'tool_use' && role === 'assistant') ev.push({ k: 't', name: b.name, input: b.input || {}, id: b.id });
       else if (b.type === 'tool_result') ev.push({ k: 'r', id: b.tool_use_id, err: b.is_error === true });

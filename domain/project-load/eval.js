@@ -156,6 +156,7 @@ check('E9 req 1 (mining): PreCompact copies exactly his 3 prompts and his 1 popu
 check('E9a the compact row records how many were copied', rows(t).some(x => x.action === 'compact' && x.project === 'Masterline' && x.mined === 4 && x.trigger === 'auto'));
 run(HOOK.pre, t, { session_id: 'w1', transcript_path: tx, trigger: 'manual' });
 check('E9b a second PreCompact on the same transcript copies nothing twice', (fs.readFileSync(path.join(t.ml, 'history', 'words.md'), 'utf8').match(/^### /gm) || []).length === 4);
+{ const t2 = tree(); run(HOOK.prompt, t2, { session_id: 'w2', prompt: 'Masterline: start' }); const tx2 = transcript(t2, [L.human('Masterline: use green', 1), JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } }), JSON.stringify({ type: 'user', message: { role: 'user', content: 'Base directory for this skill: x' } })]); run(HOOK.pre, t2, { session_id: 'w2', transcript_path: tx2, trigger: 'auto' }); check('E9c his word, then an injected skill line as the last user line: still only his word copied', (fs.readFileSync(path.join(t2.ml, 'history', 'words.md'), 'utf8').match(/^### /gm) || []).length === 1); }
 r = run(HOOK.resume, t, { session_id: 'w1', source: 'compact', transcript_path: tx });
 check('E10 the compact card says how many of his prompts were copied', /4 of his prompt\(s\) were copied/.test(r.out), (r.out.match(/\d+ of his prompt[^\n]*/) || [''])[0]);
 const comp = path.join(t.ml, 'history', 'compactions.md');

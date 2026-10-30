@@ -6014,3 +6014,31 @@ quest_start=2026-10-29
 qa_doc=projects/coding-projects/archive/QA-287292/QA-287292.md
 path=patch
 closed=2026-10-29
+
+qa=QA-282587
+quest_start_ts=2026-10-01T02:19:55.079Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\250. II #282587 - MLKSTG - PSBS - Keputusan Pendaftar , Penyedia - Papar skrin yang salah bagi langkah Maklumat Tanah
+phase=0
+status=archived
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=PSBS - Papar skrin yang salah bagi langkah Maklumat Tanah 
+assigned_to_me=2026-09-30
+urusan=PSBS
+tugasan=Keputusan Pendaftar , Penyediaan Minit Bebas, suspect ada tugasan lain juga yang mempunyai isu yang sama
+scout=6 PSBS Maklumat Tanah langkah (PYMB/SMB/PMB + Tangguh risalat trio) + SBTM KP_PLPMT on skrin 1878 not 1140, all 4 envs; Minit Bebas also missing from SKM-like list PelupusanExcelReaderHelper.java:1658-1671; A1 90% 2h, KP waits BA-Q1 (shared with MCL)
+qa_doc=projects/coding-projects/archive/QA-282587/QA-282587.md
+delegated_to=Nurul Amirah Nadiah (BA holds the ticket 2026-10-07; real wait = pendaftaran team updates common on internal)
+held_reason=
+next_step=2026-10-21: combined PROD script 3. Rework\282587.sql (D1+D2) run + committed on stg1 and stg2 (6+1+1 rows each, SELECT checked); Redmine note #31 posted to Mira (status kept Verified, 100%, 282587.sql attached). Release = Farah commit 0229aee7d9 into pelupusan release (not 4f8cb0f90b) + 282587.sql to PROD. Waiting: Mira retest PTMLK/02/L/PSBS/2026/1 on STG.
+branch=mlk/internal-issues/282587
+current_phase=Verify
+fix_by=Siti Farhanih Abdul Razak
+fix_commit=0229aee7d913ba3590cfd92e2bc4a1f08ab1e31f
+fix_branch=mlk/internal-issues/282587
+merged_int_env=2918a40cee
+merged_stag_env=387011c8fc
+commit=0229aee7d913ba3590cfd92e2bc4a1f08ab1e31f
+closed=2026-10-02
+blocker=pendaftaran MLIT on common 1.7.19-MLK.beta.patch3; miya told the BA (WhatsApp 2026-10-07 17:38) pendaftaran can raise common on MLKIT to the beta patch directly, no need to ask common first; at release common prepares one version for both pelupusan and pendaftaran
+commit_cycle2=4f8cb0f90bb54578e589c85592aa08a6eca9ae8a

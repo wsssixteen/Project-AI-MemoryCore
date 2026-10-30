@@ -10,6 +10,21 @@
 
 ---
 
+## system-rules SKILL.md v1.5 — 2026-10-29 (per みや, the five refused Submits)
+
+**Rule 8 — One ask, then obey.** His words: "audit why you are being stopped by a simple 'Submit it' ... find a universal solution to add into our system-change or system-rules or system-design so that you DO NOT EVER build a step or workflow or gate ... like this ever again. A simple check is enough."
+
+| Cause found (today's logs) | Rule 8 clause | Mechanical home |
+|---|---|---|
+| 7 gates each read "the last transcript user line" with their own reader; a skill's text, a system-reminder, a Stop-hook notice, a /goal notice counted as his last message (redmine-write-gate log 14:01 to 14:09, 5 refusals; 286646 commit refused 4 times after his waiver) | (c) one reader, app lines never his | `lib/his-words.js` (eval 44/44) · `--audit` lists own readers · `design-consult-gate` rider denies writing one (R1 to R10) |
+| his order had to be in the LAST message; any later line voided it | (a) his order anywhere in the ask is the approval; (b) it holds until he holds or refuses | `decide()`: 8 messages back, newest decisive wins; `redmine-write-gate` v1.8, `falsifier-ran-check` waiver |
+| "do not stop until you've posted" read as a refusal; "why are you not submitting" read as nothing | (b) a no counts only in the clause that names the action; a question decides nothing; a complaint is an order | `his-words` clause judge (H1 to H13, R1 to R6) |
+| the same send blocked 5 times, each time asking him again | (d) a repeat block is the gate's defect, logged, fixed in the gate | `redmine-write-gate` `gate/repeat-block` slip row (F117) |
+
+- Paired same turn: 20 other gates moved onto the reader (prod-alter, release-push, stg1-block, agent-spend, terse, predicate-box, memory-write, de-knowledge, no-code-comments, de-run-verify, project-load) or marked `not an approval reader` (turn-boundary readers); prod-alter S12 flipped (tool output after his approval no longer voids it).
+- Spec preservation: Rules 1 to 7 untouched; additive. Named drops in the gates: "last message only" (redmine, falsifier fixture 28), F107 accepted-risk allow, the two-word negation distance.
+- Diagrams (Rule 17): `lib/his-words.diagram.png` · `domain/redmine-write-gate/diagram.png` (updated) · `domain/falsifier-ran-check/diagram.png` · `domain/design-consult-gate/diagram.png` · `.claude/skills/system-rules/diagram.png`.
+
 ## v1.98 — 2026-10-29 (per みや, 286655)
 
 - **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.
