@@ -4,6 +4,7 @@ goal: BLOCK the DE close unless the deterministic close-conditions hold: (1) eve
 goal_signal: the Stop fire produced: BLOCK the DE close unless the deterministic close-conditions hold: (1) every tic
 retention: keep
 footprint: Stop hook: no work unless the reply carries the Domain Expansion closing banner; on a close, file reads only, no child process, under 1 second
+boundary: covers the Stop turn that carries the DE closing banner: the transcript, quest/active.txt and active-archive.txt, its own log.jsonl and the ledgers its conditions name · never edits a file, never runs a child process, never blocks twice in one close, never fires on any other turn · stops at a block naming the failed condition and its fix command; the fix is the DE step's, never the gate's
 # de-close-gate — deterministic close-conditions for Domain Expansion
 
 **What fires when**: Stop hook. Fires ONLY when the last assistant text carries the DE closing
@@ -54,5 +55,7 @@ diagram: domain/de-close-gate/diagram.png (C9 marked)
 self_audit: the eval replays every condition; each fire writes passed or blocked with the failing conditions to log.jsonl
 
 **C9 SAVE-QUEST (2026-10-30, per みや: "please audit if just saying DE is enough to perform save quest")**: step 2d of Domain Expansion said to run `lib/save-quest.js` for every touched quest, and nothing checked it. C9 blocks the close when a touched QA ticket has no run this session, or its latest verdict is still PHASE-1, PHASE-2 or LEARN-THEN-PHASE-2 with no reply line "Phase 1 not ready: <QA> <what is missing>". An ADHOC id is exempt (adhoc-save owns it). Eval 44/44 (C9-1 to C9-13).
+
+**C10 SESSION FINDINGS ROUTED (2026-10-30, per みや: "audit of an audit")**: `lib/session-audit.js` reads the transcript at the close; each finding class needs one reply line `<class> → <home, or why none>`. boundary: covers the finding classes the audit script returns for this transcript and the reply's `→` lines · never runs the audit outside a close, never fails the close when the audit script throws, never judges whether a named home is the right one · stops at a block listing the unrouted classes; the routing is Ruri's reply, the build-or-drop at 3 repeats is his ruling. Eval C10-1 to C10-4.
 
 **Second stop (2026-10-30)**: on a retry after a block the gate used to stay silent, so a fixed re-close left no row. It now checks and logs `passed-second-stop` or `failed-second-stop`, and still never blocks twice. Spec kept: one block per close. Eval S1 to S4.

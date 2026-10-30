@@ -25,7 +25,7 @@
       "call": "node lib/session-audit.js [--transcript <path>] [--until \"<text>\"] [--json]",
       "home": "lib/session-audit.js",
       "groups": [
-        "audit"
+        "system"
       ],
       "state_scope": "state-agnostic",
       "footprint": "on-demand: 1 node, under 1 s, no process left",
@@ -33,7 +33,7 @@
         "sessions": 0,
         "last": null
       },
-      "status": "active"
+      "status": "live"
     },
     {
       "id": "knowledge-index",
