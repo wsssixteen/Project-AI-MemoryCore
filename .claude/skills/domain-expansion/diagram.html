@@ -2,76 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Domain Expansion: today and after the upgrade</title>
+  <title>Domain Expansion before and after</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #2d3142; display: flex; justify-content: center; padding: 2rem; }
-    .frame { box-sizing: content-box; width: 1000px; padding: 28px 32px; }
-    h1 { font-size: 24px; font-weight: 600; margin-bottom: 18px; }
+    .frame { box-sizing: content-box; width: 1040px; padding: 28px 32px; }
+    h1 { font-size: 24px; font-weight: 600; margin-bottom: 16px; }
     svg { width: 100%; display: block; }
+    .t { fill: #2d3142; font-size: 14px; font-weight: 600; font-family: 'Segoe UI', Arial; }
+    .s { fill: #4f5d75; font-size: 12px; font-family: 'Segoe UI', Arial; }
+    .h { fill: #4f5d75; font-size: 13px; font-weight: 600; font-family: 'Segoe UI', Arial; }
+    .box { fill: #ffffff; stroke: #2d3142; }
+    .new { fill: rgba(191,69,32,0.08); stroke: #bf4520; stroke-width: 1.4; }
+    .off { fill: #eeeeee; stroke: #8a93a6; stroke-dasharray: 6 4; }
+    .a { stroke: #4f5d75; stroke-width: 1.2; }
   </style>
 </head>
 <body>
   <div class="frame">
-    <h1>Domain Expansion: today, and after the upgrade</h1>
-    <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
-      <title id="t">Domain Expansion today and after the upgrade</title>
-      <desc id="d">Today it checks saved files and proposals pile up. After the upgrade it reads the session transcript, routes each failure to a home, fixes it and watches that it held.</desc>
+    <h1>Domain Expansion: before and after this session</h1>
+    <svg viewBox="0 0 1040 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Domain Expansion before and after</title>
+      <desc id="d">Two flows of the ritual. After adds a session audit and routed findings; the dashed steps are proposed for retirement and still run.</desc>
       <defs>
-        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
-        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+        <marker id="ar" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
       </defs>
       <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <text class="h" x="20" y="20">BEFORE</text>
+      <text class="h" x="550" y="20">AFTER (live on main)</text>
 
-      <text x="20" y="30" fill="#4f5d75" font-size="13" font-weight="600" font-family="'Segoe UI', Arial">TODAY</text>
-      <line x1="210" y1="85" x2="268" y2="85" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-      <line x1="470" y1="85" x2="528" y2="85" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- arrows -->
+      <g class="a">
+        <line x1="245" y1="94" x2="245" y2="108" marker-end="url(#ar)"/>
+        <line x1="245" y1="170" x2="245" y2="184" marker-end="url(#ar)"/>
+        <line x1="245" y1="246" x2="245" y2="412" marker-end="url(#ar)"/>
+        <line x1="245" y1="474" x2="245" y2="488" marker-end="url(#ar)"/>
+        <line x1="245" y1="550" x2="245" y2="564" marker-end="url(#ar)"/>
+        <line x1="245" y1="626" x2="245" y2="640" marker-end="url(#ar)"/>
+        <line x1="775" y1="94" x2="775" y2="108" marker-end="url(#ar)"/>
+        <line x1="775" y1="170" x2="775" y2="184" marker-end="url(#ar)"/>
+        <line x1="775" y1="246" x2="775" y2="260" marker-end="url(#ar)"/>
+        <line x1="775" y1="322" x2="775" y2="336" marker-end="url(#ar)"/>
+        <line x1="775" y1="398" x2="775" y2="412" marker-end="url(#ar)"/>
+        <line x1="775" y1="474" x2="775" y2="488" marker-end="url(#ar)"/>
+        <line x1="775" y1="550" x2="775" y2="564" marker-end="url(#ar)"/>
+        <line x1="775" y1="626" x2="775" y2="640" marker-end="url(#ar)"/>
+      </g>
 
-      <rect x="20" y="50" width="190" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="115" y="80" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Session ends</text>
-      <text x="115" y="101" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">transcript not read</text>
+      <!-- BEFORE -->
+      <rect class="box" x="20" y="34" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="58">Saves and gap sweep (steps 1-4, 7)</text>
+      <text class="s" x="36" y="79">session file, diary, quest docs, knowledge candidates</text>
 
-      <rect x="270" y="50" width="200" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="370" y="80" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Checks files are saved</text>
-      <text x="370" y="101" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">0 of 13 failures caught</text>
+      <rect class="box" x="20" y="110" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="134">Log reviews (steps 5, 6)</text>
+      <text class="s" x="36" y="155">Forge log was deleted 2026-08-16; the step reads nothing</text>
 
-      <rect x="530" y="50" width="200" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="630" y="80" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Proposals pile up</text>
-      <text x="630" y="101" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">888 logged, 0 ruled</text>
+      <rect class="box" x="20" y="186" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="210">Audit briefing (step 7.4)</text>
+      <text class="s" x="36" y="231">7 days of telemetry; from a worktree: 0 turns, false RETIRE rows</text>
 
-      <line x1="20" y1="165" x2="980" y2="165" stroke="rgba(45,49,66,0.15)"/>
-      <text x="20" y="200" fill="#4f5d75" font-size="13" font-weight="600" font-family="'Segoe UI', Arial">AFTER THE UPGRADE</text>
+      <text class="s" x="264" y="322">nothing read the session's transcript</text>
+      <text class="s" x="264" y="340">0 of 13 failures caught by scripts</text>
 
-      <line x1="170" y1="265" x2="208" y2="265" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
-      <line x1="400" y1="265" x2="438" y2="265" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-      <line x1="630" y1="265" x2="668" y2="265" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-      <line x1="830" y1="265" x2="868" y2="265" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect class="box" x="20" y="414" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="438">Five-axis brainstorm (step 7.5)</text>
+      <text class="s" x="36" y="459">free text from memory; 888 proposals, 0 ruled, repeats unseen</text>
 
-      <rect x="20" y="225" width="150" height="80" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="95" y="260" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">This session's</text>
-      <text x="95" y="280" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">transcript</text>
+      <rect class="box" x="20" y="490" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="514">Commit, push, merge, land (steps 10, 11)</text>
+      <text class="s" x="36" y="535">SHA proof</text>
 
-      <rect x="210" y="225" width="190" height="80" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520"/>
-      <text x="305" y="255" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Finds the failures</text>
-      <text x="305" y="276" fill="#4f5d75" font-size="12" font-family="Consolas, monospace" text-anchor="middle">lib/session-audit.js</text>
-      <text x="305" y="293" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">must catch 9 of 13</text>
+      <rect class="box" x="20" y="566" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="590">Checks (steps 12, 12.5, 12.6, 12.7)</text>
+      <text class="s" x="36" y="611">Checklist D by hand; saves checked; 62 PASS on other sessions' parts</text>
 
-      <rect x="440" y="225" width="190" height="80" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="535" y="255" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Routes each one</text>
-      <text x="535" y="276" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">knowledge, tool, gate,</text>
-      <text x="535" y="293" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">workflow or memory</text>
+      <rect class="box" x="20" y="642" width="450" height="60" rx="6"/>
+      <text class="t" x="36" y="666">Close gate C1 to C9</text>
+      <text class="s" x="36" y="687">blocks when a save or a step is missing</text>
 
-      <rect x="670" y="225" width="160" height="80" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="750" y="255" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Close is blocked</text>
-      <text x="750" y="276" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">until every finding</text>
-      <text x="750" y="293" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">has a home</text>
+      <!-- AFTER -->
+      <rect class="box" x="550" y="34" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="58">Saves and gap sweep (steps 1-4, 7)</text>
+      <text class="s" x="566" y="79">unchanged</text>
 
-      <rect x="870" y="225" width="110" height="80" rx="6" fill="#ffffff" stroke="#2d3142"/>
-      <text x="925" y="255" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">Checks it</text>
-      <text x="925" y="275" fill="#2d3142" font-size="15" font-weight="600" font-family="'Segoe UI', Arial" text-anchor="middle">held</text>
-      <text x="925" y="293" fill="#4f5d75" font-size="12" font-family="'Segoe UI', Arial" text-anchor="middle">repeat = forced</text>
+      <rect class="box" x="550" y="110" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="134">Observation log review (step 6)</text>
+      <text class="s" x="566" y="155">RETIRED: step 5, Forge log. Step 6 stays</text>
 
-      <text x="20" y="355" fill="#4f5d75" font-size="14" font-family="'Segoe UI', Arial">Ruri builds Phase 1 and proves it on this session's transcript. Your step: say go. No data changes.</text>
+      <rect class="box" x="550" y="186" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="210">Audit briefing (step 7.4)</text>
+      <text class="s" x="566" y="231">CHANGED: reads the main folder's telemetry from anywhere</text>
+
+      <rect class="new" x="550" y="262" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="286">Session audit (new, in step 7.4)</text>
+      <text class="s" x="566" y="307">reads this transcript with 12 checks: 10 of 10 mechanical classes here</text>
+
+      <rect class="box" x="550" y="338" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="362">Route each finding (new)</text>
+      <text class="s" x="566" y="383">one reply line: class → knowledge, tool, gate, workflow or memory</text>
+
+      <rect class="off" x="550" y="414" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="438">Five-axis brainstorm (step 7.5)</text>
+      <text class="s" x="566" y="459">WAITS: free text stays for now; repeat table added at 3 rows</text>
+
+      <rect class="box" x="550" y="490" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="514">Commit, push, merge, land (steps 10, 11)</text>
+      <text class="s" x="566" y="535">unchanged</text>
+
+      <rect class="box" x="550" y="566" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="590">Checks (steps 12.5, 12.6, 12.7)</text>
+      <text class="s" x="566" y="611">RETIRED: step 12, Checklist D. The close gate covers it</text>
+
+      <rect class="box" x="550" y="642" width="450" height="60" rx="6"/>
+      <text class="t" x="566" y="666">Close gate C1 to C10</text>
+      <text class="s" x="566" y="687">CHANGED: C10 blocks a close while a finding class has no line</text>
+
+      <!-- key -->
+      <line x1="20" y1="728" x2="1020" y2="728" stroke="rgba(45,49,66,0.15)"/>
+      <rect class="new" x="20" y="744" width="26" height="16" rx="3"/><text class="s" x="54" y="757">new part</text>
+      <rect class="off" x="130" y="744" width="26" height="16" rx="3"/><text class="s" x="164" y="757">stays until proved over real closes</text>
+      <text class="s" x="440" y="757">Also changed: prompt hooks stay silent on agent notifications.</text>
     </svg>
   </div>
 </body>
