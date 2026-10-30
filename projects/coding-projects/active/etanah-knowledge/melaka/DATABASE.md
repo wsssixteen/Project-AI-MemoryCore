@@ -116,7 +116,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | Java entity class | DB table | JSON column on it | Notes |
 |---|---|---|---|
 | `Aplikasi` | `umm_aplikasi` | (none — spine table) | PK `aplikasi_id`. Holds `id_pengenalan`, `ursn_id`, `pejabat_id`. Join everything via this |
-| `AppPelupusan` | `plp_a_pelupusan` | `maklumat_tambahan` (TEXT, JSON-as-string) | PLU-internal pelupusan-level metadata. One row per aplikasi. Common var names: `aplp`, `appPelupusan`, `aPlp` |
+| `AppPelupusan` | `plp_a_pelupusan` | `mklmt_tmbhn` (TEXT, JSON-as-string; column name verified on PROD 2026-10-30) | PLU-internal pelupusan-level metadata. One row per aplikasi. Common var names: `aplp`, `appPelupusan`, `aPlp` |
 | `AppPermohonanTanah` | `umm_a_permohonan_tnh` | `mklmt_tmbhn` (TEXT, JSON-as-string, mapped to `getMaklumatTambahan()` in Java) | Per-permohonan-tanah row. Multiple per aplikasi (one per plot/kawasan). Common var names: `apt`, `eachAppMohonTnh`, `appMohontnh`. **This is where `pengkelasanTnh` lives** (QA-260508 save target) |
 | `AppHakmilik` | `umm_a_hkmlk` | `mklmt_tmbhn` (TEXT, JSON-as-string) | Per-hakmilik row linked to aplikasi. Common var names: `ahm`, `ahmTerlibat`, `appHakmilik` |
 | `AppLaporanTanah` | `tkl_a_laporan_tnh` | `kedudukan_tanah` (TEXT, JSON-as-string) + `maklumat_tambahan` (TEXT, JSON-as-string) | **etanah-teknikal module owns** writes; pelupusan reads via `etanah-common/.../repository/teknikal/AppLaporanTanahRepository.findByAplikasi`. Holds Zone, Jalan, Landmark, Dun, PBT, koordinat GIS — all in `kedudukan_tanah` JSON |
@@ -1701,3 +1701,10 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - 2026-10-29 (from the 2026-10-20 assessment file, in git history; recovered 2026-10-29): Jadual 1 points h/i/j come from UMM_P_HKMLK_LAIN, which has no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK (QA-284884).
 
 - 2026-10-29 (from the 2026-10-05 assessment file, in git history; recovered 2026-10-29): Template processing stamps umm_a_dok_keluaran.a_tgsn_id with the tugasan that last PROCESSED the document (PelupusanTemplateUtil.saveDocuments); an existing document is reprocessed in place, never rebuilt from the template.
+
+
+## Tajuk Risalat store (verified on PROD 2026-10-30, ADHOC-MCL-2026-3 / QA-287509)
+
+- Stored in `plp_a_pelupusan.mklmt_tmbhn`, JSON key `maklumatRisalatList`, one entry per `jenisDokumen` (`NO_DOC` at tugasan with no document, for example SKM), field `tajukRisalat`.
+- Written by `onSaveMaklumatRisalatPanel()` in the Maklumat Tanah forms, normally at Semakan Kemasukan Maklumat. Teknikal says its Laporan Tanah Perkara comes from this store; their code is not read here.
+- At Penyediaan Laporan Tanah on PROD: PT, PLPS, PRBB, PLTP, PRZ all have it, MCL 0 of 37 (QA-287509, LATENT-BUGS L31).

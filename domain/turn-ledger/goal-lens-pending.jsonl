@@ -897,3 +897,4 @@
 {"ts":"2026-10-30T07:26:50.262Z","turn_id":"1a4c9a64-7","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
 {"ts":"2026-10-30T07:27:51.365Z","turn_id":"7f8cca16-13","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
 {"ts":"2026-10-30T08:31:07.247Z","turn_id":"b4b84fc9-26","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-10-30T08:44:22.061Z","turn_id":"b4b84fc9-27","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
