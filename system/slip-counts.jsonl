@@ -1603,6 +1603,7 @@
 {"ts":"2026-10-30T00:23:47.569Z","category":"blocker"}
 {"ts":"2026-10-30T00:43:01.164Z","category":"ba-spec-overridden"}
 {"ts":"2026-10-30T00:42:29.723Z","category":"answer-the-ask"}
+{"ts":"2026-10-30T03:44:55.037Z","category":"build-missed-requirement"}
 {"ts":"2026-10-30T02:53:05.408Z","category":"blocker"}
 {"ts":"2026-10-30T00:50:39.911Z","category":"blocker"}
 {"ts":"2026-10-30T00:50:40.471Z","category":"blocker"}
@@ -1621,3 +1622,4 @@
 {"ts":"2026-10-30T03:28:06.752Z","category":"gate/repeat-block"}
 {"ts":"2026-10-30T03:28:21.148Z","category":"A1"}
 {"ts":"2026-10-30T03:46:34.369Z","category":"ask-back/self-doable-check-offered"}
+{"ts":"2026-10-30T03:55:51.081Z","category":"reply-shape"}
