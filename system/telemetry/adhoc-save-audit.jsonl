@@ -537,3 +537,4 @@
 {"ts":"2026-10-30T10:13:42.391Z","id":"ADHOC-PLP-2026-5","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":66}
 {"ts":"2026-10-30T10:14:02.052Z","id":"ADHOC-PLP-2026-5","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":79}
 {"ts":"2026-10-30T10:14:28.275Z","id":"ADHOC-PLP-2026-5","outcome":"pass","fails":[],"dur_ms":65}
+{"ts":"2026-10-30T10:23:40.082Z","id":"ADHOC-DMPRU-2026-1","outcome":"pass","fails":[],"dur_ms":68}
