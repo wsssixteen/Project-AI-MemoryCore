@@ -47,6 +47,8 @@ const RANK_RULE = [
   '   2. eSOKONGAN tracker — ranked SEVERITY descending, then nearest due date. Carries a',
   '      Severity column.',
   '   3. Internal fixes & other — every remaining tracker. Ranked oldest start first.',
+  '   Two states (miya 2026-10-30): a Perak table follows each Melaka table (1b PROD · 2b eSOKONGAN ·',
+  '   3b rest), Ammar\'s Perak tickets included; he asks Ammar before taking one. Show them too.',
   '   Columns (tables 1+3): # · Days · Due date · Subject · State. Table 2 adds Severity.',
   '   Days = bare number. BANNED: a Start column · a Deadline column · "+3d" · "Days left".',
   '   State is the only column I fill by hand — from active.txt + the qa_doc.',
