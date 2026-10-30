@@ -178,6 +178,38 @@ function main() {
         if (reason) console.log(`  [dry] Step -2: ARCHIVE HOLD would BLOCK — ${reason}`);
     }
 
+    // ── Step -1.5: REDMINE GATE (2026-10-30, per みや — "save quest" must archive only when Redmine says so; #281638 and
+    // #282198 archived early because only prose stood in the way). Asks lib/save-quest.js for the verdict. Refused on
+    // WAIT · PHASE-1 · KEEP-DELEGATED · UNKNOWN unless --ahead-of-redmine "<his words>" is passed; the reason is logged.
+    // A resolver that is missing or crashes never blocks. Dry-run reports only.
+    {
+        const aheadIdx = args.indexOf('--ahead-of-redmine');
+        const aheadReason = aheadIdx >= 0 ? String(args[aheadIdx + 1] || '').trim() : null;
+        const sqPath = path.join(REPO_ROOT, 'lib', 'save-quest.js');
+        let verdictRow = null;
+        if (/^QA-/.test(qa) && fs.existsSync(sqPath)) {
+            const sqArgs = [sqPath, qa, '--json', '--root', REPO_ROOT];
+            if (process.env.ARCHIVE_REDMINE_JSON) sqArgs.push('--redmine-json', process.env.ARCHIVE_REDMINE_JSON);
+            const sq = require('child_process').spawnSync(process.execPath, sqArgs, { encoding: 'utf8', timeout: 20000, windowsHide: true });
+            try { verdictRow = JSON.parse(sq.stdout); } catch (_) { verdictRow = null; }
+        }
+        if (verdictRow && !require(sqPath).archiveAllowed(verdictRow.verdict)) {
+            const gateLog = row => { try { const d = path.join(REPO_ROOT, 'domain', 'save-quest'); fs.mkdirSync(d, { recursive: true }); fs.appendFileSync(path.join(d, 'log.jsonl'), JSON.stringify({ ts: new Date().toISOString(), qa, gate: 'archive-redmine-gate', verdict: verdictRow.verdict, ...row }) + '\n'); } catch (_) {} };
+            const seen = verdictRow.redmine ? verdictRow.redmine.status : 'unreachable';
+            if (dryRun) console.log(`  [dry] Step -1.5: REDMINE GATE would BLOCK — Redmine = ${seen}, verdict ${verdictRow.verdict}`);
+            else if (aheadReason === null || !aheadReason) {
+                console.error(`\n⛔ Step -1.5 REDMINE GATE: ${qa} is not ready to archive. Redmine = ${seen}, verdict ${verdictRow.verdict}.`);
+                console.error(`   ${verdictRow.next}`);
+                console.error(`   Only miya's own words override it: --ahead-of-redmine "<his words>"`);
+                gateLog({ action: 'refused' });
+                process.exit(3);
+            } else {
+                console.log(`  ✓ Step -1.5: archived ahead of Redmine (${seen}): ${aheadReason}`);
+                gateLog({ action: 'ahead', reason: aheadReason });
+            }
+        } else if (verdictRow) console.log(`  ✓ Step -1.5: Redmine gate passed (${verdictRow.verdict})`);
+    }
+
     // ── Step -1: HARVEST GATE (2026-08-16, per みや — "archive without harvest must be
     // mechanically impossible"; slip archive-without-harvest, 35-quest debt). An archive
     // may not proceed unless the qa_doc carries a harvest section (## Bounty or
