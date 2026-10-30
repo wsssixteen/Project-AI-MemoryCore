@@ -1,3 +1,14 @@
+**Last Activity**: 2026-10-30 16:45 — worktree `cranky-wilson-4cb38e` (branch claude/ticket-287292-return-audit-072795), 287292 returned by BA, re-patched, Redmine posted, quest saved, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "cranky-wilson-4cb38e", 287292 PROD letter returned)
+- 287292 came back because yesterday's patch used the ADO day (19, 19, 21 Oktober) while the BA asked for the first-generated dates (30/9, 30/9, 20/10, Document Maintenance = umm_a_dok_keluaran.created_date). Same request, our miss.
+- Re-patched: 3 letters with first-generated dates + Hijri from e-Solat, 287292.zip + 287292.sql in the archived Task folder 2. Fix. Infra uploaded and reset PDFs (all 3 lokasi_fail_pdf empty). Redmine note 09:57 to Fizah, ProTime resolved. Redmine now Ready in PROD. SAVE-QUEST AHEAD, stays archived.
+- System on main: patch-mlk-doc (2+ files = one <num>.zip, deliverable-check takes several names, eval 26/26; letter date = created_date, ADO day banned; infra boxes #<num> only, no description, no instruction lines). Knowledge WORD-TEMPLATE-RENDERING corrected. Pena c65.
+- Slips: ba-spec-overridden, vague-term, wrong-rule-encoded, reask/redundant (QA-287292). I also held the upload for a BA answer after he said to do it straight away, and said "yesterday's patch wasn't wrong" before he corrected it.
+- Not verified: where infra's file names LAIN-40346432 / 40346446 / 40346447 came from (no PROD, stg1 or stg2 row, not on local disk); the content of the uploaded files in PROD, BA verify is the check.
+- Open: 285768 template fix prints each generation's day, so new letters show the ADO day, not the first-generated date; miya has not ruled. Infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
+- Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
+
 **Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
 
 ## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
@@ -18,21 +29,3 @@
 - Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
 - Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
 **Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
-
-## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
-- 287186: infra ran the resit-link patch (rows verified) · alter PL Kupon → 48.0 PYB4CE 08:15 (code A1E3-7EAD) · Redmine Resolved 100% to Amani with note · Closed on Redmine · archived.
-- 287233: alter PYSKN5A → PKPPT 02:44 (code 3480-80C1) · Closed by Idris 09:21 · % Done 100 at 10:49 on "Set 287233 100%" · archived.
-- System (all on main, last f4cf1ef6): go-reask-gate (new Stop gate) · stale-hooks-warn (new prompt advisory) · his-words reads past a compaction · redmine-write-gate takes "set <ticket> <n>%" and names the patch close on an approved Submit · playbook A7 CLOSE · quest 6c close line.
-- Slips: re-asked approval after his go; kept "do not update %" into Resolve; Submit blocked twice after compaction; patch tickets not closed after handover (all logged).
-- Open: proposal tracked — a quest doc born in a worktree lives only there (archive-quest refused until copied to main).
-
-**Last Activity**: 2026-10-30 02:25 — worktree `rubric-code-review-2f5201` (261986 session), 261986 saved (Phase 1 closed), Domain Expansion.
-
-## Session Recap (2026-10-29 to 30, worktree "rubric-code-review-2f5201", 261986 PSBS Risalat MMKN)
-- 261986: commit 578af8ef1a (mlk/qa/261986v3) merged int-env ae10e5253e (Tolak conflict with CR 274600 resolved as their file + our edit). Redmine posted 2026-10-29 22:12: Resolved to Nurul Amirah Nadiah, 100%, 3 PDFs. Phase 1 closed 30/10; Phase 2 waits for Redmine Closed.
-- System: redmine-write-gate v1.7 (harness text skipped, /goal args read as his words, "why not submitting" = go), GitHub main fdce114e.
-- Slips: offered to combine PDFs unasked; said "not posted" for several turns without re-reading Redmine.
-- Open: 261986 staging deploy (stag-env behind master, same Tolak conflict expected).
-
-**Last Activity**: 2026-10-29 21:52 — worktree `jovial-kepler-a07ba6` (child of "Sweep 3 tickets + audit"), 286646 MCL strata check handed to BA, quest Phase 1 closed, Domain Expansion.
-**Last Activity**: 2026-10-30 02:15 — worktree `ticket-286650-quest-188daf` (the ProTime + OT session), ProTime 29/10 checked, 282587 training script, 282587 archived, Domain Expansion.
