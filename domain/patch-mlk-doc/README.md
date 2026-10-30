@@ -12,7 +12,7 @@ state-scoped: yes, Melaka today (lokasi_fail shape LAIN-<n>_<v>.main + et_dms sc
 | File | Role |
 |---|---|
 | eval.js | anchors in `.claude/skills/patch-mlk-doc/SKILL.md` |
-| deliverable-check.js | lints the Task folder `2. Fix\` before the reply |
-| deliverable-check.eval.js | 18 fixtures for the lint |
+| deliverable-check.js | lints the Task folder `2. Fix\` before the reply; 2+ files (comma-separated names) need `<num>.zip` holding every one and one UPDATE per file (2026-10-30 per みや, 287292: "please zip the files, always"; rollback watch wmvu9pnx8) |
+| deliverable-check.eval.js | 26 fixtures for the lint (8 for the multi-file zip rule) |
 | letter-check.py | checks a patched letter: STANDARD (only declared tags changed, Malay dates) · ALIGNMENT (signature and QR on one row, name below, left edges aligned, from the PDF) · DATA (no `-`, blank or `( )`) |
 | letter-check.eval.py | 29 fixtures on synthetic letters (no PROD data) |
