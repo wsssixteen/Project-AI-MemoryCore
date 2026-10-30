@@ -724,6 +724,22 @@
         "sessions": 1,
         "last": "2026-10-29"
       }
+    },
+    {
+      "id": "chat-images",
+      "answers": "Which images did miya send in this session, including mid-turn ones",
+      "call": "node lib/chat-images.js <session.jsonl> <out-dir>",
+      "home": "lib/chat-images.js",
+      "groups": [
+        "documents"
+      ],
+      "state_scope": "none",
+      "footprint": "on-demand: 1 node process, reads one transcript, ends with the run",
+      "status": "active",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-10-30"
+      }
     }
   ],
   "unused_scripts_2026-10-06": {
