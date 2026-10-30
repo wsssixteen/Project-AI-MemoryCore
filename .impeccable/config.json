@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "domain/redmine-write-gate/diagram.html"
+        ],
+        "createdAt": "2026-10-29T15:01:16.236Z",
+        "reason": "repo diagram convention: 9px Consolas sub-labels in an SVG rendered to PNG at 2x, same as quest/requirement-index.diagram.html; not interactive UI"
+      }
+    ]
+  }
+}

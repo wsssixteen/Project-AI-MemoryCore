@@ -114,6 +114,11 @@ check('F18 foreign push, check but no approval blocks', r.status === 2 && /❌ m
 // F19: foreign repo, report + approval → ALLOW
 r = run(pw(push, 'go ahead and push'));
 check('F19 foreign push, check + approval passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+// F19b: his push order, then an injected skill line as the last user line -> his order still counts
+{ const tp = path.join(fDir, 't-inj.jsonl');
+  fs.writeFileSync(tp, [JSON.stringify({ type: 'user', message: { role: 'user', content: 'go ahead and push' } }), JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } }), ''].join('\n'));
+  r = run({ tool_name: 'PowerShell', tool_input: { command: push }, transcript_path: tp });
+  check('F19b his push order then an injected skill line: still approved', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 120)); }
 // F20: angry question containing "push" is NOT approval
 r = run(pw(push, 'who on earth asks you to push to release branch'));
 check('F20 "who asks you to push" is not approval', r.status === 2, 'exit=' + r.status);

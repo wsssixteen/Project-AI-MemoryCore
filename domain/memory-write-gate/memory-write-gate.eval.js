@@ -16,7 +16,7 @@ function sandbox() {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'mwg-'));
   const root = path.join(base, '.claude', 'worktrees', 'wt');
   const put = (p, t) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, t); };
-  for (const f of ['hook-runtime.js', 'turn-context.js']) put(path.join(root, 'lib', f), fs.readFileSync(path.join(REAL_ROOT, 'lib', f)));
+  for (const f of ['hook-runtime.js', 'turn-context.js', 'his-words.js']) put(path.join(root, 'lib', f), fs.readFileSync(path.join(REAL_ROOT, 'lib', f)));
   put(path.join(root, '.claude', 'skills', 'system-design', 'SKILL.md'), '# skill\n');
   put(path.join(root, 'domain', 'commit-subject-gate', 'commit-subject-gate.check.hook.js'), '// gate\n');
   put(path.join(root, 'domain', 'foo-dir', 'inner.js'), '// inner\n');
@@ -320,6 +320,11 @@ check('F0 NUKE-MARKER.md + README keys present', fs.existsSync(path.join(__dirna
 // F22: block output reaches stderr with exit 2 and is non-empty (effect check)
 { const sb = sandbox(); const r = fire(sb, { events: [U('go'), A('x')] });
   check('F22 block = exit 2 + message on stderr', r.status === 2 && (r.stderr || '').length > 200, 'exit=' + r.status + ' len=' + (r.stderr || '').length); }
+
+// F23: his word, then an injected skill line (isMeta) as the last user line -> the turn still starts at his word
+{ const sb = sandbox(); const inj = { type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } };
+  const r = fire(sb, { events: [U('go'), A(line('new: x')), inj, A('now writing')] });
+  check('F23 injected skill line after his word does not reset the turn -> PASS', passed(r), r.stderr); }
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

@@ -87,6 +87,8 @@ r = fire(Q2, [U('look at the data')]);
 check('F21 unknown switch value -> stg2 treated ON (silent), never both guarded', r.status === 0 && !out(r).trim(), out(r));
 setSwitch('stg2');
 
+r = fire(Q1, [U('read stg1 for the 5 permohonan'), { type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } }, U('Base directory for this skill: y')]);
+check('F22 his word naming stg1, then an injected skill line as last user line -> still read', r.status === 0 && /miya named stg1/.test(out(r)), out(r));
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nstg1-block.eval: ' + (results.length - failed) + '/' + results.length + ' green');

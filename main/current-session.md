@@ -1,42 +1,31 @@
-# Current Session
+**Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
 
-**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
+## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
+- Answer: DE alone now does save quest, enforced. Save quest picks Close or Archive from live Redmine: not Closed = Phase 1 only, Closed = Phase 2 (Phase 1 first when still open), patch ticket past "in work" = both together.
+- Built, on main: `lib/save-quest.js` reads ticket_type (patch tickets were told "Do not archive" against the 2026-10-29 rule) · `quest/archive-quest.js` Step -1.5 refuses an archive the verdict does not allow, `--ahead-of-redmine "<his words>"` is the only override · `de-close-gate` C9 blocks a DE close on a touched ticket with no verdict or a stage not done, unless "Phase 1 not ready: <QA> ...".
+- Evals: save-quest 69/69, feature 27/27, de-close-gate 44/44, archive Redmine gate 16/16, archive 27/27, archive-hold 27/27. Live: QA-287273 archive refused exit 3, nothing moved.
+- Open: 287273 BA verify, planned-release list. Wrong-fix row 1 verdict names BUG-BESTIARY: write it at Phase 2.
+**Last Activity**: 2026-10-30 16:45 — worktree `cranky-wilson-4cb38e` (branch claude/ticket-287292-return-audit-072795), 287292 returned by BA, re-patched, Redmine posted, quest saved, Domain Expansion.
 
-## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
-- 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
-- Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
-- System: hotfix skill gained "Hotfix deployment" H1-H4 + the infra team's template, ticket line = number only. Knowledge: pemegang permit/lesen name = `ind_pemegang_permit_lesen.nama_pemegang` (DATABASE.md).
-- Open: bounty proposal (worktree guard blocks Edit on main-only untracked quest files) waits for miya's ruling. Work worktree `E:\Dev\etanah-work\etanah-pelupusan-hotfix-285768` and `wt-common-285768` kept until his yes.
-**Last Activity**: 2026-10-29 21:25 — worktree `esokongan-quest-sweep-2bce09` (branch claude/qa-tickets-review-9d166c), 262027 handed to BA, quest saved, Domain Expansion.
+## Session Recap (2026-10-30, worktree "cranky-wilson-4cb38e", 287292 PROD letter returned)
+- 287292 came back because yesterday's patch used the ADO day (19, 19, 21 Oktober) while the BA asked for the first-generated dates (30/9, 30/9, 20/10, Document Maintenance = umm_a_dok_keluaran.created_date). Same request, our miss.
+- Re-patched: 3 letters with first-generated dates + Hijri from e-Solat, 287292.zip + 287292.sql in the archived Task folder 2. Fix. Infra uploaded and reset PDFs (all 3 lokasi_fail_pdf empty). Redmine note 09:57 to Fizah, ProTime resolved. Redmine now Ready in PROD. SAVE-QUEST AHEAD, stays archived.
+- System on main: patch-mlk-doc (2+ files = one <num>.zip, deliverable-check takes several names, eval 26/26; letter date = created_date, ADO day banned; infra boxes #<num> only, no description, no instruction lines). Knowledge WORD-TEMPLATE-RENDERING corrected. Pena c65.
+- Slips: ba-spec-overridden, vague-term, wrong-rule-encoded, reask/redundant (QA-287292). I also held the upload for a BA answer after he said to do it straight away, and said "yesterday's patch wasn't wrong" before he corrected it.
+- Not verified: where infra's file names LAIN-40346432 / 40346446 / 40346447 came from (no PROD, stg1 or stg2 row, not on local disk); the content of the uploaded files in PROD, BA verify is the check.
+- 285768 is finished: Closed, QA Verified STAG 2026-10-29, not an open item. Open: infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
+- Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
 
-## Session Recap (2026-10-23 → 2026-10-29, worktree "esokongan-quest-sweep-2bce09", tickets 262027 and 261986)
-- **262027 (PSBS Surat Keputusan PTG kepada PDT Tolak, rework cycle 2)**: fix on mlk/qa/262027v2 (54d8ffedb3, afe270b690), merged int-env + stag-env. Staging runs release 1.9.0 (baseline, no 262027), so the test ran on internal PTMLK/01/L/PSBS/2026/8. Redmine 2026-10-29 21:02: Resolved, Nurul Amirah Nadiah, 100%, note + internal Tolak PDF. Quest status=closed (Phase 1); archive waits for Redmine Closed. KPI P-262027-B4-20261023 pending BA verify.
-- **261986 (Risalat MMKN RAHSIA header)**: next. miya wants it re-looked from the start. Phase 0 done earlier; Rubric, Apply, Test not done; nothing moved this session.
-- **"164"**: no open ticket ends in 164. Ask miya for the full number.
-- **Slip**: the Redmine edit page froze Chrome for about 20 minutes while redmine-write-gate (STAGE-ONLY until 2026-10-30) blocked the API. I fought the page before telling him about the gate. He submitted the form himself.
-- **Linked sessions**: session-name-fix (cranky-wilson, DE done, 6a478ade on main) · alter-sim (cool-hopper, waits on his "add it" and a staging permohonan for a real-vs-preview compare).
-**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
+**Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
 
-## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
-- 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
-- Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
-- System: hotfix skill gained "Hotfix deployment" H1-H4 + the infra team's template, ticket line = number only. Knowledge: pemegang permit/lesen name = `ind_pemegang_permit_lesen.nama_pemegang` (DATABASE.md).
-- Open: bounty proposal (worktree guard blocks Edit on main-only untracked quest files) waits for miya's ruling. Work worktree `E:\Dev\etanah-work\etanah-pelupusan-hotfix-285768` and `wt-common-285768` kept until his yes.
+## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
+- ADHOC-MCL-2026-3: PROD MCL Laporan Tanah has no Perkara. Tajuk Risalat is never saved at SKM since 5734174bd9 (Aaron, 2026-06-19, ticket 265081) added else-return on empty premium in MlkMaklumatTanahLesenPendudukanForm.performCustomSave. PROD 0 of 37 MCL at PLT have it; PT, PLPS, PRBB, PLTP, PRZ all do. Requirement 223227 says the tajuk is created at SKM, verified 2026-05-21; its commits are all still in master.
+- Answered BA in miya's words ("So need code fix"). Teknikal patches /18 and /26 through their own 287350. Save-set: Task folder 345, register A83, latent L31, audit 33/33. On hold + archive hold, waiting a code-fix ticket; not simulated on STG (candidate PTMLK/01/L/MCL/2026/21, login iskandarz@melaka.gov.my).
+- Fix idea when the ticket comes: scope the 265081 premium block to showKemaskiniCukaiDialog, the same way the 287164 int-env change does.
+- KPI: C2 row added. Pena: c60-c63 stored (BA decides on tickets, name the link first, other team's ticket stays out, his final reply).
+- Slips: said "stops at premium check" five times without the link between premium and tajuk; repeated Teknikal's own ticket and permohonan in every draft; asked TSO for a ticket unasked; read the requirement only after the BA pointed at 223227.
+- Improvement sweep: A1 two save agents at about 150k tokens each for an update a script could do · A2 adhoc route line tells me to ask TSO for a ticket while Pena lean forbids it · A3 cause found by git log -L only after he asked; run it at Recon for any shared-form save · A4 requirement-index not run on an adhoc, BA had to point at 223227 · A5 skipped, one adhoc, no sweep. Each logged as a proposal except A5.
+- Ticket arrived: eSOKONGAN 287509 is this issue (assigned BA Nurul Amani, New). Adhoc promoted (A83 TICKETED) and archived, audit 30/30. QA-287509 block + doc carry the findings; block delegated per save-quest, quest not started.
+- Open: QA-287509 fix when it reaches miya; fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
 
-**Last Activity**: 2026-10-29 21:00 — worktree `redmine-issue-287292-1cfb39`, quest 287292 (PROD document patch, UPP Surat Makluman Pembatalan) closed through Phase 2 and archived, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "redmine-issue-287292-1cfb39", 287292 PROD letter patch)
-- Ticket: UPP Surat Makluman Pembatalan for PTMLK/02/L/UPP/2026/5, /6, /7 had no ADO signature and the top date showed the PPTPB permohonan date. Same 3 documents as 285768, so one patch.
-- Done: 3 corrected .main files (generation date 19/19/21 Oktober 2026, ADO signature, peranan), one combined infra upload request for 285768 + 287292, PDF reset script `287292.sql`. Infra confirmed. Redmine Resolved (miya submitted). ProTime resolved + weekly plan.
-- System changes landed on main: patch-mlk-doc "upload document" wording + re-dated letter keeps the generation date; close-phase: a patch ticket runs Phase 1 + Phase 2 in one pass (per miya).
-- Phase 2: the archive failed twice on EPERM. Cause not verified: the top-folder rename failed while per-file moves worked (no process held a file). A direct Move-Item then moved 1. Brief and stopped; the rest was moved by hand (hashes checked), then archive-quest.js. Its prune step deleted the 3 .main + zip from the archived 2. Fix (copies live in PROD DMS and the OneDrive recycle bin). Bounty banked 5d766965.
-- Open: the bounty proposal (one-owner marker for a Task folder) waits for miya's BUILD/DROP/DEFER.
-
-**Last Activity**: 2026-10-29 20:05 — worktree `pembatalan-dropdown-popup-251828`, adhoc ADHOC-BPRZ-2026-1 (Penang IT AWAM BPRZ) closed ANSWERED and archived, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "pembatalan-dropdown-popup-251828", Penang BPRZ adhoc)
-- His ask: Penang AWAM BPRZ popup, "Pembatalan dropdown" shows nothing; ticket maybe under Izz. Screen confirmed: tab Maklumat Perizaban > popup Maklumat Plot.
-- Finding: the plot popup lists (No. Lot/PT, No Lot Bersebelahan, Tempat) are built from the saved Maklumat Tanah rows (`etanah-awam` PelupusanService.java:4725-4782). IT record 430 has no No Lot Bersebelahan (row 201 mklmt_tmbhn blank), so that list is empty. By design per BA spec 286972. No Izz ticket matches.
-- miya: "no, it is okay" → closed ANSWERED, route ANSWER. Register Penang A6 ANSWERED; Task folder 7 → Archive; block → active-archive.txt. Audit 30/30 PASS (agent's run; my own re-run is blocked by the adhoc-brief-first gate).
-- Open: nothing for this adhoc. archive-quest needed `--allow-stub` (no Bounty section on an answered adhoc).
-**Last Activity**: 2026-10-29 19:57 — worktree `dreamy-pike-08af0b` ("28/10/2026 - one system-change workflow"), /system-change built and landed, Domain Expansion.
+**Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).

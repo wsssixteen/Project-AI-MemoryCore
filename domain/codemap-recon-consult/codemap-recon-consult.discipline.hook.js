@@ -94,6 +94,7 @@ function lastAssistantText(lines) {
 
 // did a codegraph tool_use happen since the last real user prompt (this turn)?
 function codegraphUsedThisTurn(lines) {
+  // his-words: not an approval reader — only finds the turn boundary
   let turnStart = 0;
   for (let i = lines.length - 1; i >= 0; i--) {
     let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }
@@ -111,6 +112,7 @@ function codegraphUsedThisTurn(lines) {
 
 // did a git-history probe (log / --grep / blame / show --stat) run in a tool call this turn?
 function gitHistoryUsedThisTurn(lines) {
+  // his-words: not an approval reader — only finds the turn boundary
   let turnStart = 0;
   for (let i = lines.length - 1; i >= 0; i--) {
     let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }

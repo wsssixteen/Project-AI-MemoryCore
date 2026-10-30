@@ -16,8 +16,11 @@
 //   status = OPEN | RAN: <evidence> | BROKE: <evidence> → row N | ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD
 //            | SUPERSEDED: row N
 // Callers: compile-gate (etanah commit) · close-phase Phase 1 · ticket-close-block --ba.
-// The local-test override is read from miya's LAST message only: his plain words ("test on server", "skip local testing")
-// or [risk-ok: <num> <reason>]; it never clears a row.
+// The local-test override is read from miya's OWN messages through lib/his-words.js (system-rules Rule 8, 2026-10-29):
+// his plain words ("test on server", "skip local testing") or [risk-ok: <num> <reason>], up to 8 of his messages back,
+// until a later hold ("wait", "test locally first"). A skill's text, a reminder or hook feedback is never his message
+// (286646, 2026-10-29: his waiver stood, the commit was refused four times because an app line was "the last message").
+// It never clears a row.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -32,7 +35,9 @@ const OVERRIDE_HOURS = 72;
 const LEDGER_HEAD = /^(#{1,4})\s*Falsifier ledger\b.*$/im;
 const RUBRIC_HEAD = /^#{1,4}[^\n]*\bRubric\b|═══\s*RUBRIC\b/im;
 const OVERRIDE_RX = /\[risk-ok:\s*#?(?:QA-)?(\d{4,})\b\s*([^\]]{3,})\]/gi;
-const POPUP_ANSWER = /^\s*Your questions have been answered:/;
+const { hisMessages } = require(path.resolve(__dirname, '..', '..', 'lib', 'his-words.js')); // the repo's own lib, whatever FALSIFIER_ROOT points at
+// A later hold on the commit or the test voids an earlier waiver.
+const HOLD_RX = /\b(?:not yet|wait|hold on|don'?t commit|do not commit|jangan commit|test(?:ing)? (?:it )?locally first|local test first|belum)\b/i;
 // miya's plain words waive the local test too (2026-10-08 per miya, #283751): "test on server", "skip local testing".
 const PLAIN_WAIVE_RX = new RegExp([
   String.raw`\b(?:test(?:ing|ed)?|check|verify|try)\b[^.?!\n]{0,40}?\b(?:on|in|at)\s+(?:the\s+)?(?:server|internal|staging|stag|mlit|int[- ]env|stag[- ]env|stg\d?)\b`,
@@ -158,44 +163,25 @@ function recordedOverride(qa) {
   return hit;
 }
 
-// miya's LAST message (or his popup answer). Assistant text and tool output never count.
-function lastUserText(transcriptPath) {
-  let raw; try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return ''; }
-  const lines = raw.split(/\r?\n/).filter(Boolean);
-  for (let i = lines.length - 1; i >= 0; i--) {
-    let o; try { o = JSON.parse(lines[i]); } catch (_) { continue; }
-    const m = o.message || o;
-    if ((m.role || o.type) !== 'user') continue;
-    const c = m.content;
-    if (typeof c === 'string') return c;
-    if (Array.isArray(c)) {
-      const texts = c.filter(x => x && x.type === 'text').map(x => x.text);
-      if (texts.length) return texts.join('\n');
-      for (const x of c) {
-        if (!x || x.type !== 'tool_result') continue;
-        const t = typeof x.content === 'string' ? x.content : Array.isArray(x.content) ? x.content.filter(y => y && y.type === 'text').map(y => y.text).join('\n') : '';
-        if (POPUP_ANSWER.test(t)) return [...t.matchAll(/"="([^"]*)"/g)].map(a => a[1]).join('\n');
-      }
-    }
-  }
-  return '';
-}
-
-// Record an override when miya's last message carries the token for this ticket. Returns the row or null.
+// Record an override when one of miya's own messages (newest first, 8 back) carries the token or the plain waiver for
+// this ticket and nothing he said after it holds. Assistant text, tool output and app lines never count. Returns the row or null.
 function captureOverride(qa, transcriptPath) {
   if (!transcriptPath) return null;
-  const last = lastUserText(transcriptPath);
-  for (const m of last.matchAll(OVERRIDE_RX)) {
-    if (m[1] !== num(qa)) continue;
-    const row = { ts: new Date().toISOString(), qa, reason: m[2].trim().slice(0, 200) };
-    try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
-    return row;
-  }
-  const plain = plainWaiver(qa, last);
-  if (plain) {
-    const row = { ts: new Date().toISOString(), qa, reason: 'plain words: "' + plain.slice(0, 160) + '"', via: 'plain' };
-    try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
-    return row;
+  for (const msg of hisMessages(transcriptPath, { limit: 8 })) {
+    const text = msg.text;
+    if (HOLD_RX.test(text)) return null;                       // a later hold ends the search
+    for (const m of text.matchAll(OVERRIDE_RX)) {
+      if (m[1] !== num(qa)) continue;
+      const row = { ts: new Date().toISOString(), qa, reason: m[2].trim().slice(0, 200) };
+      try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
+      return row;
+    }
+    const plain = plainWaiver(qa, text);
+    if (plain) {
+      const row = { ts: new Date().toISOString(), qa, reason: 'plain words: "' + plain.slice(0, 160) + '"', via: 'plain' };
+      try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
+      return row;
+    }
   }
   return null;
 }
@@ -310,4 +296,4 @@ if (require.main === module) {
   process.exit(1);
 }
 
-module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, lastUserText, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };
+module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };

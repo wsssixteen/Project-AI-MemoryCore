@@ -116,7 +116,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | Java entity class | DB table | JSON column on it | Notes |
 |---|---|---|---|
 | `Aplikasi` | `umm_aplikasi` | (none — spine table) | PK `aplikasi_id`. Holds `id_pengenalan`, `ursn_id`, `pejabat_id`. Join everything via this |
-| `AppPelupusan` | `plp_a_pelupusan` | `maklumat_tambahan` (TEXT, JSON-as-string) | PLU-internal pelupusan-level metadata. One row per aplikasi. Common var names: `aplp`, `appPelupusan`, `aPlp` |
+| `AppPelupusan` | `plp_a_pelupusan` | `mklmt_tmbhn` (TEXT, JSON-as-string; column name verified on PROD 2026-10-30) | PLU-internal pelupusan-level metadata. One row per aplikasi. Common var names: `aplp`, `appPelupusan`, `aPlp` |
 | `AppPermohonanTanah` | `umm_a_permohonan_tnh` | `mklmt_tmbhn` (TEXT, JSON-as-string, mapped to `getMaklumatTambahan()` in Java) | Per-permohonan-tanah row. Multiple per aplikasi (one per plot/kawasan). Common var names: `apt`, `eachAppMohonTnh`, `appMohontnh`. **This is where `pengkelasanTnh` lives** (QA-260508 save target) |
 | `AppHakmilik` | `umm_a_hkmlk` | `mklmt_tmbhn` (TEXT, JSON-as-string) | Per-hakmilik row linked to aplikasi. Common var names: `ahm`, `ahmTerlibat`, `appHakmilik` |
 | `AppLaporanTanah` | `tkl_a_laporan_tnh` | `kedudukan_tanah` (TEXT, JSON-as-string) + `maklumat_tambahan` (TEXT, JSON-as-string) | **etanah-teknikal module owns** writes; pelupusan reads via `etanah-common/.../repository/teknikal/AppLaporanTanahRepository.findByAplikasi`. Holds Zone, Jalan, Landmark, Dun, PBT, koordinat GIS — all in `kedudukan_tanah` JSON |
@@ -1548,6 +1548,8 @@ umm_a_permit_lesen.no_permit_lesen ──(by value)──► ind_permit_lesen.pe
 find referencing tables by COLUMN NAME (`permit_lesen_id`, `versi_permit_lesen_id`), never by FK.
 Safe clear order: NULL the app row's number+versi first, then delete children, then the induk row.
 
+**Pemegang permit / lesen name (verified stg1 2026-10-29)**: `ind_pemegang_permit_lesen.nama_pemegang`, one row per versi, linked by `versi_mula_id` / `versi_akhir_id` -> `ind_versi_permit_lesen.versi_permit_lesen_id` -> `permit_lesen_id`. `umm_a_permit_lesen` and `ind_permit_lesen` hold no holder name (only `nama_operator`, `nama_tapak`). Code: `PelupusanMaklumatPemohonHelper.java:3325` (entity `PemegangPermitLesen`, `versiAkhir`). Query: `SELECT nama_pemegang FROM ind_pemegang_permit_lesen WHERE versi_akhir_id IN (SELECT versi_permit_lesen_id FROM ind_versi_permit_lesen WHERE permit_lesen_id = <id>)`.
+
 **First-year lesen dates (#279882, OMLPS, PROD 2026-09-15)**: the dates printed for year 1 live in `ind_versi_permit_lesen` (`versi_dok = 0`, `trkh_mula` / `trkh_tamat`), reached through `ind_permit_lesen.no_permit_lesen`; `ind_permit_lesen` itself holds blank dates; `umm_a_permit_lesen` holds the application-side renewal dates and must not be touched for a year-1 correction. Script: `1. Tasks\Melaka\Archive\209. DP #279882 ...\2. Fix\279882.sql`.
 
 **Pelan replace on PROD (#279793, MLPS L1e, 2026-09-18, done by Nik Muhammad Akram)**: 4 tables, 6 columns, one row each: `et_dms.dokumen_revision` (`nama_fail`, `lokasi_fail`, `lokasi_fail_pdf`), `et_dms.dokumen` (`nama_dokumen`), `et_main.skg_dok` (`nama_fail`), `et_main.umm_a_dok_keluaran` (`nama`); the new file goes under `WORM/PERMIT/<pejabat>/4A - LMS/<file ref with / as ~>/`. Source: the #279793 Redmine journal 2026-09-18.
@@ -1695,3 +1697,14 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - Tugasan PLT (Penyediaan Laporan Tanah) and its Maklumat Siasatan screen are teknikal (`MLK_TKL_ST`), not pelupusan.
 - Same table for the other pelupusan urusan (MLIT 2026, row in `umm_a_permohonan_tnh` with lot + luas): PT, PLPS, PLTP, PPTPB, MCL, MLPS, PSBS, PRZ, BPRZ, PPJK, PRU, RPPLP, PDBB, PLBP, OPRBB, OPLPS, OPPTPB, OMLPS. No row at all: UPS_PLP, UPP, UTBPB, OPLBP, PNL.
 - JSON key `idHkmlk` exists only on PRBB (48 of 111) and PDBB (5 of 16). Other hakmilik-based urusan link the hakmilik through `umm_a_hkmlk.id_hkmlk` only.
+
+- 2026-10-29 (from the 2026-10-20 assessment file, in git history; recovered 2026-10-29): Jadual 1 points h/i/j come from UMM_P_HKMLK_LAIN, which has no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK (QA-284884).
+
+- 2026-10-29 (from the 2026-10-05 assessment file, in git history; recovered 2026-10-29): Template processing stamps umm_a_dok_keluaran.a_tgsn_id with the tugasan that last PROCESSED the document (PelupusanTemplateUtil.saveDocuments); an existing document is reprocessed in place, never rebuilt from the template.
+
+
+## Tajuk Risalat store (verified on PROD 2026-10-30, ADHOC-MCL-2026-3 / QA-287509)
+
+- Stored in `plp_a_pelupusan.mklmt_tmbhn`, JSON key `maklumatRisalatList`, one entry per `jenisDokumen` (`NO_DOC` at tugasan with no document, for example SKM), field `tajukRisalat`.
+- Written by `onSaveMaklumatRisalatPanel()` in the Maklumat Tanah forms, normally at Semakan Kemasukan Maklumat. Teknikal says its Laporan Tanah Perkara comes from this store; their code is not read here.
+- At Penyediaan Laporan Tanah on PROD: PT, PLPS, PRBB, PLTP, PRZ all have it, MCL 0 of 37 (QA-287509, LATENT-BUGS L31).

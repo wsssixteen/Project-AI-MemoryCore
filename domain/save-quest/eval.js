@@ -32,7 +32,7 @@ check('6 close-phase Phase 2 opens with the Redmine check and names the override
 check('7 close-phase keeps every prior Phase 1 step (0-7) and Phase 2 step (0-5)', ['Wrong-fix rows saved', 'Assert local test + falsifier ledger', 'The FIXED git sequence', 'STOP — review gate', 'On approval', '**Return:**', 'Mark closed', 'Checklist C', 'WORKFLOW UPGRADE — MANDATORY', 'Phase 2 emit', 'Archive hygiene — run the atomic mover', 'Harvest + bank', 'Checklist E'].every(s => skill.includes(s)));
 
 const { NEXT, decide, TERMINAL } = require(path.join(ROOT, 'lib', 'save-quest.js'));
-const verdicts = [...new Set(Object.keys(NEXT).map(k => k.replace(/\+1$|-IN-WORK$/, '')))];
+const verdicts = [...new Set(Object.keys(NEXT).map(k => k.replace(/\+1$|-IN-WORK$|-PATCH$/, '')))];
 const section = (skill.match(/## Save-quest mode[\s\S]*?\r?\n---\r?\n/) || [''])[0];
 check('7b the Save-quest section was found (either line ending)', section.length > 500);
 const missing = verdicts.filter(v => !section.includes('`' + v + '`'));

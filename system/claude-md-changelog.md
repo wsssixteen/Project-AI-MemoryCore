@@ -10,6 +10,40 @@
 
 ---
 
+**v2.00** (2026-10-30) — §Disposition +rule 8 (TEMPORARY): plan first, then ask. Before any question or yes/no to みや, the same reply shows the plan as one explain-diagram picture (current state → my steps → his steps → end state, data changes with their script on the picture), then the question. Why: 287164, he was asked "clear it" for a data change with no plan shown; his words: "tell me your plan first, always, before asking anything. This thing can be added as a temporary fix in CLAUDE.md, use skill diagram before asking." Spec-preservation: rules 0 to 7 untouched; additive. Temporary until a gate enforces it, then the line becomes a pointer.
+
+
+
+## system-rules SKILL.md v1.5 — 2026-10-29 (per みや, the five refused Submits)
+
+**Rule 8 — One ask, then obey.** His words: "audit why you are being stopped by a simple 'Submit it' ... find a universal solution to add into our system-change or system-rules or system-design so that you DO NOT EVER build a step or workflow or gate ... like this ever again. A simple check is enough."
+
+| Cause found (today's logs) | Rule 8 clause | Mechanical home |
+|---|---|---|
+| 7 gates each read "the last transcript user line" with their own reader; a skill's text, a system-reminder, a Stop-hook notice, a /goal notice counted as his last message (redmine-write-gate log 14:01 to 14:09, 5 refusals; 286646 commit refused 4 times after his waiver) | (c) one reader, app lines never his | `lib/his-words.js` (eval 44/44) · `--audit` lists own readers · `design-consult-gate` rider denies writing one (R1 to R10) |
+| his order had to be in the LAST message; any later line voided it | (a) his order anywhere in the ask is the approval; (b) it holds until he holds or refuses | `decide()`: 8 messages back, newest decisive wins; `redmine-write-gate` v1.8, `falsifier-ran-check` waiver |
+| "do not stop until you've posted" read as a refusal; "why are you not submitting" read as nothing | (b) a no counts only in the clause that names the action; a question decides nothing; a complaint is an order | `his-words` clause judge (H1 to H13, R1 to R6) |
+| the same send blocked 5 times, each time asking him again | (d) a repeat block is the gate's defect, logged, fixed in the gate | `redmine-write-gate` `gate/repeat-block` slip row (F117) |
+
+- Paired same turn: 20 other gates moved onto the reader (prod-alter, release-push, stg1-block, agent-spend, terse, predicate-box, memory-write, de-knowledge, no-code-comments, de-run-verify, project-load) or marked `not an approval reader` (turn-boundary readers); prod-alter S12 flipped (tool output after his approval no longer voids it).
+- Spec preservation: Rules 1 to 7 untouched; additive. Named drops in the gates: "last message only" (redmine, falsifier fixture 28), F107 accepted-risk allow, the two-word negation distance.
+- Diagrams (Rule 17): `lib/his-words.diagram.png` · `domain/redmine-write-gate/diagram.png` (updated) · `domain/falsifier-ran-check/diagram.png` · `domain/design-consult-gate/diagram.png` · `.claude/skills/system-rules/diagram.png`.
+
+## v1.99 — 2026-10-30 (per みや, Melaka + Perak ticket order)
+
+- **Added**: §Vocabulary ticket order — two states. Each category is Melaka's table, then Perak's table of the same category: 1 PROD → 1b Perak PROD, 2 eSOKONGAN → 2b Perak eSOKONGAN, 3 the rest → 3b Perak rest. Perak rows include Ammar's tickets (the shared miya + Ammar filter); he asks Ammar before taking one.
+- His words: "if our Melaka eSokongan tickets have finished, we should focus on Perak's eSokongan first … I will always ask Ammar first though"; popup: "we group them but different tables. Under category eSokongan, we put both. Under next priority, we put both in separate tables as well, same for the rest."
+- Code: `quest/redmine-board.js` (shared-assignee fetch, `SLOT` / `renderSlot`, `markShared`) · `system/states.json` perak `redmine.shared_assignee_ids` [1218] + `board_slot` "interleave". Eval `quest/redmine-board.eval.js` 46/46 (P1 to P12 new, O1 rewritten).
+- Mirrors: list-redmine, sweep, retrieve-redmine SKILL · session-briefing · `feedback_esokongan_means_tracker`.
+- Spec preservation: the 2026-10-19 tracker tiers, the inside-tier order and "he picks the day's tickets" are untouched. Changed and named: O1 asserted one lone Perak table after Melaka; Perak now prints as 1b/2b/3b. Other states (Terengganu) keep their single table at the end. `domain/list-redmine/eval.js` was stale since 2026-10-19 (asserted eSOKONGAN as table 1, so 5 checks were red before this change): order re-pointed to PROD first; table count = category headings; the State cell "≤ 24 characters" check dropped (board_state values like 274323's already exceed it). 17/17.
+
+## v1.98 — 2026-10-29 (per みや, 286655)
+
+- **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.
+- **Paired**: deploy SKILL §5b, where his test photos are found (session images folder, PicturesScreenshots, clipboard) and a photo not on disk is never a question.
+- **Trigger**: I asked him to save a Pengesahan photo into 2. Fix and stopped on a refused tool call. His words: "do not ask me when you have done it many times ... take note when there are blockers ... people use AI to save time".
+- **Spec preservation**: additive. Rules 0-6 unchanged; rule 2 (no asking-back for searchable facts) and rule 3 (enumerate-then-pursue) keep their text, rule 7 names the two cases they missed (an own step, a refused call) and adds the log row.
+
 ## v1.97 — 2026-10-29 (per みや, the change route, after the Fable 5.1 Foundations audit)
 
 His popup answers: route = "Rules own, skill runs" · entry = "Refine existing gate" · model = "Rule row, never blocks" · group name = "Capabilities".

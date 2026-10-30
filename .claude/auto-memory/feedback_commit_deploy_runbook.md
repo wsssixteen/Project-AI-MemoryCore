@@ -254,3 +254,5 @@ Related: [[feedback_uat_fat_environments]]
 - A version tagged in etanah-common git may not be in nexus yet (`1.10.17-MLK`). Check `maven-metadata.xml` before pinning.
 - Facts + evidence: `etanah-knowledge/melaka/BRANCH-AND-DEPLOY.md` section 7 "Common pin at the catch-up".
 **Why**: a different common on staging means the BA no longer tests the release she was given.
+
+- 2026-10-29 (from the 2026-09-18 assessment file, in git history; recovered 2026-10-29): Env-version skew: a fix verified on staging is not verified for an env on a different feature build (MLIT had #263304 and still crashed on cycle 1).

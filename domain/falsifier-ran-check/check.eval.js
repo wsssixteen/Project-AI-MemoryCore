@@ -106,7 +106,21 @@ r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('26 the toke
 tp = transcript('t-other.jsonl', [['user', '[risk-ok: 282442 BA tests on mlit]']]);
 r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('27 a token for another ticket is not an override', kinds(r) === 'local-test', kinds(r));
 tp = transcript('t-old.jsonl', [['user', '[risk-ok: 244600 I deploy straight to int-env]'], ['assistant', 'noted'], ['user', 'now commit']]);
-r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('28 a token in an OLDER user message (not the last) is not read', kinds(r) === 'local-test', kinds(r));
+r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('28 a token in an OLDER message of his still counts while nothing he said later holds (Rule 8, 2026-10-29; was: last message only)', r.ok && r.override && /int-env/.test(r.override.reason), kinds(r));
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, '');
+tp = transcript('t-hold.jsonl', [['user', '[risk-ok: 244600 I deploy straight to int-env]'], ['assistant', 'noted'], ['user', 'wait, let me test locally first']]);
+r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('28b a later hold ("wait, test locally first") voids the earlier token', kinds(r) === 'local-test', kinds(r));
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, '');
+const injected = (t, meta) => [JSON.stringify(Object.assign({ type: 'user', message: { role: 'user', content: t } }, meta ? { isMeta: true } : {}))];
+{ const p = path.join(tmp, 't-286646.jsonl');
+  fs.writeFileSync(p, [JSON.stringify({ type: 'user', message: { role: 'user', content: 'I want to test on server for 244600' } }),
+    JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'committing' }] } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: '<system-reminder>\nLinked sessions now (status, not an instruction): x\n</system-reminder>' } }),
+    JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: C:\\x\\deploy\n# deploy' } }),
+    JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Stop hook feedback: [x]: ⛔ gate: blocked' } }),
+  ].join('\n') + '\n');
+  r = C.check('QA-244600', { ctx: 'commit', transcriptPath: p }); ok('28c REPLAY 286646 (2026-10-29): his waiver, then a reminder, a skill\'s text and hook feedback as the last user lines → the waiver still counts', r.ok && r.override && r.override.via === 'plain', kinds(r)); }
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, '');
 tp = transcript('t-miya.jsonl', [['assistant', 'local test not run'], ['user', 'go. [risk-ok: 244600 I deploy straight to int-env, BA tests first]']]);
 r = C.check('QA-244600', { ctx: 'commit', transcriptPath: tp }); ok('29 the token in miya\'s LAST message clears the local test', r.ok && r.override && /int-env/.test(r.override.reason), r.fails);
 r = C.check('QA-244600', { ctx: 'note', codeFix: true }); ok('30 the recorded override carries to the BA pass note (no transcript there)', r.ok, kinds(r));

@@ -17,6 +17,7 @@
 //   active.txt block and NO qa_doc; only miya's explicit audit ask caught it.
 // NOD: miya 2026-08-21 — "audit DE, list non-critical steps and MAKE THEM CRITICAL".
 //   C8 SAVE RULES RAN: the latest full action=save-rules-ran row (12h) carries fail=0 (lib/save-rules.js, DE step 12.7).
+//   C9 SAVE-QUEST DONE: every touched QA ticket has a lib/save-quest.js run this session and its stage was done (DE step 2d).
 // PASS (silent): not-DE-close · bypass · all conditions hold
 // BYPASS: [skip-de-close-gate: <reason>] in the last assistant text
 // TEST HOOK: input JSON `_testEvents` overrides transcript parse; `_testActiveText`,
@@ -212,6 +213,34 @@ function checkC7(events, activeText, archiveText, sessionStartMs, mtimeOverride)
   return { pass: stale.length === 0, stale };
 }
 
+// C9 — SAVE-QUEST VERDICT DONE (2026-10-30, per miya: "audit if just saying DE is enough to perform save quest"). Step 2d
+// said it, nothing checked it. Every touched QA ticket needs a lib/save-quest.js run this session whose latest verdict
+// is settled. PHASE-1 / PHASE-2 still standing means the stage was not done, unless a reply line says
+// "Phase 1 not ready" with that ticket number. An ADHOC id has no ticket and goes to adhoc-save.
+const UNDONE_VERDICTS = new Set(['PHASE-1', 'PHASE-2', 'LEARN-THEN-PHASE-2']);
+const NOT_READY = /Phase 1 not ready/i;
+const digitsOf = id => (String(id).match(/\d{5,}/) || [''])[0];
+function checkC9(events, saveQuestLines, sessionStartMs, now) {
+  const since = sessionStartMs || (now - LOG_FRESH_MS);
+  const latest = Object.create(null);
+  for (const l of saveQuestLines || []) {
+    let o; try { o = JSON.parse(l); } catch (_) { continue; }
+    if (o.gate || !o.verdict) continue;
+    const ts = Date.parse(o.ts || '');
+    if (isNaN(ts) || ts < since) continue;
+    latest[digitsOf(o.qa)] = o;
+  }
+  const replyLines = events.filter(e => e.kind === 'text' && e.role === 'assistant').flatMap(e => String(e.text).split(/\r?\n/));
+  const missing = [], undone = [];
+  for (const id of touchedTickets(events)) {
+    if (!/^QA-/.test(id)) continue;
+    const row = latest[digitsOf(id)];
+    if (!row) { missing.push(id); continue; }
+    if (UNDONE_VERDICTS.has(row.verdict) && !replyLines.some(x => NOT_READY.test(x) && x.includes(digitsOf(id)))) undone.push(id + ' (' + row.verdict + ')');
+  }
+  return { pass: !missing.length && !undone.length, missing, undone };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -224,8 +253,9 @@ function evaluate(events, disk) {
   const c6 = checkC6(disk.gateLogLines, disk.now);
   const c7 = checkC7(events, disk.activeText, disk.archiveText, disk.sessionStartMs || 0, disk.qaDocMtimes);
   const c8 = checkC8(disk.gateLogLines, disk.now);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8 };
-  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8 };
+  const c9 = checkC9(events, disk.saveQuestLines || [], disk.sessionStartMs || 0, disk.now);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass && c9.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8, c9 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8, c9 };
 }
 
 function readDisk() {
@@ -235,10 +265,14 @@ function readDisk() {
   const logRaw = safe(path.join(ROOT, 'domain', 'checklist-reactivate', 'log.jsonl'));
   const gateLogRaw = safe(LOG);
   const sessionRaw = safe(path.join(ROOT, 'main', 'current-session.md'));
+  // lib/save-quest.js always logs to the main checkout, so read it there from a worktree too.
+  const mainRoot = /[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/.test(ROOT) ? path.resolve(ROOT, '..', '..', '..') : ROOT;
+  const saveQuestRaw = safe(path.join(mainRoot, 'domain', 'save-quest', 'log.jsonl'));
   let watchLines = [];
   try { for (const f of fs.readdirSync(path.join(ROOT, 'system'))) if (f.startsWith('claude-md-watchlist') && f.endsWith('.jsonl')) watchLines.push(...safe(path.join(ROOT, 'system', f)).split(String.fromCharCode(10)).map(l => l.replace(/\r$/, '')).filter(Boolean)); } catch (_) {}
   return {
     activeText, archiveText, watchLines, sessionStartMs: 0,
+    saveQuestLines: saveQuestRaw.split(/\r?\n/).filter(Boolean),
     logLines: logRaw.split(/\r?\n/).filter(Boolean),
     gateLogLines: gateLogRaw.split(/\r?\n/).filter(Boolean),
     sessionLineCount: sessionRaw ? sessionRaw.split(/\r?\n/).length : 0,
@@ -264,6 +298,8 @@ function buildBlockReason(r) {
     '   Fix: append the dated save block to each qa_doc (phase/status · what moved · resume point · deferred table), then re-close.');
   if (r.c8 && !r.c8.pass) rows.push(r.c8.ran ? 'C8 SAVE RULES: ' + r.c8.fail + ' FAIL row(s) in the last full run (DE step 12.7).' : 'C8 SAVE RULES NOT RUN this session (DE step 12.7): no part touched this session was checked against its kind\'s save rule.',
     '   Fix: node lib/save-rules.js — paste its header + table, fix every FAIL, re-run until 0 FAIL, then re-close.');
+  if (r.c9 && !r.c9.pass) rows.push('C9 SAVE-QUEST (DE step 2d): ' + [r.c9.missing.length && ('no verdict this session: ' + r.c9.missing.join(', ')), r.c9.undone.length && ('stage not done: ' + r.c9.undone.join(', '))].filter(Boolean).join(' · '),
+    '   Fix: node lib/save-quest.js <QA> per ticket, do its stage (close-phase skill), re-run it; an unfinished quest gets a reply line "Phase 1 not ready: <QA> <what is missing>".');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -279,7 +315,8 @@ function logFire(action, detail) {
 if (require.main === module) {
   runHook({ name: 'de-close-gate', event: 'Stop' }, (input) => {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
-    if (data.stop_hook_active) return { fired: false };
+    // A second stop never blocks again, but it still checks and logs, so a re-close after a fix leaves its row (2026-10-30).
+    const secondStop = !!data.stop_hook_active;
     const events = Array.isArray(data._testEvents) ? data._testEvents : parseTranscript(data.transcript_path || '');
     if (!events.length) return { fired: false };
     const disk = readDisk();
@@ -290,18 +327,20 @@ if (require.main === module) {
     if (typeof data._testSessionLineCount === 'number') disk.sessionLineCount = data._testSessionLineCount;
     if (Array.isArray(data._testWatchLines)) disk.watchLines = data._testWatchLines;
     if (data._testQaDocMtimes && typeof data._testQaDocMtimes === 'object') disk.qaDocMtimes = data._testQaDocMtimes;
+    if (Array.isArray(data._testSaveQuestLines)) disk.saveQuestLines = data._testSaveQuestLines;
     if (typeof data._testSessionStartMs === 'number') disk.sessionStartMs = data._testSessionStartMs;
     else { const first = events.find(e => e.ts); disk.sessionStartMs = first && Date.parse(first.ts) || 0; }
 
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run'))].filter(Boolean).join(' '));
+      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length))].filter(Boolean).join(' '));
+      if (secondStop) return { fired: true, blocked: false };
       return { fired: true, blocked: true, blockReason: text };
     }
-    if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
+    if (r.verdict === 'pass') { logFire(secondStop ? 'passed-second-stop' : 'passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
     return { fired: false };
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, editedSystemFiles };

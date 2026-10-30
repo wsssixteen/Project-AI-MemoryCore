@@ -18,7 +18,7 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 function writeTranscript(file, assistantText) {
   const p = path.join(os.tmpdir(), file);
   const lines = [
-    JSON.stringify({ message: { role: 'user', content: [{ type: 'text', text: 'please answer' }] } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'please answer' }] } }),
     JSON.stringify({ message: { role: 'assistant', content: [{ type: 'text', text: assistantText }] } }),
   ];
   fs.writeFileSync(p, lines.join('\n') + '\n', 'utf8');
@@ -89,8 +89,8 @@ check('F4 short reply (<800 chars) passes regardless of shape', r.status === 0 &
 function writeQA(file, userText, assistantText) {
   const p = path.join(os.tmpdir(), file);
   fs.writeFileSync(p, [
-    JSON.stringify({ message: { role: 'user', content: [{ type: 'text', text: userText }] } }),
-    JSON.stringify({ message: { role: 'user', content: [{ type: 'tool_result', content: 'ok' }] } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: userText }] } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: 'ok' }] } }),
     JSON.stringify({ message: { role: 'assistant', content: [{ type: 'text', text: assistantText }] } }),
   ].join('\n') + '\n', 'utf8');
   return p;
@@ -119,7 +119,18 @@ check('F10 a question that asks for a list/board/table is NOT capped', !isBlocke
 qp = writeQA('fixture-terse-q7.jsonl', 'Then how much has Izz progressed on his branch?', longTables); qaPaths.push(qp);
 r = runHook(qp);
 check('F11 a plain how-much question is capped', isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
-// --- F12..F15: ticket number with a hashtag (2026-10-27) ---
+// --- F20: his word, then an injected skill line as the last user line -> the gate still reads his word (his-words, 2026-10-29)
+{
+  const p2 = path.join(os.tmpdir(), 'fixture-terse-injected.jsonl');
+  fs.writeFileSync(p2, [
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'why we have to include plps and mlps together not separately?' }] } }),
+    JSON.stringify({ type: 'user', isMeta: true, message: { role: 'user', content: 'Base directory for this skill: x' } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'Base directory for this skill: y' }] } }),
+    JSON.stringify({ message: { role: 'assistant', content: [{ type: 'text', text: longTables }] } }),
+  ].join('\n') + '\n', 'utf8');
+  r = runHook(p2);
+  check('F20 his question then an injected skill line: still read as his short question (BLOCKED)', isBlocked(r) && /short question/.test(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 80));
+}// --- F12..F15: ticket number with a hashtag (2026-10-27) ---
 qp = writeQA('fixture-terse-h1.jsonl', 'is 286462 for reports?', 'Yes. #286462 goes to the Reports team.'); qaPaths.push(qp);
 r = runHook(qp);
 check('F12 short reply with #286462 is BLOCKED', isBlocked(r) && /hashtag/.test(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 80));

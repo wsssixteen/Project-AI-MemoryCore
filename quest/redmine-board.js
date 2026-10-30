@@ -131,10 +131,18 @@ function fetchOne(filter, { scoped = true } = {}) {
     });
 }
 
+// SHARED ASSIGNEES (miya 2026-10-30): a state that names redmine.shared_assignee_ids (Perak:
+// Ammar) also shows that colleague's tickets on ITS projects — the shared miya + Ammar filter.
+const sharedIdsOf = s => ((s && s.redmine && s.redmine.shared_assignee_ids) || []).map(Number).filter(Boolean);
+
 async function fetchIssues() {
+    const shared = otherActiveStates().filter(s => sharedIdsOf(s).length);
     const batches = await Promise.all([
         ...FILTERS.map(f => fetchOne(f)),
         fetchOne('assigned_to_id=me', { scoped: false }), // cross-state safety net
+        ...shared.map(s => fetchOne(`assigned_to_id=${sharedIdsOf(s).join('|')}`, { scoped: false })
+            .then(list => list.filter(i => projectNamesOf(s).includes(String(i.project && i.project.name || '').trim().toLowerCase()))
+                .map(i => ({ ...i, shared: true })))),
     ]);
     const byId = new Map();
     for (const batch of batches) for (const issue of batch) byId.set(issue.id, issue);
@@ -291,6 +299,7 @@ function shape(issues, today, trainByVersion, states) {
             project: i.project ? i.project.name : '(unknown)',
             subject: (i.subject || '').trim(),
             urgent: urgentWords(i.description),
+            ...(i.shared ? { shared: true } : {}),
         };
     });
 }
@@ -347,6 +356,8 @@ function categoryOf(r) {
 //   3 Internal Issue 53 · QA 15
 //   4 CR (68 70 73 74 75) · Development 12 · Requirement(s) 13 28
 //   9 not placed yet: Team Initiative (no tracker of that name), any other tracker
+// Two states (miya 2026-10-30): each Melaka table is followed by Perak's table of the same
+// category (1b · 2b · 3b), Ammar's Perak tickets included — see SLOT / renderSlot below.
 const TRACKER_TIER = new Map([
     ...[63, 64, 71].map(id => [id, 0]),
     ...[51, 30, 31, 32, 36, 37, 38, 39, 40, 45, 46, 47, 57, 58].map(id => [id, 1]),
@@ -427,9 +438,37 @@ function splitByState(offRows) {
         const hit = rest.filter(r => names.has(String(r.project || '').trim().toLowerCase()));
         if (!hit.length) continue;
         rest = rest.filter(r => !hit.includes(r));
-        boards.push({ state: s.key, label: s.label || s.key, rows: hit });
+        boards.push({ state: s.key, label: s.label || s.key, rows: hit,
+            ...(s.redmine.board_slot === 'interleave' ? { interleave: true } : {}) });
     }
     return { boards, rest };
+}
+
+// A shared colleague's row with no quest block shows who holds it, e.g. "Ammar Zakwan · New".
+function markShared(rows) {
+    for (const r of rows) {
+        if (!isMe(r.assignee) && r.state === 'Not drafted') r.state = `${r.assignee.replace(/\s*\([^)]*\)\s*$/, '').trim()} · ${r.status}`;
+    }
+}
+function whoLabel(rows) {
+    const names = [...new Set(rows.filter(r => !isMe(r.assignee)).map(r => r.assignee.replace(/\s*\([^)]*\)\s*$/, '').trim()))];
+    return names.length ? `assigned to you or ${names.join(', ')}` : 'assigned to you';
+}
+
+// INTERLEAVE (miya 2026-10-30): a state with board_slot "interleave" (Perak) prints one table per
+// category, each right after the Melaka table of the same category: 1b PROD · 2b eSOKONGAN · 3b rest.
+// A category with no row prints no table, so a Melaka-only board keeps its exact bytes.
+const SLOT = {
+    patch:     { n: '1b', what: 'PROD',              rank: 'priority, urgent, then oldest',  fn: rows => rankAged(rows) },
+    esokongan: { n: '2b', what: 'eSOKONGAN tracker', rank: 'priority, urgent, then nearest due', fn: rows => rankEsokongan(rows) },
+    other:     { n: '3b', what: 'Internal fixes & other', rank: 'tracker tier, priority, urgent, then oldest', fn: rows => rankAged(rows) },
+};
+function renderSlot(board, cat) {
+    const rows = board.rows.filter(r => categoryOf(r) === cat);
+    if (!rows.length) return null;
+    const s = SLOT[cat];
+    return [`### ${s.n}. ${board.label} ${s.what} — ${rows.length} open, ${whoLabel(rows)} (ranked: ${s.rank})`, '',
+        ...HEADER6, ...renderRows6(s.fn(rows))].join('\n');
 }
 
 // One table per state, same order as the three Melaka tables stacked: PROD, then the
@@ -444,7 +483,7 @@ function rankStateBoard(rows) {
 }
 
 function renderStateBoard(board) {
-    return [`### ${board.label} — ${board.rows.length} open, assigned to you (ranked: PROD, then eSOKONGAN tracker, then the rest by tracker tier; inside each: priority, urgent, then due / oldest)`, '',
+    return [`### ${board.label} — ${board.rows.length} open, ${whoLabel(board.rows)} (ranked: PROD, then eSOKONGAN tracker, then the rest by tracker tier; inside each: priority, urgent, then due / oldest)`, '',
         ...HEADER6, ...renderRows6(board.rows)].join('\n');
 }
 
@@ -486,7 +525,7 @@ async function main(argv) {
     // Anything assigned to miya OUTSIDE the Melaka project — another state, another
     // programme. Surfaced separately so it can never be mistaken for Melaka work,
     // and can never be silently dropped by the Melaka-scoped filters either.
-    const offProject = rows.filter(r => isMe(r.assignee) && !MELAKA_PROJECTS.has(r.project));
+    const offProject = rows.filter(r => (isMe(r.assignee) || r.shared) && !MELAKA_PROJECTS.has(r.project));
     rows = rows.filter(r => !offProject.includes(r));
     const { boards: stateBoards, rest: offOther } = splitByState(offProject);
 
@@ -504,7 +543,10 @@ async function main(argv) {
     for (const b of stateBoards) {
         await stampReceivedDays(b.rows, today);
         b.rows = rankStateBoard(b.rows);
+        markShared(b.rows);
     }
+    const slotted = stateBoards.filter(b => b.interleave);
+    const printSlot = cat => { for (const b of slotted) { const t = renderSlot(b, cat); if (t) { console.log(''); console.log(t); } } };
 
     // --state <key>: only that state's table. The home (Melaka) key prints the normal board.
     if (args.includes('--state')) {
@@ -542,15 +584,18 @@ async function main(argv) {
     // Default is MINE ONLY (miya 2026-08-05: "present to me ONLY my list").
     // The colleagues' table is still built — ask for it with --tracking.
     console.log(renderPatch(minePatch));
+    printSlot('patch');
     console.log('');
     console.log(renderEsokongan(mineEsok));
+    printSlot('esokongan');
     console.log('');
     console.log(renderOther(mineOther));
+    printSlot('other');
     if (args.includes('--tracking')) {
         console.log('');
         console.log(renderOthers(others));
     }
-    for (const b of stateBoards) {
+    for (const b of stateBoards.filter(x => !x.interleave)) {
         console.log('');
         console.log(renderStateBoard(b));
     }

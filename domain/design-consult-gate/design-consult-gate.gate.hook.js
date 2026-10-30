@@ -130,6 +130,33 @@ function detectNewSymbol(oldStr, newStr) {
   return newSyms.length ? newSyms.join(', ') : null;
 }
 
+// OWN-READER RIDER (2026-10-29, system-rules Rule 8 — after five refused Submits he had ordered): a hook, gate or lib
+// file may not parse transcript user lines itself to decide on miya's words. It requires lib/his-words.js (the one
+// reader) or, when its reader is not about his words (a turn boundary, a prompt count), it carries the line
+// `// his-words: not an approval reader — <why>`. Checked on the content being written; bypass [skip-own-reader: <why>].
+const READER_PATHS = [
+  /[\\/]\.claude[\\/]hooks[\\/][^\\/]+\.js$/i,
+  /[\\/]domain[\\/][^\\/]+[\\/][^\\/]+\.js$/i,
+  /[\\/]lib[\\/][^\\/]+\.js$/i,
+];
+const READER_EXEMPT = /[\\/](?:lib[\\/]his-words\.js|[^\\/]*\.eval\.js|eval\.js|eval\.workflow\.js)$/i;
+let HW = null; try { HW = require((process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..')) + '/lib/his-words.js'); } catch (_) { HW = null; }
+const USES_READER = /his-words(?:\.js)?['"]/;
+const NOT_APPROVAL_MARK = /\/\/\s*his-words:\s*not an approval reader/i;
+function ownReaderProblem(filePath, ti) {
+  if (!HW || !READER_PATHS.some(re => re.test(filePath)) || READER_EXEMPT.test(filePath)) return null;
+  const newText = typeof ti.content === 'string' ? ti.content : (typeof ti.new_string === 'string' ? ti.new_string : '');
+  if (!newText || !HW.OWN_READER.test(newText)) return null;
+  let whole = newText;
+  if (typeof ti.new_string === 'string') {
+    let existing = ''; try { existing = fs.readFileSync(filePath, 'utf8'); } catch (_) { existing = ''; }
+    whole = existing.includes(ti.old_string || '') && ti.old_string ? existing.replace(ti.old_string, ti.new_string) : existing + '\n' + newText;
+  }
+  if (USES_READER.test(whole) || NOT_APPROVAL_MARK.test(whole)) return null;
+  const line = newText.split('\n').find(l => HW.OWN_READER.test(l)) || '';
+  return line.trim().slice(0, 100);
+}
+
 // Bypass tokens are only valid when *I deliberately write them* — an ASSISTANT text
 // block in the CURRENT turn. Shared primitive (2026-08-21 self-disarm fix, 8 gates).
 let bypassInCurrentTurn; try { bypassInCurrentTurn = require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { bypassInCurrentTurn = function () { return false; }; } // env-first + fail-CLOSED (bypass ignored if lib unreachable) — 2026-08-21 self-disarm fix
@@ -154,6 +181,21 @@ process.stdin.on('end', () => {
     const filePath = ti.file_path || ti.path || '';
     const isGuarded = GUARDED.some(re => re.test(filePath));
     const isEtanah = ETANAH_PATHS.some(re => re.test(filePath));
+
+    // Own-reader rider runs first: it is about WHAT is written, whatever else the gate decides about the path.
+    const ownReader = ownReaderProblem(filePath, ti);
+    if (ownReader && !bypassInCurrentTurn(data.transcript_path, /\[skip-own-reader:/i)) {
+      logFire(filePath, 'blocked-own-reader', ownReader);
+      const reason = [
+        '⛔ design-consult-gate (Rule 8 rider): this code reads transcript user lines itself to decide on miya\'s words.',
+        `   line: ${ownReader}`,
+        '   One reader only: const { lastHis, hisMessages, decide } = require(path.join(ROOT, \'lib\', \'his-words.js\'));',
+        '   Not about his words (a turn boundary, a prompt count)? Put the line  // his-words: not an approval reader — <why>  in the file.',
+        '   Why: 2026-10-29, five Submits he had ordered were refused because seven gates each read "the last user line" their own way.',
+      ].join('\n');
+      process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason } }));
+      process.exit(0);
+    }
 
     if (!isGuarded && !isEtanah) process.exit(0);
 

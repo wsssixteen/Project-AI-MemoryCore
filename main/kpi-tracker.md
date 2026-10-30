@@ -6,14 +6,14 @@
 
 | Code | Competency | Rows | Latest |
 |---|---|---|---|
-| B1 | Technical & Domain Knowledge | 1 | 2026-05-31 |
+| B1 | Technical & Domain Knowledge | 2 | 2026-10-29 |
 | B2 | Quality of Work | 1 | 2026-10-23 |
 | B3 | Delivery & Planning | 0 | - |
 | B4 | Ownership & Initiative | 4 | 2026-10-29 |
 | B5 | Communication | 0 | - |
 | B6 | Teamwork & Collaboration | 1 | 2026-10-23 |
 | C1 | Code Quality & Engineering Practice | 0 | - |
-| C2 | Problem Solving & Production Support | 2 | 2026-10-23 |
+| C2 | Problem Solving & Production Support | 3 | 2026-10-30 |
 
 ## Pending — counts once its condition holds (printed at every session start)
 
@@ -25,6 +25,7 @@
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-10-29 | #286646 | Proved that the jenis hakmilik check used for PLTP and PSBS cannot refuse a strata petak, because a petak carries the same jenis PN as its land, and built the MCL check on the strata parent link instead. | PROD ind_hkmlk 040141PN00001856/M1/4/28 jns 4 strata_induk 13377 · commit 1ac43f7b0d CarianRasmiHakmilikForm.java |
 | 2026-05-31 | #259702 | Traced all 12 content-control populators of the PRU risalat templates to their source and proved the faults were in the data, not the code. | projects/coding-projects/archive/QA-259702/QA-259702.md |
 
 ## B2 — Quality of Work
@@ -64,5 +65,6 @@ _No rows yet._
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-10-30 | ADHOC-MCL-2026-3 | Found that a 2026-06-19 commit stops the MCL Semakan Kemasukan Maklumat save at the premium check, so Tajuk Risalat is never saved and PROD Laporan Tanah has no Perkara. | etanah-pelupusan 5734174bd9 (#265081) MlkMaklumatTanahLesenPendudukanForm.performCustomSave :686-691; Redmine 223227 comments 12, 14, 19; PROD 0 of 37 MCL at PLT have tajukRisalat |
 | 2026-10-23 | #265109 | Traced the Lulus panel failure to a colleague's commit and proved it at runtime from the server's exception log. | commit c162244010 · et_sistem_mlit.pt_application_ex_entity rows 419180-419183 |
 | 2026-10-20 | #275092 | Cleared a Perak PROD Seterusnya error by altering the flow one tugasan hop at a time. | #275092 journal (20 entries) · projects/coding-projects/archive/QA-275092/QA-275092.md |
