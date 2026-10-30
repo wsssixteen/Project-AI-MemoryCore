@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29, worktree "jovial-kepler-a07ba6", 286646 MCL strata)
+- 286646: AWAM `CarianRasmiHakmilikForm` refuses a strata hakmilik (`strataInduk != null`) for MCL on Cari, tick and Teruskan, Melaka only. Commit 1ac43f7b0d on mlk/esokongan/286646, merged into AWAM mlk/int-env e363158157.
+- miya tested on internal: strata receipt 260810BSAT00038 shows the Ralat on Cari and tick, Teruskan off. Land receipt 261016BSAT00003 not tested (accepted risk). The row still loads into Senarai Hakmilik; expected, same as the PLTP/PSBS jenis check.
+- Redmine journal 5 (21:43): Resolved, Anis Nabilah J Daud, 100%, Root Cause (DEV) + Solutions + Resolved By, BA note + 2 photos from `2. Fix`. Quest status=closed; archive waits for Redmine Closed.
+- Slips: told him to test on staging when the BA env is internal ("are you broken?"). Gates read a mid-turn or app message as his last message (falsifier ledger, redmine-write-gate submit), so his approvals were missed twice.
+- Open: ticket onto the planned-release list; kaunter (SPOC) route and draft p_aplikasi 68769 not covered by this fix (BA told).
+
+**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
+
 ## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", 285768 hotfix)
 - 285768: common 1.10.20-MLK (Haikal's note) is already on `mlk/release/1.9.0`. Per the team lead, a hotfix branch `mlk/hotfix/285768` off master: one pom line 1.10.8 -> 1.10.20-MLK, `da08e3d6cf`, pushed, compile green. Infra deployed it to etanah-hx6.melaka.gov.my/etanah-pelupusan.
 - Redmine Closed 14:39; Nurul Amani Verified STAG 16:08. Quest saved: Phase 2 run, archived (save-quest = DONE), bounty written, 3 .main/zip pruned from the archived folder (copies in PROD DMS via 287292).
@@ -6945,6 +6954,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

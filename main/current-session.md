@@ -29,12 +29,3 @@
 - Open: ticket onto the planned-release list; 4 BA questions (cop+QR side effect, PT/PSBS/PLTP scope, row a) Jenis Hakmilik, label wording) unanswered.
 
 **Last Activity**: 2026-10-29 21:52 — worktree `jovial-kepler-a07ba6` (child of "Sweep 3 tickets + audit"), 286646 MCL strata check handed to BA, quest Phase 1 closed, Domain Expansion.
-
-## Session Recap (2026-10-29, worktree "jovial-kepler-a07ba6", 286646 MCL strata)
-- 286646: AWAM `CarianRasmiHakmilikForm` refuses a strata hakmilik (`strataInduk != null`) for MCL on Cari, tick and Teruskan, Melaka only. Commit 1ac43f7b0d on mlk/esokongan/286646, merged into AWAM mlk/int-env e363158157.
-- miya tested on internal: strata receipt 260810BSAT00038 shows the Ralat on Cari and tick, Teruskan off. Land receipt 261016BSAT00003 not tested (accepted risk). The row still loads into Senarai Hakmilik; expected, same as the PLTP/PSBS jenis check.
-- Redmine journal 5 (21:43): Resolved, Anis Nabilah J Daud, 100%, Root Cause (DEV) + Solutions + Resolved By, BA note + 2 photos from `2. Fix`. Quest status=closed; archive waits for Redmine Closed.
-- Slips: told him to test on staging when the BA env is internal ("are you broken?"). Gates read a mid-turn or app message as his last message (falsifier ledger, redmine-write-gate submit), so his approvals were missed twice.
-- Open: ticket onto the planned-release list; kaunter (SPOC) route and draft p_aplikasi 68769 not covered by this fix (BA told).
-
-**Last Activity**: 2026-10-29 21:30 — worktree `common-version-1-10-20-mlk-c5ee8f`, 285768 hotfix branch + quest archived (Redmine Closed), Domain Expansion.
