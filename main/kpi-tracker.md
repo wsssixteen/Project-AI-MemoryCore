@@ -13,7 +13,7 @@
 | B5 | Communication | 0 | - |
 | B6 | Teamwork & Collaboration | 1 | 2026-10-23 |
 | C1 | Code Quality & Engineering Practice | 0 | - |
-| C2 | Problem Solving & Production Support | 2 | 2026-10-23 |
+| C2 | Problem Solving & Production Support | 3 | 2026-10-30 |
 
 ## Pending — counts once its condition holds (printed at every session start)
 
@@ -65,5 +65,6 @@ _No rows yet._
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-10-30 | ADHOC-MCL-2026-3 | Found that a 2026-06-19 commit stops the MCL Semakan Kemasukan Maklumat save at the premium check, so Tajuk Risalat is never saved and PROD Laporan Tanah has no Perkara. | etanah-pelupusan 5734174bd9 (#265081) MlkMaklumatTanahLesenPendudukanForm.performCustomSave :686-691; Redmine 223227 comments 12, 14, 19; PROD 0 of 37 MCL at PLT have tajukRisalat |
 | 2026-10-23 | #265109 | Traced the Lulus panel failure to a colleague's commit and proved it at runtime from the server's exception log. | commit c162244010 · et_sistem_mlit.pt_application_ex_entity rows 419180-419183 |
 | 2026-10-20 | #275092 | Cleared a Perak PROD Seterusnya error by altering the flow one tugasan hop at a time. | #275092 journal (20 entries) · projects/coding-projects/archive/QA-275092/QA-275092.md |

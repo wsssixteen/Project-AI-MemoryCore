@@ -9,6 +9,9 @@
 // v3 BLOCK: a quest reply (names an active quest's ticket number) with a Next steps table and no image sent this turn
 //           and no "Diagram: none (<reason>)" line — 2026-10-29 miya on 286655: "I didn't see any story diagram using
 //           your diagram skill to decide. Why do you fail to show this on every quest run?"
+// v4 BLOCK: EVERY quest reply (names an active quest's ticket number), with or without a Next steps table, needs an image sent
+//           this turn or a "Diagram: none (<reason>)" line — 2026-10-30 miya on 287273: "Please ensure our current quest
+//           workflow will always stop with showing the issue using diagram skill."
 // BYPASS: [skip-next-steps-shape: <reason>] · FAIL-OPEN on any error
 // Runs inside the stop-reply-shape bundle (lib/dispatch-hooks.js), not a standalone registration (system-rules Rule 7)
 // Log: domain/next-steps-shape/log.jsonl
@@ -96,7 +99,6 @@ function activeTickets(file) {
 function evaluatePicture(text, turnEvents, tickets) {
   if (!text || BYPASS.test(text)) return { verdict: 'pass', reason: 'no-text-or-bypass' };
   const plain = text.replace(/```[\s\S]*?```/g, '');
-  if (!plain.split(/\r?\n/).some(l => HEADING.test(l))) return { verdict: 'pass', reason: 'no-next-steps' };
   const ticket = (tickets || []).find(n => new RegExp('(^|[^0-9])' + n + '([^0-9]|$)').test(plain));
   if (!ticket) return { verdict: 'pass', reason: 'not-a-quest-reply' };
   if (DIAGRAM_NONE_RE.test(plain)) return { verdict: 'pass', reason: 'diagram-none-stated' };
@@ -132,9 +134,10 @@ if (require.main === module) {
         if (p.verdict !== 'block') { log({ action: 'passed', reason: r.reason, picture: p.reason }); process.exit(0); }
         log({ action: 'blocked', reason: p.reason, detail: p.ticket });
         process.stderr.write([
-          `⛔ next-steps-shape: this ${p.ticket} reply asks miya to decide, but no picture was sent this turn.`,
-          '   Draw the urusan flow with the changed step marked, and the options side by side, with the explain-diagram skill',
-          '   (render: node lib/diagram-render.js), Read the PNG, then send it with SendUserFile (miya 2026-10-29).',
+          `⛔ next-steps-shape: this ${p.ticket} quest reply stops with no picture of the issue sent this turn.`,
+          '   Draw the issue (urusan flow, the value of concern and the changed step marked; options side by side when he decides)',
+          '   with the explain-diagram skill (render: node lib/diagram-render.js), Read the PNG, then send it with SendUserFile',
+          '   (miya 2026-10-29 / 2026-10-30: every quest stop shows the issue as a picture).',
           '   Nothing to draw this round? One line instead: Diagram: none (<reason>).',
           '   ⚡ DELTA ONLY: send just the picture, not the whole reply.',
         ].join('\n') + '\n');

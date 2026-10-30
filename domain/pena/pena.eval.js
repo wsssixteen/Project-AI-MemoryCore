@@ -19,7 +19,7 @@ const has = (r, mod) => new RegExp('\\[' + mod + '\\] line').test(r.stdout);
 
 const FINAL = [
   'Salam Anis,', '', 'Mapping as below. Start from No. Permit.', '',
-  'One No. Permit can have more than one row. Ganti Hari, Tambah Kuantiti and PDBB in progress carry the same number.',
+  'One No. Permit can have more than one row. Ganti Hari, Tambah Kuantiti and PDBB in progress carry the same number.', '',
   'The earliest row (created_date) is the original permit.', 'Use its aplikasi_id for the tables below.', '',
   '*1. Rekod Permohonan*', '', '|_. Field |_. Table |_. Column |', '| No. Permit | umm_a_permit_lesen | no_permit_lesen |', '',
   '*Scripts*', '', '1. Rekod Permohonan', '<pre>',
@@ -154,6 +154,18 @@ check('48 a closing he never uses is caught', r.status === 1 && has(r, 'greet'),
 r = run(['check', '--module', 'greet', '--file', draft('c10.txt', CL('thank you all the very best'))]);
 check('49 a closing sentence with extra words is caught', r.status === 1 && has(r, 'greet'), r.stdout);
 check('50 greet rules name the default and the large-ticket closing', modules.greet.rules.some((x) => /Default: Thank you\./.test(x)) && modules.greet.rules.some((x) => /^Thank you very much\. = a large ticket/.test(x)));
+r = run(['check', '--profile', 'redmine-dev-fixlist', '--file', draft('t1.txt', 'Salam Amirul,\n\nOn MLIT, MPT gives an error.\n\nThank you.\n')]);
+check('51 a developer hand-over asks the topdown question by hand', /\[topdown\] by hand: Read only the first lines/.test(r.stdout), r.stdout);
+check('52 topdown sits in the dev and BA profiles, never with hint', ['redmine-dev-mapping', 'redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('topdown')) && !profiles['junior-handover'].modules.includes('topdown'));
+r = run(['check', '--module', 'line', '--file', draft('p1.txt', 'Salam Amirul,\n\nBA opens MPT for MLPS.\nThe screen shows an error.\nMPT has a list of langkah.\nEach langkah has a turutan.\n\nThank you.\n')]);
+check('53 a paragraph of 4 sentences is caught', r.status === 1 && /paragraph of 4 sentences/.test(r.stdout), r.stdout);
+r = run(['check', '--module', 'line', '--file', draft('p2.txt', 'Salam Amirul,\n\nBA opens MPT for MLPS.\nThe screen shows an error.\nMPT has a list of langkah.\n\nEach langkah has a turutan.\n\nThank you.\n')]);
+check('54 paragraphs of 3 sentences or fewer pass', !/paragraph of/.test(r.stdout), r.stdout);
+r = run(['check', '--module', 'line', '--file', draft('p3.txt', 'Salam Amirul,\n\nTo check on MLIT: open PTMLK/01/L/PT/2026/36 from Carian Pintas.\n\nThank you.\n')]);
+check('55 one permohonan number is not read as 3 ids', !/3 or more ids/.test(r.stdout), r.stdout);
+r = run(['check', '--module', 'table', '--file', draft('p4.txt', 'Salam Amirul,\n\nMLPS: query did not return a unique result.\nPRBB: query did not return a unique result.\nPT: NullPointerException.\n\nThank you.\n')]);
+check('56 three label: value lines are told to become a table', /put them in a table/.test(r.stdout), r.stdout);
+check('57 attach sits in the three Redmine note profiles and table in fixlist and BA pass', ['redmine-dev-mapping', 'redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('attach')) && ['redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('table')));
 
 const failed = results.filter((x) => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 400)));

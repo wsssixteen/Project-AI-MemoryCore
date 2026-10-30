@@ -73,7 +73,11 @@ http.get = (url, opts, cb) => {
     const u = String(url);
     let body;
     if (/\/projects\/[^/]+\/issues\.json/.test(u)) body = { issues: WORLD.filter(i => MLK.includes(i)) };
-    else if (/\/redmine\/issues\.json/.test(u)) body = { issues: WORLD.filter(i => i.assigned_to.id === ME.id) };
+    else if (/\/redmine\/issues\.json/.test(u)) {
+        const who = (/assigned_to_id=([^&]+)/.exec(u) || [])[1] || '';
+        const wanted = who === 'me' ? [ME.id] : who.split('|').map(Number);
+        body = { issues: WORLD.filter(i => wanted.includes(i.assigned_to.id)) };
+    }
     else if (/\/users\/current\.json/.test(u)) body = { user: { id: ME.id } };
     else if (/\/issues\/(\d+)\.json/.test(u)) { const i = WORLD.find(x => x.id === Number(/\/issues\/(\d+)\.json/.exec(u)[1])); body = { issue: { created_on: i.created_on, journals: [] } }; }
     else body = {};
@@ -139,7 +143,9 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
 
     // ── other states + unregistered projects ────────────────────────────────────────────
     const all = await board([...MLK, ...TRG, ...PRK, ...STRAY]);
-    check('O1 a second active state (Perak) gets its own table', /^### Perak — 1 open, assigned to you/m.test(all) && ids(section(all, '### Perak')).join(',') === '3001', all);
+    check('O1 Perak (board_slot interleave) prints its rest table right after Melaka table 3, not a lone table at the end',
+        /^### 3b\. Perak Internal fixes & other — 1 open, assigned to you \(/m.test(all) && ids(section(all, '### 3b. Perak')).join(',') === '3001'
+        && !/^### Perak —/m.test(all) && all.indexOf('### 3b. Perak') > all.indexOf('### 3. Internal') && all.indexOf('### 3b. Perak') < all.indexOf('### Terengganu'), all);
     const note = (all.match(/^_🚨 Assigned to you OUTSIDE Melaka.*$/m) || [''])[0];
     check('O2 unregistered project / non-active state / stateless project keep the one-line note',
         /OUTSIDE Melaka \(3\)/.test(note) && ['#4001 [TRG_04_SPOC_Hasil]', '#4002 [eSOKONGAN SELANGOR]', '#4003 [Some [Other] Programme]'].every(s => note.includes(s)), note);
@@ -186,6 +192,38 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     // tier 1 UAT · tier 2 MA Fix (High) + Permanent Fix (Low) · tier 3 QA + Internal Issue (Medium before Low,
     // then oldest) · tier 4 Development + CR (High before Medium)
     check('K1 table 3 sorts by tracker tier before priority', ids(tierSec).join(',') === '1106,1107,1105,1103,1002,1104,1101,1102', ids(tierSec).join(','));
+
+    // ── Perak interleave + shared assignee Ammar (miya 2026-10-30) ────────────────────────
+    const AMMAR = { id: 1218, name: 'Ammar Zakwan (Dev PLP)' };
+    const PRK2 = [
+        iss(3101, 'eSOKONGAN PERAK', 51, 'eSOKONGAN', 'Medium', { assignee: AMMAR, due: '2026-11-16', status: 'New' }),
+        iss(3102, 'eSOKONGAN PERAK', 51, 'eSOKONGAN', 'High', { assignee: AMMAR, due: '2026-11-20', status: 'New' }),
+        iss(3103, 'eSOKONGAN PERAK', 71, 'Internal Issue (PROD)', 'Medium', { assignee: AMMAR, status: 'Rework' }),
+        iss(3104, 'eSOKONGAN PERAK', 77, 'Internal Issue (Permanent Fix)', 'Medium', { assignee: AMMAR }),
+        iss(3105, 'eSOKONGAN PERAK', 51, 'eSOKONGAN', 'Medium', { due: '2026-11-10' }),                  // his own Perak eSOKONGAN
+        iss(3106, 'eSOKONGAN PERAK', 53, 'Internal Issue', 'Medium', { assignee: AMMAR, status: 'Resolved' }),
+        iss(3107, 'eSOKONGAN MELAKA', 53, 'Internal Issue', 'High', { assignee: AMMAR, subject: 'Ammar Melaka row' }),
+        iss(3108, 'eSOKONGAN TERENGGANU', 51, 'eSOKONGAN', 'Medium', { assignee: AMMAR, subject: 'Ammar TRG row' }),
+    ];
+    const pr = await board([...MLK, ...PRK2]);
+    const order = ['### 1. PROD', '### 1b. Perak PROD', '### 2. eSOKONGAN', '### 2b. Perak eSOKONGAN', '### 3. Internal', '### 3b. Perak Internal'].map(h => pr.indexOf(h));
+    check('P1 order: each Perak table sits right after the Melaka table of the same category', order.every((x, n) => x >= 0 && (n === 0 || x > order[n - 1])), order.join(','));
+    check('P2 Perak eSOKONGAN: High first, then nearest due; his own row and Ammar\'s together', ids(section(pr, '### 2b. Perak')).join(',') === '3102,3105,3101', ids(section(pr, '### 2b. Perak')).join(','));
+    check('P3 Perak PROD and rest tables carry Ammar\'s rows', ids(section(pr, '### 1b. Perak')).join(',') === '3103' && ids(section(pr, '### 3b. Perak')).join(',') === '3104', pr);
+    check('P4 heading names the shared colleague', /^### 2b\. Perak eSOKONGAN tracker — 3 open, assigned to you or Ammar Zakwan \(/m.test(pr), pr);
+    check('P5 Ammar\'s row with no quest block shows who holds it and its status', /\| 3101 \|.*\| Ammar Zakwan · New \|$/m.test(pr) && /\| 3105 \|.*\| Not drafted \|$/m.test(pr), pr);
+    check('P6 Ammar\'s Resolved Perak row is hidden like any Resolved row', !ids(pr).includes(3106), ids(pr).join(','));
+    check('P7 Ammar\'s rows outside Perak projects never enter the board (Melaka-scoped passes miss 3107 by stub design; TRG not shared)',
+        !ids(pr).includes(3107) && !ids(pr).includes(3108) && !/OUTSIDE Melaka/.test(pr), pr);
+    check('P8 Melaka tables keep their bytes: the board minus the Perak tables equals the Melaka-only board',
+        pr.split(/\n\n(?=### \db\. Perak)/).map(p => p.replace(/^### \db\. Perak[\s\S]*?(?=\n\n### |$)/, '')).join('').replace(/\n+$/, '') === mlkOnly.replace(/\n+$/, ''), pr);
+    const onlyPrk = await board([...MLK, ...PRK2], ['--state', 'perak']);
+    check('P9 --state perak still prints ONE combined table: PROD, eSOKONGAN, rest', /^### Perak — 5 open, assigned to you or Ammar Zakwan/.test(onlyPrk) && ids(onlyPrk).join(',') === '3103,3102,3105,3101,3104', onlyPrk);
+    const noPrkSot = await board([...MLK, iss(3201, 'eSOKONGAN PERAK', 51, 'eSOKONGAN', 'Low', { assignee: AMMAR })]);
+    check('P10 a Perak category with no row prints no table (only 2b here)', /### 2b\. Perak/.test(noPrkSot) && !/### 1b\.|### 3b\./.test(noPrkSot), noPrkSot);
+    const jp = JSON.parse(await board([...MLK, ...PRK2], ['--json']));
+    check('P11 --json: Perak board in states[] carries the shared rows; mine[] never does', jp.states.find(s => s.state === 'perak').rows.length === 5 && !jp.mine.some(r => r.id > 3100), JSON.stringify(jp.states.map(s => s.state)));
+    check('P12 two runs are byte-identical', pr === await board([...MLK, ...PRK2]), '');
 
     // ── pure helpers ────────────────────────────────────────────────────────────────────
     const sp = B.splitByState([]);

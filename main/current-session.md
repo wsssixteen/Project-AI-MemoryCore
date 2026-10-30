@@ -1,31 +1,38 @@
-#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
+**Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
 
-## Session Recap (2026-10-29, worktree "stoic-ramanujan-634076", 286655 MLPS/OMLPS Tarikh Jadual)
-- 286655: Maklumat Jadual at Penyediaan Borang 4Ae dan L1e keeps the saved Tarikh Mula/Akhir after Simpan (MLPS + OMLPS; QA 262778 old-date reset kept). Commit 75381bb3a7 on mlk/esokongan/286655, merged int-env fa244fa194.
-- miya tested MLPS on internal PTMLK/02/L/MLPS/2026/5 (27/05/2025 to 31/12/2028 kept after Simpan, Borang 4Ae line (1) matches, Pengesahan KPPD 21:30 matches). OMLPS not tested (no OMLPS app at that tugasan on internal).
-- Redmine journal #6 (22:23, miya clicked Submit): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani. The 2 red-boxed photos in `2. Fix` did NOT attach (upload tokens lost when the form re-rendered); add them on his nod.
-- System: CLAUDE.md v1.98 Disposition 7 (own steps run without asking; blockers logged and routed around) + deploy §5b photo finding (37e702ed).
-- Slips: asked him to save a photo I could find myself; redmine-write-gate could not see "submit it" sent as a huge pasted block (read "(none)") and blocked the Submit twice.
-- Open: attach the 2 photos to 286655; ticket onto the planned-release list; OMLPS untested.
+## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
+- ADHOC-MCL-2026-3: PROD MCL Laporan Tanah has no Perkara. Tajuk Risalat is never saved at SKM since 5734174bd9 (Aaron, 2026-06-19, ticket 265081) added else-return on empty premium in MlkMaklumatTanahLesenPendudukanForm.performCustomSave. PROD 0 of 37 MCL at PLT have it; PT, PLPS, PRBB, PLTP, PRZ all do. Requirement 223227 says the tajuk is created at SKM, verified 2026-05-21; its commits are all still in master.
+- Answered BA in miya's words ("So need code fix"). Teknikal patches /18 and /26 through their own 287350. Save-set: Task folder 345, register A83, latent L31, audit 33/33. On hold + archive hold, waiting a code-fix ticket; not simulated on STG (candidate PTMLK/01/L/MCL/2026/21, login iskandarz@melaka.gov.my).
+- Fix idea when the ticket comes: scope the 265081 premium block to showKemaskiniCukaiDialog, the same way the 287164 int-env change does.
+- KPI: C2 row added. Pena: c60-c63 stored (BA decides on tickets, name the link first, other team's ticket stays out, his final reply).
+- Slips: said "stops at premium check" five times without the link between premium and tajuk; repeated Teknikal's own ticket and permohonan in every draft; asked TSO for a ticket unasked; read the requirement only after the BA pointed at 223227.
+- Improvement sweep: A1 two save agents at about 150k tokens each for an update a script could do · A2 adhoc route line tells me to ask TSO for a ticket while Pena lean forbids it · A3 cause found by git log -L only after he asked; run it at Recon for any shared-form save · A4 requirement-index not run on an adhoc, BA had to point at 223227 · A5 skipped, one adhoc, no sweep. Each logged as a proposal except A5.
+- Ticket arrived: eSOKONGAN 287509 is this issue (assigned BA Nurul Amani, New). Adhoc promoted (A83 TICKETED) and archived, audit 30/30. QA-287509 block + doc carry the findings; block delegated per save-quest, quest not started.
+- Open: QA-287509 fix when it reaches miya; fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
 
- Current Session
+**Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).
 
-**Last Activity**: 2026-10-29 23:30 — worktree `common-version-1-10-20-mlk-c5ee8f` (second session), Submit-it block audit → system-rules Rule 8 + `lib/his-words.js`, landed on main.
+## Session Recap (2026-10-30, worktree "baseline-wednesday-release-029181", 287273 MCL 3 owners shown as 6)
+- 287273 = adhoc ADHOC-MCL-2026-1 (register A77 now TICKETED). Fix in etanah-awam CarianRasmiHakmilikForm: rows of one owner on one title join into one pemohon, shares added as fractions; a title whose shares total over 1 is duplicate data, keeps one share. Commits 2026-10-30 12:14 and 14:43 on mlk/esokongan/287273, int-env merge 14:44. Tested by miya on MLIT (JAAFRI 2 rows, 1 name). Redmine journal #7: Resolved to Anis, 100%, 4 files. Phase 1 closed; Phase 2 waits for Redmine Closed.
+- System (on main): next-steps-shape v4 (every quest stop shows the issue picture or `Diagram: none (<reason>)`), deploy 5b (a test row's condition is proven by one plain SELECT).
+- Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
+- Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
+**Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
 
-## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", the Submit-it block audit)
-- **Ask** (miya, angry): audit why a simple "Submit it" blocked me all day; check the slip logs; find a universal solution for system-change / system-rules / system-design so no gate is ever built like this again.
-- **Found**: 7 approval gates each had their own copy of a "last user line" reader. Today the last user line was a skill's text, a system-reminder, a Stop-hook notice or the /goal notice, and "do not stop until you've posted" read as a refusal. `domain/redmine-write-gate/log.jsonl` 14:01 to 14:09: 5 refusals of one ordered Submit (261986). 286646: commit refused 4 times after his waiver. 22 files parsed user lines themselves.
-- **Built**: system-rules Rule 8 "One ask, then obey" (v1.5) · `lib/his-words.js` the one reader (`hisMessages` · `lastHis` · `decide`; eval 44/44; `--audit` clean) · `design-consult-gate` own-reader rider (R1 to R10, 47/47) · `redmine-write-gate` v1.8 on the reader, 8 messages back, repeat block = slip row (112/118; the 6 reds pre-exist: quest-start-claim shape drift, proposal logged) · `falsifier-ran-check` waiver window (58/58) · 3 Sonnet agents moved 20 gates onto the reader or marked them · prod-alter S12 flipped · 5 diagrams (Rule 17).
-- **Open**: `lib/quest-start-claim.js` no longer matches redmine-write-gate's standing-claim shape (F74 to F76, F82, F85 red since before today). STAGE-ONLY window for Redmine API posts ends 2026-10-30 by his 2026-10-19 ruling.
+## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
+- 287186: infra ran the resit-link patch (rows verified) · alter PL Kupon → 48.0 PYB4CE 08:15 (code A1E3-7EAD) · Redmine Resolved 100% to Amani with note · Closed on Redmine · archived.
+- 287233: alter PYSKN5A → PKPPT 02:44 (code 3480-80C1) · Closed by Idris 09:21 · % Done 100 at 10:49 on "Set 287233 100%" · archived.
+- System (all on main, last f4cf1ef6): go-reask-gate (new Stop gate) · stale-hooks-warn (new prompt advisory) · his-words reads past a compaction · redmine-write-gate takes "set <ticket> <n>%" and names the patch close on an approved Submit · playbook A7 CLOSE · quest 6c close line.
+- Slips: re-asked approval after his go; kept "do not update %" into Resolve; Submit blocked twice after compaction; patch tickets not closed after handover (all logged).
+- Open: proposal tracked — a quest doc born in a worktree lives only there (archive-quest refused until copied to main).
 
-**Last Activity**: 2026-10-29 22:20 — worktree `suspicious-nash-ce350d` (child of "Sweep 3 tickets + audit"), 286610 MCL Notis 5A + tempoh pajakan handed to BA, quest Phase 1 closed, Domain Expansion.
+**Last Activity**: 2026-10-30 02:25 — worktree `rubric-code-review-2f5201` (261986 session), 261986 saved (Phase 1 closed), Domain Expansion.
 
-## Session Recap (2026-10-29, worktree "suspicious-nash-ce350d", 286610 Notis 5A + Tempoh Pajakan)
-- 286610: report.config.json Notis 5A PSKN5A list += STATUS_PENYEDIAAN_BARU (Jana Semula rebuilds unsigned) · TemplateSuratKeputusanLulusMCL.docx row b) Tempoh Pajakan = static "Selama-lamanya". Commit e76c26d9ab on mlk/esokongan/286610, merged int-env 12b6d2306c, miya deployed mlit.
-- miya tested Isu 1 on internal (PTMLK/02/L/PLTP/2026/7, nazli): Peraku signed -> Jana Semula -> Baru unsigned -> Selesai -> signed. PASSED. Isu 2 checked at template level only (Word render); not run on internal.
-- Redmine journal 4 (22:11): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani + 3 screenshots. Quest status=closed; archive waits for Redmine Closed.
-- Internal-only path: on int-env Notis 5A goes through the Report API (285171, 03f5c01e0a); the test passed through it.
-- Slips: git fetch in miya's repo; test scenario without starting state; doc-sim cannot boot (Spring "Only one AsyncAnnotationBeanPostProcessor"). redmine-write-gate read "do not stop until you've submitted" as a refusal (SUBMIT_DENIAL :68) and blocked his /goal approval twice.
-- Open: ticket onto the planned-release list; 4 BA questions (cop+QR side effect, PT/PSBS/PLTP scope, row a) Jenis Hakmilik, label wording) unanswered.
+## Session Recap (2026-10-29 to 30, worktree "rubric-code-review-2f5201", 261986 PSBS Risalat MMKN)
+- 261986: commit 578af8ef1a (mlk/qa/261986v3) merged int-env ae10e5253e (Tolak conflict with CR 274600 resolved as their file + our edit). Redmine posted 2026-10-29 22:12: Resolved to Nurul Amirah Nadiah, 100%, 3 PDFs. Phase 1 closed 30/10; Phase 2 waits for Redmine Closed.
+- System: redmine-write-gate v1.7 (harness text skipped, /goal args read as his words, "why not submitting" = go), GitHub main fdce114e.
+- Slips: offered to combine PDFs unasked; said "not posted" for several turns without re-reading Redmine.
+- Open: 261986 staging deploy (stag-env behind master, same Tolak conflict expected).
 
 **Last Activity**: 2026-10-29 21:52 — worktree `jovial-kepler-a07ba6` (child of "Sweep 3 tickets + audit"), 286646 MCL strata check handed to BA, quest Phase 1 closed, Domain Expansion.
+**Last Activity**: 2026-10-30 02:15 — worktree `ticket-286650-quest-188daf` (the ProTime + OT session), ProTime 29/10 checked, 282587 training script, 282587 archived, Domain Expansion.
