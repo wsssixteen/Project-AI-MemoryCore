@@ -58,3 +58,8 @@ The three closed names are the Redmine statuses with `is_closed = true`, read fr
 
 - The closed-status list is baked. A new closed status added on Redmine would read as "not closed" (verdict `PHASE-1` or `WAIT`). The verdict line always prints the raw Redmine status, so the mismatch is visible.
 - `quest/archive-quest.js` itself does not refuse an archive while Redmine is open. The check is in the skill. A refusal inside the mover is logged as a proposal for miya's ruling.
+
+diagram: domain/save-quest/diagram.png (patch step marked)
+self_audit: lib/save-quest.eval.js and domain/save-quest/eval.js replay the table; each run writes ts, qa, redmine, local, verdict, dur_ms to log.jsonl, and de-close-gate C9 reads the latest row back at Domain Expansion close
+
+**2026-10-30, per みや ("audit if saving quest is enough ... whether to run only phase 1 to the end or run through phase 1 then phase 2")**: the table was right for normal tickets and wrong for patch tickets. `decide()` now takes `ticket_type`: a patch ticket past "in work" gets `PHASE-2` (Phase 1 first when still open) with the words "ahead of Redmine", where it used to print "Do not archive" against his 2026-10-29 rule. `archiveAllowed()` is new: the verdicts on which `quest/archive-quest.js` Step -1.5 may archive. Spec kept: every other row of the table and its evals. Eval 69/69 + feature eval 27/27.
