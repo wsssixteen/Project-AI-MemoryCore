@@ -65,6 +65,7 @@ More than one file = ONE box: "these files", then every `lokasi_fail` on its own
 |---|---|
 | `2. Fix\<num>.sql` | the PDF-reset script, in the `feedback_infra_script_schema_env` file format: 4-line header (Ticket · Env — schema · Permohonan (aplikasi_id) · Fix) · blank · ONE before SELECT · the UPDATE · `-- 1 row updated` |
 | `2. Fix\<lokasi_fail basename>` (e.g. `LAIN-37140956_1.main`) | the BA's edited docx, renamed — the attachment infra drops in place |
+| `2. Fix\<num>.zip` — ONLY when more than 1 file goes to infra | every `.main` of the patch in ONE zip; he attaches the zip, never the loose files (2026-10-30 per みや, 287292: "please zip the files, always"). The loose `.main` files stay beside it so he can check them. The upload box lists every `lokasi_fail` on its own line; the reset box holds one UPDATE + `-- 1 row updated` per file |
 
 **Banned** (2026-10-02 per みや, #282198): any `PATCH-REQUEST-*.txt` or other descriptive file · a `.txt` script. Script naming is `<num>.sql`, always (`feedback_script_file_naming`). The infra copy texts below live in CHAT only, never in a file.
 The reply's FIRST line is the full Windows path of the `2. Fix\` folder, ONCE; then one file name per line (2026-10-29 per みや, 285768: he uploads them all from that folder). A full path repeated per file is banned.
@@ -92,7 +93,7 @@ UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_I
 No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
 
 **The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. The folder is named by its FULL Windows path once, then the file names under it — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
-**Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>` must print PASS.
+**Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>[,<basename 2>,...]` must print PASS (more than 1 basename: it also checks `<num>.zip` holds every one and the script has one UPDATE per file).
 
 **When I edit the letter myself (no BA file) — 2026-10-29 per みや, 285768: "I think you just butchered this part. Not aligned, no peranan filled."**
 1. **Standard first**: put each value where the system's own layout puts it. Read the strategy class that fills the template (tag, image size, which cell), never the first box whose name matches (285768: the signature belongs beside the QR in the table, not in the empty block above it).
