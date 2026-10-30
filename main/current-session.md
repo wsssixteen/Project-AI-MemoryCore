@@ -9,6 +9,13 @@
 - Improvement sweep: A1 two save agents at about 150k tokens each for an update a script could do · A2 adhoc route line tells me to ask TSO for a ticket while Pena lean forbids it · A3 cause found by git log -L only after he asked; run it at Recon for any shared-form save · A4 requirement-index not run on an adhoc, BA had to point at 223227 · A5 skipped, one adhoc, no sweep. Each logged as a proposal except A5.
 - Open: code-fix ticket (BA decides); fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
 
+**Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).
+
+## Session Recap (2026-10-30, worktree "baseline-wednesday-release-029181", 287273 MCL 3 owners shown as 6)
+- 287273 = adhoc ADHOC-MCL-2026-1 (register A77 now TICKETED). Fix in etanah-awam CarianRasmiHakmilikForm: rows of one owner on one title join into one pemohon, shares added as fractions; a title whose shares total over 1 is duplicate data, keeps one share. Commits 2026-10-30 12:14 and 14:43 on mlk/esokongan/287273, int-env merge 14:44. Tested by miya on MLIT (JAAFRI 2 rows, 1 name). Redmine journal #7: Resolved to Anis, 100%, 4 files. Phase 1 closed; Phase 2 waits for Redmine Closed.
+- System (on main): next-steps-shape v4 (every quest stop shows the issue picture or `Diagram: none (<reason>)`), deploy 5b (a test row's condition is proven by one plain SELECT).
+- Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
+- Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
 **Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
 
 ## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
