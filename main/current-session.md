@@ -1,3 +1,10 @@
+**Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
+
+## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
+- Answer: DE alone now does save quest, enforced. Save quest picks Close or Archive from live Redmine: not Closed = Phase 1 only, Closed = Phase 2 (Phase 1 first when still open), patch ticket past "in work" = both together.
+- Built, on main: `lib/save-quest.js` reads ticket_type (patch tickets were told "Do not archive" against the 2026-10-29 rule) · `quest/archive-quest.js` Step -1.5 refuses an archive the verdict does not allow, `--ahead-of-redmine "<his words>"` is the only override · `de-close-gate` C9 blocks a DE close on a touched ticket with no verdict or a stage not done, unless "Phase 1 not ready: <QA> ...".
+- Evals: save-quest 69/69, feature 27/27, de-close-gate 44/44, archive Redmine gate 16/16, archive 27/27, archive-hold 27/27. Live: QA-287273 archive refused exit 3, nothing moved.
+- Open: 287273 BA verify, planned-release list. Wrong-fix row 1 verdict names BUG-BESTIARY: write it at Phase 2.
 **Last Activity**: 2026-10-30 16:45 — worktree `cranky-wilson-4cb38e` (branch claude/ticket-287292-return-audit-072795), 287292 returned by BA, re-patched, Redmine posted, quest saved, Domain Expansion.
 
 ## Session Recap (2026-10-30, worktree "cranky-wilson-4cb38e", 287292 PROD letter returned)
@@ -22,10 +29,3 @@
 - Open: QA-287509 fix when it reaches miya; fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
 
 **Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).
-
-## Session Recap (2026-10-30, worktree "baseline-wednesday-release-029181", 287273 MCL 3 owners shown as 6)
-- 287273 = adhoc ADHOC-MCL-2026-1 (register A77 now TICKETED). Fix in etanah-awam CarianRasmiHakmilikForm: rows of one owner on one title join into one pemohon, shares added as fractions; a title whose shares total over 1 is duplicate data, keeps one share. Commits 2026-10-30 12:14 and 14:43 on mlk/esokongan/287273, int-env merge 14:44. Tested by miya on MLIT (JAAFRI 2 rows, 1 name). Redmine journal #7: Resolved to Anis, 100%, 4 files. Phase 1 closed; Phase 2 waits for Redmine Closed.
-- System (on main): next-steps-shape v4 (every quest stop shows the issue picture or `Diagram: none (<reason>)`), deploy 5b (a test row's condition is proven by one plain SELECT).
-- Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
-- Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
-**Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
