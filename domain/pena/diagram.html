@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pena topdown module</title>
+<style>body{margin:0;background:#fff}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="340" viewBox="0 0 1100 340" role="img" aria-labelledby="diagram-pena-title diagram-pena-desc" font-family="Segoe UI, Arial, sans-serif">
+  <title id="diagram-pena-title">Pena flow how a note in his name is checked</title>
+  <desc id="diagram-pena-desc">A note in miya's name goes through Pena: show the modules, write the draft, check it, put the PENA line under it. The changed step is the module list, which now carries topdown: the issue as the user sees it first, then one layer per cause, then the fix, then what the reader checks.</desc>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1b1b1b">Pena: a note in his name, how a note in his name is checked</text>
+  <text x="24" y="56" font-size="13" fill="#555">Red = the one step that changes.</text>
+  <g font-size="14" fill="#1b1b1b">
+    <rect x="24" y="80" width="180" height="60" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="40" y="106">Note in his name</text><text x="40" y="126" font-size="12" fill="#555">hand-over, BA pass</text>
+    <rect x="244" y="80" width="200" height="60" rx="6" fill="#fdecea" stroke="#d93025" stroke-width="2.5"/><text x="260" y="106" font-weight="700">pena show</text><text x="260" y="126" font-size="12">modules + topdown</text>
+    <rect x="484" y="80" width="180" height="60" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="500" y="106">Write the draft</text>
+    <rect x="704" y="80" width="180" height="60" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="720" y="106">pena check</text><text x="720" y="126" font-size="12" fill="#555">topdown asked by hand</text>
+    <rect x="924" y="80" width="150" height="60" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="940" y="106">PENA line</text><text x="940" y="126" font-size="12" fill="#555">under the draft</text>
+  </g>
+  <g stroke="#555" stroke-width="2" fill="none">
+    <path d="M204 110 H240"/><path d="M444 110 H480"/><path d="M664 110 H700"/><path d="M884 110 H920"/>
+  </g>
+  <text x="24" y="190" font-size="15" font-weight="700" fill="#d93025">topdown: the order inside the note</text>
+  <g font-size="13" fill="#1b1b1b">
+    <rect x="24" y="206" width="240" height="70" rx="6" fill="#fff" stroke="#d93025"/><text x="38" y="230" font-weight="700">1 The issue, top view</text><text x="38" y="252">what the user sees, where</text>
+    <rect x="294" y="206" width="240" height="70" rx="6" fill="#fff" stroke="#d93025"/><text x="308" y="230" font-weight="700">2 Layer by layer</text><text x="308" y="252">one cause per layer, going down</text>
+    <rect x="564" y="206" width="240" height="70" rx="6" fill="#fff" stroke="#d93025"/><text x="578" y="230" font-weight="700">3 The fix point</text><text x="578" y="252">where it is fixed, the file</text>
+    <rect x="834" y="206" width="240" height="70" rx="6" fill="#fff" stroke="#d93025"/><text x="848" y="230" font-weight="700">4 What they check</text><text x="848" y="252">the steps to see it work</text>
+  </g>
+  <g stroke="#d93025" stroke-width="2" fill="none"><path d="M264 241 H290"/><path d="M534 241 H560"/><path d="M804 241 H830"/></g>
+  <text x="24" y="320" font-size="13" fill="#555">Banned: opening with a class name, a line number or the fix before the issue is said.</text>
+</svg>
+</body></html>

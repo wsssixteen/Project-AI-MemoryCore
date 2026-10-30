@@ -68,7 +68,7 @@ const VIEW_FIRST = /\b(?:let me (?:see|check|view|review)|(?:view|see|check|revi
 // 2026-10-27 per miya (#246964, "add all and its variations"): every go-word and its forms, alone or in a sentence.
 // v1.8: + an imperative that names the Redmine ("upload to the redmine", "update the redmine"; "update yourself on the
 // redmine" does not match).
-const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan|(?:upload|post|submit|send|hantar|update)\s+(?:it\s+)?(?:to\s+|on\s+|in\s+|into\s+)?(?:the\s+)?redmine)\b/i;
+const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan|set\s+(?:#?\d{5,6}\s+)?(?:(?:to|as)\s+)?(?:\d{1,3}(?=\s*(?:%|percent))|resolved|closed|in progress)|(?:upload|post|submit|send|hantar|update)\s+(?:it\s+)?(?:to\s+|on\s+|in\s+|into\s+)?(?:the\s+)?redmine)\b/i;
 // The verbs a no-word must share a clause with to refuse ("don't post it yet"); the reader does the clause work, so
 // "do not stop until you've posted" is an order (v1.7 fixed this with a two-word distance; v1.8 uses the clause).
 const SUBMIT_ACTION = /\b(?:approve|submit|send|post|pass|proceed|hantar|upload|update)\w*/i;
@@ -76,6 +76,8 @@ const SUBMIT_ACTION = /\b(?:approve|submit|send|post|pass|proceed|hantar|upload|
 const SUBMIT_COMPLAINT = /\bwhy\b[^.?!\n]{0,60}\bnot\s+(?:submit|send|post|pass|hantar)\w*/i;
 // A hold on a Redmine write, anywhere in his message: the reader's holds plus "view it first" shapes.
 const REDMINE_HOLD = new RegExp(HOLD.source + '|' + VIEW_FIRST.source, 'i');
+// After a patch ticket's handover is posted, the close runs in the same turn (close-phase, patch = Phase 1 + Phase 2). 287186/287233, 2026-10-30.
+const PATCH_CLOSE_NEXT = '   NEXT, same turn, no question: read the ticket back; when its quest block is ticket_type=patch (Internal Issue (PROD) · Data Patching (PROD) · PROD-CR · alter), run close-phase now: node lib/save-quest.js <QA>, then Phase 1 + Phase 2 (archive).\n';
 const hisSubmitWords = tp => decide(tp, { approve: SUBMIT_APPROVAL, action: SUBMIT_ACTION, complaint: SUBMIT_COMPLAINT, hold: REDMINE_HOLD, bypass: BYPASS });
 const hisPostWords = (tp, approve, action) => decide(tp, { approve, action, hold: REDMINE_HOLD, bypass: BYPASS });
 // A second block of the same action in one task is the gate's defect, not his (Rule 8d): it is logged as a slip.
@@ -170,7 +172,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
     if (his.verdict === 'approve') {
       const said = his.via === 'bypass' ? 'bypass' : (lastB.match(SUBMIT_APPROVAL) || lastB.match(SUBMIT_COMPLAINT) || [his.via])[0];
       logRow({ outcome: 'allowed', surface: 'browser-submit', approval: said, back: his.back });
-      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${said}")\n` };
+      return { fired: true, blocked: false, contextOut: `redmine-write-gate: Submit approved by miya ("${said}")\n` + PATCH_CLOSE_NEXT };
     }
     const prior = repeatBlock('browser-submit');
     logRow({ outcome: 'blocked', surface: 'browser-submit', why: his.verdict === 'deny' ? 'his ' + his.via : 'no order found', last_user: lastB.slice(0, 120), repeat: prior });
