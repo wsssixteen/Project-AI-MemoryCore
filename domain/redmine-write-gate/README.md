@@ -215,3 +215,5 @@ self_audit: every fire writes a log.jsonl row (outcome, approval or last_user); 
 | 19 | a slip row written for a repeat block inside an eval run | handled: `REDMINE_GATE_SLIPS` points the eval at a sandbox file |
 | 20 | his hold phrased in Malay ("tunggu", "belum lagi") | handled: in the reader's hold list; other Malay forms widen on a logged miss |
 | 21 | two sessions, two forms, one blocked in each within 30 min | accepted-risk: the repeat counter reads one log per checkout; two true first blocks read as a repeat, which costs one wrong slip row, never a wrong allow |
+
+**v1.8 patch-close line (2026-10-30, 287186/287233)**: an approved browser Submit now carries the next step — when the ticket's quest block is ticket_type=patch, run close-phase (Phase 1 + Phase 2) in the same turn, no question. Paired: playbook row A7, quest skill 6c line. Fixture F131. Why: both tickets waited for his 'Archive' after their handover was posted, because the close rule lived only in close-phase, which loads on 'close' words.
