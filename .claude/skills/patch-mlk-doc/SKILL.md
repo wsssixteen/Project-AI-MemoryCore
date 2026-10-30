@@ -77,7 +77,7 @@ Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_
 Upload document (he attaches the edited docx; the word is "upload", never "replace", per miya 2026-10-29):
 ```
 Hi infra, please help to upload document for MLK PROD. Thank you.
-#<num>: <URUSAN> - <one short outcome sentence>.
+#<num>
 
 <lokasi_fail>
 ```
@@ -85,12 +85,12 @@ Hi infra, please help to upload document for MLK PROD. Thank you.
 Reset PDF:
 ```
 Hi infra, please assist. Thank you.
-#<num>: <URUSAN> - <one short outcome sentence>.
+#<num>
 
 UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=<id>;
 -- 1 row updated
 ```
-No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
+No blank line between greeting and `#<num>`. The `#<num>` line is the ticket number ONLY: no description after it (2026-10-30 per みや, 287292). No instruction lines either ("Unzip …", "replace ikut nama …"): a box is greeting + `#<num>` + paths or UPDATEs, nothing else.
 
 **The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. The folder is named by its FULL Windows path once, then the file names under it — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
 **Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>[,<basename 2>,...]` must print PASS (more than 1 basename: it also checks `<num>.zip` holds every one and the script has one UPDATE per file).
