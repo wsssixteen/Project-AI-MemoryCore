@@ -533,3 +533,7 @@
 {"ts":"2026-10-30T09:14:29.666Z","id":"ADHOC-DMPRU-2026-1","outcome":"pass","fails":[],"dur_ms":93}
 {"ts":"2026-10-30T09:56:27.202Z","id":"ADHOC-DMPRU-2026-1","outcome":"pass","fails":[],"dur_ms":106}
 {"ts":"2026-10-30T10:20:02.395Z","id":"ADHOC-PLP-2026-5","outcome":"pass","fails":[],"dur_ms":70}
+{"ts":"2026-10-30T10:12:50.684Z","id":"ADHOC-PLP-2026-5","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line","register: status ↔ block status"],"dur_ms":88}
+{"ts":"2026-10-30T10:13:42.391Z","id":"ADHOC-PLP-2026-5","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":66}
+{"ts":"2026-10-30T10:14:02.052Z","id":"ADHOC-PLP-2026-5","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":79}
+{"ts":"2026-10-30T10:14:28.275Z","id":"ADHOC-PLP-2026-5","outcome":"pass","fails":[],"dur_ms":65}
