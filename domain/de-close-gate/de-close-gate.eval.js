@@ -200,6 +200,21 @@ check('S3 second stop on a normal reply -> silent, no row', r.status === 0 && !/
 r = run({ _testSaveQuestLines: [] });
 check('S4 first stop still blocks', r.status === 2, 'exit=' + r.status);
 
+// C10: each class session-audit finds needs a reply line '<class> -> <home>'
+const FINDING = [{ class: 'query-miss', what: 'x', home: 'knowledge' }];
+r = run({ _testFindings: FINDING });
+check('C10 unrouted finding blocks', r.status === 2 && /C10 SESSION FINDINGS/.test(r.stderr + r.stdout), 'exit=' + r.status);
+r = run({ _testFindings: FINDING, _testEvents: [{ kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' }, { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' }, { kind: 'text', role: 'assistant', text: 'query-miss → knowledge: FLOWABLE-KNOWLEDGE.md' }, { kind: 'text', role: 'assistant', text: CLOSE_BANNER }] });
+check('C10 routed finding passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run({ _testFindings: FINDING, _testEvents: [{ kind: 'text', role: 'assistant', text: 'query-miss happened, no home given' }, { kind: 'text', role: 'assistant', text: CLOSE_BANNER }] });
+check('C10 naming the class with no arrow still blocks', r.status === 2, 'exit=' + r.status);
+r = run({ _testFindings: [] });
+check('C10 no findings passes', r.status === 0, 'exit=' + r.status);
+r = run({ transcript_path: 'C:/no/such/file.jsonl' });
+check('C10 audit script failure never blocks', r.status === 0, 'exit=' + r.status);
+r = run({ stop_hook_active: true, _testFindings: FINDING });
+check('C10 second stop does not block again', r.status === 0, 'exit=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nde-close-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');
