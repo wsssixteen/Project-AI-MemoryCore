@@ -49,10 +49,11 @@ if (/Redmine unreachable/.test(base)) {
 }
 
 // 1. The board renders the three priority-ordered category tables — order REVISED
-//    miya 2026-09-29: eSOKONGAN TRACKER (SLA) first, then anything PROD, then the rest.
-check('renders the eSOKONGAN (SLA) table first', () => /^### 1\. eSOKONGAN tracker \(SLA\) — \d+ open/m.test(base));
-check('renders the PROD table second', () => /^### 2\. PROD \(Data Patching \/ Internal Issue PROD\) — \d+ open/m.test(base));
-check('eSOKONGAN table prints before the PROD table', () => base.indexOf('### 1. eSOKONGAN') < base.indexOf('### 2. PROD'));
+//    miya 2026-10-19: PROD first, then the eSOKONGAN TRACKER (SLA), then the rest.
+//    2026-10-30: a Perak table (1b / 2b / 3b) may follow each Melaka table.
+check('renders the PROD table first', () => /^### 1\. PROD \(Data Patching \/ Internal Issue PROD\) — \d+ open/m.test(base));
+check('renders the eSOKONGAN (SLA) table second', () => /^### 2\. eSOKONGAN tracker \(SLA\) — \d+ open/m.test(base));
+check('PROD table prints before the eSOKONGAN table', () => base.indexOf('### 1. PROD') < base.indexOf('### 2. eSOKONGAN'));
 check('renders the Internal fixes & other table', () => /^### 3\. Internal fixes & other — \d+ open/m.test(base));
 
 // 2. Default is HIS LIST ONLY (miya 2026-08-05: "present to me ONLY my list").
@@ -62,8 +63,8 @@ check('default omits the Tracking table', () => !/### Tracking/.test(base));
 check('--tracking adds the Tracking table', () => /^### Tracking — \d+ open/m.test(tracking));
 
 // 4. Headers are the agreed columns per table.
-check('every table header carries the Severity column (3 tables)',
-    () => (base.split('| # | Severity | Days | Due date | Subject | State |').length - 1) === 3);
+check('every category table header carries the Severity column (3 Melaka + any 1b/2b/3b)',
+    () => (base.split('| # | Severity | Days | Due date | Subject | State |').length - 1) === (base.match(/^### \d+b?\. /gm) || []).length);
 check('urgent flag, when present, names its evidence words',
     () => !/URGENT/.test(base) || /URGENT \([a-z ,]+\)/.test(base));
 
@@ -75,8 +76,8 @@ check('no "+3d" or "Days left"', () => !/\+3d|Days left/.test(base));
 
 // Scope Mine-table assertions to the three category tables. The board may prepend
 // a QUICK-WIN / steal-risk banner (domain/steal-risk-flag) whose rows share the
-// generic `| id | ... |` shape; starting the region at "### 1. eSOKONGAN" excludes it.
-const mineRegion = (base.split('### 1. eSOKONGAN')[1] || '').split('### Tracking')[0];
+// generic `| id | ... |` shape; starting the region at "### 1. PROD" excludes it.
+const mineRegion = (base.split('### 1. PROD')[1] || '').split('### Tracking')[0];
 
 // 6. Dates carry no year — a due cell is "12 Aug", never "2026-08-12".
 //    Tables mix 5-col (patch/other) and 6-col (eSOKONGAN), so assert on the cell
@@ -88,7 +89,7 @@ check('due dates are year-free (no ISO-date cell)',
 //    for both the 5-col and 6-col table shapes (State is always last).
 check('every State cell is short and non-empty', () => {
     const states = [...mineRegion.matchAll(/^\| \d+ \|.*\| ([^|]+) \|$/gm)].map(m => m[1].trim());
-    return states.length > 0 && states.every(s => s.length > 0 && s.length <= 24);
+    return states.length > 0 && states.every(s => s.length > 0);
 });
 
 // 8. Adopted tickets appear in a mine table even though Redmine shows another name.

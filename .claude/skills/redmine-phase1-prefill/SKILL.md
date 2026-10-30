@@ -111,7 +111,7 @@ mcp__Claude_in_Chrome__file_upload
 ```
 
 **Edge cases**:
-- `$files` empty → fill non-file fields, emit warning `Files: 0 — confirm intentional or add to <destSubfolder>` (per みや 2026-06-01 prior turn answer 4c)
+- `$files` empty → **do not submit yet** (2026-10-30 per みや, 287201: "no uploads? why do you always skip attachments?"). First find his test photo by the four places in the deploy skill §5b "Finding his photos" (images folder · Screenshots · clipboard · session transcript via `node lib/chat-images.js`), red-box it into `<destSubfolder>` and upload it. Submit with 0 files only when he says there is no file, or when all four places are empty: then name the missing photo in one line and write a `core/slips.js` blocker row. (Replaces the 2026-06-01 "warn and go on" rule 4c.)
 - `$destSubfolder` has subfolders (not just files) → surface for confirmation: `Found subfolders in <name>: <list>. Upload immediate files only? (per immediate-only rule)`
 - File >97.7MB (Redmine limit per photo) → STOP that file, emit warning, continue with others
 

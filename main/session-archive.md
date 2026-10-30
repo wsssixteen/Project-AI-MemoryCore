@@ -4,6 +4,27 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29 to 30, worktree "ticket-286650-quest-188daf", ProTime check + OT + 282587 training)
+- ProTime: Wednesday 28/10 missed lines added (incl. Baseline Pelupusan 1.9.0); 29/10 now 8 tickets + 8 adhocs RESOLVED (37979 PPTPB Risalat line left PENDING, not mine to verify).
+- OT tickets (handed over after 18:30 on live Redmine): 286988 19:34 · 262027 21:02 · 286646 21:43 · 286610 22:11 · 261986 22:12.
+- 282587: `3. Rework\282587-training.sql` (`et_main_trn.` on every table, INSERT guarded) uploaded to Redmine 21:45 "Script for training release" via Chrome form (API write gate). Redmine Closed → harvested + archived at DE.
+- 261986: Redmine Resolved, commit 578af8ef1a pushed (mlk/qa/261986v3), not on int-env; Phase 1 not ready: no falsifier ledger in its doc.
+- Slips (4, logged): missed Wednesday lines · resolved 286988 before Redmine · mixed adhoc line format · said 261986 had no commit without checking git or other sessions.
+- Open: training script not schema-verified (no training DB MCP; all DB MCPs ECONNREFUSED); new tickets 287233 · 287186 · 287201 · 287164 have no branch yet; protime-plan check reads only today (parked).
+#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
+
+## Session Recap (2026-10-29, worktree "stoic-ramanujan-634076", 286655 MLPS/OMLPS Tarikh Jadual)
+- 286655: Maklumat Jadual at Penyediaan Borang 4Ae dan L1e keeps the saved Tarikh Mula/Akhir after Simpan (MLPS + OMLPS; QA 262778 old-date reset kept). Commit 75381bb3a7 on mlk/esokongan/286655, merged int-env fa244fa194.
+- miya tested MLPS on internal PTMLK/02/L/MLPS/2026/5 (27/05/2025 to 31/12/2028 kept after Simpan, Borang 4Ae line (1) matches, Pengesahan KPPD 21:30 matches). OMLPS not tested (no OMLPS app at that tugasan on internal).
+- Redmine journal #6 (22:23, miya clicked Submit): Resolved, Nurul Amani, 100%, Penyelesaian Kekal, Root Cause (DEV) + Solutions + Resolved By, note to Amani. The 2 red-boxed photos in `2. Fix` did NOT attach (upload tokens lost when the form re-rendered); add them on his nod.
+- System: CLAUDE.md v1.98 Disposition 7 (own steps run without asking; blockers logged and routed around) + deploy §5b photo finding (37e702ed).
+- Slips: asked him to save a photo I could find myself; redmine-write-gate could not see "submit it" sent as a huge pasted block (read "(none)") and blocked the Submit twice.
+- Open: attach the 2 photos to 286655; ticket onto the planned-release list; OMLPS untested.
+
+ Current Session
+
+**Last Activity**: 2026-10-29 23:30 — worktree `common-version-1-10-20-mlk-c5ee8f` (second session), Submit-it block audit → system-rules Rule 8 + `lib/his-words.js`, landed on main.
+
 ## Session Recap (2026-10-29, worktree "common-version-1-10-20-mlk-c5ee8f", the Submit-it block audit)
 - **Ask** (miya, angry): audit why a simple "Submit it" blocked me all day; check the slip logs; find a universal solution for system-change / system-rules / system-design so no gate is ever built like this again.
 - **Found**: 7 approval gates each had their own copy of a "last user line" reader. Today the last user line was a skill's text, a system-reminder, a Stop-hook notice or the /goal notice, and "do not stop until you've posted" read as a refusal. `domain/redmine-write-gate/log.jsonl` 14:01 to 14:09: 5 refusals of one ordered Submit (261986). 286646: commit refused 4 times after his waiver. 22 files parsed user lines themselves.
@@ -6972,6 +6993,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
 
 
 

@@ -10,6 +10,10 @@
 
 ---
 
+**v2.00** (2026-10-30) — §Disposition +rule 8 (TEMPORARY): plan first, then ask. Before any question or yes/no to みや, the same reply shows the plan as one explain-diagram picture (current state → my steps → his steps → end state, data changes with their script on the picture), then the question. Why: 287164, he was asked "clear it" for a data change with no plan shown; his words: "tell me your plan first, always, before asking anything. This thing can be added as a temporary fix in CLAUDE.md, use skill diagram before asking." Spec-preservation: rules 0 to 7 untouched; additive. Temporary until a gate enforces it, then the line becomes a pointer.
+
+
+
 ## system-rules SKILL.md v1.5 — 2026-10-29 (per みや, the five refused Submits)
 
 **Rule 8 — One ask, then obey.** His words: "audit why you are being stopped by a simple 'Submit it' ... find a universal solution to add into our system-change or system-rules or system-design so that you DO NOT EVER build a step or workflow or gate ... like this ever again. A simple check is enough."
@@ -24,6 +28,14 @@
 - Paired same turn: 20 other gates moved onto the reader (prod-alter, release-push, stg1-block, agent-spend, terse, predicate-box, memory-write, de-knowledge, no-code-comments, de-run-verify, project-load) or marked `not an approval reader` (turn-boundary readers); prod-alter S12 flipped (tool output after his approval no longer voids it).
 - Spec preservation: Rules 1 to 7 untouched; additive. Named drops in the gates: "last message only" (redmine, falsifier fixture 28), F107 accepted-risk allow, the two-word negation distance.
 - Diagrams (Rule 17): `lib/his-words.diagram.png` · `domain/redmine-write-gate/diagram.png` (updated) · `domain/falsifier-ran-check/diagram.png` · `domain/design-consult-gate/diagram.png` · `.claude/skills/system-rules/diagram.png`.
+
+## v1.99 — 2026-10-30 (per みや, Melaka + Perak ticket order)
+
+- **Added**: §Vocabulary ticket order — two states. Each category is Melaka's table, then Perak's table of the same category: 1 PROD → 1b Perak PROD, 2 eSOKONGAN → 2b Perak eSOKONGAN, 3 the rest → 3b Perak rest. Perak rows include Ammar's tickets (the shared miya + Ammar filter); he asks Ammar before taking one.
+- His words: "if our Melaka eSokongan tickets have finished, we should focus on Perak's eSokongan first … I will always ask Ammar first though"; popup: "we group them but different tables. Under category eSokongan, we put both. Under next priority, we put both in separate tables as well, same for the rest."
+- Code: `quest/redmine-board.js` (shared-assignee fetch, `SLOT` / `renderSlot`, `markShared`) · `system/states.json` perak `redmine.shared_assignee_ids` [1218] + `board_slot` "interleave". Eval `quest/redmine-board.eval.js` 46/46 (P1 to P12 new, O1 rewritten).
+- Mirrors: list-redmine, sweep, retrieve-redmine SKILL · session-briefing · `feedback_esokongan_means_tracker`.
+- Spec preservation: the 2026-10-19 tracker tiers, the inside-tier order and "he picks the day's tickets" are untouched. Changed and named: O1 asserted one lone Perak table after Melaka; Perak now prints as 1b/2b/3b. Other states (Terengganu) keep their single table at the end. `domain/list-redmine/eval.js` was stale since 2026-10-19 (asserted eSOKONGAN as table 1, so 5 checks were red before this change): order re-pointed to PROD first; table count = category headings; the State cell "≤ 24 characters" check dropped (board_state values like 274323's already exceed it). 17/17.
 
 ## v1.98 — 2026-10-29 (per みや, 286655)
 

@@ -28,7 +28,8 @@ const lookalike = path.join(sb, 'xticket-load-verify.js'); fs.copyFileSync(postS
 
 // Legacy fixtures (F1-F55) test the post-window behaviour; the v1.4 stage-only fixtures pass their own date.
 function run(payload, until = '2000-01-01', root = ROOT) {
-  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: root, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: root } });
+  // REDMINE_GATE_SLIPS: a blocked fixture must never write a repeat-block slip row into the real ledger (57 bogus rows on 2026-10-30).
+  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: root, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: root, REDMINE_GATE_SLIPS: path.join(sb, 'slips-sandbox.jsonl') } });
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 const blocked = r => /redmine-write-gate/.test(r.out) && /⛔/.test(r.out);
@@ -288,6 +289,11 @@ check('F127 REPLAY 287186: "submit it", then the /goal about stopping the asking
 const findOut = JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: 'Found 1 matching element\n\n- ref_2437: button "Submit" (submit) - the issue edit form' }] } });
 const rClick = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'mcp__claude-in-chrome__computer', tool_input: { action: 'left_click', tabId: 1, ref: 'ref_2437' }, transcript_path: transcript([user(GO), findOut, user('Is that clear enough?'), findOut]) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS } });
 check('F128 REPLAY 287186: click on the Submit button by ref after "submit it" + "Is that clear enough?" → allowed', !b8(rClick), (rClick.stdout || '').slice(0, 200));
+const setRun = (words) => spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'mcp__claude-in-chrome__computer', tool_input: { action: 'left_click', tabId: 1, ref: 'ref_2437' }, transcript_path: transcript([user(words), findOut]) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS } });
+check('F129 REPLAY 287233: "Set 287233 100%" is an order → Submit allowed', !b8(setRun('Set 287233 100%')), (setRun('Set 287233 100%').stdout || '').slice(0, 200));
+check('F130 "should I set 287233 to 100%?" is a question → Submit blocked', b8(setRun('should I set 287233 to 100%?')), '');
+const approvedOut = setRun('submit it');
+check('F131 REPLAY 287186/287233: an approved Submit names the patch close as the next step (close-phase Phase 1 + Phase 2, no question)', !b8(approvedOut) && /close-phase now/.test(approvedOut.stdout || '') && /no question/.test(approvedOut.stdout || ''), (approvedOut.stdout || '').slice(0, 300));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.querySelector('.attributes').innerText" }, transcript_path: transcript([user('check the ticket')]) }, STAGE);
 check('F70 DOM read of the issue page → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "fetch('https://example.com/api/x.json')" }, transcript_path: transcript([user('x')]) }, STAGE);

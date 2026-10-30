@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fix-photo flow</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #2d3142; display: flex; justify-content: center; padding: 2rem; }
+.frame { max-width: 1000px; width: 100%; padding: 28px 32px; box-sizing: content-box; background: #f5f5f5; }
+.eyebrow { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #4f5d75; margin-bottom: 0.4rem; }
+h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Feature · domain/fix-photo · v4</p>
+<h1>His test screenshots: saved, boxed, attached to Redmine</h1>
+<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fp-t fp-d">
+<title id="fp-t">fix-photo flow</title>
+<desc id="fp-d">He sends test screenshots, the check sees a test word plus an image, I save each into the cycle folder, red-box only the changed field, write a FIX-PHOTO line, and upload from the cycle folder to Redmine.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker></defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<line x1="180" y1="70" x2="208" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="420" y1="70" x2="448" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="640" y1="70" x2="668" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="790" y1="104" x2="790" y2="172" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="670" y1="210" x2="642" y2="210" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="450" y1="210" x2="422" y2="210" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+<rect x="20" y="36" width="160" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="100" y="64" font-size="13" font-weight="600" text-anchor="middle">He sends screenshots</text>
+<text x="100" y="84" fill="#4f5d75" font-size="11" text-anchor="middle">any time, mid-turn too</text>
+
+<rect x="212" y="30" width="208" height="80" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+<text x="316" y="56" font-size="13" font-weight="600" text-anchor="middle">Test word + image seen</text>
+<text x="316" y="76" fill="#bf4520" font-size="11" text-anchor="middle">v4: "test scenarios", "attach</text>
+<text x="316" y="92" fill="#bf4520" font-size="11" text-anchor="middle">... ticket", mid-turn messages</text>
+
+<rect x="452" y="36" width="188" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="546" y="64" font-size="13" font-weight="600" text-anchor="middle">Saved to cycle folder</text>
+<text x="546" y="84" fill="#4f5d75" font-size="11" text-anchor="middle">2. Fix\n. what it shows.png</text>
+
+<rect x="672" y="36" width="236" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="790" y="64" font-size="13" font-weight="600" text-anchor="middle">Red box, changed field only</text>
+<text x="790" y="84" fill="#4f5d75" font-size="11" text-anchor="middle">mark.py, then looked at</text>
+
+<rect x="672" y="176" width="236" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="790" y="204" font-size="13" font-weight="600" text-anchor="middle">FIX-PHOTO line per photo</text>
+<text x="790" y="224" fill="#4f5d75" font-size="11" text-anchor="middle">full path, checked to exist</text>
+
+<rect x="454" y="176" width="188" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="548" y="204" font-size="13" font-weight="600" text-anchor="middle">Upload to Redmine</text>
+<text x="548" y="224" fill="#4f5d75" font-size="11" text-anchor="middle">only from the cycle folder</text>
+
+<rect x="232" y="176" width="188" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="326" y="204" font-size="13" font-weight="600" text-anchor="middle">Submit</text>
+<text x="326" y="224" fill="#4f5d75" font-size="11" text-anchor="middle">when he ordered it</text>
+</svg>
+</div>
+</body>
+</html>
