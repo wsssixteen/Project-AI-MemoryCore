@@ -1,3 +1,10 @@
+**Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).
+
+## Session Recap (2026-10-30, worktree "baseline-wednesday-release-029181", 287273 MCL 3 owners shown as 6)
+- 287273 = adhoc ADHOC-MCL-2026-1 (register A77 now TICKETED). Fix in etanah-awam CarianRasmiHakmilikForm: rows of one owner on one title join into one pemohon, shares added as fractions; a title whose shares total over 1 is duplicate data, keeps one share. Commits 2026-10-30 12:14 and 14:43 on mlk/esokongan/287273, int-env merge 14:44. Tested by miya on MLIT (JAAFRI 2 rows, 1 name). Redmine journal #7: Resolved to Anis, 100%, 4 files. Phase 1 closed; Phase 2 waits for Redmine Closed.
+- System (on main): next-steps-shape v4 (every quest stop shows the issue picture or `Diagram: none (<reason>)`), deploy 5b (a test row's condition is proven by one plain SELECT).
+- Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
+- Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
 **Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
 
 ## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
@@ -16,12 +23,3 @@
 - Open: 261986 staging deploy (stag-env behind master, same Tolak conflict expected).
 
 **Last Activity**: 2026-10-30 02:15 — worktree `ticket-286650-quest-188daf` (the ProTime + OT session), ProTime 29/10 checked, 282587 training script, 282587 archived, Domain Expansion.
-
-## Session Recap (2026-10-29 to 30, worktree "ticket-286650-quest-188daf", ProTime check + OT + 282587 training)
-- ProTime: Wednesday 28/10 missed lines added (incl. Baseline Pelupusan 1.9.0); 29/10 now 8 tickets + 8 adhocs RESOLVED (37979 PPTPB Risalat line left PENDING, not mine to verify).
-- OT tickets (handed over after 18:30 on live Redmine): 286988 19:34 · 262027 21:02 · 286646 21:43 · 286610 22:11 · 261986 22:12.
-- 282587: `3. Rework\282587-training.sql` (`et_main_trn.` on every table, INSERT guarded) uploaded to Redmine 21:45 "Script for training release" via Chrome form (API write gate). Redmine Closed → harvested + archived at DE.
-- 261986: Redmine Resolved, commit 578af8ef1a pushed (mlk/qa/261986v3), not on int-env; Phase 1 not ready: no falsifier ledger in its doc.
-- Slips (4, logged): missed Wednesday lines · resolved 286988 before Redmine · mixed adhoc line format · said 261986 had no commit without checking git or other sessions.
-- Open: training script not schema-verified (no training DB MCP; all DB MCPs ECONNREFUSED); new tickets 287233 · 287186 · 287201 · 287164 have no branch yet; protime-plan check reads only today (parked).
-#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
