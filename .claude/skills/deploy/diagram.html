@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>deploy: from ticket to tested env</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #2d3142;
+           min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1000px; width: 100%; min-width: 0; padding: 28px 32px; box-sizing: content-box; background: #f5f5f5; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.2rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Skill · .claude/skills/deploy</p>
+    <h1>deploy: from ticket to tested env</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d"><title id="t">deploy: from ticket to tested env</title><desc id="d">Resolve env and branch, merge per ticket, deploy card, test scenario with alter for test data, Redmine handover.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker></defs><rect width="100%" height="100%" fill="#f5f5f5"/><rect x="20" y="60" width="180" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/><text x="110" y="98" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">1. Resolve</text><text x="110" y="122" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">env · module · branch</text><line x1="204" y1="110" x2="214" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/><rect x="216" y="60" width="180" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/><text x="306" y="98" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">2. Git per ticket</text><text x="306" y="122" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">base current · merge</text><text x="306" y="140" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">compile · push</text><line x1="400" y1="110" x2="410" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/><rect x="412" y="60" width="180" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/><text x="502" y="98" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">3. Deploy card</text><text x="502" y="122" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">ssh steps · one</text><text x="502" y="140" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">command per block</text><line x1="596" y1="110" x2="606" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/><rect x="608" y="60" width="180" height="116" rx="6" fill="rgba(191,69,32,0.10)" stroke="#bf4520" stroke-width="1.2"/><text x="698" y="98" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">4. Test scenario</text><text x="698" y="122" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">no app at tugasan:</text><text x="698" y="140" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">alter OLDEST app there</text><text x="698" y="158" fill="#bf4520" font-size="11" font-family="Consolas" text-anchor="middle">alter back after test</text><line x1="792" y1="110" x2="802" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/><rect x="804" y="60" width="180" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/><text x="894" y="98" fill="#2d3142" font-size="14" font-weight="600" text-anchor="middle">5. Redmine handover</text><text x="894" y="122" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">root cause · solution</text><text x="894" y="140" fill="#4f5d75" font-size="11" font-family="Consolas" text-anchor="middle">note · fields</text></svg>
+    </div>
+  </div>
+</body>
+</html>
+
+
