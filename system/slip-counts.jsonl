@@ -1601,3 +1601,14 @@
 {"ts":"2026-10-30T00:43:01.164Z","category":"ba-spec-overridden"}
 {"ts":"2026-10-30T00:42:29.723Z","category":"answer-the-ask"}
 {"ts":"2026-10-30T02:53:05.408Z","category":"blocker"}
+{"ts":"2026-10-30T00:50:39.911Z","category":"blocker"}
+{"ts":"2026-10-30T00:50:40.471Z","category":"blocker"}
+{"ts":"2026-10-30T00:52:05.900Z","category":"format-drift"}
+{"ts":"2026-10-30T01:18:23.224Z","category":"vague-term"}
+{"ts":"2026-10-30T01:22:28.918Z","category":"verify-before-claim"}
+{"ts":"2026-10-30T01:26:03.990Z","category":"wrong-rule-encoded"}
+{"ts":"2026-10-30T01:37:23.521Z","category":"blocker"}
+{"ts":"2026-10-30T01:41:47.052Z","category":"reask/redundant"}
+{"ts":"2026-10-30T02:09:53.529Z","category":"build-missed-requirement"}
+{"ts":"2026-10-30T02:35:37.019Z","category":"de-ruling-list-dropped"}
+{"ts":"2026-10-30T02:45:48.262Z","category":"blocker"}
