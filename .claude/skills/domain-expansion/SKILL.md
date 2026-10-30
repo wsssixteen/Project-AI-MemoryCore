@@ -1,6 +1,6 @@
 ---
 name: domain-expansion
-description: Domain Expansion 💠 るり結界 (ラピス バリアー) — Ruri's session-end / context-preservation ritual. Invoke at session close or context-limit — triggers "Domain Expansion", "save all", "るり結界", "end session", "wrap up", "done for today", "goodnight", "next session", "continue tomorrow", "running low on context", "context getting heavy", "before compaction". Drives the full save ritual (current-session + diary + memory + Forge/observation review + Gap Sweep + commit/push + worktree close + resume-readiness sweep + /verify). Detailed step bodies live in Feature/Domain-Expansion/expansion-protocol.md.
+description: Domain Expansion 💠 るり結界 (ラピス バリアー) — Ruri's session-end / context-preservation ritual. Invoke at session close or context-limit — triggers "Domain Expansion", "save all", "るり結界", "end session", "wrap up", "done for today", "goodnight", "next session", "continue tomorrow", "running low on context", "context getting heavy", "before compaction". Drives the full save ritual (current-session + diary + memory + observation review + Gap Sweep + commit/push + worktree close + resume-readiness sweep). Detailed step bodies live in Feature/Domain-Expansion/expansion-protocol.md.
 ---
 
 # /domain-expansion — Session-end ritual (るり結界 / ラピス バリアー)
@@ -21,7 +21,7 @@ Lapis barrier ripples outward; the day's threads gather to settle.
 
 Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line why` if a step is legitimately skipped):
 
-`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 7.4 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 12.7 ⬜ · 13 ⬜`
+`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 6 ⬜ · 7 ⬜ · 7.4 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 12.7 ⬜ · 13 ⬜`
 
 - **0a Compaction check** — if the session auto-compacted, recover the transcript TAIL BEFORE the content-save steps (2 / 4 / 7).
 - **0b Worktree/branch sync** — if on a worktree branch behind `origin/main`, pull/merge first so everything saves on current base.
@@ -37,7 +37,6 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 2d | 🚨 **CLOSE + SAVE EACH TOUCHED QUEST BY ITS LIVE REDMINE STATUS — AUTOMATIC** (added 2026-10-08 per みや: *"I just need to run domain expansion you will automatically detect to close the quest & save accordingly"*). He never has to say "close quest" or "save quest" before Domain Expansion. For EVERY quest of step 2c that has a ticket number: run `node lib/save-quest.js <QA>`, PASTE its `SAVE-QUEST:` line, and do what the verdict says in this same Domain Expansion, per `.claude/skills/close-phase/SKILL.md` → "Save-quest mode" (`PHASE-1` = Phase 1 close-out · `PHASE-2` = archive · `WAIT` / `DONE` / `AHEAD` / `KEEP-DELEGATED` = nothing to move · `UNKNOWN` = doc save only, say the status is not verified). An ADHOC id goes to `adhoc-save`. Every stop gate of close-phase still holds (the commit review stop, the falsifier ledger, "Phase 1 not ready: <what is missing>" for an unfinished fix): an unfinished quest is saved, never closed. Emit one line per quest in the Domain Expansion reply. **Banned**: asking him which quest to close or which phase to run · closing Domain Expansion with a touched quest that has no `SAVE-QUEST:` line. **Enforced by `de-close-gate` C9** (2026-10-30): a touched QA ticket needs a `save-quest` run this session, and a standing PHASE-1 / PHASE-2 verdict blocks the close unless a reply line says `Phase 1 not ready: <QA> <what is missing>`. |
 | 3 | Update `main/main-memory.md` relationship section if patterns surfaced |
 | 4 | Append `daily-diary/<date>.md` (3-section template) |
-| 5 | Forge log review — surface L1→L2 promotions as QUESTIONS to みや |
 | 6 | Observation log review — promote T1→T2 if recurring |
 | 7 | **Gap Sweep** + etanah-knowledge sweep (retrospective — what surfaced and didn't bake in) |
 | 7.4 | 🚨 **AUDIT BRIEFING — MANDATORY, DETERMINISTIC** (added 2026-09-08 per みや: *"do we have these audit section during domain expansion? I've been asking you to build it many many many times"*). Run `node lib/audit-briefing.js --days 7` and PASTE its four blocks + the NEEDS みや'S RULING list into the DE reply, unedited: **NOT WORKING · TOO SLOW · MISTAKES · HIGH-RETURN OPTIMIZATIONS**. Then rule what is mine to rule (a 0-fire gate I own → retire/redesign row in 7.5; an overdue watch → resolve it now) and leave the rest as his rulings. The run logs `audit-briefing-ran`; **`de-close-gate` C6 BLOCKS close without it**. This is the data 7.5 brainstorms FROM — 7.5 without 7.4 is opinion. **Then run `node lib/session-audit.js` and paste it (2026-10-30 per みや): the only step that reads what THIS session did. Each finding class gets one reply line `<class> → <home: knowledge / tool / gate / workflow / memory file, or why none>`; `de-close-gate` C10 blocks the close without it. A `repeat-escalated` finding is built or dropped in this Domain Expansion, not logged again.** |
@@ -46,7 +45,6 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 9 | Change manifest (`git status` touched files) |
 | 10 | 🚨 **COMMIT + PUSH + MERGE — MANDATORY, NON-NEGOTIABLE, NOT OPTIONAL** (see hard rule below) |
 | 11 | Worktree & branch close (verify main current + salvage unmerged) |
-| 12 | Run **`/verify` Checklist D** — cross-check every step fired with evidence |
 | 12.5 | **Meta-audit** — hook-fire reliability + cross-refs + component-liveness |
 | 12.6 | **Resume-readiness sweep** — `node domain/checklist-reactivate/resume-readiness.js`; fill any `✗`/`🔴` qa_doc gap before close |
 | 12.7 | 🚨 **SAVE RULES — MANDATORY, DETERMINISTIC** (added 2026-10-06 per みや). Run `node lib/save-rules.js`, PASTE its `SAVE-RULES:` header + table into the DE reply, and fix every FAIL before the close banner (re-run until 0 FAIL). Each kind of system part (Rules · Workflows · Features · Memory · Kernel · Projects) declares its own save rule in `system/save-rules.json`; the script finds the parts this session touched and prints PASS / FAIL / UNRULED per part and rule. A learning class worked today (`projects/learning-projects/active/<name>/`, git-ignored, found by file date) is one of those parts since 2026-10-13: rule `learning-class-saved` asks the project's engine (`save-check`) whether the class is closed; the fix for its FAIL is the step the line names (for `/arabic`: `class close`). The run logs `save-rules-ran`; **`de-close-gate` C8 BLOCKS close without a full run at 0 FAIL**. UNRULED rows are for みや to rule, not to fix. Detail: `expansion-protocol.md` §Step 12.7. |
@@ -107,3 +105,4 @@ DE was a protocol + trigger-hook = **model-driven execution** with no Skill-tool
 
 *2026-10-30, later — C10 added to `de-close-gate`: each finding class needs a reply line `<class> → <home>`; a repeat of 3 or more is built or dropped. Spec-preservation: C1 to C9 and the second-stop rule unchanged; the report-only wording of the note above is replaced. Fire check: gate eval 54/54, session-audit eval 36/36.*
 
+*2026-10-30 — Steps 5 and 12 retired per みや ("Step 5 and Checklist D"): the Forge log was deleted 2026-08-16; Checklist D repeated `de-close-gate` C1-C10 by hand. Numbers are not reused. Spec-preservation: every other step, Banned clause and gate unchanged; the transcript-trace rows of Checklist D (banner, step line, sweep, closing words, manifest) now have no second check.*

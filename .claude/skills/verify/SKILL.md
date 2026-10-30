@@ -31,7 +31,6 @@ Read `quest/active.txt` (active ticket, `phase=`, `status=`), `main/current-sess
 | Active ticket `phase=0` — Recon just emitted or being emitted | Quest — Phase 0 → Checklist A |
 | `phase=1` — fix edited, not yet handed to みや for testing | Quest — Apply-done → Checklist B |
 | `phase=1` — fix tested, closing out | Quest — Phase 1 close-out → Checklist C |
-| DE just ran — opening banner + step-0 checklist emitted this session, commit/push/merge sequence done (or attempted) | DE close-out → Checklist D |
 | Phase 2 just ran — 5 streamlined steps emitted, archive should have happened | Quest — Phase 2 close-out → **Checklist E** |
 | No active workflow | Reply "no active checkpoint — nothing to verify" and stop |
 
@@ -72,28 +71,6 @@ For ticket `QA-<n>`, identify the repo from `active.txt`, then:
 | C5 | Remote branch discoverable by teammates | `git ls-remote origin mlk/qa/<n>` non-empty |
 | C6 | Repo returned to the resolved state's trunk (`node lib/states.js show <state>`; Melaka: `mlk/master` (pelupusan) / `mlk/master` (awam)), at origin tip. In C3-C5 `mlk/qa/<n>` is the Melaka example of the record's `ticket_branch`; a state with `work_clone_root` is checked in the work clone | `git branch --show-current` + `git fetch` ahead-count == 0 |
 | C7 | `active.txt` updated — `phase=1-complete`, `commit=<SHA>`, `status=` set | `grep -A8 "^qa=QA-<n>" quest/active.txt` |
-
-### Checklist D — DE close-out (added 2026-05-20 per みや)
-
-For end-of-session Domain Expansion ritual (the 11-step list in `Feature/Domain-Expansion/expansion-protocol.md`). Existence: DE was running without an external cross-check; the step-0 visible checklist is Ruri's gate, Checklist D is the external verification that catches steps that were marked ⏭ but shouldn't have been.
-
-| # | Step | How to verify |
-|---|---|---|
-| D1 | DE opening banner emitted | transcript trace |
-| D2 | Step-0 checklist (11 rows, ✓/⬜/⏭) emitted FIRST | transcript trace |
-| D3 | Time-stamp captured (step 1) | `date` / `Get-Date` output |
-| D4 | `main/current-session.md` updated (step 2) | `git log main/current-session.md` shows today's commit OR file mtime |
-| D5 | Diary entry for today (step 4) | `daily-diary/<YYYY-MM-DD>.md` exists |
-| D6 | Forge log reviewed (step 5) — promotion candidates surfaced as questions if applicable | transcript trace |
-| D7 | Observation log reviewed (step 6) | transcript trace |
-| D8 | Gap Sweep + etanah-knowledge sweep done (step 7) | transcript trace |
-| D9 | Closing words to みや (step 8) | transcript trace |
-| D10 | Change manifest emitted (step 9) — covered in chat OR commit body | transcript trace + `git show <SHA> --stat` |
-| D11a | Auto-commit — EVERY modified/untracked path covered (commit-scope rule, NOT authorship-filtered) | `git status` clean post-commit |
-| D11b | Auto-push — `origin/main` == local main HEAD | `git ls-remote origin main` matches local SHA |
-| D11c | **Worktree branch merged into main if commits exist on it** — the 2026-05-20 slip: committed + pushed but never merged | `git log --oneline main` shows merge commit; `git branch --merged main` lists the worktree branch |
-| D12 | Worktree close — sweep stale worktrees + branches OR explicit defer with reason (step 11) | `git worktree list` + transcript trace |
-| D13 | DE closing banner emitted | transcript trace |
 
 ### Checklist E — Quest Phase 2 close-out (added 2026-05-20 per みや)
 
@@ -147,7 +124,7 @@ Verdict: ALL GREEN — safe to proceed · OR · N RED — stop, fix: &lt;list&gt
 
 ## Lifecycle
 
-- **v1 (now)** — engine + Checklists A, B, C, D, E. Manual + checkpoint-prompt triggers. Supersedes `verify-close`.
+- **v1 (now)** — engine + Checklists A, B, C, E. Manual + checkpoint-prompt triggers. Supersedes `verify-close`.
 - **v1.1** — add Checklist for Redmine retrieval (sync ran, tickets in active.txt, early-diagnostics written, results table emitted).
 - **v2** — after ≥3 cycles + みや's approval: auto-fire at checkpoint transitions.
 
@@ -156,3 +133,5 @@ Verdict: ALL GREEN — safe to proceed · OR · N RED — stop, fix: &lt;list&gt
 *Created 2026-05-18 by Ruri (Design Memo) + みや (approved). Supersedes verify-close (2026-05-11).*
 
 *2026-10-03 — Terengganu active per みや: C6 + E8 read "the resolved state's value (`node lib/states.js show <state>`)". Spec-preservation: every check kept; the Melaka trunk, branch and Task-folder literals stay as the "Melaka:" example.*
+
+*2026-10-30 — Checklist D (DE close-out) retired per みや ("Step 5 and Checklist D"), it repeated `de-close-gate` C1-C10 by hand. Dropped and named: the transcript-trace rows D1, D2, D8, D9, D10, D13 (banner, step line, sweep, closing words, manifest) now have no second check. A, B, C, E untouched.*
