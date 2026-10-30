@@ -1,0 +1,47 @@
+{
+ "urusan": "MLPS",
+ "tugasan": "PB4AE",
+ "key": "MLK_PLP_MLPS",
+ "env": "mlit",
+ "source": "engine v3 mlit",
+ "ts": "2026-10-30T10:00:44.962Z",
+ "ids": [
+  "first-pass",
+  "entry:Pelupusan-Permohonan-Service",
+  "loop:pembetulan",
+  "alter",
+  "initiate",
+  "reassign",
+  "migrated"
+ ],
+ "rows": [
+  {
+   "id": "first-pass",
+   "how": "PYB4AE sends to PB4AE"
+  },
+  {
+   "id": "entry:Pelupusan-Permohonan-Service",
+   "how": "DELAY (35 s) enters PYB4AE through Pelupusan Permohonan Service > Spoc Integration"
+  },
+  {
+   "id": "loop:pembetulan",
+   "how": "PB4AE goes back to PYB4AE through exclusiveGateway, then forward again"
+  },
+  {
+   "id": "alter",
+   "how": "Alter Flow to this tugasan or to an earlier node; app rows are not deleted"
+  },
+  {
+   "id": "initiate",
+   "how": "Initiate or Initiate & Alter: a new process runs to this tugasan; app rows are not deleted"
+  },
+  {
+   "id": "reassign",
+   "how": "agihan or admin changes the holder inside the same pass"
+  },
+  {
+   "id": "migrated",
+   "how": "data migration created the rows; no user pass produced them"
+  }
+ ]
+}

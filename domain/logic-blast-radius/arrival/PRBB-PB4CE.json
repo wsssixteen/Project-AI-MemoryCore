@@ -1,0 +1,57 @@
+{
+ "urusan": "PRBB",
+ "tugasan": "PB4CE",
+ "key": "MLK_PLP_PRBB",
+ "env": "mlit",
+ "source": "engine v15 mlit",
+ "ts": "2026-10-30T10:00:47.623Z",
+ "ids": [
+  "first-pass",
+  "loop:pembetulanPB4CE",
+  "entry:isLangkauTahun",
+  "entry:goToSuratKeputusan",
+  "entry:parallelGateway",
+  "alter",
+  "initiate",
+  "reassign",
+  "migrated"
+ ],
+ "rows": [
+  {
+   "id": "first-pass",
+   "how": "PYB4CE sends to PB4CE"
+  },
+  {
+   "id": "loop:pembetulanPB4CE",
+   "how": "PB4CE goes back to PYB4CE through Pembetulan, then forward again"
+  },
+  {
+   "id": "entry:isLangkauTahun",
+   "how": "DELAY (35 s) enters PYB4CE through Langkau Tahun > Spoc Integration Service"
+  },
+  {
+   "id": "entry:goToSuratKeputusan",
+   "how": "PMB enters PYB4CE through goToSuratKeputusan > Pembetulan"
+  },
+  {
+   "id": "entry:parallelGateway",
+   "how": "PL enters PYB4CE through parallelGateway"
+  },
+  {
+   "id": "alter",
+   "how": "Alter Flow to this tugasan or to an earlier node; app rows are not deleted"
+  },
+  {
+   "id": "initiate",
+   "how": "Initiate or Initiate & Alter: a new process runs to this tugasan; app rows are not deleted"
+  },
+  {
+   "id": "reassign",
+   "how": "agihan or admin changes the holder inside the same pass"
+  },
+  {
+   "id": "migrated",
+   "how": "data migration created the rows; no user pass produced them"
+  }
+ ]
+}

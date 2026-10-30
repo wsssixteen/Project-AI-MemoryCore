@@ -34,8 +34,9 @@
 const fs = require('fs');
 const path = require('path');
 
-function parseModel(xmlPath) {
-  const xml = fs.readFileSync(xmlPath, 'utf8');
+function parseModel(xmlPath) { return parseXml(fs.readFileSync(xmlPath, 'utf8')); }
+
+function parseXml(xml) {
   const model = { xml, nodes: {}, flows: [], callActivities: [], gateways: [], conditions: [], diIds: new Set() };
   // flow nodes (process side)
   const nodeRe = /<(userTask|callActivity|exclusiveGateway|parallelGateway|inclusiveGateway|serviceTask|startEvent|endEvent|intermediateCatchEvent|boundaryEvent)\b([^>]*)\bid="([^"]+)"([^>]*)>/g;
@@ -255,6 +256,9 @@ function diffModels(oldM, newM) {
 function label(m, id) { const n = m.nodes[id]; return n ? (n.name || n.type + ':' + id.slice(0, 10)) : id.slice(0, 12); }
 
 // ---- main ----
+module.exports = { parseModel, parseXml, varsInCondition };
+if (require.main !== module) return;
+
 const args = process.argv.slice(2);
 const file = args.find(a => !a.startsWith('--'));
 const baseIdx = args.indexOf('--baseline');
