@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-30, worktree "baseline-wednesday-release-029181", 287273 MCL 3 owners shown as 6)
+- 287273 = adhoc ADHOC-MCL-2026-1 (register A77 now TICKETED). Fix in etanah-awam CarianRasmiHakmilikForm: rows of one owner on one title join into one pemohon, shares added as fractions; a title whose shares total over 1 is duplicate data, keeps one share. Commits 2026-10-30 12:14 and 14:43 on mlk/esokongan/287273, int-env merge 14:44. Tested by miya on MLIT (JAAFRI 2 rows, 1 name). Redmine journal #7: Resolved to Anis, 100%, 4 files. Phase 1 closed; Phase 2 waits for Redmine Closed.
+- System (on main): next-steps-shape v4 (every quest stop shows the issue picture or `Diagram: none (<reason>)`), deploy 5b (a test row's condition is proven by one plain SELECT).
+- Slips: test data taken from a query that JOINed receipt tables, so miya tested a normal case ("wrong test scenario", angry); commit gate blocked fix 2 until he said "test on server".
+- Open: BA verify; planned-release list; audit of DE and save-quest in this same session, then DE 2.
+**Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
+
 ## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
 - 287186: infra ran the resit-link patch (rows verified) · alter PL Kupon → 48.0 PYB4CE 08:15 (code A1E3-7EAD) · Redmine Resolved 100% to Amani with note · Closed on Redmine · archived.
 - 287233: alter PYSKN5A → PKPPT 02:44 (code 3480-80C1) · Closed by Idris 09:21 · % Done 100 at 10:49 on "Set 287233 100%" · archived.
@@ -7011,6 +7018,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
