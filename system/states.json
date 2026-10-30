@@ -72,7 +72,9 @@
         "schemas": { "prod": "ET_MAIN", "dev": "ET_MAIN_PERAK_DEV", "engine_stag": "ET_FLOWABLE_STAG" },
         "primary_env": "prod"
       },
-      "redmine": { "project": null, "project_names": ["eSOKONGAN PERAK"], "_unverified": "project identifier not read from the API yet" },
+      "redmine": { "project": null, "project_names": ["eSOKONGAN PERAK"], "_unverified": "project identifier not read from the API yet",
+        "shared_assignee_ids": [1218], "_shared_assignee_ids": "Ammar Zakwan: his Perak tickets show on the board too (miya 2026-10-30, the shared miya + Ammar filter)",
+        "board_slot": "interleave", "_board_slot": "a Perak table right after each Melaka table: PROD, eSOKONGAN, the rest (miya 2026-10-30)" },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null
     },

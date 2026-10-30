@@ -25,6 +25,14 @@
 - Spec preservation: Rules 1 to 7 untouched; additive. Named drops in the gates: "last message only" (redmine, falsifier fixture 28), F107 accepted-risk allow, the two-word negation distance.
 - Diagrams (Rule 17): `lib/his-words.diagram.png` · `domain/redmine-write-gate/diagram.png` (updated) · `domain/falsifier-ran-check/diagram.png` · `domain/design-consult-gate/diagram.png` · `.claude/skills/system-rules/diagram.png`.
 
+## v1.99 — 2026-10-30 (per みや, Melaka + Perak ticket order)
+
+- **Added**: §Vocabulary ticket order — two states. Each category is Melaka's table, then Perak's table of the same category: 1 PROD → 1b Perak PROD, 2 eSOKONGAN → 2b Perak eSOKONGAN, 3 the rest → 3b Perak rest. Perak rows include Ammar's tickets (the shared miya + Ammar filter); he asks Ammar before taking one.
+- His words: "if our Melaka eSokongan tickets have finished, we should focus on Perak's eSokongan first … I will always ask Ammar first though"; popup: "we group them but different tables. Under category eSokongan, we put both. Under next priority, we put both in separate tables as well, same for the rest."
+- Code: `quest/redmine-board.js` (shared-assignee fetch, `SLOT` / `renderSlot`, `markShared`) · `system/states.json` perak `redmine.shared_assignee_ids` [1218] + `board_slot` "interleave". Eval `quest/redmine-board.eval.js` 46/46 (P1 to P12 new, O1 rewritten).
+- Mirrors: list-redmine, sweep, retrieve-redmine SKILL · session-briefing · `feedback_esokongan_means_tracker`.
+- Spec preservation: the 2026-10-19 tracker tiers, the inside-tier order and "he picks the day's tickets" are untouched. Changed and named: O1 asserted one lone Perak table after Melaka; Perak now prints as 1b/2b/3b. Other states (Terengganu) keep their single table at the end. `domain/list-redmine/eval.js` was stale since 2026-10-19 (asserted eSOKONGAN as table 1, so 5 checks were red before this change): order re-pointed to PROD first; table count = category headings; the State cell "≤ 24 characters" check dropped (board_state values like 274323's already exceed it). 17/17.
+
 ## v1.98 — 2026-10-29 (per みや, 286655)
 
 - **Added**: §Disposition rule 7. A step this workflow already does runs with no question. A blocker (refused tool call, file not on disk, refused DB) gets every non-destructive path in the same turn, then a core/slips.js blocker row, then the work carries on with the gap named in one line.

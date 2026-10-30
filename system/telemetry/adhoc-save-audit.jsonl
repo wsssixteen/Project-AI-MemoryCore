@@ -517,3 +517,6 @@
 {"ts":"2026-10-29T18:22:15.101Z","id":"ADHOC-PT-2026-14","outcome":"pass","fails":[],"dur_ms":58}
 {"ts":"2026-10-29T18:22:15.351Z","id":"ADHOC-PRU-2026-5","outcome":"pass","fails":[],"dur_ms":58}
 {"ts":"2026-10-29T18:22:15.594Z","id":"ADHOC-MLMS-2026-1","outcome":"pass","fails":[],"dur_ms":59}
+{"ts":"2026-10-30T02:28:48.994Z","id":"ADHOC-PRBB-2026-20","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","register: status ↔ block status","qa_doc: \"## Test data\" has an entry"],"dur_ms":40}
+{"ts":"2026-10-30T02:28:56.938Z","id":"ADHOC-PRBB-2026-20","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":40}
+{"ts":"2026-10-30T02:29:04.515Z","id":"ADHOC-PRBB-2026-20","outcome":"pass","fails":[],"dur_ms":41}
