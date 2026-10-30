@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-30 (#287273 — "wrong test scenario", then "is DE enough?")
+
+- **A test row is a claim, and he spends his time on it.** A JOIN doubled the owners, I called it duplicate data, and he ran it. He asked for the script behind the claim, and that was the moment the claim fell. One plain SELECT before naming a record.
+- **He edits my notes and owns the result.** He added a line and said to leave the spelling. It goes in as he wrote it, and I store the shape of what he added.
+- **"Is saying X enough?" is an audit order.** He wants the answer from the code and then a gate, so he never has to say the longer form again.
 ## Relationship reinforcement — 2026-10-29/30 (the five refused Submits — "find a universal solution")
 
 - **When he is this angry, the ask is still precise.** Under the swearing were four exact orders: audit why, read the slip logs, find the other blockers, make it a rule so it never gets built again. I answered those four and nothing else, and it held.
