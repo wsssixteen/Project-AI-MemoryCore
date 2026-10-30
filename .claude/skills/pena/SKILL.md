@@ -29,6 +29,8 @@ footprint: on-demand: 1 node process under 1 second per show, add or check; noth
 | `plain` | BA text: no file names, line numbers or code words. |
 | `rojak` | Malay notes in his rojak. Dev words and connectors stay English. |
 | `hint` | Junior handover: where to look, never the cause or the fix. Checked by hand. |
+| `topdown` | Issue or topic in one line > overview (1 to 3 short sentences or one table) > details layer by layer > what the reader checks. Checked by hand. |
+| `attach` | Check every file we hold for one that shows the point; red-box it, cut the sentences it proves, name what each attachment shows. Checked by hand. |
 
 The full meaning, rules and banned list of each module live in `domain/pena/modules.json`. Read them with `show`; never retype them here.
 
