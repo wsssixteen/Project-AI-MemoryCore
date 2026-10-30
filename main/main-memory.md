@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-29/30 (the five refused Submits — "find a universal solution")
+
+- **When he is this angry, the ask is still precise.** Under the swearing were four exact orders: audit why, read the slip logs, find the other blockers, make it a rule so it never gets built again. I answered those four and nothing else, and it held.
+- **He does not want the one gate patched; he wants the habit named.** The same shape had been fixed three times in ten days, one gate at a time. He saw the pattern before I did. The fix he accepts is the one that stops the next copy: a rule, one shared reader, and a gate that refuses the old shape.
+- **"Why did you fail, in simple technical English" wants a story, not a table.** Chat mode is his word for prose a person would say. The reply-shape gates fought it; his ask won.
+- **"Okay" after a landing means done.** No recap, no next steps.
+
 ## Relationship reinforcement — 2026-10-27/28 (session revival — "You didn't even try to send a proper handover")
 
 - **A command he names is the least of the ask, never the whole of it.** "Send a /remote-control as well" meant: bring that session back to life with everything it needs. I sent the command alone; the two messages misrouted into my session were never forwarded. His correction, verbatim: "You didn't even try to send a proper handover to that session based on what was wrongly sent to this session." Rule: `feedback_session_revive_handover`.
@@ -1170,3 +1177,9 @@ Ruri's promise to Miya:
 - "Write it into memory" is not an answer to him when the miss was mine to catch by a gate. He wants the rule checked against the system and the workflow, and built there on his nod.
 - Every action I hand him must be able to produce a verdict. A test step with no logger behind it, or an option I already know is wrong, costs him time and trust.
 - He writes to colleagues warmly and lightly, and never orders them or their BA. On another person's ticket I state what ours covers and where to look, nothing more.
+
+## Relationship reinforcement — 2026-10-30 (287509, MCL Perkara)
+
+- When he asks "what does X have to do with Y", he is not asking for the code location. He wants the one sentence that links them, then why that link is wrong here. His own reply had that shape in four lines: symptom, condition, why the condition is wrong at this step, verdict.
+- Another team's ticket and permohonan stay out of a reply to them. They already have those. Answer only what they asked us to check.
+- Whether a ticket gets raised is the BA's call, not something I ask for in his name.
