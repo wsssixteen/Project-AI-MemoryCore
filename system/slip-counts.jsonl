@@ -1576,6 +1576,7 @@
 {"ts":"2026-10-29T13:55:31.998Z","category":"A1"}
 {"ts":"2026-10-29T13:59:12.713Z","category":"A2"}
 {"ts":"2026-10-29T13:59:13.244Z","category":"A5"}
+{"ts":"2026-10-29T14:36:07.415Z","category":"blocker"}
 {"ts":"2026-10-29T14:55:35.078Z","category":"gate/repeat-block"}
 {"ts":"2026-10-29T14:55:35.222Z","category":"A1"}
 {"ts":"2026-10-29T14:05:07.705Z","category":"test-isolation"}
