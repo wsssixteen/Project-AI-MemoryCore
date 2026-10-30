@@ -77,7 +77,7 @@ Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_
 Upload document (he attaches the edited docx; the word is "upload", never "replace", per miya 2026-10-29):
 ```
 Hi infra, please help to upload document for MLK PROD. Thank you.
-#<num>: <URUSAN> - <one short outcome sentence>.
+#<num>
 
 <lokasi_fail>
 ```
@@ -85,24 +85,26 @@ Hi infra, please help to upload document for MLK PROD. Thank you.
 Reset PDF:
 ```
 Hi infra, please assist. Thank you.
-#<num>: <URUSAN> - <one short outcome sentence>.
+#<num>
 
 UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=<id>;
 -- 1 row updated
 ```
-No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
+No blank line between greeting and `#<num>`. The `#<num>` line is the ticket number ONLY: no description after it (2026-10-30 per みや, 287292). No instruction lines either ("Unzip …", "replace ikut nama …"): a box is greeting + `#<num>` + paths or UPDATEs, nothing else.
 
 **The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. The folder is named by its FULL Windows path once, then the file names under it — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
 **Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>[,<basename 2>,...]` must print PASS (more than 1 basename: it also checks `<num>.zip` holds every one and the script has one UPDATE per file).
 
 **When I edit the letter myself (no BA file) — 2026-10-29 per みや, 285768: "I think you just butchered this part. Not aligned, no peranan filled."**
 1. **Standard first**: put each value where the system's own layout puts it. Read the strategy class that fills the template (tag, image size, which cell), never the first box whose name matches (285768: the signature belongs beside the QR in the table, not in the empty block above it).
-2. **A date on a letter = the date that letter was generated**, read from the letter itself (Hijri line, QR, ADO name, DMS revision), never argued from the ticket text.
+2. **A date on a letter = the date the document was FIRST generated**: `umm_a_dok_keluaran.created_date`, the date the Document Maintenance screen shows (section "Re-dating" below). Never the ADO sign day, never the Hijri line inside the stored file.
 3. **Every field, not only the ones the ticket names**: a `-` or blank field gets its real value (285768: peranan from the signer's role in the urusan's module).
 4. **Render, then check every letter**: `python -I domain/patch-mlk-doc/letter-check.py --letter <patched> --original <downloaded> --pdf <render> --expect-change <tag or tag#n> --removed <tags> --allow-empty <tags> --signature <png>` prints PASS for STANDARD (only declared tags changed, Malay dates) · ALIGNMENT (signature and QR on one row, name below, left edges aligned) · DATA (no `-`, blank or `( )`). FAIL = fix and re-run before the hand-back.
 
-## Re-dating a generated letter (2026-10-29 per みや, #287292 + #285768)
-- The letter's date is the date it was GENERATED (proof: the Hijri "Bersamaan" line inside the stored file, filled at generation from JAKIM e-solat, and the signing tugasan's finish date). The Hijri line then needs no change.
+## Re-dating a generated letter (2026-10-30 per みや, #287292: "choose when the document was first generated")
+- The letter's date is the day the document was FIRST generated (the PT clerk's Jana): `umm_a_dok_keluaran.created_date`, shown on the Document Maintenance screen. `SELECT aplikasi_id, nama, created_date, created_by FROM umm_a_dok_keluaran WHERE aplikasi_id = (SELECT aplikasi_id FROM umm_aplikasi WHERE id_pengenalan = '<PERMOHONAN>');`
+- The Hijri "Bersamaan" line is set to the same day, from JAKIM e-Solat (`https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=date&date=<yyyy-mm-dd>&zone=MLK01` → `hijri`).
+- **Banned**: the ADO sign day, the Hijri line already in the stored file, or the signing tugasan's finish date as the letter date. They show when the letter was generated AGAIN at the ADO step, not when it was first generated (287292: patched 19/19/21 Oktober from these; the BA returned it; first generated was 30/9, 30/9, 20/10).
 - A BA asking for a different date (e.g. the permohonan date): show both dates side by side in the FIRST reply and let みや pick. Never re-date silently to the BA's date.
 - Two tickets on the same letters = one patch: say "3 documents, not 6" first.
 
