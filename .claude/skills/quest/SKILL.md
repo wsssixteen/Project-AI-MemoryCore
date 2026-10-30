@@ -369,7 +369,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 
 | Gate | Requirement |
 |---|---|
-| Test data written | If the hand-back asks みや to test/simulate, the quest MD `## Test data` section MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js --qa <num>` NOW. Never hand-write it. |
+| Test data written | If the hand-back asks みや to test/simulate, the quest MD `## Test data` section MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js --qa <num>` NOW. Never hand-write it. **No permohonan at the target tugasan on the test env (STG / MLIT) → alter the OLDEST suitable one there yourself while preparing, record its before-node, alter it back after his test** (deploy skill §5b "Test data by alter", 2026-10-30 per みや, 287164). |
 | Tugasan named | Every test/simulate instruction names the specific **tugasan** — not just the document/screen. みや needs to know where in the workflow to go. Omitting it = the same failure as a blank Notes.txt. |
 | Flag states WHERE — human-findable | Every flag / ⚠️ / caveat states a location みや can actually FIND: the file path PLUS, for a document, the visible **searchable text** + page number. NEVER cite an internal machine ID (Word `paraId`, SDT `id`, XML attribute) — みや cannot search those in Word. Say "the line reading '<visible text>' on page N", not "paragraph 78F8C270". |
 | Login present | Any permohonan ID carries its `pengguna_semasa` login (`feedback_pengguna_semasa.md`). Unknown → DB-query it first. |
