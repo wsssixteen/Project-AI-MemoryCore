@@ -97,12 +97,14 @@ No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome o
 
 **When I edit the letter myself (no BA file) — 2026-10-29 per みや, 285768: "I think you just butchered this part. Not aligned, no peranan filled."**
 1. **Standard first**: put each value where the system's own layout puts it. Read the strategy class that fills the template (tag, image size, which cell), never the first box whose name matches (285768: the signature belongs beside the QR in the table, not in the empty block above it).
-2. **A date on a letter = the date that letter was generated**, read from the letter itself (Hijri line, QR, ADO name, DMS revision), never argued from the ticket text.
+2. **A date on a letter = the date the document was FIRST generated**: `umm_a_dok_keluaran.created_date`, the date the Document Maintenance screen shows (section "Re-dating" below). Never the ADO sign day, never the Hijri line inside the stored file.
 3. **Every field, not only the ones the ticket names**: a `-` or blank field gets its real value (285768: peranan from the signer's role in the urusan's module).
 4. **Render, then check every letter**: `python -I domain/patch-mlk-doc/letter-check.py --letter <patched> --original <downloaded> --pdf <render> --expect-change <tag or tag#n> --removed <tags> --allow-empty <tags> --signature <png>` prints PASS for STANDARD (only declared tags changed, Malay dates) · ALIGNMENT (signature and QR on one row, name below, left edges aligned) · DATA (no `-`, blank or `( )`). FAIL = fix and re-run before the hand-back.
 
-## Re-dating a generated letter (2026-10-29 per みや, #287292 + #285768)
-- The letter's date is the date it was GENERATED (proof: the Hijri "Bersamaan" line inside the stored file, filled at generation from JAKIM e-solat, and the signing tugasan's finish date). The Hijri line then needs no change.
+## Re-dating a generated letter (2026-10-30 per みや, #287292: "choose when the document was first generated")
+- The letter's date is the day the document was FIRST generated (the PT clerk's Jana): `umm_a_dok_keluaran.created_date`, shown on the Document Maintenance screen. `SELECT aplikasi_id, nama, created_date, created_by FROM umm_a_dok_keluaran WHERE aplikasi_id = (SELECT aplikasi_id FROM umm_aplikasi WHERE id_pengenalan = '<PERMOHONAN>');`
+- The Hijri "Bersamaan" line is set to the same day, from JAKIM e-Solat (`https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=date&date=<yyyy-mm-dd>&zone=MLK01` → `hijri`).
+- **Banned**: the ADO sign day, the Hijri line already in the stored file, or the signing tugasan's finish date as the letter date. They show when the letter was generated AGAIN at the ADO step, not when it was first generated (287292: patched 19/19/21 Oktober from these; the BA returned it; first generated was 30/9, 30/9, 20/10).
 - A BA asking for a different date (e.g. the permohonan date): show both dates side by side in the FIRST reply and let みや pick. Never re-date silently to the BA's date.
 - Two tickets on the same letters = one patch: say "3 documents, not 6" first.
 
