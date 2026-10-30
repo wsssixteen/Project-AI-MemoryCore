@@ -1,0 +1,62 @@
+{
+ "urusan": "OPLBP",
+ "tugasan": "SB",
+ "key": "MLK_PLP_UPLP",
+ "env": "mlit",
+ "source": "engine v3 mlit",
+ "ts": "2026-10-30T10:00:38.441Z",
+ "ids": [
+  "first-pass",
+  "entry:tindakan",
+  "loop:agihan",
+  "entry:pembetulan",
+  "loop:pembetulan",
+  "entry:Tindakan-Semak-Peraku",
+  "alter",
+  "initiate",
+  "reassign",
+  "migrated"
+ ],
+ "rows": [
+  {
+   "id": "first-pass",
+   "how": "Mula sends to SB"
+  },
+  {
+   "id": "entry:tindakan",
+   "how": "Mula enters PB through exclusiveGateway > spocIntegrationService"
+  },
+  {
+   "id": "loop:agihan",
+   "how": "SB goes back to PB through Agihan > Tindakan(Pembetulan), then forward again"
+  },
+  {
+   "id": "entry:pembetulan",
+   "how": "SMB enters PB through Tindakan(Pembetulan)"
+  },
+  {
+   "id": "loop:pembetulan",
+   "how": "SB goes back to SMB through Agihan > Tindakan(Pembetulan), then forward again"
+  },
+  {
+   "id": "entry:Tindakan-Semak-Peraku",
+   "how": "PB enters SMB through Tindakan (Semak/Peraku)"
+  },
+  {
+   "id": "alter",
+   "how": "Alter Flow to this tugasan or to an earlier node; app rows are not deleted"
+  },
+  {
+   "id": "initiate",
+   "how": "Initiate or Initiate & Alter: a new process runs to this tugasan; app rows are not deleted"
+  },
+  {
+   "id": "reassign",
+   "how": "agihan or admin changes the holder inside the same pass"
+  },
+  {
+   "id": "migrated",
+   "how": "data migration created the rows; no user pass produced them"
+  }
+ ]
+}
