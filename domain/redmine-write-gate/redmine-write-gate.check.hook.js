@@ -68,7 +68,7 @@ const VIEW_FIRST = /\b(?:let me (?:see|check|view|review)|(?:view|see|check|revi
 // 2026-10-27 per miya (#246964, "add all and its variations"): every go-word and its forms, alone or in a sentence.
 // v1.8: + an imperative that names the Redmine ("upload to the redmine", "update the redmine"; "update yourself on the
 // redmine" does not match).
-const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan|(?:upload|post|submit|send|hantar|update)\s+(?:it\s+)?(?:to\s+|on\s+|in\s+|into\s+)?(?:the\s+)?redmine)\b/i;
+const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post(?:s|ed|ing)?(?: it| now)?|yes,? post|\[redmine-post-ok\]|I approve|approved?|submit(?:s|ted|ting)?(?: it| now)?|go(?: ahead)?(?: and)? (?:submit|send|post)|go(?: ahead| on)?|proceed|confirm(?:ed)?|yes|yep|yup|ok(?:ay)?|send(?:s|ing)?(?: it| now)?|sent|pass(?:ed)?(?: it)?|do it|push it|hantar(?:kan)?|teruskan|set\s+(?:#?\d{5,6}\s+)?(?:(?:to|as)\s+)?(?:\d{1,3}(?=\s*(?:%|percent))|resolved|closed|in progress)|(?:upload|post|submit|send|hantar|update)\s+(?:it\s+)?(?:to\s+|on\s+|in\s+|into\s+)?(?:the\s+)?redmine)\b/i;
 // The verbs a no-word must share a clause with to refuse ("don't post it yet"); the reader does the clause work, so
 // "do not stop until you've posted" is an order (v1.7 fixed this with a two-word distance; v1.8 uses the clause).
 const SUBMIT_ACTION = /\b(?:approve|submit|send|post|pass|proceed|hantar|upload|update)\w*/i;
