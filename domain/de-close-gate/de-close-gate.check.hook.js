@@ -315,7 +315,8 @@ function logFire(action, detail) {
 if (require.main === module) {
   runHook({ name: 'de-close-gate', event: 'Stop' }, (input) => {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
-    if (data.stop_hook_active) return { fired: false };
+    // A second stop never blocks again, but it still checks and logs, so a re-close after a fix leaves its row (2026-10-30).
+    const secondStop = !!data.stop_hook_active;
     const events = Array.isArray(data._testEvents) ? data._testEvents : parseTranscript(data.transcript_path || '');
     if (!events.length) return { fired: false };
     const disk = readDisk();
@@ -333,10 +334,11 @@ if (require.main === module) {
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length))].filter(Boolean).join(' '));
+      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length))].filter(Boolean).join(' '));
+      if (secondStop) return { fired: true, blocked: false };
       return { fired: true, blocked: true, blockReason: text };
     }
-    if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
+    if (r.verdict === 'pass') { logFire(secondStop ? 'passed-second-stop' : 'passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
     return { fired: false };
   });
 }

@@ -54,3 +54,5 @@ diagram: domain/de-close-gate/diagram.png (C9 marked)
 self_audit: the eval replays every condition; each fire writes passed or blocked with the failing conditions to log.jsonl
 
 **C9 SAVE-QUEST (2026-10-30, per みや: "please audit if just saying DE is enough to perform save quest")**: step 2d of Domain Expansion said to run `lib/save-quest.js` for every touched quest, and nothing checked it. C9 blocks the close when a touched QA ticket has no run this session, or its latest verdict is still PHASE-1, PHASE-2 or LEARN-THEN-PHASE-2 with no reply line "Phase 1 not ready: <QA> <what is missing>". An ADHOC id is exempt (adhoc-save owns it). Eval 44/44 (C9-1 to C9-13).
+
+**Second stop (2026-10-30)**: on a retry after a block the gate used to stay silent, so a fixed re-close left no row. It now checks and logs `passed-second-stop` or `failed-second-stop`, and still never blocks twice. Spec kept: one block per close. Eval S1 to S4.

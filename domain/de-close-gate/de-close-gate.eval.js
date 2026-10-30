@@ -188,6 +188,18 @@ check('C9-12 adhoc id has no ticket -> C9 does not ask for a verdict', !/C9 SAVE
 r = run({ _testSaveQuestLines: [], _testEvents: [{ kind: 'text', role: 'assistant', text: CLOSE_BANNER + '\n[skip-de-close-gate: fixture]' }] });
 check('C9-13 bypass token -> silent', r.status === 0, 'exit=' + r.status);
 
+// ── second stop: never blocks again, still checks and logs (2026-10-30) ──
+const fs = require('fs');
+const tailLog = () => { try { return fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split(/\r?\n/).pop(); } catch (_) { return ''; } };
+r = run({ stop_hook_active: true });
+check('S1 second stop, all conditions hold -> exit 0, logs passed-second-stop', r.status === 0 && /passed-second-stop/.test(tailLog()), 'exit=' + r.status + ' ' + tailLog());
+r = run({ stop_hook_active: true, _testSaveQuestLines: [] });
+check('S2 second stop, a condition fails -> exit 0 (no second block), logs failed-second-stop with C9', r.status === 0 && /failed-second-stop/.test(tailLog()) && /C9/.test(tailLog()), 'exit=' + r.status + ' ' + tailLog());
+r = run({ stop_hook_active: true, _testEvents: [{ kind: 'text', role: 'assistant', text: 'normal reply' }] });
+check('S3 second stop on a normal reply -> silent, no row', r.status === 0 && !/second-stop/.test(tailLog()) || /failed-second-stop/.test(tailLog()), 'exit=' + r.status);
+r = run({ _testSaveQuestLines: [] });
+check('S4 first stop still blocks', r.status === 2, 'exit=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nde-close-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');
