@@ -132,6 +132,7 @@
       "Inside a block, go down one layer per line: screen or action, then the data or flow, then the code. Class names and line numbers only on the lowest layer.",
       "The fix comes after its cause, never before the issue is said.",
       "Close with what the reader checks: the permohonan, the screen, the click.",
+      "Each block opens with what the user did, then what they saw. Before a part is used (langkah, turutan, tugasan), one short line says what it is. One fact per sentence, one sentence per line, a blank line between layers (miya 2026-10-30, #239386 second correction: 'jumping into the issue without explaining what is the issue').",
       "(miya 2026-10-30, #239386: explain top-down, from the issue at the top view, layer by layer to where we fix, and for them to check.)"
     ],
     "banned": ["a class name, line number or fix in the first line after the greeting", "a hand-over with no line saying what the reader checks"],
