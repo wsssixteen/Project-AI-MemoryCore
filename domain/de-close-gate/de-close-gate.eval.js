@@ -16,6 +16,8 @@ const FRESH_SAVE = JSON.stringify({ ts: new Date().toISOString(), action: 'save-
 const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' }), FRESH_AUDIT, FRESH_SAVE];
 const STALE_RECON = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'reconcile-ran', detail: 'open=20' })];
 
+const SQ = (qa, verdict, ts) => JSON.stringify({ ts: ts || new Date().toISOString(), qa, redmine: 'Resolved', local: 'active', verdict, dur_ms: 5 });
+
 function run(overrides) {
   const stdin = JSON.stringify(Object.assign({
     transcript_path: '',
@@ -29,6 +31,7 @@ function run(overrides) {
     _testLogLines: FRESH_LOG,
     _testGateLogLines: FRESH_RECON,
     _testSessionLineCount: 56,
+    _testSaveQuestLines: [SQ('QA-276182', 'WAIT')],
   }, overrides));
   return spawnSync(process.execPath, [HOOK], { input: stdin, encoding: 'utf8', timeout: 30000, env: process.env });
 }
@@ -147,6 +150,43 @@ check('F26 a clean re-run after a failing run -> pass (latest full row governs)'
 // F14: malformed rows in gate log ignored, fresh row still found -> pass
 r = run({ _testGateLogLines: ['not-json', '{broken'].concat(FRESH_RECON) });
 check('F14 malformed gate-log rows tolerated -> pass', r.status === 0, 'exit=' + r.status);
+
+// ── C9: every touched ticket has a save-quest verdict and its stage was done (2026-10-30, per miya) ──
+r = run({ _testSaveQuestLines: [] });
+check('C9-1 replay: touched ticket with no save-quest run -> BLOCK naming it', r.status === 2 && /C9 SAVE-QUEST/.test(r.stderr) && /no verdict this session: QA-276182/.test(r.stderr) && /node lib\/save-quest\.js/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'PHASE-1')] });
+check('C9-2 verdict PHASE-1 still standing -> BLOCK, stage not done', r.status === 2 && /stage not done: QA-276182 \(PHASE-1\)/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'PHASE-2')] });
+check('C9-3 verdict PHASE-2 still standing -> BLOCK', r.status === 2 && /PHASE-2/.test(r.stderr), 'exit=' + r.status);
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'PHASE-1'), SQ('QA-276182', 'WAIT')] });
+check('C9-4 PHASE-1 then WAIT after the close-out -> pass (latest row wins)', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+for (const v of ['DONE', 'AHEAD', 'KEEP-DELEGATED', 'HELD', 'UNKNOWN']) {
+  r = run({ _testSaveQuestLines: [SQ('QA-276182', v)] });
+  check('C9-5 settled verdict ' + v + ' -> pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+}
+const notReady = extra => [
+  { kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' },
+  { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' },
+  { kind: 'text', role: 'assistant', text: extra },
+  { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
+];
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'PHASE-1')], _testEvents: notReady('Phase 1 not ready: QA-276182 fix not deployed') });
+check('C9-6 unfinished quest with its "Phase 1 not ready" line -> pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'PHASE-1')], _testEvents: notReady('Phase 1 not ready: QA-111222 fix not deployed') });
+check('C9-7 "not ready" naming another ticket -> still BLOCK', r.status === 2 && /QA-276182/.test(r.stderr), 'exit=' + r.status);
+r = run({ _testSaveQuestLines: [SQ('QA-276182', 'WAIT', '2020-01-01T00:00:00Z')], _testSessionStartMs: Date.now() - 3600000 });
+check('C9-8 a run from before this session does not count -> BLOCK', r.status === 2 && /no verdict this session/.test(r.stderr), 'exit=' + r.status);
+r = run({ _testSaveQuestLines: [SQ('276182', 'WAIT')] });
+check('C9-9 a row keyed by the bare number counts -> pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run({ _testSaveQuestLines: [JSON.stringify({ ts: new Date().toISOString(), qa: 'QA-276182', gate: 'archive-redmine-gate', verdict: 'WAIT', action: 'refused' })] });
+check('C9-10 an archive-gate refusal row is not a save-quest run -> BLOCK', r.status === 2 && /no verdict this session/.test(r.stderr), 'exit=' + r.status);
+r = run({ _testSaveQuestLines: ['not json {{', '', SQ('QA-276182', 'WAIT')] });
+check('C9-11 junk log rows tolerated -> pass', r.status === 0, 'exit=' + r.status);
+r = run({ _testActiveText: 'qa=ADHOC-MCL-2026-9\nstatus=active\n', _testSaveQuestLines: [], _testEvents: [
+  { kind: 'tool', name: 'Bash', blob: 'cat ADHOC-MCL-2026-9' }, { kind: 'tool', name: 'Edit', blob: 'ADHOC-MCL-2026-9.md' }, { kind: 'text', role: 'assistant', text: CLOSE_BANNER } ] });
+check('C9-12 adhoc id has no ticket -> C9 does not ask for a verdict', !/C9 SAVE-QUEST/.test(r.stderr || ''), r.stderr);
+r = run({ _testSaveQuestLines: [], _testEvents: [{ kind: 'text', role: 'assistant', text: CLOSE_BANNER + '\n[skip-de-close-gate: fixture]' }] });
+check('C9-13 bypass token -> silent', r.status === 0, 'exit=' + r.status);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
