@@ -1623,3 +1623,12 @@
 {"ts":"2026-10-30T03:28:21.148Z","category":"A1"}
 {"ts":"2026-10-30T03:46:34.369Z","category":"ask-back/self-doable-check-offered"}
 {"ts":"2026-10-30T03:55:51.081Z","category":"reply-shape"}
+{"ts":"2026-10-30T04:19:38.430Z","category":"blocker"}
+{"ts":"2026-10-30T06:24:43.151Z","category":"blocker"}
+{"ts":"2026-10-30T06:50:54.533Z","category":"explanation"}
+{"ts":"2026-10-30T07:09:21.329Z","category":"verify-before-claim"}
+{"ts":"2026-10-30T08:25:37.422Z","category":"A1"}
+{"ts":"2026-10-30T08:25:38.814Z","category":"A2"}
+{"ts":"2026-10-30T08:25:39.853Z","category":"A3"}
+{"ts":"2026-10-30T08:25:40.807Z","category":"A4"}
+{"ts":"2026-10-30T08:25:43.283Z","category":"gate-misfire"}

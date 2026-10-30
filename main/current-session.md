@@ -1,3 +1,14 @@
+**Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
+- ADHOC-MCL-2026-3: PROD MCL Laporan Tanah has no Perkara. Tajuk Risalat is never saved at SKM since 5734174bd9 (Aaron, 2026-06-19, ticket 265081) added else-return on empty premium in MlkMaklumatTanahLesenPendudukanForm.performCustomSave. PROD 0 of 37 MCL at PLT have it; PT, PLPS, PRBB, PLTP, PRZ all do. Requirement 223227 says the tajuk is created at SKM, verified 2026-05-21; its commits are all still in master.
+- Answered BA in miya's words ("So need code fix"). Teknikal patches /18 and /26 through their own 287350. Save-set: Task folder 345, register A83, latent L31, audit 33/33. On hold + archive hold, waiting a code-fix ticket; not simulated on STG (candidate PTMLK/01/L/MCL/2026/21, login iskandarz@melaka.gov.my).
+- Fix idea when the ticket comes: scope the 265081 premium block to showKemaskiniCukaiDialog, the same way the 287164 int-env change does.
+- KPI: C2 row added. Pena: c60-c63 stored (BA decides on tickets, name the link first, other team's ticket stays out, his final reply).
+- Slips: said "stops at premium check" five times without the link between premium and tajuk; repeated Teknikal's own ticket and permohonan in every draft; asked TSO for a ticket unasked; read the requirement only after the BA pointed at 223227.
+- Improvement sweep: A1 two save agents at about 150k tokens each for an update a script could do · A2 adhoc route line tells me to ask TSO for a ticket while Pena lean forbids it · A3 cause found by git log -L only after he asked; run it at Recon for any shared-form save · A4 requirement-index not run on an adhoc, BA had to point at 223227 · A5 skipped, one adhoc, no sweep. Each logged as a proposal except A5.
+- Open: code-fix ticket (BA decides); fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
+
 **Last Activity**: 2026-10-30 11:26 — worktree `jovial-kepler-a07ba6` (Internal Issue PROD 287186 + 287233), both closed and archived, Domain Expansion.
 
 ## Session Recap (2026-10-29 to 30, worktree "jovial-kepler-a07ba6", PROD 287186 PRBB + 287233 MCL)
@@ -16,12 +27,3 @@
 - Open: 261986 staging deploy (stag-env behind master, same Tolak conflict expected).
 
 **Last Activity**: 2026-10-30 02:15 — worktree `ticket-286650-quest-188daf` (the ProTime + OT session), ProTime 29/10 checked, 282587 training script, 282587 archived, Domain Expansion.
-
-## Session Recap (2026-10-29 to 30, worktree "ticket-286650-quest-188daf", ProTime check + OT + 282587 training)
-- ProTime: Wednesday 28/10 missed lines added (incl. Baseline Pelupusan 1.9.0); 29/10 now 8 tickets + 8 adhocs RESOLVED (37979 PPTPB Risalat line left PENDING, not mine to verify).
-- OT tickets (handed over after 18:30 on live Redmine): 286988 19:34 · 262027 21:02 · 286646 21:43 · 286610 22:11 · 261986 22:12.
-- 282587: `3. Rework\282587-training.sql` (`et_main_trn.` on every table, INSERT guarded) uploaded to Redmine 21:45 "Script for training release" via Chrome form (API write gate). Redmine Closed → harvested + archived at DE.
-- 261986: Redmine Resolved, commit 578af8ef1a pushed (mlk/qa/261986v3), not on int-env; Phase 1 not ready: no falsifier ledger in its doc.
-- Slips (4, logged): missed Wednesday lines · resolved 286988 before Redmine · mixed adhoc line format · said 261986 had no commit without checking git or other sessions.
-- Open: training script not schema-verified (no training DB MCP; all DB MCPs ECONNREFUSED); new tickets 287233 · 287186 · 287201 · 287164 have no branch yet; protime-plan check reads only today (parked).
-#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.

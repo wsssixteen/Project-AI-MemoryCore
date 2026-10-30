@@ -247,3 +247,7 @@
 {"ts":"2026-10-30T03:07:50.529Z","qa":"QA-287233","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-30T03:09:00.081Z","qa":"QA-287233","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-30T03:14:59.936Z","qa":"QA-287186","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-30T08:27:01.981Z","qa":"QA-287273","kind":"wrong-fix","n":1,"was":"first build added every same-owner share","why":"MLIT duplicated rows 1/1 + 1/1 gave 2/1 in the reflection harness","learned":"a title whose shares total over 1 has duplicate rows: dedupe, keep one share"}
+{"ts":"2026-10-30T08:27:02.802Z","qa":"QA-287273","kind":"wrong-fix","n":1,"verdict":"knowledge:BUG-BESTIARY.md"}
+{"ts":"2026-10-30T08:33:29.095Z","qa":"ADHOC-MCL-2026-3","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-30T08:33:56.767Z","qa":"ADHOC-MCL-2026-3","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"findings carried into QA-287509 doc; knowledge distilled at QA-287509 Phase 2, not mid-quest"}

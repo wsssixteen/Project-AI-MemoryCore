@@ -520,3 +520,9 @@
 {"ts":"2026-10-30T02:28:48.994Z","id":"ADHOC-PRBB-2026-20","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","register: status ↔ block status","qa_doc: \"## Test data\" has an entry"],"dur_ms":40}
 {"ts":"2026-10-30T02:28:56.938Z","id":"ADHOC-PRBB-2026-20","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":40}
 {"ts":"2026-10-30T02:29:04.515Z","id":"ADHOC-PRBB-2026-20","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-10-30T06:23:30.816Z","id":"ADHOC-MCL-2026-3","outcome":"pass","fails":[],"dur_ms":40}
+{"ts":"2026-10-30T07:25:03.709Z","id":"ADHOC-MCL-2026-3","outcome":"pass","fails":[],"dur_ms":47}
+{"ts":"2026-10-30T07:29:13.709Z","id":"ADHOC-MCL-2026-3","outcome":"pass","fails":[],"dur_ms":54}
+{"ts":"2026-10-30T07:29:22.117Z","id":"ADHOC-MCL-2026-3","outcome":"pass","fails":[],"dur_ms":45}
+{"ts":"2026-10-30T08:33:30.091Z","id":"ADHOC-MCL-2026-3","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":80}
+{"ts":"2026-10-30T08:33:57.672Z","id":"ADHOC-MCL-2026-3","outcome":"pass","fails":[],"dur_ms":92}

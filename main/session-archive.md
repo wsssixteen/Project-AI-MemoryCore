@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-29 to 30, worktree "ticket-286650-quest-188daf", ProTime check + OT + 282587 training)
+- ProTime: Wednesday 28/10 missed lines added (incl. Baseline Pelupusan 1.9.0); 29/10 now 8 tickets + 8 adhocs RESOLVED (37979 PPTPB Risalat line left PENDING, not mine to verify).
+- OT tickets (handed over after 18:30 on live Redmine): 286988 19:34 · 262027 21:02 · 286646 21:43 · 286610 22:11 · 261986 22:12.
+- 282587: `3. Rework\282587-training.sql` (`et_main_trn.` on every table, INSERT guarded) uploaded to Redmine 21:45 "Script for training release" via Chrome form (API write gate). Redmine Closed → harvested + archived at DE.
+- 261986: Redmine Resolved, commit 578af8ef1a pushed (mlk/qa/261986v3), not on int-env; Phase 1 not ready: no falsifier ledger in its doc.
+- Slips (4, logged): missed Wednesday lines · resolved 286988 before Redmine · mixed adhoc line format · said 261986 had no commit without checking git or other sessions.
+- Open: training script not schema-verified (no training DB MCP; all DB MCPs ECONNREFUSED); new tickets 287233 · 287186 · 287201 · 287164 have no branch yet; protime-plan check reads only today (parked).
+#**Last Activity**: 2026-10-29 22:30 — worktree `stoic-ramanujan-634076` (child of "Sweep 3 tickets + audit"), 286655 MLPS/OMLPS Jadual dates handed to Amani, Domain Expansion.
+
 ## Session Recap (2026-10-29, worktree "stoic-ramanujan-634076", 286655 MLPS/OMLPS Tarikh Jadual)
 - 286655: Maklumat Jadual at Penyediaan Borang 4Ae dan L1e keeps the saved Tarikh Mula/Akhir after Simpan (MLPS + OMLPS; QA 262778 old-date reset kept). Commit 75381bb3a7 on mlk/esokongan/286655, merged int-env fa244fa194.
 - miya tested MLPS on internal PTMLK/02/L/MLPS/2026/5 (27/05/2025 to 31/12/2028 kept after Simpan, Borang 4Ae line (1) matches, Pengesahan KPPD 21:30 matches). OMLPS not tested (no OMLPS app at that tugasan on internal).
@@ -6984,6 +6993,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
