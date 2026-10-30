@@ -901,3 +901,4 @@
 {"ts":"2026-10-30T08:51:47.042Z","turn_id":"0106ed3f-41","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
 {"ts":"2026-10-30T08:51:47.125Z","turn_id":"0106ed3f-41","feature":"codemap-recon-consult","goal":"codemap-recon-consult.discipline.hook.js — Stop hook (back-gate) Power: domain/codemap-recon-consult/ — back-gate paired with the front-gate trigger.hook.js reminder."}
 {"ts":"2026-10-30T08:52:44.543Z","turn_id":"6b62a798-5","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-10-30T08:57:17.367Z","turn_id":"0106ed3f-42","feature":"redmine-write-gate","goal":"BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first"}

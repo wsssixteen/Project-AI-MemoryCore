@@ -28,7 +28,8 @@ const lookalike = path.join(sb, 'xticket-load-verify.js'); fs.copyFileSync(postS
 
 // Legacy fixtures (F1-F55) test the post-window behaviour; the v1.4 stage-only fixtures pass their own date.
 function run(payload, until = '2000-01-01', root = ROOT) {
-  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: root, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: root } });
+  // REDMINE_GATE_SLIPS: a blocked fixture must never write a repeat-block slip row into the real ledger (57 bogus rows on 2026-10-30).
+  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: root, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: root, REDMINE_GATE_SLIPS: path.join(sb, 'slips-sandbox.jsonl') } });
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 const blocked = r => /redmine-write-gate/.test(r.out) && /⛔/.test(r.out);
