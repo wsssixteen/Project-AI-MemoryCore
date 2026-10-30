@@ -154,6 +154,9 @@ check('48 a closing he never uses is caught', r.status === 1 && has(r, 'greet'),
 r = run(['check', '--module', 'greet', '--file', draft('c10.txt', CL('thank you all the very best'))]);
 check('49 a closing sentence with extra words is caught', r.status === 1 && has(r, 'greet'), r.stdout);
 check('50 greet rules name the default and the large-ticket closing', modules.greet.rules.some((x) => /Default: Thank you\./.test(x)) && modules.greet.rules.some((x) => /^Thank you very much\. = a large ticket/.test(x)));
+r = run(['check', '--profile', 'redmine-dev-fixlist', '--file', draft('t1.txt', 'Salam Amirul,\n\nOn MLIT, MPT gives an error.\n\nThank you.\n')]);
+check('51 a developer hand-over asks the topdown question by hand', /\[topdown\] by hand: Read only the line after the greeting/.test(r.stdout), r.stdout);
+check('52 topdown sits in the dev and BA profiles, never with hint', ['redmine-dev-mapping', 'redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('topdown')) && !profiles['junior-handover'].modules.includes('topdown'));
 
 const failed = results.filter((x) => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 400)));

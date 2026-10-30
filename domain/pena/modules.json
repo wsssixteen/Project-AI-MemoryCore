@@ -122,5 +122,20 @@
     "banned": ["the finished SQL or diff", "the cause"],
     "check": "manual",
     "ask": "Does any line say why it breaks or give the finished fix? Cut it."
+  },
+  "topdown": {
+    "title": "Top-down explanation",
+    "means": "Explain from the highest view down. First the issue as the user sees it and where. Then one layer at a time, each cause in its own block, going down. Then where it is fixed. Last, what the reader checks to see it work.",
+    "rules": [
+      "Line after the greeting: the issue at the top view (screen, action, env, which urusan or module).",
+      "Two or more causes: say how many, then one numbered block per cause, each opening with what the user sees for that cause.",
+      "Inside a block, go down one layer per line: screen or action, then the data or flow, then the code. Class names and line numbers only on the lowest layer.",
+      "The fix comes after its cause, never before the issue is said.",
+      "Close with what the reader checks: the permohonan, the screen, the click.",
+      "(miya 2026-10-30, #239386: explain top-down, from the issue at the top view, layer by layer to where we fix, and for them to check.)"
+    ],
+    "banned": ["a class name, line number or fix in the first line after the greeting", "a hand-over with no line saying what the reader checks"],
+    "check": "manual",
+    "ask": "Read only the line after the greeting: does it say what the user sees and where, with no class name or line number? Does each cause go down one layer per line and close on the fix? Is the last line before the closing what the reader checks?"
   }
 }
