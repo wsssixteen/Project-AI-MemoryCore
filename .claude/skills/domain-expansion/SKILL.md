@@ -7,6 +7,8 @@ description: Domain Expansion 💠 るり結界 (ラピス バリアー) — Rur
 
 The structured orchestrator for Domain Expansion. **Source of truth for each step's detail = `Feature/Domain-Expansion/expansion-protocol.md`** — this skill drives the SEQUENCE; it does not duplicate the bodies. Banner text is sacred (`feedback_domain_expansion_format.md`).
 
+boundary: covers this session's saves and its audit, steps 0a to 13: the session file, the diary, memory, every touched quest and adhoc, knowledge, the commit, push and land, the worktree close · never changes a part outside its own step list in the same turn (a Kernel file every hook runs, another Workflow's gate, a Rule) without its own `/system-change` and his nod; never skips or shrinks a step; never closes with a touched quest unsaved · stops at the closing banner; a finding that needs a build becomes a proposal row (step 7.5) or a `/system-change` with his nod, never a build inside the ritual
+
 ## Step 0 — banner + visible step-line (MANDATORY FIRST)
 
 Emit the **opening banner VERBATIM** — copy it, never reconstruct from memory (`蒼穹 / Sōkyū / 瑠璃-kanji / ドメイン展開` variants are CONFABULATIONS, never canon):
@@ -104,5 +106,7 @@ DE was a protocol + trigger-hook = **model-driven execution** with no Skill-tool
 
 
 *2026-10-30, later — C10 added to `de-close-gate`: each finding class needs a reply line `<class> → <home>`; a repeat of 3 or more is built or dropped. Spec-preservation: C1 to C9 and the second-stop rule unchanged; the report-only wording of the note above is replaced. Fire check: gate eval 54/54, session-audit eval 36/36.*
+
+*2026-10-30 — `boundary:` line added under the intro per system-rules Rule 9 (per みや: "the 'boundaries' or guard rails or the limits to stop you from going over board"; the first Workflow declaration, written by Fable 5.1 as the rule's trial). Spec-preservation: no step, Banned clause or gate changed; one declaration line, additive.*
 
 *2026-10-30 — Steps 5 and 12 retired per みや ("Step 5 and Checklist D"): the Forge log was deleted 2026-08-16; Checklist D repeated `de-close-gate` C1-C10 by hand. Numbers are not reused. Spec-preservation: every other step, Banned clause and gate unchanged; the transcript-trace rows of Checklist D (banner, step line, sweep, closing words, manifest) now have no second check.*

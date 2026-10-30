@@ -10,12 +10,13 @@
  *        --trigger "<when X>" --action "<flag/block Y>" --replay "<concrete case>" \
  *        --route <code|check|tool-gate|skill|prose> --route-why "<reason>" \
  *        --footprint "<per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none>: <processes, RAM>" \
+ *        --boundary "covers <what it reads and acts on> · never <what it must not do or touch> · stops <when it hands to miya, or none: report only>" \
  *        --nod "<authorization>" [--override-collision "<reason>"] [--root <path>]
  *   node core/forge.js new skill <name>  --trigger ... --action ... --replay ... --nod ...
  *   node core/forge.js new script <name> --trigger ... --action ... --replay ... --nod ...
  *   node core/forge.js refine <name> --nod "<authorization>"
  *   node core/forge.js install hook .claude/hooks/<file>.js [--name <kebab>] --symptom ... --goal ... --signal ... \
- *        --retention ... --footprint ... --nod "<authorization>" [--allow-relative] [--no-smoke]
+ *        --retention ... --footprint ... --boundary ... --nod "<authorization>" [--allow-relative] [--no-smoke]
  *        (2026-10-05: brings an EXISTING loose hook into domain/<name>/ unchanged — see forgeInstall)
  *
  * Forge is step 4 of system/INDEX.md §The change route; it never runs git. The route's step 7
@@ -43,10 +44,17 @@ const TELEMETRY = path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl');
 function arg(name, required) {
   const i = process.argv.indexOf('--' + name);
   const v = i > 0 ? process.argv[i + 1] : undefined;
-  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}\n       forge new check <name> needs ALL of: --event --trigger --action --replay --symptom --goal --signal --retention --footprint --nod  [--matcher "<m>"] [--override-collision "<reason>"] [--root <path>]`);
+  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}\n       forge new check <name> needs ALL of: --event --trigger --action --replay --symptom --goal --signal --retention --footprint --boundary --nod  [--matcher "<m>"] [--override-collision "<reason>"] [--root <path>]`);
   return v;
 }
 const FOOTPRINT_RE = /^(per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none)\b/i;
+// system-rules Rule 9 (2026-10-30): boundary = covers <…> · never <…> · stops <…>, in this order; "·" or ";" between the parts
+const BOUNDARY_RE = /^covers\s+[^·;\n]*\S\s*[·;]\s*never\s+[^·;\n]*\S\s*[·;]\s*stops\s+\S/i;
+function checkBoundary(b) {
+  if (b === undefined || /^\s*$/.test(b) || /\bTODO\b/i.test(b)) die(2, '--boundary must be a real line (empty/TODO banned — system-rules Rule 9)');
+  if (!BOUNDARY_RE.test(b.trim())) die(2, '--boundary must read "covers <what it reads and acts on> · never <what it must not do or touch> · stops <when it hands to miya, or none: report only>" (system-rules Rule 9)');
+  return b.trim();
+}
 function die(code, msg) { console.error('forge: ' + msg); process.exit(code); }
 function log(msg) { console.log('forge: ' + msg); }
 function append(file, row) {
@@ -137,7 +145,8 @@ function readmeTemplate(name, event, trigger, action, why) {
     'goal_signal: ' + (why.signal || 'TODO(forge)') + '\n' +
     (why.signalRegex ? 'goal_signal_regex: ' + why.signalRegex + '\n' : '') +
     'retention: ' + (why.retention || 'TODO(forge)') + '\n' +
-    'footprint: ' + (why.footprint || 'TODO(forge)') + '\n\n' +
+    'footprint: ' + (why.footprint || 'TODO(forge)') + '\n' +
+    'boundary: ' + (why.boundary || 'TODO(forge)') + '\n\n' +
     '**What fires when**: ' + (event || 'n/a') + ' — ' + trigger + '\n\n' +
     '**Contract**: ' + action + '\n\n' +
     '**Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.\n\n' +
@@ -205,10 +214,12 @@ function forgeNew() {
   // system-rules Rule 7 (2026-09-29): resource footprint declared at birth — trigger class first, then processes + RAM
   why.footprint = arg('footprint', true);
   if (!FOOTPRINT_RE.test(why.footprint.trim())) die(2, '--footprint must start with one of: per-prompt | per-tool | per-turn | per-session | always | scheduled | on-demand | none, then ": <processes, RAM>" (system-rules Rule 7)');
+  why.boundary = checkBoundary(arg('boundary', true));
 
   // 1. ECHO (recorded, per operator parameter echo+nod)
   log('ECHO  Trigger: when ' + trigger + ' · Action: ' + action + ' · Replay case: ' + replay);
   log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention + ' · footprint: ' + why.footprint);
+  log('BOUNDARY ' + why.boundary);
   log('NOD   ' + nod + ' · ROUTE ' + route + ' (' + routeWhy + ')');
 
   // 2. collision → refine-first
@@ -258,7 +269,7 @@ function forgeNew() {
       const dir = kind === 'skill' ? path.join(ROOT, '.claude', 'skills', name) : path.join(ROOT, 'lib');
       fs.mkdirSync(dir, { recursive: true });
       mainPath = kind === 'skill' ? path.join(dir, 'SKILL.md') : path.join(dir, name + '.js');
-      const whyHeader = '// symptom: ' + why.symptom + '\n// goal: ' + why.goal + '\n// goal_signal: ' + why.signal + '\n// retention: ' + why.retention + '\n// footprint: ' + why.footprint + '\n';
+      const whyHeader = '// symptom: ' + why.symptom + '\n// goal: ' + why.goal + '\n// goal_signal: ' + why.signal + '\n// retention: ' + why.retention + '\n// footprint: ' + why.footprint + '\n// boundary: ' + why.boundary + '\n';
       fs.writeFileSync(mainPath, kind === 'skill' ? skillTemplate(name, trigger, action) + '\n' + whyHeader.replace(/^\/\/ /gm, '') : '#!/usr/bin/env node\n// ' + name + ' — born via forge\n' + whyHeader);
       created.push(mainPath);
       if (kind === 'script') {
@@ -267,7 +278,7 @@ function forgeNew() {
       }
     }
     // 7. registry + telemetry + rollback recipe
-    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, footprint: why.footprint, collisions_overridden: override || null });
+    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, footprint: why.footprint, boundary: why.boundary, collisions_overridden: override || null });
     append(TELEMETRY, { ts: new Date().toISOString(), hook: 'forge', event: 'Forge', mode: 'forge-new', component: name, kind, exit: 0, blocked: false });
     // Auto-ledger the birth as a type=upgrade Slip Ledger row (weekly-audit feed) — 2026-07-19
     // scour refinement #3. Expected result: registry rows ⊆ upgrade rows, zero manual memory.
@@ -322,6 +333,7 @@ function whyFromArgs() {
   if (/^(fires?|triggers?|runs?)\b/i.test(why.goal.trim())) die(2, '--goal restates the trigger; state the OUTCOME the feature exists to produce (Rule 13)');
   why.footprint = arg('footprint', true);
   if (!FOOTPRINT_RE.test(why.footprint.trim())) die(2, '--footprint must start with one of: per-prompt | per-tool | per-turn | per-session | always | scheduled | on-demand | none, then ": <processes, RAM>" (system-rules Rule 7)');
+  why.boundary = checkBoundary(arg('boundary', true));
   return why;
 }
 function walkFiles(dir, out) {
@@ -362,7 +374,7 @@ process.exit(failed ? 1 : 0);
 
 function forgeInstall() {
   const kind = process.argv[3], srcArg = process.argv[4];
-  if (kind !== 'hook' || !srcArg || srcArg.startsWith('--')) die(2, 'usage: forge install hook <.claude/hooks/file.js> [--name <kebab>] --symptom --goal --signal --retention --footprint --nod [--allow-relative] [--no-smoke] [--root <path>]');
+  if (kind !== 'hook' || !srcArg || srcArg.startsWith('--')) die(2, 'usage: forge install hook <.claude/hooks/file.js> [--name <kebab>] --symptom --goal --signal --retention --footprint --boundary --nod [--allow-relative] [--no-smoke] [--root <path>]');
   const src = path.isAbsolute(srcArg) ? srcArg : path.join(ROOT, srcArg);
   const hooksDir = path.join(ROOT, '.claude', 'hooks');
   if (!fs.existsSync(src) || path.dirname(path.resolve(src)) !== path.resolve(hooksDir) || !src.endsWith('.js')) die(2, 'install hook: source must be an existing .js file directly under .claude/hooks/ — got ' + srcArg);
@@ -377,6 +389,7 @@ function forgeInstall() {
   const dir = path.join(ROOT, 'domain', name);
   log('ECHO  install ' + oldRel + ' → ' + newRel + ' (telemetry name kept: ' + base + ')');
   log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention + ' · footprint: ' + why.footprint);
+  log('BOUNDARY ' + why.boundary);
   log('NOD   ' + nod);
 
   if (fs.existsSync(dir)) { log('COLLISION: domain/' + name + ' already exists — refine-first, or pick another --name'); process.exit(3); }
@@ -457,7 +470,7 @@ function forgeInstall() {
       '# ' + name + '\n\n' +
       'symptom: ' + why.symptom + '\n' + 'goal: ' + why.goal + '\n' + 'goal_signal: ' + why.signal + '\n' +
       (why.signalRegex ? 'goal_signal_regex: ' + why.signalRegex + '\n' : '') +
-      'retention: ' + why.retention + '\n' + 'footprint: ' + why.footprint + '\n' +
+      'retention: ' + why.retention + '\n' + 'footprint: ' + why.footprint + '\n' + 'boundary: ' + why.boundary + '\n' +
       'registration: ' + registration + '\n' +
       'telemetry_name: ' + base + '\n\n' +
       '**Installed** ' + new Date().toISOString().slice(0, 10) + ' via `core/forge.js install hook` — moved unchanged from `' + oldRel + '`. The telemetry name `' + base + '` is kept, so its fire history before and after the install is one series.\n\n' +

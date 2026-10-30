@@ -31,8 +31,9 @@ const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
 // F1 — birth
+const BOUNDARY = ['--boundary', 'covers the Stop turn of the sandbox · never writes outside the sandbox · stops none: report only'];
 let r = runForge(['new', 'check', 'probe-check', '--event', 'Stop',
-  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case',
+  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', ...BOUNDARY, '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case',
   '--route', 'check', '--route-why', 'detectable trigger', '--nod', 'forge-eval-fixture']);
 check('F1 exit 0', r.status === 0, 'exit=' + r.status + ' err=' + (r.stderr || '').slice(0, 200));
 check('F1 hook file born', fs.existsSync(path.join(TMP, 'domain', 'probe-check', 'probe-check.check.hook.js')), '');
@@ -45,7 +46,7 @@ check('F1 echo emitted', /ECHO\s+Trigger: when eval probe trigger/.test(r.stdout
 
 // F2 — collision → refine-first
 r = runForge(['new', 'check', 'probe-check', '--event', 'Stop',
-  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case', '--nod', 'forge-eval-fixture']);
+  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', ...BOUNDARY, '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case', '--nod', 'forge-eval-fixture']);
 check('F2 collision exit 3', r.status === 3, 'exit=' + r.status);
 check('F2 refine-first suggested', /refine-first/.test(r.stdout), r.stdout.slice(0, 200));
 
@@ -67,6 +68,13 @@ check('F3e missing --footprint exit 2', r.status === 2 && /--footprint/.test(r.s
 r = runForge(['new', 'check', 'bad-footprint-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'keep', '--footprint', 'light', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
 check('F3f footprint without a trigger class exit 2', r.status === 2 && /Rule 7/.test(r.stderr), 'exit=' + r.status);
 check('F1b born README carries footprint:', /^footprint: on-demand/m.test(fs.readFileSync(path.join(TMP, 'domain', 'probe-check', 'README.md'), 'utf8')), '');
+// F3g/F3h/F1c — system-rules Rule 9 (2026-10-30): missing --boundary → exit 2; a boundary without covers · never · stops → exit 2; README carries the line
+r = runForge(['new', 'check', 'boundary-less-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'keep', '--footprint', 'none: n/a', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+check('F3g missing --boundary exit 2', r.status === 2 && /--boundary/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = runForge(['new', 'check', 'bad-boundary-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'keep', '--footprint', 'none: n/a', '--boundary', 'reads the transcript only', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+check('F3h boundary without covers · never · stops exit 2', r.status === 2 && /Rule 9/.test(r.stderr) && !fs.existsSync(path.join(TMP, 'domain', 'bad-boundary-probe')), 'exit=' + r.status);
+check('F1c born README carries boundary: covers … never … stops', /^boundary: covers the Stop turn of the sandbox · never writes outside the sandbox · stops none: report only$/m.test(fs.readFileSync(path.join(TMP, 'domain', 'probe-check', 'README.md'), 'utf8')), '');
+check('F1d registry row carries boundary', /"boundary":"covers the Stop turn/.test(fs.readFileSync(path.join(TMP, 'system', 'registry.jsonl'), 'utf8')), '');
 // F4 — refine resolves a pre-forge flat hook (.claude/hooks/<name>.js) and runs its <name>.eval.js pin
 fs.mkdirSync(path.join(TMP, '.claude', 'hooks'), { recursive: true });
 fs.writeFileSync(path.join(TMP, '.claude', 'hooks', 'flat-probe.js'), '// flat hook\n');
@@ -78,7 +86,7 @@ r = runForge(['refine', 'flat-probe', '--nod', 'forge-eval-fixture']);
 check('F4b flat hook with RED pin → exit 2', r.status === 2 && /pre-refine eval RED/.test(r.stderr), 'exit=' + r.status);
 
 // ── F5–F12 — `forge install hook` (2026-10-05): bring an existing loose hook into a Feature folder ──
-const WHY = ['--symptom', 'eval fixture: a loose hook sits outside any Feature', '--goal', 'the hook is an installed Feature with a goal and an eval', '--signal', 'census verdict PROPER', '--retention', 'regenerate', '--footprint', 'per-session: 1 node, eval probe', '--nod', 'forge-eval-fixture'];
+const WHY = ['--symptom', 'eval fixture: a loose hook sits outside any Feature', '--goal', 'the hook is an installed Feature with a goal and an eval', '--signal', 'census verdict PROPER', '--retention', 'regenerate', '--footprint', 'per-session: 1 node, eval probe', ...BOUNDARY, '--nod', 'forge-eval-fixture'];
 const H = (...p) => path.join(TMP, '.claude', 'hooks', ...p);
 const setSettings = (obj) => fs.writeFileSync(path.join(TMP, '.claude', 'settings.json'), JSON.stringify(obj, null, 2));
 const getSettings = () => fs.readFileSync(path.join(TMP, '.claude', 'settings.json'), 'utf8');
@@ -101,7 +109,7 @@ check('F5 direct registration re-pointed with its own (double) separator style, 
 check('F5 no registration left on the old path', !/\.claude[\\/]+hooks[\\/]+LooseProbe\.js/.test(st), '');
 check('F5 bundle child re-pointed, sibling child untouched', fs.readFileSync(path.join(TMP, 'domain', 'bundles', 'b.json'), 'utf8') === JSON.stringify({ children: ['domain/loose-probe/loose-probe.hook.js', '.claude/hooks/other.js'] }), '');
 const rdme = fs.readFileSync(path.join(fdir, 'README.md'), 'utf8');
-check('F5 README carries goal · retention · footprint · telemetry_name', /^goal: the hook is an installed Feature/m.test(rdme) && /^retention: regenerate/m.test(rdme) && /^footprint: per-session/m.test(rdme) && /^telemetry_name: LooseProbe/m.test(rdme), rdme.slice(0, 300));
+check('F5 README carries goal · retention · footprint · boundary · telemetry_name', /^goal: the hook is an installed Feature/m.test(rdme) && /^retention: regenerate/m.test(rdme) && /^footprint: per-session/m.test(rdme) && /^boundary: covers the Stop turn/m.test(rdme) && /^telemetry_name: LooseProbe/m.test(rdme), rdme.slice(0, 300));
 check('F5 NUKE-MARKER with the rollback recipe', /Rollback \| move `domain\/loose-probe\/loose-probe\.hook\.js` back to `\.claude\/hooks\/LooseProbe\.js`/.test(fs.readFileSync(path.join(fdir, 'NUKE-MARKER.md'), 'utf8')), '');
 check('F5 registry row kind=install-hook with installed_from', /"kind":"install-hook"/.test(fs.readFileSync(path.join(TMP, 'system', 'registry.jsonl'), 'utf8')) && /"installed_from":"\.claude\/hooks\/LooseProbe\.js"/.test(fs.readFileSync(path.join(TMP, 'system', 'registry.jsonl'), 'utf8')), '');
 check('F5 docs naming the old path are LISTED, not silently left', /DOCS still naming the old path.*note\.md/.test(r.stdout), r.stdout.slice(-300));
@@ -147,6 +155,8 @@ check('F10 red eval → exit 2 and nothing half-lands', r.status === 2 && fs.exi
 // F11 WHY-chain is mandatory for an install too · F12 collision with an existing Feature folder
 r = runForge(['install', 'hook', '.claude/hooks/red-probe.js', '--symptom', 's', '--signal', 'x', '--retention', 'keep', '--footprint', 'none: n/a', '--nod', 'n']);
 check('F11 missing --goal exit 2, nothing moved', r.status === 2 && /--goal/.test(r.stderr) && fs.existsSync(H('red-probe.js')), 'exit=' + r.status);
+r = runForge(['install', 'hook', '.claude/hooks/red-probe.js', '--symptom', 's', '--goal', 'g', '--signal', 'x', '--retention', 'keep', '--footprint', 'none: n/a', '--nod', 'n']);
+check('F11b missing --boundary on install exit 2, nothing moved (Rule 9)', r.status === 2 && /--boundary/.test(r.stderr) && fs.existsSync(H('red-probe.js')), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
 fs.writeFileSync(H('probe-check.js'), "process.stdout.write('c');\n");
 r = runForge(['install', 'hook', '.claude/hooks/probe-check.js', ...WHY]);
 check('F12 existing domain/<name> → collision exit 3, nothing moved', r.status === 3 && fs.existsSync(H('probe-check.js')), 'exit=' + r.status);
