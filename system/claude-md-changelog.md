@@ -10,6 +10,10 @@
 
 ---
 
+**v2.00** (2026-10-30) — §Disposition +rule 8 (TEMPORARY): plan first, then ask. Before any question or yes/no to みや, the same reply shows the plan as one explain-diagram picture (current state → my steps → his steps → end state, data changes with their script on the picture), then the question. Why: 287164, he was asked "clear it" for a data change with no plan shown; his words: "tell me your plan first, always, before asking anything. This thing can be added as a temporary fix in CLAUDE.md, use skill diagram before asking." Spec-preservation: rules 0 to 7 untouched; additive. Temporary until a gate enforces it, then the line becomes a pointer.
+
+
+
 ## system-rules SKILL.md v1.5 — 2026-10-29 (per みや, the five refused Submits)
 
 **Rule 8 — One ask, then obey.** His words: "audit why you are being stopped by a simple 'Submit it' ... find a universal solution to add into our system-change or system-rules or system-design so that you DO NOT EVER build a step or workflow or gate ... like this ever again. A simple check is enough."
