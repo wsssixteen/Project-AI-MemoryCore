@@ -1,3 +1,14 @@
+**Last Activity**: 2026-10-30 19:10 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - PLTP/2026/9 alter SPI"), stg alter relay solved by him with the aliranKerjaId variable, then the audit of the audit, Domain Expansion.
+
+## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
+- ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
+- The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
+- My misses: boot files never read, no briefing · FLOWABLE-KNOWLEDGE never read after the path failed in the worktree (line 630 names this PLTP to PSPM pattern) · two guessed SQL names · runner run twice because I cut its output · "Semakan Permohonan Isian" invented · rule 8 picture skipped · A0-A6 rows never emitted.
+- Tools: alter.js live prints the root process variables, not those of the process holding the task, which hid the answer · run.ps1 alter-flow said "no live engine task" for a live grandchild task · audit-briefing from a worktree reads the worktree's near-empty telemetry and reports every hook as never fired (proposal already logged earlier today, still open).
+- Improvement sweep: see slips proposals A1-A5 dated today from this session.
+- Audit of the audit (2 Fable 5.1 agents, verified counts): DE enforces saves (de-close-gate 222 blocks) but does not audit the session. Scripts caught 0 of 13 failures, a usual DE about 1-2, today's 7 with the audit in view. 888 proposals, 0 rulings; the worktree telemetry bug proposed 34 times. Upgrade design: lib/session-audit.js reads the transcript and emits typed findings (10 mechanical classes), de-close-gate C10 needs each routed (knowledge / tool / gate / workflow / memory, wrong-fix verdict shape), watch row per change, slips fingerprint escalates at 2 and 3, audit-briefing telemetry from main, notifications not counted as his turns; retire steps 5, 6, Checklist D, free-text 7.5. Not built, waits his go. First fixture: this session's transcript 22cc0457, must catch 9 of 13.
+- Knowledge baked: FLOWABLE-KNOWLEDGE section 13, altering back into a sub-process after the child was born.
+- Open: Pendaftaran verify; his go on the DE upgrade.
 **Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
 
 ## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
@@ -17,39 +28,3 @@
 - Open: gate-fail and slip audit child session (brief in `main/todo.md`, start from the desktop app).
 - Assessment: A1 gates fired on replies that had no scenario and no ask. A2 two test-data slips from not checking the holder after an alter. A3 his "why can't I open it" took 4 queries and minutes before a plain answer. A4 alter can create a task with no holder. A5 mid-turn photos lived only in the transcript.
 **Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
-
-## Session Recap (2026-10-29/30, worktree "alter-patching-a323d9", 286650 STG alter + headless runner)
-- 286650: STG scenario ready (miya did the alter himself after my tool failed on login); ticket held by Pendaftaran, block stays delegated.
-- Built `E:\Dev\scripts\FlowableAlter\runner\`: STG/MLIT Alter Flow with no login. Eval 10/10 urusan + one different-step move, all checked in the DB. Refuses PROD. No Initiate & Alter yet.
-- Wired into the quest: alter-ticket-gate v1.2 (ticket found in active, archive or disk; env + tracker; A5 tool by env), quest-phase0.js alter layer, playbook A5 = one table. Fable 5.1 final PASS. Commit 3fa92232, land 7cbd56d7.
-- Open: Initiate & Alter in the runner needs an etanah repo change; alter-sim and the runner overlap, not ruled.
-
-**Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
-**Last Activity**: 2026-10-30 17:50 — worktree `sweep-orchestration-audit-39e710`, parent of the 286655 / 286646 / 286610 sweep; all three children archived; own Domain Expansion.
-
-## Session Recap (2026-10-29 to 30, worktree "sweep-orchestration-audit-39e710", sweep parent close)
-- Redmine live 2026-10-30: 286646 Verified (Nurul Amirah Nadiah, release 2/11) · 286655 Resolved (Amani) · 286610 Resolved (Amani). All WAIT per save-quest.
-- verify2 pass banked: `QA-<n>-verify2.md` in each quest folder. 286655 MLPS 92 / OMLPS 88 (miya accepted) · 286646 92 · 286610 92 / 92.
-- All three children ran their own DE and are archived.
-- System: sweep audit Tool + Step 8 landed 2026-10-29. Next real /sweep is the live proof (watch wmvtdigs8).
-- Open: 286655 test photos not attached to the ticket (the child asked miya; no answer seen).
-
-**Previous**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
-
-## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
-- Answer: DE alone now does save quest, enforced. Save quest picks Close or Archive from live Redmine: not Closed = Phase 1 only, Closed = Phase 2 (Phase 1 first when still open), patch ticket past "in work" = both together.
-- Built, on main: `lib/save-quest.js` reads ticket_type (patch tickets were told "Do not archive" against the 2026-10-29 rule) · `quest/archive-quest.js` Step -1.5 refuses an archive the verdict does not allow, `--ahead-of-redmine "<his words>"` is the only override · `de-close-gate` C9 blocks a DE close on a touched ticket with no verdict or a stage not done, unless "Phase 1 not ready: <QA> ...".
-- Evals: save-quest 69/69, feature 27/27, de-close-gate 44/44, archive Redmine gate 16/16, archive 27/27, archive-hold 27/27. Live: QA-287273 archive refused exit 3, nothing moved.
-- Open: 287273 BA verify, planned-release list. Wrong-fix row 1 verdict names BUG-BESTIARY: write it at Phase 2.
-**Last Activity**: 2026-10-30 16:45 — worktree `cranky-wilson-4cb38e` (branch claude/ticket-287292-return-audit-072795), 287292 returned by BA, re-patched, Redmine posted, quest saved, Domain Expansion.
-
-## Session Recap (2026-10-30, worktree "cranky-wilson-4cb38e", 287292 PROD letter returned)
-- 287292 came back because yesterday's patch used the ADO day (19, 19, 21 Oktober) while the BA asked for the first-generated dates (30/9, 30/9, 20/10, Document Maintenance = umm_a_dok_keluaran.created_date). Same request, our miss.
-- Re-patched: 3 letters with first-generated dates + Hijri from e-Solat, 287292.zip + 287292.sql in the archived Task folder 2. Fix. Infra uploaded and reset PDFs (all 3 lokasi_fail_pdf empty). Redmine note 09:57 to Fizah, ProTime resolved. Redmine now Ready in PROD. SAVE-QUEST AHEAD, stays archived.
-- System on main: patch-mlk-doc (2+ files = one <num>.zip, deliverable-check takes several names, eval 26/26; letter date = created_date, ADO day banned; infra boxes #<num> only, no description, no instruction lines). Knowledge WORD-TEMPLATE-RENDERING corrected. Pena c65.
-- Slips: ba-spec-overridden, vague-term, wrong-rule-encoded, reask/redundant (QA-287292). I also held the upload for a BA answer after he said to do it straight away, and said "yesterday's patch wasn't wrong" before he corrected it.
-- Not verified: where infra's file names LAIN-40346432 / 40346446 / 40346447 came from (no PROD, stg1 or stg2 row, not on local disk); the content of the uploaded files in PROD, BA verify is the check.
-- 285768 is finished: Closed, QA Verified STAG 2026-10-29, not an open item. Open: infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
-- Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
-
-**Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
