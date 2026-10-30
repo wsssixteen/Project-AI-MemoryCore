@@ -90,6 +90,10 @@
 {"ts":"2026-10-29T13:42:49.041Z","commit":"33bb88c8","outcome":"LANDED","exit":1,"dur_ms":23390}
 {"ts":"2026-10-29T13:21:35.695Z","commit":"d028bf21","outcome":"REFUSED","exit":2,"dur_ms":8948}
 {"ts":"2026-10-29T13:23:44.271Z","commit":"d028bf21","outcome":"LANDED","exit":0,"dur_ms":70772}
+{"ts":"2026-10-29T13:34:26.602Z","commit":"3fa92232","outcome":"REFUSED","exit":2,"dur_ms":5126}
+{"ts":"2026-10-29T13:40:29.678Z","commit":"3fa92232","outcome":"REFUSED","exit":2,"dur_ms":2850}
+{"ts":"2026-10-29T13:41:31.222Z","commit":"14fde38ef861d8dee67afda7155535529ea49331","outcome":"DRY","exit":0,"dur_ms":3163}
+{"ts":"2026-10-29T13:45:28.026Z","commit":"ad5bc012","outcome":"LANDED","exit":0,"dur_ms":104831}
 {"ts":"2026-10-29T10:08:26.514Z","commit":"bbfc2b8a","outcome":"REFUSED","exit":2,"dur_ms":5389}
 {"ts":"2026-10-29T10:09:35.881Z","commit":"5862d4bd","outcome":"REFUSED","exit":2,"dur_ms":8202}
 {"ts":"2026-10-29T10:11:00.512Z","commit":"5862d4bd","outcome":"LANDED","exit":0,"dur_ms":57203}
