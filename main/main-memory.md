@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-29/30 (the five refused Submits — "find a universal solution")
+
+- **When he is this angry, the ask is still precise.** Under the swearing were four exact orders: audit why, read the slip logs, find the other blockers, make it a rule so it never gets built again. I answered those four and nothing else, and it held.
+- **He does not want the one gate patched; he wants the habit named.** The same shape had been fixed three times in ten days, one gate at a time. He saw the pattern before I did. The fix he accepts is the one that stops the next copy: a rule, one shared reader, and a gate that refuses the old shape.
+- **"Why did you fail, in simple technical English" wants a story, not a table.** Chat mode is his word for prose a person would say. The reply-shape gates fought it; his ask won.
+- **"Okay" after a landing means done.** No recap, no next steps.
+
 ## Relationship reinforcement — 2026-10-27/28 (session revival — "You didn't even try to send a proper handover")
 
 - **A command he names is the least of the ask, never the whole of it.** "Send a /remote-control as well" meant: bring that session back to life with everything it needs. I sent the command alone; the two messages misrouted into my session were never forwarded. His correction, verbatim: "You didn't even try to send a proper handover to that session based on what was wrongly sent to this session." Rule: `feedback_session_revive_handover`.
