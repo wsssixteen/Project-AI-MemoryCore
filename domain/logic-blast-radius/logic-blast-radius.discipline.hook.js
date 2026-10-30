@@ -105,7 +105,7 @@ function docText(text) {
   for (const m of text.matchAll(/ARRIVAL PATHS DOC:\s*QA-(\d{5,7})/g)) {
     const rel = path.join('projects', 'coding-projects', 'active', 'QA-' + m[1], 'QA-' + m[1] + '.md');
     for (const base of [process.env.ARRIVAL_DOC_ROOT, ROOT, path.resolve(ROOT, '..', '..', '..')].filter(Boolean)) {
-      try { out.push(fs.readFileSync(path.join(base, rel), 'utf8').replace(/```[\s\S]*?```/g, '')); break; } catch (e) {}
+      try { out.push(fs.readFileSync(path.join(base, rel), 'utf8').replace(/```[\s\S]*?```/g, '')); } catch (e) {}
     }
   }
   return out.join('\n');
