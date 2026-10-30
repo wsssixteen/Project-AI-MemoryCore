@@ -6,12 +6,23 @@ goal_signal: the reply's Next steps table has a What it means column with a 5+ w
 retention: rotate monthly
 footprint: per-turn: joins the stop-reply-shape bundle, 1 node child, ~30 MB, <200 ms
 
-diagram: domain/next-steps-shape/diagram.png (v3 step marked)
+diagram: domain/next-steps-shape/diagram.png (v4 step marked)
 self_audit: the eval replays every fixture (`node domain/next-steps-shape/next-steps-shape.eval.js`); each fire writes passed/blocked with the reason and, from v3, the picture verdict to log.jsonl
 
 **What fires when**: Stop — a reply ends with a Next steps table
 
 **v3 (2026-10-29, per みや on 286655: "I didn't see any story diagram using your diagram skill to decide. Why do you fail to show this on every quest run?")**: a quest reply (it names the number of a `status=active` block in `quest/active.txt`) that ends with Next steps BLOCKS once unless this turn sent an image with `SendUserFile` or the reply carries `Diagram: none (<reason>)` outside a code fence. Turn events come from `lib/adhoc-brief-first.js` (shared parser, same as the adhoc picture check). Paired skill text: quest SKILL.md Pre-emit gate row 🧭. Eval 27/27.
+
+**v4 (2026-10-30, per みや on 287273: "Please ensure our current quest workflow will always stop with showing the issue using diagram skill.")**: the Next steps condition is dropped from the picture check. EVERY quest reply (names an active `qa=QA-<n>` number outside a code fence) blocks once unless this turn sent an image or the reply carries `Diagram: none (<reason>)`. Spec kept: waiver line, once-only block, fail-open, image-only, ticket outside fences, bypass. Changed and named: Q7 (quest mention, no Next steps) now blocks; Q13 now pins "ticket only inside a fence → pass". Eval 29/29 (Q17, Q18 added).
+
+| # | Adversarial scenario (Rule 12, v4 additions) | Verdict |
+|---|---|---|
+| 23 | quest reply with no Next steps, no picture (the v4 case) | fixture Q7 |
+| 24 | quest reply with no Next steps, picture sent | fixture Q17 |
+| 25 | short yes/no quest answer | fixture Q18: waiver line clears it |
+| 26 | a reply naming several active tickets (board, briefing) | accepted-risk: one waiver line clears it; a board reply is not a quest stop |
+| 27 | the picture went out earlier in the same turn, before a long tool run | handled: turn events cover the whole turn |
+| 28 | a commit-only or deploy-only stop | accepted-risk: waiver line names it; his ask was "always" |
 
 | # | Adversarial scenario (Rule 12) | Verdict |
 |---|---|---|
