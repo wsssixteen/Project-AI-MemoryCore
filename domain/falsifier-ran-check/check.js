@@ -152,6 +152,17 @@ function evaluate(text, opts) {
       if (extra.length) fails.push({ kind: 'drift', msg: `staged file(s) not on the ledger "Fix files:" line: ${extra.join(', ')} — the design moved after the Rubric; rewrite the falsifier rows for the design as it is now, then update "Fix files:"` });
     }
   }
+  // A scenario marked ✗ or BA-Q under "## Arrival paths" owes a ledger row named arrival:<id> (2026-10-30, 287048).
+  const arrival = String(text || '').split(/^## Arrival paths/m)[1];
+  if (arrival) {
+    for (const line of arrival.split(/^## /m)[0].split(/\r?\n/)) {
+      const c = line.trim().replace(/^\||\|$/g, '').split('|').map(s => s.trim());
+      if (c.length < 3 || /^id$/i.test(c[0]) || /^-+$/.test(c[0])) continue;
+      if (/^(✗|BA-Q)/.test(c[c.length - 1]) && !L.rows.some(r => String(r.falsifier || '').includes('arrival:' + c[0]) || String(r.design || '').includes('arrival:' + c[0]))) {
+        fails.push({ kind: 'arrival-missing', msg: `Arrival paths row "${c[0]}" is ${c[c.length - 1]} but the ledger has no arrival:${c[0]} row` });
+      }
+    }
+  }
   return { fails, rows: L.rows, fixFiles: L.fixFiles, need };
 }
 
