@@ -1,17 +1,17 @@
 {
   "redmine-dev-mapping": {
     "for": "Redmine note that answers another team's developer: which table and column, how to read a value",
-    "modules": ["greet", "lean", "line", "table", "separate", "script", "proven"],
+    "modules": ["greet", "lean", "line", "table", "separate", "script", "proven", "topdown"],
     "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 10 and 14)"]
   },
   "redmine-ba-pass": {
     "for": "Redmine note that passes a fix or a patch to the BA for testing",
-    "modules": ["greet", "lean", "line", "plain", "proven"],
+    "modules": ["greet", "lean", "line", "plain", "proven", "topdown"],
     "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 1, 2, 5, 13)", "domain/ticket-close-block/ticket-close-block.js prints the note shape"]
   },
   "redmine-dev-fixlist": {
     "for": "Redmine note to a developer listing fixes left or findings",
-    "modules": ["greet", "lean", "line", "rojak", "proven"],
+    "modules": ["greet", "lean", "line", "rojak", "proven", "topdown"],
     "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 3, 9 and the Dev-to-dev fix list shape)"]
   },
   "redmine-rootcause": {
