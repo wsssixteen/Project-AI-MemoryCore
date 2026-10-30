@@ -1,3 +1,11 @@
+**Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
+
+## Session Recap (2026-10-29/30, worktree "alter-patching-a323d9", 286650 STG alter + headless runner)
+- 286650: STG scenario ready (miya did the alter himself after my tool failed on login); ticket held by Pendaftaran, block stays delegated.
+- Built `E:\Dev\scripts\FlowableAlter\runner\`: STG/MLIT Alter Flow with no login. Eval 10/10 urusan + one different-step move, all checked in the DB. Refuses PROD. No Initiate & Alter yet.
+- Wired into the quest: alter-ticket-gate v1.2 (ticket found in active, archive or disk; env + tracker; A5 tool by env), quest-phase0.js alter layer, playbook A5 = one table. Fable 5.1 final PASS. Commit 3fa92232, land 7cbd56d7.
+- Open: Initiate & Alter in the runner needs an etanah repo change; alter-sim and the runner overlap, not ruled.
+
 **Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
 
 ## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
@@ -17,15 +25,3 @@
 - Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
 
 **Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
-
-## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
-- ADHOC-MCL-2026-3: PROD MCL Laporan Tanah has no Perkara. Tajuk Risalat is never saved at SKM since 5734174bd9 (Aaron, 2026-06-19, ticket 265081) added else-return on empty premium in MlkMaklumatTanahLesenPendudukanForm.performCustomSave. PROD 0 of 37 MCL at PLT have it; PT, PLPS, PRBB, PLTP, PRZ all do. Requirement 223227 says the tajuk is created at SKM, verified 2026-05-21; its commits are all still in master.
-- Answered BA in miya's words ("So need code fix"). Teknikal patches /18 and /26 through their own 287350. Save-set: Task folder 345, register A83, latent L31, audit 33/33. On hold + archive hold, waiting a code-fix ticket; not simulated on STG (candidate PTMLK/01/L/MCL/2026/21, login iskandarz@melaka.gov.my).
-- Fix idea when the ticket comes: scope the 265081 premium block to showKemaskiniCukaiDialog, the same way the 287164 int-env change does.
-- KPI: C2 row added. Pena: c60-c63 stored (BA decides on tickets, name the link first, other team's ticket stays out, his final reply).
-- Slips: said "stops at premium check" five times without the link between premium and tajuk; repeated Teknikal's own ticket and permohonan in every draft; asked TSO for a ticket unasked; read the requirement only after the BA pointed at 223227.
-- Improvement sweep: A1 two save agents at about 150k tokens each for an update a script could do · A2 adhoc route line tells me to ask TSO for a ticket while Pena lean forbids it · A3 cause found by git log -L only after he asked; run it at Recon for any shared-form save · A4 requirement-index not run on an adhoc, BA had to point at 223227 · A5 skipped, one adhoc, no sweep. Each logged as a proposal except A5.
-- Ticket arrived: eSOKONGAN 287509 is this issue (assigned BA Nurul Amani, New). Adhoc promoted (A83 TICKETED) and archived, audit 30/30. QA-287509 block + doc carry the findings; block delegated per save-quest, quest not started.
-- Open: QA-287509 fix when it reaches miya; fix-photo Stop check keeps firing on BA brief screenshots, needed the skip token on every reply.
-
-**Last Activity**: 2026-10-30 16:30 — worktree `baseline-wednesday-release-029181` (branch claude/quest-workflow-diagram-979e64), 287273 MCL fixed and handed to BA, Phase 1 closed, Domain Expansion 1 of 2 (audit of DE and save-quest follows).
