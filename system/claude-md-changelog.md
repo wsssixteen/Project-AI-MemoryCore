@@ -10,6 +10,13 @@
 
 ---
 
+## The project start (AGENTS.md · HANDOVER.md · VOICE.md), no CLAUDE.md version change (2026-10-31)
+
+- Per みや: "a handover always as part of starting a project … a general README file but for agents … I want to use voice chat … Claude Code ends up like the worker … an audit installed into it and also into DE". Built as a refinement of `domain/project-load` (v2.2) and the `/project` skill (v1.4), not a new Feature: the project system already owned the start.
+- CLAUDE.md unchanged, by decision: the `/project` skill is description-triggered ("new project", "handover", "voice intake"), the always-on memory line `side-project-folder` points at it, and `domain/project-load` fires on every alias; a boot pointer would be a second copy of a route that already fires (system-rules Rule 1; INDEX.md decision criteria: prose only for judgment). Version stays v2.01.
+- Domain Expansion: `lib/save-rules.js` finds a project folder on disk by its `project.json` (Appraisal-2026 had one and no row anywhere); rule `project-handover` runs `project.js checkHandover` on every shape-2 folder touched today (C8 blocks). Route step 5 of `system/INDEX.md` now names the DE check a new part must pass before it lands.
+- Evals: `domain/project-load/eval.js` 80/80 · `project-load.eval.js` 30/30 · `lib/save-rules.eval.js` 95/95.
+
 ## reply-shape-spec §3c, no CLAUDE.md version change (2026-10-31)
 
 - +No oversharing before the next step is confirmed, per みや: a reply is the answer plus the ONE next step. Paired: `domain/terse-gate` signal 4 (over 20 lines blocked unless he asks for more or confirms; eval F21 to F30).
