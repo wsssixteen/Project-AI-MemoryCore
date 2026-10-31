@@ -18,6 +18,9 @@
  * SIGNAL 3 (miya 2026-10-27, "not shot ticket numbers with hashtags"): a ticket number written as #<5-7 digits>
  *   outside code (fences and inline backticks) -> BLOCK, any reply length. The app turns it into a dead issue link
  *   he cannot copy. Write plain digits. Bypass [skip-hashtag: <reason>]. Canonical: .claude/reply-shape-spec.md §3h.
+ * SIGNAL 4 (miya 2026-10-31, "NOT over share things until you've confirmed on the next steps ... I have always skipped too long replies"):
+ *   any message, question or not. A reply over 20 non-empty lines outside code fences -> BLOCK, unless his message asks for more
+ *   (ASKED_FOR_MORE) or confirms the next step (CONFIRMED). Bypass [skip-terse: <what he asked for>]. Canonical: reply-shape-spec §3c.
  * EXEMPT: short replies (< 800 chars) · DE/closing/personal (═══ · るり結界 · Domain Expansion)
  *   · bypass token [skip-terse: <reason>].
  * FAIL-OPEN: any error → allow stop.
@@ -35,6 +38,10 @@ const { lastHis: lastUserText } = require(path.join(process.env.CLAUDE_PROJECT_D
 const QUESTION = /\?\s*$|^(why|how|what|where|which|is|are|does|do|did|can|will|so)\b/i;
 // He asked for something that is long by nature: no cap.
 const WANTS_DETAIL = /\b(list|board|tickets?|table|steps?|scenario|brief|status|summary|detail(s|ed)?|full|everything|all|explain|audit|compare|plan|code|script|show|walk|trace|draft|write)\b/i;
+// Signal 4 is narrower than WANTS_DETAIL: "all" or "plan" in passing is not an ask for a long reply.
+const ASKED_FOR_MORE = /\b(examples?|(more|full|in|the|with) details?|detailed|everything|list|board|tickets?|table|steps|scenario|brief|summary|audit|compare|script|code|draft|write|walk me)\b/i;
+const CONFIRMED = /^\s*(yes|ok|okay|go|proceed|confirmed|continue|do it)\b/i;
+const OVERSHARE_CAP = 20;
 
 function lastText(tp) {
   let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return null; }
@@ -92,6 +99,16 @@ process.stdin.on('end', () => {
         '   Answer it in a few lines. Investigation, evidence and extras stay in the quest doc until he asks.',
         '   He did ask for the detail? Add [skip-terse: <what he asked for>].',
         '   ⚡ DELTA ONLY: output the short answer in 1-5 lines; do NOT re-emit the reply.',
+      ].join('\n') }));
+      process.exit(0);
+    }
+    if (heavy < 6 && ask && lines > OVERSHARE_CAP && !ASKED_FOR_MORE.test(ask) && !CONFIRMED.test(ask)) {
+      log({ action: 'blocked-overshare', lines, ask_len: ask.length });
+      process.stdout.write(JSON.stringify({ decision: 'block', reason: [
+        '⛔ terse-gate: the reply is ' + lines + ' lines (cap ' + OVERSHARE_CAP + ') and he has not asked for more or confirmed the next step.',
+        '   Send the answer and the ONE next step. Options, examples and research wait until he asks.',
+        '   He did ask for it? Add [skip-terse: <what he asked for>].',
+        '   ⚡ DELTA ONLY: output the short version in at most 10 lines; do NOT re-emit the reply.',
       ].join('\n') }));
       process.exit(0);
     }

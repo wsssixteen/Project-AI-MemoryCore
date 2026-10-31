@@ -109,7 +109,7 @@ r = runHook(qp);
 check('F7 bypass token lets a long answer through', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
 qp = writeQA('fixture-terse-q4.jsonl', 'why? ' + 'context '.repeat(60), longTables); qaPaths.push(qp);
 r = runHook(qp);
-check('F8 a long message (>300 chars) is not treated as a short question', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+check('F8 a long message (>300 chars) is not treated as a short question', !/short question/.test(r.stdout || ''), 'stdout=' + (r.stdout || '').slice(0, 80));
 qp = writeQA('fixture-terse-q5.jsonl', 'is it compiled?', 'Yes.\n' + '```\n' + Array.from({ length: 40 }, (_, i) => 'line ' + i).join('\n') + '\n```\n' + 'z'.repeat(820)); qaPaths.push(qp);
 r = runHook(qp);
 check('F9 lines inside a code fence do not count toward the cap', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
@@ -143,6 +143,38 @@ check('F14 hashtag inside inline code or a fence passes', !isBlocked(r), 'stdout
 qp = writeQA('fixture-terse-h4.jsonl', 'quote it', 'Subject is ESOKONGAN #286462. [skip-hashtag: quoting the Redmine subject]'); qaPaths.push(qp);
 r = runHook(qp);
 check('F15 [skip-hashtag:] bypass passes', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+// --- F21..F29: no oversharing before the next step is confirmed (2026-10-31) ---
+const reply30 = Array.from({ length: 30 }, (_, i) => '| option ' + i + ' | research he did not ask for yet, one table row after another |').join('\n');
+const reply20 = Array.from({ length: 20 }, (_, i) => '| option ' + i + ' | research he did not ask for yet, one table row after another |').join('\n');
+const founding = 'I feel like we can built using the "template" we\'ve used for my work in coding. Like having the "data" gathering to later on make kpi, through quests, but I think we\'ll have a different workflow of course and details, different things.';
+const overshare = [
+  ['F21 founding message (a statement, over 300 chars of context) + 30 lines is BLOCKED', founding + ' ' + 'context '.repeat(30), reply30, true],
+  ['F22 "all" in passing does not count as asking for more', 'Shall we use wayfinder to get all of the requirements on my trading style. It would give you all the data you need.', reply30, true],
+  ['F23 a reply of exactly 20 lines passes', founding, reply20, false],
+  ['F24 he asked for examples: not capped', 'give me some examples of that', reply30, false],
+  ['F25 he confirmed the next step: not capped', 'yes go ahead with that', reply30, false],
+  ['F26 he asked for the full detail: not capped', 'I want the full details on this now', reply30, false],
+  ['F27 bypass token passes', founding, reply30 + '\n[skip-terse: he asked for the comparison]', false],
+  ['F28 lines inside a code fence do not count', founding, 'Short answer.\n```\n' + reply30 + '\n```\n' + 'z'.repeat(820), false],
+  ['F29 a banner reply (quest emit) stays exempt', founding, '═══ Recon ═══\n' + reply30, false],
+];
+overshare.forEach(([name, ask, reply, blocked], i) => {
+  const q = writeQA('fixture-terse-o' + i + '.jsonl', ask, reply); qaPaths.push(q);
+  r = runHook(q);
+  check(name, isBlocked(r) === blocked && (!blocked || /next step/.test(r.stdout)), 'stdout=' + (r.stdout || '').slice(0, 100));
+});
+// --- F30: injected skill line after his message: still his words that decide
+{
+  const p3 = path.join(os.tmpdir(), 'fixture-terse-o-inj.jsonl');
+  fs.writeFileSync(p3, [
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: founding }] } }),
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'Base directory for this skill: give examples and the full details' }] } }),
+    JSON.stringify({ message: { role: 'assistant', content: [{ type: 'text', text: reply30 }] } }),
+  ].join('\n') + '\n', 'utf8');
+  qaPaths.push(p3);
+  r = runHook(p3);
+  check('F30 words in an injected skill line never count as his ask (BLOCKED)', isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+}
 for (const p of qaPaths) { try { fs.unlinkSync(p); } catch (_) {} }
 
 // cleanup tmp fixtures

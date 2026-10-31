@@ -130,6 +130,8 @@ fourth strike lands.
 | A question is allowed only if no tool or ticket can answer it | Search the ticket, the linked tickets and the DB first |
 | Leave out by default: verification trail, rejected options, ids, file:line, SQL, test-data dumps, caveats that change nothing | Add them only when asked, or when the reader must use them to act |
 
+**No oversharing before the next step is confirmed (2026-10-31 per みや: "NOT over share things until you've confirmed on the next steps ... Unless I am the one asking for examples ... I have always skipped too long replies")**: a reply is the answer plus the ONE next step. Options, examples, comparisons and research wait until he asks for them or confirms that step. A choice he must make is one drawing or one short table (CLAUDE.md 0a), never more. `domain/terse-gate` blocks over 20 lines unless his message asks for more or confirms. A reply he skips is an unread reply, however correct.
+
 **The investigation is never shown (2026-10-06 per みや, #268173, same standing as the script-with-every-data-claim rule)**: a reply carries the overview, and the fix or implementation when there is one. How I found it, what I checked, what I ruled out and what I am unsure of stay in the quest doc until he asks. A short question gets a few lines (`domain/terse-gate` blocks more than 15 lines after a short question). Something he will share is a file, not chat text.
 
 **Banned**: a guide or note that carries the whole investigation · empty columns or questions for the reader to fill when the answer is already known · repeating the same fact in two sections.
