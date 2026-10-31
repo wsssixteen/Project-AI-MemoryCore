@@ -10,6 +10,13 @@
 
 ---
 
+## reply-shape-spec §3c, no CLAUDE.md version change (2026-10-31)
+
+- +No oversharing before the next step is confirmed, per みや: a reply is the answer plus the ONE next step. Paired: `domain/terse-gate` signal 4 (over 20 lines blocked unless he asks for more or confirms; eval F21 to F30).
+- Spec preservation: signals 1 to 3 kept. Eval F8 now asserts only that a long message is not read as a short question, its original spec; a long reply to it may now be blocked by signal 4. CLAUDE.md 0a and rule 8 pictures stay; they count as no lines.
+
+---
+
 **v2.01** (2026-10-30) — Available Skills `/verify` line: "DE Checklist D" removed, "Phase 2 close-out" named (Checklist E already existed). Why: audit of the audit, Checklist D repeated `de-close-gate` by hand; his ruling: "Step 5 and Checklist D". Spec-preservation: the listed verify checkpoints stay; one dropped, named here.
 
 **v2.00** (2026-10-30) — §Disposition +rule 8 (TEMPORARY): plan first, then ask. Before any question or yes/no to みや, the same reply shows the plan as one explain-diagram picture (current state → my steps → his steps → end state, data changes with their script on the picture), then the question. Why: 287164, he was asked "clear it" for a data change with no plan shown; his words: "tell me your plan first, always, before asking anything. This thing can be added as a temporary fix in CLAUDE.md, use skill diagram before asking." Spec-preservation: rules 0 to 7 untouched; additive. Temporary until a gate enforces it, then the line becomes a pointer.
