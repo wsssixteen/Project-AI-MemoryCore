@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it. 2026-10-13: a learning project is a folder projects/learning-projects/active/<name>/ (git-ignored); its engine .claude/skills/<name>/<name>.js answers `save-check`, and that answer is its save rule. Version 3 (2026-10-17): kind projects gains project-shape2 and project-report-current for folders in the project system shape (project.json \"shape\": 2). The kind tools (system/tools.json, the Tool registry, INDEX.md seventh kind since 2026-10-14) is listed with no rule yet: its rows print UNRULED for みや to rule.",
+  "version": 4,
+  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it. 2026-10-13: a learning project is a folder projects/learning-projects/active/<name>/ (git-ignored); its engine .claude/skills/<name>/<name>.js answers `save-check`, and that answer is its save rule. Version 3 (2026-10-17): kind projects gains project-shape2 and project-report-current for folders in the project system shape (project.json \"shape\": 2). The kind tools (system/tools.json, the Tool registry, INDEX.md seventh kind since 2026-10-14) is listed with no rule yet: its rows print UNRULED for みや to rule. Version 4 (2026-10-31): kind projects gains project-handover (AGENTS.md, VOICE.md, HANDOVER.md current); a project folder is found on disk by its project.json whether or not it is listed here (lib/save-rules.js isProjectFolder), so a new project is checked at Domain Expansion from its first day.",
   "ignore": [
     "**/log.jsonl",
     "**/*.log.jsonl",
@@ -431,7 +431,8 @@
         "projects/coding-projects/active/DawahMap",
         "projects/coding-projects/active/Eisenhower",
         "projects/coding-projects/active/mas-ergonomics-animation",
-        "projects/coding-projects/active/Masterline"
+        "projects/coding-projects/active/Masterline",
+        "projects/coding-projects/active/Trading"
       ],
       "rules": [
         {
@@ -478,6 +479,15 @@
             "projects/coding-projects/active/*"
           ],
           "source": ".claude/skills/project/SKILL.md and domain/project-load/README.md (the project system, 2026-10-17)"
+        },
+        {
+          "id": "project-handover",
+          "text": "A project in shape 2 has AGENTS.md (the README for agents: no state, points at START.md), VOICE.md (the voice intake prompt) and HANDOVER.md with the six report headings, written and not older than the newest change in the folder (history and reports excluded).",
+          "check": "project-handover",
+          "applies": [
+            "projects/coding-projects/active/*"
+          ],
+          "source": ".claude/skills/project/SKILL.md section 8 and domain/project-load/README.md (2026-10-31: a handover at every project start)"
         },
         {
           "id": "project-report-current",

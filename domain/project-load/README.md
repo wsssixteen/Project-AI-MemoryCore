@@ -4,7 +4,10 @@ symptom: 2026-10-08 miya: 'make sure everything WILL be loaded every single time
 goal: a session that works on a project starts from that project's own documents, never from memory alone, and keeps its spec, hard rules, decisions and next step through every compaction, resume and new session
 goal_signal: the first reply after a project is named, a compaction or a resume cites its START.md state (or the quest's Resume Point); no decision stated in a reply is missing from DECISIONS.md
 retention: rotate monthly
-footprint: per-prompt: 0 extra processes beyond the hook's own node start; one directory listing and a few small JSON reads; silent unless an alias matches or a compacted session lacks its card · per-turn: one child of the stop-claim-integrity bundle, silent unless the session is bound to a shape-2 project (then one 3 MB transcript tail read) · per-compaction: one node process reading the transcript once (PreCompact) and once more (SessionStart)
+footprint: per-prompt: 0 extra processes beyond the hook's own node start; one directory listing and a few small JSON reads; silent unless an alias matches or a compacted session lacks its card · per-turn: one child of the stop-claim-integrity bundle, silent unless the session is bound to a shape-2 project (then one 3 MB transcript tail read) · per-compaction: one node process reading the transcript once (PreCompact) and once more (SessionStart) · on-demand: `project.js new|upgrade|intake|audit`, one node process under 1 s
+boundary: covers the project folders under projects/coding-projects/active/ that hold project.json (their START.md, DECISIONS.md, HANDOVER.md, AGENTS.md, VOICE.md, history\, reports\), the session transcript it mines, its own log.jsonl, and the one turn where a decision or a report is checked · never edits a file he wrote by hand except by appending a ledger row or a history copy, never writes START.md or HANDOVER.md content itself (the worker writes them), never reads or writes quest/active.txt except to read a quest card, never opens the voice chat or any app · stops at a block naming the missing ledger row or report, at an audit line naming the file to rewrite, or at a card; the content is the worker's, the decision is his
+self_audit: `project.js audit [<Name>]` reads the folder back from disk (START.md sections, DECISIONS.md table, AGENTS.md, VOICE.md, HANDOVER.md six headings, not the template, not older than the newest change) and logs one row (ts · ok · errs · dur_ms); `new`, `upgrade` and `intake` end by running it and printing what is still missing; `lib/save-rules.js` rule `project-handover` runs it at Domain Expansion (de-close-gate C8)
+diagram: domain/project-load/diagram.png (the project start: his two steps marked; the same picture sits in .claude/skills/project/)
 
 **What fires when**
 
@@ -41,11 +44,26 @@ No registry to keep: the folders are the list. The other half is `lib/save-rules
 
 **New project**: `node domain/project-load/project.js new <Name> --aliases "a,b"` (templates in `templates/`). Everything else: `.claude/skills/project/SKILL.md`.
 
+## The project start (2026-10-31, per みや: "something like a handover always as part of starting a project … a general README file but for agents … I want to use voice chat")
+
+| File (from `templates/`) | Holds | Does NOT hold → where it is | Why this shape |
+|---|---|---|---|
+| `AGENTS.md` | the README for any agent: read order, how to work here, the voice path. Standard file name, so an agent that is not Ruri finds it | no state, no spec, no map → `START.md` (state, spec), `PROJECT.md` section 2 (map) | one home per fact (system-rules Rule 1); the card the hooks inject is still cut from START.md |
+| `HANDOVER.md` | what the next worker needs: the six report headings (What changed · Decisions made · Open questions · Blockers · Unverified · Next step), rewritten at every stop | history → `history\`, `DECISIONS.md` | the delegated report already had this shape; one file, not dated files, so the newest is always the file. `main/handoff-<date>-<topic>.md` stays for MemoryCore system efforts (in git, dated, read at boot); a project folder is his OneDrive space, outside git, loaded by hooks |
+| `VOICE.md` | the prompt he starts a voice chat with (one question at a time, recommended answer, never a table aloud, the wayfinder order: destination → wide → grill; ends with one HANDOVER block) and the two steps that bring the block here | nothing else | the voice chat is a plain claude.ai chat with no skill: the method must ride in the prompt. The folder is on OneDrive, so the file is on his phone |
+| `history\voice-<date>.md` | the voice chat's block, word for word (`project.js intake`) | never edited; START.md, DECISIONS.md and HANDOVER.md are filled from it by the worker | his words are the record (skill rule 15) |
+
+**Current** = `HANDOVER.md` not older than the newest file in the folder (`history\`, `reports\`, `media\` excluded; 2 s grace), the same rule as a delegated report. **Checked** by `project.js audit` (exit 1 on FAIL) and at Domain Expansion by `lib/save-rules.js` rule `project-handover` (step 12.7 → `de-close-gate` C8). A project folder is found on disk by its `project.json`, listed or not (`lib/save-rules.js isProjectFolder`, 2026-10-31: Appraisal-2026 had a manifest and no row anywhere, so no save rule ever ran on it). A shape-1 folder audits as NA until it migrates (skill section 6). An older shape-2 folder gets the three files with `project.js upgrade <Name>` (adds only what is missing) and FAILs the audit until its hand-over is written, at the next session that touches it, never silently. Not verified: whether the voice chat can read a file or export its transcript; the design assumes copy and paste.
+
+Adversarial scenarios (system-design Rule 12): the table `SCENARIOS` in `eval.js` (49 rows, `node domain/project-load/eval.js --table`); the 2026-10-31 rows cover the unwritten hand-over, a later START.md edit, a history-only change, a dropped heading, state drifting into AGENTS.md, an old folder, a double paste, a hostile block, a shape-1 folder, the unlisted project folder.
+
 **Unbind / bind**: `[project-unbind: <Name>]` in a prompt · `node domain/project-load/project.js unbind <Name> --session <id> [--all]` · `bind <Name> --session <id> --report <file>.md`. Log rows `unbound` (report_only) and `bound` (via cli).
 
 **Bypass**: `[skip-project-load: <reason>]` in the prompt (the card); `[skip-project-decision: <reason>]` · `[skip-project-report: <reason>]` in the reply (the Stop gate). An empty reason does not count.
 
-**Eval**: `node domain/project-load/project-load.eval.js` (the 2026-10-08 prompt hook: 22 fixtures + registration, 30 checks) and `node domain/project-load/eval.js` (the project system: requirements 1-7, 28 scenarios, 50 checks). `--table` prints the scenario table.
+**Eval**: `node domain/project-load/project-load.eval.js` (the 2026-10-08 prompt hook: 22 fixtures + registration, 30 checks) and `node domain/project-load/eval.js` (the project system: requirements 1-7 plus the project start, 49 scenarios, 80 checks). `--table` prints the scenario table.
+
+**Version**: 2.2 — 2026-10-31: the project start. `AGENTS.md`, `HANDOVER.md`, `VOICE.md` templates; `project.js upgrade` · `intake` · `audit`; `checkHandover` behind `lib/save-rules.js` rule `project-handover`; project folders found on disk at Domain Expansion. README gains `boundary:` (system-rules Rule 9), `self_audit:` (Rule 16), `diagram:` (Rule 17). Spec preservation: every 2.1 contract kept (card, decision gate, report gate, words, compactions); `scaffold` refuses an existing folder unless `upgrade` is passed; eval 80/80, prompt-hook eval 30/30, save-rules eval 95/95.
 
 **Version**: 2.1 — 2026-10-19: delegation from the start brief only, the written report path only; unbind marker and commands; eval 59 checks. Spec preservation: every 2.0 contract kept; the report binding narrowed.
 
