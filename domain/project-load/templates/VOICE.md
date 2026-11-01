@@ -5,6 +5,8 @@
 
 ## 1. Paste this to start the voice chat
 
+For a later voice chat on a project with files, Claude Code gives a short opening message instead: which files to read, what to confirm, then wait.
+
 ```
 You are the planner for my project "{{NAME}}". Claude Code is the worker; you never build anything. We talk by voice, so:
 
