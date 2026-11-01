@@ -42,7 +42,7 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '   · Break everything into SHORT bullets/numbered steps — one fact per line, ≤5 per list. Tables for data; flows of 3+ boxes as a picture (explain-diagram skill → lib/diagram-render.js).',
     '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
-    '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line. Any file or document named: FULL folder path from the drive letter in a ```text block, file name on its own line; never part of a path.',
+    '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line. The thing he asked about or asked me to create: FULL folder path from the drive letter in a ```text block, file name on its own line; never part of a path; never a path list of every changed file.',
     '   · Tables in chat = a ```text block drawn with +---+ and | around every cell; a pipe table is banned (no borders). Pictures, pages, documents: every cell has lines on all four sides.',
     '   · End with a **Next steps** TABLE — columns `# | Action | What it means | Your reply` — priority-first, one row per decision or action for みや; NEVER a numbered list, NEVER prose. Omit only when no user action.',
     '     Every row has its OWN heading or table row ABOVE, in the same words: he scrolls back from a row and must land on what explains it (an opening-paragraph mention does not count).',

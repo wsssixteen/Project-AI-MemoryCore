@@ -10,6 +10,10 @@
 
 ---
 
+## v2.03 (2026-11-01)
+
+- Rule 9 narrowed per みや: "be more specific on listing the folder path ... Not every single file changes path. That will bloat the reply." Dropped and named: the v2.02 wording "any file I point to". Gate unchanged: it still blocks part paths; a bare file name passes.
+
 ## v2.02 (2026-11-01)
 
 - §Disposition +rules 9 and 10, body in reply-shape-spec §3j. Per みや: "always show the full path (not including the document's name, just the path to the folder) every time" and "Lack of border lines is ugly and not useful".

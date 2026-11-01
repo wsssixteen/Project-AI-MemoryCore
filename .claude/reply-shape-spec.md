@@ -262,13 +262,13 @@ Example, the Memory kind with two parts:
 
 ## 3j. 🧱 Full folder path, and tables with full border lines (2026-11-01, per みや)
 
-**Full folder path.** Every file or document I point to or create, in every reply:
+**Full folder path.** Only for the thing he asked about or asked me to create (the updated document, a requested handover). Not for every changed file: that bloats the reply. Other files are named without a path, or not at all.
 
 ```text
 C:\Users\vice4\OneDrive - Pymsoft Sdn Bhd\<the whole folder path>
 ```
 
-The file name follows on its own line. A fenced block gives him the copy button. Banned: part of a path, a path from a project or repo root, a file name alone with no folder in the reply.
+The file name follows on its own line. A fenced block gives him the copy button. Banned: part of a path, a path from a project or repo root, a folder list of every changed file.
 
 **Full border lines.** The horizontal-rules-only table is banned. In chat a table is a fenced `text` block drawn with `+---+` and `|`, cells wrapped by hand to about 90 characters. In a picture, page or document, every cell has a line on all four sides. Every table this spec or a skill asks for keeps its columns and is drawn this way. Files read by agents (`.md` data, ledgers) keep pipe tables.
 
