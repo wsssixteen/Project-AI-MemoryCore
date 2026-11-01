@@ -10,6 +10,14 @@
 
 ---
 
+## v2.02 (2026-11-01)
+
+- §Disposition +rules 9 and 10, body in reply-shape-spec §3j. Per みや: "always show the full path (not including the document's name, just the path to the folder) every time" and "Lack of border lines is ugly and not useful".
+- Paired: `domain/pre-reply-contract` two lines, `domain/full-address-trace-gate` v3 (blocks a part path and a pipe table in chat; eval fixtures added), memory reply-mechanics.
+- Spec preservation: the trace check is unchanged. Skills that name a "markdown table" keep their columns; the table is now drawn with borders in chat.
+
+---
+
 ## The project start (AGENTS.md · HANDOVER.md · VOICE.md), no CLAUDE.md version change (2026-10-31)
 
 - Per みや: "a handover always as part of starting a project … a general README file but for agents … I want to use voice chat … Claude Code ends up like the worker … an audit installed into it and also into DE". Built as a refinement of `domain/project-load` (v2.2) and the `/project` skill (v1.4), not a new Feature: the project system already owned the start.
