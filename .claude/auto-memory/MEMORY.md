@@ -79,7 +79,7 @@
 ## Redmine and writing for people (skills: list-redmine, redmine-phase1-prefill)
 - [redmine-board](feedback_esokongan_means_tracker.md) — eSOKONGAN = tracker; board script first; shared filter; BA vs TSO; delegated quests
 - [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first; one standing exception: New to In Progress at quest start
-- [redmine-sla](reference_redmine_sla_hours.md) — Priority = SLA hours: Critical 1, High 6, Medium 22
+- [redmine-sla](reference_redmine_sla_hours.md) — 🚨 SLA for dev: Critical 6, High 10, Medium 22, Low 31 hours; timer 8am to 5pm; Terengganu Sunday to Thursday, the rest Monday to Friday
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
 - [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only; BA test scenario = SENARIO list of key names
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first

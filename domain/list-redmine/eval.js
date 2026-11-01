@@ -64,7 +64,7 @@ check('--tracking adds the Tracking table', () => /^### Tracking — \d+ open/m.
 
 // 4. Headers are the agreed columns per table.
 check('every category table header carries the Severity column (3 Melaka + any 1b/2b/3b)',
-    () => (base.split('| # | Severity | Days | Due date | Subject | State |').length - 1) === (base.match(/^### \d+b?\. /gm) || []).length);
+    () => (base.split('| # | Severity | Days | Hours left | Subject | State |').length - 1) === (base.match(/^### \d+b?\. /gm) || []).length);
 check('urgent flag, when present, names its evidence words',
     () => !/URGENT/.test(base) || /URGENT \([a-z ,]+\)/.test(base));
 

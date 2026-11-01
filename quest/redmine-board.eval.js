@@ -131,7 +131,7 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     // ── Terengganu table ────────────────────────────────────────────────────────────────
     const trgSec = section(withTrg, '### Terengganu');
     check('T1 Terengganu heading counts his open tickets (Resolved hidden like Melaka)', /^### Terengganu — 6 open, assigned to you/m.test(trgSec), trgSec.split('\n')[0]);
-    check('T2 same columns as the Melaka tables', trgSec.includes('| # | Severity | Days | Due date | Subject | State |'), trgSec);
+    check('T2 same columns as the Melaka tables', trgSec.includes('| # | Severity | Days | Hours left | Subject | State |'), trgSec);
     // PROD first, then eSOKONGAN tracker (High before Medium), then the rest by tracker tier:
     // Permanent Fix 2007 (tier 2), Internal Issue 2005 (tier 3), eSOKONGAN-CR 2001 (not placed, last)
     check('T3 ranked: PROD, then eSOKONGAN tracker, then the rest by tracker tier', ids(trgSec).join(',') === '2002,2004,2003,2007,2005,2001', ids(trgSec).join(','));
@@ -224,6 +224,23 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     const jp = JSON.parse(await board([...MLK, ...PRK2], ['--json']));
     check('P11 --json: Perak board in states[] carries the shared rows; mine[] never does', jp.states.find(s => s.state === 'perak').rows.length === 5 && !jp.mine.some(r => r.id > 3100), JSON.stringify(jp.states.map(s => s.state)));
     check('P12 two runs are byte-identical', pr === await board([...MLK, ...PRK2]), '');
+
+    // ── Hours left replaces Due date (miya 2026-11-01) ──────────────────────────────────
+    {
+        const HL = [
+            iss(5001, 'eSOKONGAN MELAKA', 51, 'eSOKONGAN', 'Medium', { start: '2026-09-01', due: '2027-12-01' }),
+            iss(5002, 'eSOKONGAN MELAKA', 51, 'eSOKONGAN', 'Medium', { start: '2026-10-01', due: '2026-10-02' }),
+            iss(5003, 'MLK_03_Pelupusan', 53, 'Internal Issue', 'Medium', {}),
+        ];
+        MLK.push(...HL);
+        const out = await board(HL);
+        const cell = id => (new RegExp('^\\| ' + id + ' \\|[^|]*\\|[^|]*\\| ([^|]*) \\|', 'm').exec(out) || [])[1];
+        check('L1 no Due date column anywhere', !/Due date/.test(out), out);
+        check('L2 eSOKONGAN row shows a bare number', /^-?\d+$/.test(String(cell(5001))), cell(5001));
+        check('L3 a row off the eSOKONGAN tracker shows a dash', cell(5003) === '—', cell(5003));
+        check('L4 fewest hours left ranks first, even with the later due date', ids(section(out, '### 2. eSOKONGAN')).join(',') === '5001,5002', ids(section(out, '### 2. eSOKONGAN')).join(','));
+        MLK.splice(MLK.length - HL.length, HL.length);
+    }
 
     // ── pure helpers ────────────────────────────────────────────────────────────────────
     const sp = B.splitByState([]);
