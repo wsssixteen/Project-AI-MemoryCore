@@ -386,6 +386,7 @@ function scaffold(name, opts) {
   if (fs.existsSync(path.join(dir, 'project.json'))) throw new Error(dir + ' already holds a project.json');
   fs.mkdirSync(path.join(dir, 'history'), { recursive: true });
   fs.mkdirSync(path.join(dir, 'reports'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'drafts'), { recursive: true });
   const vars = { NAME: name, DATE: today(), DIR: dir };
   const written = [];
   for (const f of fs.readdirSync(TEMPLATES)) {

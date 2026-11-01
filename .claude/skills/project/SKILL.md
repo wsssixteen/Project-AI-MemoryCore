@@ -19,6 +19,7 @@ description: The project system — how a personal or outside project (Masterlin
 | `history\words.md` | his prompts, word for word, copied out of the session transcripts | the PreCompact hook and `/project save` (by script, never by hand) |
 | `history\compactions.md` | each compaction summary (lossy; kept to check nothing was lost) | the SessionStart compact hook |
 | `reports\<session-name>.md` | a delegated session's report, six fixed headings | that session |
+| `drafts\<deliverable>\<version>-<agent>\` | work in progress any agent on the project may read: each agent builds its own version beside the others and never overwrites another's. A finished piece leaves this folder. Not `output` (nothing here is final), not `resources` (those are inputs). His ask 2026-11-01 | any agent working on the project |
 | `PROJECT.md` | the full index: where everything lives, which file answers which question, sessions ledger | me |
 | `VERSIONS.md` · `ARCHITECTURE.md` · `PROOFS.md` · `ROADMAP.md` | one row per version or bulk change · parts and flows · tests and costly mistakes · his asks in his words | me |
 
