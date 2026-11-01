@@ -18,7 +18,7 @@ metadata:
 >
 > The timers will count from 8am to 5pm. For Trg is sunday to thu , the rest is monday to friday
 
-**How to apply**: developer's limit by priority = Critical 6, High 10, Medium 22, Low 31 working hours. Timer 08:00 to 17:00; Terengganu Sunday to Thursday, every other state Monday to Friday. The message does not say whether lunch counts: he is unsure, so show lunch in and lunch out and never choose silently. **Take public holidays out of the timer**: without them, September 2026 showed 3 misses where his manager counted 1; removing Malaysia Day gave exactly 1. A manager's count outranks my calculation. **This replaces the 2026-09-09 table below where they differ (Critical 1, High 6, Low unstated)**; that table may be a ticket-level figure, not verified.
+**How to apply**: developer's limit by priority = Critical 6, High 10, Medium 22, Low 31 working hours. Timer 08:00 to 17:00; Terengganu Sunday to Thursday, every other state Monday to Friday. Lunch is counted (stricter). The timing is settled by his message; do not ask him about lunch, 9 to 5 or 7 working days (his ruling 2026-11-01).
 
 Older note, per みや 2026-09-09 (#278218 retrospective):
 
