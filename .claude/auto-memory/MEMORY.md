@@ -103,6 +103,7 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
+- [rustdesk-server](reference_rustdesk_server.md) — RustDesk "Not ready": company ID server 202.186.75.193; check prints at every session start on the work laptop; sessions run ON that laptop
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
 - [eisenhower](project_eisenhower.md) — Eisenhower matrix app REBUILD on Rust + egui + SQLite: read PROJECT.md then MAP.md (wayfinder) in the MAIN checkout's projects/coding-projects/active/Eisenhower/ first
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
