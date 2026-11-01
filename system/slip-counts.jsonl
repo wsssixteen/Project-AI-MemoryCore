@@ -1689,3 +1689,5 @@
 {"ts":"2026-11-01T02:51:07.584Z","category":"verify"}
 {"ts":"2026-11-01T04:06:01.685Z","category":"reask/redundant"}
 {"ts":"2026-11-01T05:08:28.177Z","category":"blocker"}
+{"ts":"2026-10-31T07:16:51.826Z","category":"blocker"}
+{"ts":"2026-10-31T07:55:38.164Z","category":"reask/rambling"}

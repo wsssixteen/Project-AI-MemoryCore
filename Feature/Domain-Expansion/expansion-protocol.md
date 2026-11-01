@@ -363,6 +363,8 @@ Before the closing banner, run `node lib/save-rules.js` and paste its `SAVE-RULE
 
 **Enforced by**: the run logs `action=save-rules-ran` to `domain/de-close-gate/log.jsonl`; `de-close-gate` **C8** blocks the close without a full (non-`--paths`, non-`--since`) run ≤12 h old with `fail=0`. **Why** (みや 2026-10-06): *"this is how you will know what is important to be saved for each domain of things we do in a session … more deterministic or mechanical so that it won't simply be up to you."*
 
+**Projects (2026-10-31)**: a project folder is found on disk by its `project.json` whether or not `system/save-rules.json` lists it (Appraisal-2026 had a manifest and no row anywhere, so no rule ever ran on it). Rule `project-handover` checks a shape-2 folder touched today for `AGENTS.md`, `VOICE.md` and a `HANDOVER.md` with the six headings, written and not older than the folder's newest change; the fix line is `node domain/project-load/project.js audit "<Name>"`.
+
 ---
 
 ## Step 13 — Handoff Block — tiered (added 2026-05-24 evening; tiered 2026-05-26 after session-end overload slip)
@@ -417,6 +419,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-10-31 — Step 12.7: project folders are found on disk by `project.json` (listed or not) and rule `project-handover` checks AGENTS.md · VOICE.md · HANDOVER.md current, per みや ("a handover always as part of starting a project … an audit installed into DE"). Spec-preservation: every step and gate untouched; one paragraph added.*
 
 *Updated 2026-10-08 — Step 10: (1) skipping or scoping down the whole ritual is banned (a `⏭` covers one step only; "another session owns the diary" is never a reason); (2) never regress: stat read before and after the commit. Per みや after the skipped DE of 2026-10-08 and the `c1e6ad56` revert. Spec-preservation: the three Step 10 actions, the SHA proof, the retry rule and all other steps untouched; additive.*
 
