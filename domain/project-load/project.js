@@ -12,6 +12,9 @@
 //       node domain/project-load/project.js decide <Name> --decision "..." --why "..." --who "..." [--serves S1]
 //       node domain/project-load/project.js words <Name> --transcript <file.jsonl> [--session <id>]
 //       node domain/project-load/project.js check <Name>
+//       node domain/project-load/project.js upgrade <Name>                      (adds the template files a folder lacks; touches nothing present)
+//       node domain/project-load/project.js intake <Name> --file <block.md>     (the voice chat's HANDOVER block → history\voice-<date>.md)
+//       node domain/project-load/project.js audit [<Name>]                      (AGENTS.md · VOICE.md · HANDOVER.md current; exit 1 on FAIL; DE runs it via lib/save-rules.js)
 //       node domain/project-load/project.js unbind <Name> --session <id> [--all] [--reason "..."]   (not delegated; --all: not bound)
 //       node domain/project-load/project.js bind <Name> --session <id> [--report <file>.md]          (repair a binding)
 // The transcript format is internal to Claude Code (docs: it changes between versions): every parser here fails open.
@@ -379,11 +382,52 @@ function reportVerdicts(projectName, dayIso) {
   return out;
 }
 
+// ---------- the agent README, the hand-over, the voice prompt (2026-10-31, per miya: a handover as part of starting a project,
+// a README for agents, voice intake). AGENTS.md holds no state (START.md does); HANDOVER.md is one file, rewritten at every stop,
+// current = not older than the newest change in the folder (history\ and reports\ excluded, same rule as a delegated report).
+const HANDOVER_UNWRITTEN = /\(not written yet/;
+function checkHandover(p) {
+  const errs = [];
+  if (p.shape < 2) return errs;
+  for (const f of ['AGENTS.md', 'VOICE.md']) if (read(path.join(p.dir, f)) === null) errs.push(f + ' missing (node domain/project-load/project.js upgrade ' + JSON.stringify(p.name) + ')');
+  const hp = path.join(p.dir, 'HANDOVER.md');
+  const h = read(hp);
+  if (h === null) { errs.push('HANDOVER.md missing (node domain/project-load/project.js upgrade ' + JSON.stringify(p.name) + ')'); return errs; }
+  const miss = reportMissing(h);
+  if (miss.length) errs.push('HANDOVER.md lacks heading(s): ' + miss.join(', '));
+  if (HANDOVER_UNWRITTEN.test(h) || /\{\{\w+\}\}/.test(h)) errs.push('HANDOVER.md not written yet (template text still inside)');
+  const newest = newestChange(p.dir, 0);
+  if (newest.file && path.resolve(newest.file) !== path.resolve(hp) && mtime(hp) + 2000 < newest.ms) errs.push('HANDOVER.md older than ' + path.basename(newest.file) + ' (rewrite it: what changed, decisions, open questions, blockers, unverified, next step)');
+  return errs;
+}
+// system-design Rule 16: the audit reads the folder back from disk and logs one row per run.
+function audit(p) {
+  const t0 = Date.now();
+  const errs = p.shape < 2 ? [] : checkShape2(p).concat(checkHandover(p));
+  logAppend({ action: 'audit', project: p.name, shape: p.shape, ok: !errs.length, errs: errs.length ? errs : undefined, dur_ms: Date.now() - t0 });
+  return { ok: !errs.length, errs, shape: p.shape };
+}
+function auditLine(p, a) {
+  if (p.shape < 2) return 'NA   ' + p.name + ': shape 1 (migrate: /project skill section 6)';
+  return (a.ok ? 'PASS ' + p.name + ': START.md, DECISIONS.md, AGENTS.md, VOICE.md, HANDOVER.md current' : 'FAIL ' + p.name + ':\n  ' + a.errs.join('\n  '));
+}
+// the voice chat's HANDOVER block, saved word for word (never edited) into history\voice-<date>.md
+function intake(p, file) {
+  const text = read(file);
+  if (text === null) throw new Error('cannot read ' + file);
+  const hist = path.join(p.dir, 'history'); fs.mkdirSync(hist, { recursive: true });
+  let out = path.join(hist, 'voice-' + today() + '.md'); let n = 1;
+  while (fs.existsSync(out)) out = path.join(hist, 'voice-' + today() + '-' + (++n) + '.md');
+  fs.writeFileSync(out, '# ' + p.name + ' — voice intake ' + today() + ' (his HANDOVER block, copied word for word; never edited)\n\n' + text.replace(/^﻿/, '').trim() + '\n');
+  logAppend({ action: 'intake', project: p.name, file: out, chars: text.length });
+  return out;
+}
+
 // ---------- scaffold ----------
 function scaffold(name, opts) {
   const o = opts || {};
   const dir = path.join(ACTIVE, name);
-  if (fs.existsSync(path.join(dir, 'project.json'))) throw new Error(dir + ' already holds a project.json');
+  if (fs.existsSync(path.join(dir, 'project.json')) && !o.upgrade) throw new Error(dir + ' already holds a project.json (missing files only: project.js upgrade ' + JSON.stringify(name) + ')');
   fs.mkdirSync(path.join(dir, 'history'), { recursive: true });
   fs.mkdirSync(path.join(dir, 'reports'), { recursive: true });
   const vars = { NAME: name, DATE: today(), DIR: dir };
@@ -398,7 +442,7 @@ function scaffold(name, opts) {
   return written;
 }
 
-module.exports = { PEOPLE_RULE, MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, minedSince, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, reportVerdicts, scaffold, read, mtime };
+module.exports = { PEOPLE_RULE, MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, minedSince, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, checkHandover, audit, auditLine, intake, reportVerdicts, scaffold, read, mtime };
 
 // ---------- CLI ----------
 if (require.main === module) {
@@ -413,7 +457,20 @@ if (require.main === module) {
       const text = resume.composeFor({ projects: [p], quests: [], kind: 'compact', mined: { [p.name]: Number(flag('mined') || 0) } });
       process.stdout.write(text + '\n[drill] ' + text.length + ' characters (the harness cuts at 10,000)\n');
     }
-    else if (cmd === 'new') { const w = scaffold(name, { aliases: String(flag('aliases') || '').split(',').map(s => s.trim()).filter(Boolean), repo: flag('repo') }); console.log('created:\n  ' + w.join('\n  ')); }
+    else if (cmd === 'new' || cmd === 'upgrade') {
+      const w = scaffold(name, { aliases: String(flag('aliases') || '').split(',').map(s => s.trim()).filter(Boolean), repo: flag('repo'), upgrade: cmd === 'upgrade' });
+      console.log((w.length ? 'created:\n  ' + w.join('\n  ') : 'nothing to add: every template file is present'));
+      // self-audit (Rule 16): what the folder still needs before the first stop; a scaffold is not a finished start
+      const p = findProject(name); if (p) { const a = audit(p); console.log(a.ok ? 'AUDIT PASS ' + p.name : 'NEXT before the first stop (node domain/project-load/project.js audit ' + JSON.stringify(p.name) + ' must exit 0):\n  ' + a.errs.join('\n  ')); }
+    }
+    else if (cmd === 'intake') { const p = need(); const f = flag('file'); if (!f) { console.error('intake needs --file <the HANDOVER block from the voice chat>'); process.exit(2); } const out = intake(p, f); console.log('saved word for word: ' + out + '\nnow fill START.md (goal, spec rows, hard rules, open decisions), one decide row per decision, rewrite HANDOVER.md, then audit.'); const a = audit(p); console.log(auditLine(p, a)); }
+    else if (cmd === 'audit') {
+      const list = name ? [need()] : listProjects();
+      let fail = 0;
+      for (const p of list) { const a = audit(p); if (!a.ok) fail++; console.log(auditLine(p, a)); }
+      console.log('PROJECT-AUDIT: ' + list.length + ' project(s), ' + fail + ' FAIL');
+      process.exit(fail ? 1 : 0);
+    }
     else if (cmd === 'decide') { const p = need(); if (!flag('decision') || !flag('why') || !flag('who')) { console.error('decide needs --decision --why --who'); process.exit(2); } const n = decide(p, { decision: flag('decision'), why: flag('why'), who: flag('who'), serves: flag('serves'), date: flag('date') }); logAppend({ action: 'decided', project: p.name, n }); console.log('DECISIONS.md row ' + n + ' written: ' + path.join(p.dir, 'DECISIONS.md')); }
     else if (cmd === 'unbind') {   // unbind <Name> --session <id> [--all] [--reason "..."]: not delegated (default) or not bound at all
       const p = need(); const s = flag('session'); if (!s) { console.error('unbind needs --session <session id>'); process.exit(2); }
@@ -429,6 +486,6 @@ if (require.main === module) {
     }
     else if (cmd === 'words') { const p = need(); const t = flag('transcript'); if (!t) { console.error('words needs --transcript <file.jsonl>'); process.exit(2); } const r = mineWords(p, t, { session: flag('session'), sinceTs: flag('since') }); console.log(r.added + ' prompt(s) added to ' + r.file + (r.error ? ' (error: ' + r.error + ')' : '')); }
     else if (cmd === 'check') { const p = need(); const e = checkShape2(p); console.log(p.shape < 2 ? p.name + ': shape 1 (no START.md checks)' : e.length ? 'FAIL ' + p.name + ':\n  ' + e.join('\n  ') : 'PASS ' + p.name + ': START.md, DECISIONS.md, index'); process.exit(e.length ? 1 : 0); }
-    else { console.log('usage: project.js card|drill|new|decide|words|check|unbind|bind <Name> [...]'); process.exit(cmd ? 2 : 0); }
+    else { console.log('usage: project.js card|drill|new|upgrade|intake|audit|decide|words|check|unbind|bind <Name> [...]'); process.exit(cmd ? 2 : 0); }
   } catch (e) { console.error('project.js: ' + e.message); process.exit(1); }
 }
