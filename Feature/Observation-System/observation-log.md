@@ -103,6 +103,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 **[2026-10-19]** T2 recurrence of the 2026-08-04 "short question, long answer" row — ADHOC-PRU-2026-1: he asked "in a single short sentence why" and got three tables; `reask/verbose` is at 3 in 7 days (escalation). Also new T1: **the database is the evidence, so making it reachable is my first job, not his.** I asked him three times to connect the Penang DB before I opened the setup script in a terminal tab for him.
 **[2026-10-20]** T2 recurrence (third in two weeks) of the 2026-08-04 "short question, long answer" row — #284831: a peer session asked me for a three-part status and I answered in four sections with tables; his next message was "have we passed the ticket or what's left to do now?" in anger. One line from live Redmine answered it. Promotion candidate to T3: the status answer shape (verdict · holder · what is left) belongs in a gate, not in my care.
 
+**[2026-11-02]** T2 recurrence (fourth) of the same row — 287346: "Brief me shortly" got a long reply with no diagram, then "just answer my question", then "answer like a normal human". The BA's yes-or-no question had been answered by the sweep and I did not lead with it. A ticket brief opens with the question the BA asked and its answer. Proposal A5 of 2026-11-02 carries the mechanical half.
+
 ## Retired Observations
 
 *(Observations that have been fully integrated — moved to memory or Forge)*
