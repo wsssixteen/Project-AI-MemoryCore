@@ -1,5 +1,9 @@
 **Last Activity**: 2026-10-30 19:10 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - PLTP/2026/9 alter SPI"), stg alter relay solved by him with the aliranKerjaId variable, then the audit of the audit, Domain Expansion.
 
+## Session Recap (2026-11-02, sweep audit false alarms)
+- `domain/sweep/audit.js`: no-return-table also reads the SubagentHandback message; task-folder-write judges where a shell command writes, and fails closed on a destination it cannot place; `--controller-caught none` = empty list. Replay of esokongan-2026-11-02: 9 + 1 false alarms gone, exit 0. Why: exit 1 would have re-bought all 9 familiars, about 2.7M tokens.
+- Old vs new on 367 real familiar commands: the first fix cleared a real `[IO.File]::WriteAllText` into a Task folder, so New-Item, mkdir, Remove-Item, Rename-Item, tee and .NET writes joined the writer list. 19 commands cleared, 23 real writes newly caught. Scripts in python or node stay unparsed (README accepted risk).
+
 ## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
 - ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
 - The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
