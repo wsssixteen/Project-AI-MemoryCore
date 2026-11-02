@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
+- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
+- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
+- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
+- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
+- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
+- Open: nothing from this session. No ticket worked.
+- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
+**Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
+
 ## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
 - 287201 PLTP Syor Keputusan PDT labels: fix 6f93448d46, Redmine Verified by Fizah, closed at Phase 1, waits for release.
 - 287164 MCL premium gate: 761ec96f82 + 784d3e57e2 + 0c97566203, tested on MLIT by miya, Redmine Resolved to Fizah, closed at Phase 1. Photos do not show the Syarat pick or the dialog reopen.
@@ -7074,6 +7084,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
