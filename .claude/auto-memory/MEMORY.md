@@ -113,6 +113,7 @@
 - [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ in the MAIN checkout (shape 2: START.md first, DECISIONS.md ledger); rules in the /project skill; orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
+- [appraisal](project_appraisal_self_initiatives.md) — appraisal self-initiative list, one row per ticket; project folder projects/coding-projects/active/Appraisal-2026 in the MAIN checkout
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
 
 ## User

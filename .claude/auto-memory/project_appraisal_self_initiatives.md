@@ -7,6 +7,8 @@ metadata:
 
 miya keeps this list for his appraisal. A **self-initiative** = something we fixed or added that BA or the ticket did not ask for, because the same cause sat next to the reported one. We include it (miya 2026-10-15, #284884: "We will include even though BA didn't request for it").
 
+Project folder: projects/coding-projects/active/Appraisal-2026 (main folder).
+
 **How to apply:** when a fix covers more than BA listed, add one row here the same turn, and mark the item "self-initiative" in the ticket's quest doc inventory. Plain words, what the user now gets.
 
 | Date | Ticket | Self-initiative | BA asked for |

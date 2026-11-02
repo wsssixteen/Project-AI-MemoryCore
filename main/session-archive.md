@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
+- 287201 PLTP Syor Keputusan PDT labels: fix 6f93448d46, Redmine Verified by Fizah, closed at Phase 1, waits for release.
+- 287164 MCL premium gate: 761ec96f82 + 784d3e57e2 + 0c97566203, tested on MLIT by miya, Redmine Resolved to Fizah, closed at Phase 1. Photos do not show the Syarat pick or the dialog reopen.
+- System, on main: test data by alter rule, `lib/chat-images.js`, no Redmine submit with 0 files, CLAUDE.md v2.00 rule 8 plan first.
+- Open: gate-fail and slip audit child session (brief in `main/todo.md`, start from the desktop app).
+- Assessment: A1 gates fired on replies that had no scenario and no ask. A2 two test-data slips from not checking the holder after an alter. A3 his "why can't I open it" took 4 queries and minutes before a plain answer. A4 alter can create a task with no holder. A5 mid-turn photos lived only in the transcript.
+**Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
+
 ## Session Recap (2026-10-29/30, worktree "alter-patching-a323d9", 286650 STG alter + headless runner)
 - 286650: STG scenario ready (miya did the alter himself after my tool failed on login); ticket held by Pendaftaran, block stays delegated.
 - Built `E:\Dev\scripts\FlowableAlter\runner\`: STG/MLIT Alter Flow with no login. Eval 10/10 urusan + one different-step move, all checked in the DB. Refuses PROD. No Initiate & Alter yet.
@@ -7066,6 +7074,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
