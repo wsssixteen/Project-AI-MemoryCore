@@ -106,16 +106,14 @@ function evaluate(text) {
   if (offenders.length === 0) return { verdict: 'passed', reason: 'clean' };
   return { verdict: 'blocked', offenders: [...new Set(offenders)].slice(0, 8) };
 }
-// v3 (2026-11-01 miya): any reply, outside fences: a path that is not from the drive letter, or a pipe table (no border lines).
-// v4 (2026-11-02 miya): a text table wider than 70 characters wraps on his screen and breaks the grid.
+// v3 (2026-11-01 miya): any reply, outside fences: a path that is not from the drive letter, a path only.
+// v4 (2026-11-02 miya): a +---+ table in a code block is blocked, a normal Markdown table passes.
 function evaluateShape(text) {
   if (!text || EXEMPT.test(text)) return { verdict: 'silent', reason: 'exempt' };
   const body = text.replace(/```[\s\S]*?```/g, '');
   const offenders = [];
-  if (/^[ \t]*\|.*\|[ \t]*\r?\n[ \t]*\|[\s:|-]+\|[ \t]*$/m.test(body)) offenders.push('pipe table: draw it in a ```text block with +---+ and |');
-  for (const block of text.match(/```text\r?\n[\s\S]*?```/g) || []) {
-    const lines = block.split(/\r?\n/);
-    if (lines.some(l => /^\+[-+]+\+\s*$/.test(l)) && lines.some(l => /^[+|]/.test(l) && l.trimEnd().length > 70)) offenders.push('text table wider than 70 characters: it wraps on his screen; drop a column or use short bullets');
+  for (const block of text.match(/```[^\n]*\r?\n[\s\S]*?```/g) || []) {
+    if (/^\+[-+]+\+\s*$/m.test(block)) offenders.push('table in a code block: use a normal Markdown table');
   }
   const rest = body.replace(/https?:\/\/[^\s)`]+/g, ' ').replace(/[A-Za-z]:\\[^\n`|]*/g, ' ');
   for (const re of [/(?<![\w:\\/.-])(?:[\w.-]+[\\/])+[\w.-]+\.[a-z][a-z0-9]{0,5}\b/gi, /(?<![\w:\\/.-])[\w.-]+(?:\\[\w.-]+){2,}/g]) {
