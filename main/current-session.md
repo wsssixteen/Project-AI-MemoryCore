@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-02 18:45 — worktree `ticket-287773-quest-run-66ac6f`, QA-287773 Phase 1 closed, Domain Expansion.
+
+## Session Recap (2026-11-02, ticket 287773 PPTPB)
+- Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
+- System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
+- Wrong: I advised the PT route from requirement 219931 on a 16:36 sync, BA wrote the opposite at 16:39. The v4 Flowable tidy left 174 of 249 arrows off the gateway diamonds, not saved. Both have slip rows; wrong-fix row 1 added.
+- Open: (1) posted Solutions names KPT, his screenshot shows only PPD and KPPD, reason not verified. (2) MLIT PTMLK/03/L/PPTPB/2026/9 still with sabrina, must go back to PKPPT/suhaila. (3) MLIT engine v14 PT route undo not confirmed. All three are in the qa_doc Resume Point.
+- Assessment: A1 save-quest read QUEST-STORY as MISSING for an absolute qa_doc, and the doc existed only in the worktree. A2 the Resume Point still said hold after the fix was posted. A3 Solutions text named KPT without being compared to the photo. A4 fix advice ran on a journal read 9 minutes old. A5 ⏭ no sweep run.
+
 **Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
 
 ## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
