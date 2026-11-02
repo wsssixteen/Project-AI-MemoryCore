@@ -63,6 +63,17 @@
       ".claude/auto-memory/feedback_ticket_writing_style.md (entry 8)"
     ]
   },
+  "flowable-description": {
+    "for": "The Save model Description line for a Flowable model change",
+    "modules": [
+      "lean",
+      "line",
+      "rojak"
+    ],
+    "pointers": [
+      ".claude/skills/bpmn-check/SKILL.md (Step 2: one line, ends with the tracker and ticket number, the existing text stays)"
+    ]
+  },
   "infra-handoff": {
     "for": "Message to infra with a script to run",
     "modules": [

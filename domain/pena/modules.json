@@ -28,7 +28,8 @@
       "No verdict words about our own work (verified, DB-proven, as mentioned).",
       "No pushback lines to another team (miya 2026-10-14, #282303): never say what we will not do, never compare their version or work against ours to refuse, never tell them to raise a ticket. State the finding only; they decide the next step.",
       "Every draft reply to another person comes in 2 versions: SHORT first (1-2 lines, the answer only, e.g. \"Bukan id ni je... Isu ni akan jadi untuk semua permohonan yang isi tanah dimiliki.\"), then FULL. He picks one.",
-      "A chat reply answers ONLY the question in the last message, in about 3 short fragments. No background on how it works today and no process line (change request, please confirm) unless that message asks for it (ADHOC-UPP-PDTJ: 5 lines cut to \"Sepatutnya waktu dijana. Waktu ADO sign tu ke. Jana semula load balik tarikh ADO sign.\")."
+      "A chat reply answers ONLY the question in the last message, in about 3 short fragments. No background on how it works today and no process line (change request, please confirm) unless that message asks for it (ADHOC-UPP-PDTJ: 5 lines cut to \"Sepatutnya waktu dijana. Waktu ADO sign tu ke. Jana semula load balik tarikh ADO sign.\").",
+      "A Flowable Description names the change in the team's own words, then where it goes (287773: \"Tambah Agihan PT selepas Keputusan Pentadbir Tanah, hantar ke 12.0 ...\"). No flow-model word such as laluan or gateway, and no condition in brackets; the diagram already shows both."
     ],
     "banned": [
       "Everything ...",

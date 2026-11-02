@@ -42,6 +42,7 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 | `redmine-ba-pass` | passing a fix or patch to the BA | greet · lean · line · plain · proven · topdown · table · attach |
 | `redmine-dev-fixlist` | fix list or findings for a developer | greet · lean · line · rojak · proven · topdown · table · attach |
 | `redmine-rootcause` | Root cause and Solution fields | lean · line · plain · rojak · proven |
+| `flowable-description` | the Save model Description line for a Flowable model change | lean · line · rojak |
 | `infra-handoff` | message to infra | lean · line · proven |
 | `whatsapp-dev` | WhatsApp reply | lean · line · rojak · proven |
 | `junior-handover` | guide note for a junior | greet · lean · line · rojak · hint |
