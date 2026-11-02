@@ -130,6 +130,8 @@ fourth strike lands.
 | A question is allowed only if no tool or ticket can answer it | Search the ticket, the linked tickets and the DB first |
 | Leave out by default: verification trail, rejected options, ids, file:line, SQL, test-data dumps, caveats that change nothing | Add them only when asked, or when the reader must use them to act |
 
+**No oversharing before the next step is confirmed (2026-10-31 per みや: "NOT over share things until you've confirmed on the next steps ... Unless I am the one asking for examples ... I have always skipped too long replies")**: a reply is the answer plus the ONE next step. Options, examples, comparisons and research wait until he asks for them or confirms that step. A choice he must make is one drawing or one short table (CLAUDE.md 0a), never more. `domain/terse-gate` blocks over 20 lines unless his message asks for more or confirms. A reply he skips is an unread reply, however correct.
+
 **The investigation is never shown (2026-10-06 per みや, #268173, same standing as the script-with-every-data-claim rule)**: a reply carries the overview, and the fix or implementation when there is one. How I found it, what I checked, what I ruled out and what I am unsure of stay in the quest doc until he asks. A short question gets a few lines (`domain/terse-gate` blocks more than 15 lines after a short question). Something he will share is a file, not chat text.
 
 **Banned**: a guide or note that carries the whole investigation · empty columns or questions for the reader to fill when the answer is already known · repeating the same fact in two sections.
@@ -257,6 +259,20 @@ Example, the Memory kind with two parts:
 ```
 
 **Banned**: a system change reported with no `System › <kind>` heading · the same kind headed twice in one reply (one heading per part was the 2026-10-27 shape; retired 2026-10-28) · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` v3 (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it, and blocks a kind headed twice. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was. 2026-10-28: the DE delta carried four `System › Memory` headings for four files; he reads a kind as one table, like the Workflows / Features / Tools layers.
+
+## 3j. 🧱 Full folder path, and tables with full border lines (2026-11-01, per みや)
+
+**Full folder path.** Only for the thing he asked about or asked me to create (the updated document, a requested handover). Not for every changed file: that bloats the reply. Other files are named without a path, or not at all.
+
+```text
+C:\Users\vice4\OneDrive - Pymsoft Sdn Bhd\<the whole folder path>
+```
+
+The file name follows on its own line. A fenced block gives him the copy button. Banned: part of a path, a path from a project or repo root, a folder list of every changed file.
+
+**Full border lines.** The horizontal-rules-only table is banned. In chat a table is a fenced `text` block drawn with `+---+` and `|`, cells wrapped by hand to about 90 characters. In a picture, page or document, every cell has a line on all four sides. Every table this spec or a skill asks for keeps its columns and is drawn this way. Files read by agents (`.md` data, ledgers) keep pipe tables.
+
+**Enforced**: `domain/full-address-trace-gate` v3 blocks a part path and a pipe table in chat. Bypass `[skip-full-address: <reason>]`.
 
 ## 4. Precedence Note
 

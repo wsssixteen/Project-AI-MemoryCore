@@ -10,6 +10,34 @@
 
 ---
 
+## v2.03 (2026-11-01)
+
+- Rule 9 narrowed per みや: "be more specific on listing the folder path ... Not every single file changes path. That will bloat the reply." Dropped and named: the v2.02 wording "any file I point to". Gate unchanged: it still blocks part paths; a bare file name passes.
+
+## v2.02 (2026-11-01)
+
+- §Disposition +rules 9 and 10, body in reply-shape-spec §3j. Per みや: "always show the full path (not including the document's name, just the path to the folder) every time" and "Lack of border lines is ugly and not useful".
+- Paired: `domain/pre-reply-contract` two lines, `domain/full-address-trace-gate` v3 (blocks a part path and a pipe table in chat; eval fixtures added), memory reply-mechanics.
+- Spec preservation: the trace check is unchanged. Skills that name a "markdown table" keep their columns; the table is now drawn with borders in chat.
+
+---
+
+## The project start (AGENTS.md · HANDOVER.md · VOICE.md), no CLAUDE.md version change (2026-10-31)
+
+- Per みや: "a handover always as part of starting a project … a general README file but for agents … I want to use voice chat … Claude Code ends up like the worker … an audit installed into it and also into DE". Built as a refinement of `domain/project-load` (v2.2) and the `/project` skill (v1.4), not a new Feature: the project system already owned the start.
+- CLAUDE.md unchanged, by decision: the `/project` skill is description-triggered ("new project", "handover", "voice intake"), the always-on memory line `side-project-folder` points at it, and `domain/project-load` fires on every alias; a boot pointer would be a second copy of a route that already fires (system-rules Rule 1; INDEX.md decision criteria: prose only for judgment). Version stays v2.01.
+- Domain Expansion: `lib/save-rules.js` finds a project folder on disk by its `project.json` (Appraisal-2026 had one and no row anywhere); rule `project-handover` runs `project.js checkHandover` on every shape-2 folder touched today (C8 blocks). Route step 5 of `system/INDEX.md` now names the DE check a new part must pass before it lands.
+- Evals: `domain/project-load/eval.js` 80/80 · `project-load.eval.js` 30/30 · `lib/save-rules.eval.js` 95/95.
+
+## reply-shape-spec §3c, no CLAUDE.md version change (2026-10-31)
+
+- +No oversharing before the next step is confirmed, per みや: a reply is the answer plus the ONE next step. Paired: `domain/terse-gate` signal 4 (over 20 lines blocked unless he asks for more or confirms; eval F21 to F30).
+- Spec preservation: signals 1 to 3 kept. Eval F8 now asserts only that a long message is not read as a short question, its original spec; a long reply to it may now be blocked by signal 4. CLAUDE.md 0a and rule 8 pictures stay; they count as no lines.
+
+---
+
+**v2.01** (2026-10-30) — Available Skills `/verify` line: "DE Checklist D" removed, "Phase 2 close-out" named (Checklist E already existed). Why: audit of the audit, Checklist D repeated `de-close-gate` by hand; his ruling: "Step 5 and Checklist D". Spec-preservation: the listed verify checkpoints stay; one dropped, named here.
+
 **v2.00** (2026-10-30) — §Disposition +rule 8 (TEMPORARY): plan first, then ask. Before any question or yes/no to みや, the same reply shows the plan as one explain-diagram picture (current state → my steps → his steps → end state, data changes with their script on the picture), then the question. Why: 287164, he was asked "clear it" for a data change with no plan shown; his words: "tell me your plan first, always, before asking anything. This thing can be added as a temporary fix in CLAUDE.md, use skill diagram before asking." Spec-preservation: rules 0 to 7 untouched; additive. Temporary until a gate enforces it, then the line becomes a pointer.
 
 

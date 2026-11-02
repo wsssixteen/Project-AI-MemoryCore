@@ -54,6 +54,16 @@ if (cmd === 'add') {
   process.exit(2);
 }
 
+// A part named again and again was never acted on: ⚠️ at 2, 🚨 at 3 (lib/session-audit.js, 2026-10-30, the telemetry bug was logged 34 times).
+function repeatSection(rows) {
+  let counts = {};
+  try { counts = require(path.join(ROOT, 'lib', 'session-audit.js')).repeatCounts(rows, ROOT); } catch (_) { return []; }
+  const top = Object.entries(counts).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]);
+  if (!top.length) return [];
+  return ['## 🔁 Parts named repeatedly in the ledger', '', '| Part | Rows | Flag |', '|---|---|---|',
+    ...top.map(([p, n]) => `| ${p} | ${n} | ${n >= 3 ? '🚨 build or drop' : '⚠️'} |`), ''];
+}
+
 function spawnDashboard() {
   // DEDUPE on concat (fixed 2026-07-17, みや caught the inflated headline): every slip added
   // since slips.jsonl was born (C7, 2026-07-12) is written to BOTH files by `add` below, so a
@@ -108,6 +118,7 @@ function spawnDashboard() {
       ...up14.map(r => `| ${r.ts.slice(0, 10)} | ${r.category} | ${r.evidence || '—'} |`),
       '',
     ] : []),
+    ...repeatSection(allRows),
     ...(prop14.length ? [
       '## 💡 Open proposals (14d — raised by the DE Improvement Sweep, NOT yet built; type=proposal)',
       '',

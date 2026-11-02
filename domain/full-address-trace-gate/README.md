@@ -40,6 +40,8 @@ Fires when ALL:
 | 2026-07-01 | v1 (advisory) | Original at `.claude/hooks/full-address-trace-gate.js`, `additionalContext` reminder. QA-267976. |
 | 2026-07-06 | v2 (BLOCKING) | Promoted advisory → `decision:block` after 6+ fires/day on same slip class (QA-268883). Relocated to Feature folder. Added `[skip-full-address:]` bypass token. Added `stop_hook_active` guard. Extracted `evaluate()` for eval.js re-use. Design routed through /system-design + /system-rules. |
 
+| 2026-11-01 | v3 | Added `evaluateShape`: on any reply, outside fences, blocks a path not from the drive letter and a pipe table (reply-shape-spec §3j, per miya). Trace check unchanged. Rollback: remove `evaluateShape` and its call. |
+
 ## Rule-6-v1.2 pre-ship checks
 
 - **(a) Spec preservation** — the v1 offender-detection regexes (file A + method B) preserved byte-for-byte. Trigger heuristic (`refCount ≥ 2 && (arrows | "class chain" | "trace")`) preserved. Log format preserved. **New** specs added: `[skip-full-address:]` bypass · `stop_hook_active` guard · length-floor 400 · `decision:block` exit path.

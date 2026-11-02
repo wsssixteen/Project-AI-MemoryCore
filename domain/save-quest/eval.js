@@ -14,6 +14,15 @@ const read = rel => { try { return fs.readFileSync(path.join(ROOT, rel), 'utf8')
 const lib = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'save-quest.eval.js')], { encoding: 'utf8', timeout: 120000 });
 check('1 lib/save-quest.eval.js green', lib.status === 0, (lib.stdout || '').split('\n').filter(l => /FAIL|green/.test(l)).join(' | '));
 
+const { storyState } = require(path.join(ROOT, 'lib', 'save-quest.js'));
+const fullStory = '# QA\n\n## Quest Story\n- Asked : a\n- Paths : wrong: b; c worked\n- Cost : d\n- Result : e\n\n## Next\n- Asked : not this one\n';
+check('S1 story with all four lines is present', storyState(fullStory) === 'present');
+check('S2 no story is MISSING', storyState('# QA\n\n## Debugging\n- Asked : x\n- Paths : x\n- Cost : x\n- Result : x\n') === 'MISSING');
+check('S3 a story with an empty line is MISSING', storyState('## Quest Story\n- Asked : a\n- Paths :\n- Cost : c\n- Result : d\n') === 'MISSING');
+check('S4 lines in a later section do not count', storyState('## Quest Story\n- Asked : a\n\n## Next\n- Paths : p\n- Cost : c\n- Result : r\n') === 'MISSING');
+check('S5 story as the last section is read', storyState('## Quest Story\n- Asked : a\n- Paths : p\n- Cost : c\n- Result : r') === 'present');
+check('S6 empty input is MISSING', storyState('') === 'MISSING' && storyState(null) === 'MISSING');
+
 const skill = read('.claude/skills/close-phase/SKILL.md');
 const head = skill.split('\n').slice(0, 5).join('\n').toLowerCase();
 for (const phrase of ['save this quest', 'save quest', 'save the quest']) check('2 close-phase description carries trigger "' + phrase + '"', head.includes(phrase));

@@ -21,6 +21,8 @@ const fs   = require('fs');
 const path = require('path');
 
 const { renderStealBanner } = require('../domain/steal-risk-flag/steal-risk');
+const { hoursLeft, stateOfProject } = require('../lib/sla-hours');
+const ESOKONGAN_TRACKER = 51;
 
 // active.txt is untracked and exists only in the MAIN checkout: strip the worktree suffix (same idiom as active-cli.js).
 const ACTIVE_TXT = path.join(__dirname.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+(?=[\\/]quest$)/i, ''), 'active.txt');
@@ -103,15 +105,6 @@ const ADOPTED_AS_MINE = new Set([
     273837, // PPTPB - Patching Nama Jabatan di Surat YBJT
 ]);
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-// "2026-08-12" -> "12 Aug". Year dropped (miya 2026-08-05) — everything on this
-// board is current-year by construction, so the year was four dead characters.
-function shortDate(iso) {
-    if (!iso) return '—';
-    const [, m, d] = iso.split('-');
-    return `${Number(d)} ${MONTHS[Number(m) - 1]}`;
-}
 
 function fetchOne(filter, { scoped = true } = {}) {
     const qs = ['status_id=open', filter, 'limit=100'];
@@ -209,7 +202,7 @@ function fetchReceivedDate(issueId, myId) {
                         }
                         const iso = received || iss.created_on || null;
                         const notes = (iss.journals || []).map(j => j.notes || '').join('\n');
-                        resolve({ received: iso ? String(iso).slice(0, 10) : null, notes });
+                        resolve({ received: iso ? String(iso).slice(0, 10) : null, receivedAt: iso, notes });
                     } catch { resolve({ received: null, notes: '' }); }
                 });
             }).on('error', () => resolve({ received: null, notes: '' }));
@@ -223,8 +216,10 @@ async function stampReceivedDays(mineRows, today) {
     const myId = await fetchMyId();
     if (!myId) return;
     await Promise.all(mineRows.map(async r => {
-        const { received: recv, notes } = await fetchReceivedDate(r.id, myId);
+        const { received: recv, receivedAt, notes } = await fetchReceivedDate(r.id, myId);
         if (recv) { r.received = recv; r.days = daysSince(recv, today); }
+        // Hours left (miya 2026-11-01): eSOKONGAN tracker only, and only while the ticket is with him.
+        if (r.tracker_id === ESOKONGAN_TRACKER && isMe(r.assignee)) r.hoursLeft = hoursLeft(r.priority, receivedAt, new Date(), stateOfProject(r.project));
         r.urgent = [...new Set([...r.urgent, ...urgentWords(notes)])].sort();
     }));
 }
@@ -387,14 +382,18 @@ function bySeverityThen(tieBreak) {
     };
 }
 
-// eSOKONGAN tie-break: nearest due date (soonest first; no-due rows last), then id.
-function byNearestDue(a, b) {
+// eSOKONGAN tie-break: fewest hours left (no-number rows last), then nearest due date, then id.
+function byFewestHours(a, b) {
+    const ah = a.hoursLeft ?? null, bh = b.hoursLeft ?? null;
+    if (ah !== null && bh !== null && ah !== bh) return ah - bh;
+    if (ah !== null && bh === null) return -1;
+    if (ah === null && bh !== null) return 1;
     if (a.due && b.due && a.due !== b.due) return a.due < b.due ? -1 : 1;
     if (a.due && !b.due) return -1;
     if (!a.due && b.due) return 1;
     return a.id - b.id;
 }
-function rankEsokongan(rows) { return rows.slice().sort(bySeverityThen(byNearestDue)); }
+function rankEsokongan(rows) { return rows.slice().sort(bySeverityThen(byFewestHours)); }
 
 // PROD + other tie-break: the 3-DAY RULE age order rankMine already produced.
 function rankAged(rows) {
@@ -409,9 +408,9 @@ function severityCell(r) {
     return r.urgent.length ? `${r.priority} · URGENT (${r.urgent.join(', ')})` : r.priority;
 }
 
-const HEADER6 = ['| # | Severity | Days | Due date | Subject | State |', '|---|---|---|---|---|---|'];
+const HEADER6 = ['| # | Severity | Days | Hours left | Subject | State |', '|---|---|---|---|---|---|'];
 function renderRows6(rows) {
-    return rows.map(r => `| ${r.id} | ${severityCell(r)} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
+    return rows.map(r => `| ${r.id} | ${severityCell(r)} | ${r.days ?? '—'} | ${r.hoursLeft ?? '—'} | ${r.subject} | ${r.state} |`);
 }
 
 function renderPatch(rows) {
@@ -420,7 +419,7 @@ function renderPatch(rows) {
 }
 
 function renderEsokongan(rows) {
-    return [`### 2. eSOKONGAN tracker (SLA) — ${rows.length} open (ranked: priority, urgent, then nearest due)`, '',
+    return [`### 2. eSOKONGAN tracker (SLA) — ${rows.length} open (ranked: priority, urgent, then fewest hours left)`, '',
         ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
@@ -460,7 +459,7 @@ function whoLabel(rows) {
 // A category with no row prints no table, so a Melaka-only board keeps its exact bytes.
 const SLOT = {
     patch:     { n: '1b', what: 'PROD',              rank: 'priority, urgent, then oldest',  fn: rows => rankAged(rows) },
-    esokongan: { n: '2b', what: 'eSOKONGAN tracker', rank: 'priority, urgent, then nearest due', fn: rows => rankEsokongan(rows) },
+    esokongan: { n: '2b', what: 'eSOKONGAN tracker', rank: 'priority, urgent, then fewest hours left', fn: rows => rankEsokongan(rows) },
     other:     { n: '3b', what: 'Internal fixes & other', rank: 'tracker tier, priority, urgent, then oldest', fn: rows => rankAged(rows) },
 };
 function renderSlot(board, cat) {

@@ -106,7 +106,19 @@ function evaluate(text) {
   if (offenders.length === 0) return { verdict: 'passed', reason: 'clean' };
   return { verdict: 'blocked', offenders: [...new Set(offenders)].slice(0, 8) };
 }
-module.exports = { evaluate, findOffenders, looksLikeTrace };
+// v3 (2026-11-01 miya): any reply, outside fences: a path that is not from the drive letter, or a pipe table (no border lines).
+function evaluateShape(text) {
+  if (!text || EXEMPT.test(text)) return { verdict: 'silent', reason: 'exempt' };
+  const body = text.replace(/```[\s\S]*?```/g, '');
+  const offenders = [];
+  if (/^[ \t]*\|.*\|[ \t]*\r?\n[ \t]*\|[\s:|-]+\|[ \t]*$/m.test(body)) offenders.push('pipe table: draw it in a ```text block with +---+ and |');
+  const rest = body.replace(/https?:\/\/[^\s)`]+/g, ' ').replace(/[A-Za-z]:\\[^\n`|]*/g, ' ');
+  for (const re of [/(?<![\w:\\/.-])(?:[\w.-]+[\\/])+[\w.-]+\.[a-z][a-z0-9]{0,5}\b/gi, /(?<![\w:\\/.-])[\w.-]+(?:\\[\w.-]+){2,}/g]) {
+    for (const m of rest.match(re) || []) offenders.push('part of a path: ' + m);
+  }
+  return offenders.length ? { verdict: 'blocked', offenders: [...new Set(offenders)].slice(0, 8) } : { verdict: 'passed', reason: 'clean' };
+}
+module.exports = { evaluate, evaluateShape, findOffenders, looksLikeTrace };
 
 // Only run the Stop-hook logic when executed as the main script.
 // When require()d from eval.js, only the module.exports above is used.
@@ -122,6 +134,12 @@ if (require.main === module) {
       if (data.stop_hook_active) process.exit(0);
 
       const text = lastAssistantText(data.transcript_path || '');
+      const shape = evaluateShape(text);
+      if (shape.verdict === 'blocked') {
+        logFire('blocked-shape', shape.offenders);
+        process.stdout.write(JSON.stringify({ decision: 'block', reason: ['⛔ full-address-trace-gate: reply-shape-spec §3j.', '   Folder path from the drive letter in a ```text block; tables drawn with full borders in a ```text block.', ...shape.offenders.map(o => '   - ' + o), '   Bypass: [skip-full-address: <reason>]', '   ⚡ DELTA ONLY: re-send just the corrected part.'].join('\n') }));
+        process.exit(0);
+      }
       const result = evaluate(text);
       if (result.verdict === 'silent') { process.exit(0); }
       if (result.verdict === 'passed') { logFire('passed'); process.exit(0); }
