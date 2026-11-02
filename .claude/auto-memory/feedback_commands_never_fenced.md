@@ -106,3 +106,5 @@ Related: [[feedback_commands_never_fenced]] · [[Tasks folder file format]] ·
 **Why**: the Ammar brief was emitted under 60 lines of DE ritual and the fuller reply was pointed at `QA-275847.md` — he could not find either. Pairs with [[feedback_ticket_writing_style]] and [[feedback_reply_separation_of_concerns]].
 
 **How to apply**: when a message contains "brief me / summary to send / reply for X", the FIRST block of the answer is the sendable text; everything else follows.
+
+**2026-11-02 update (miya)**: a chat text table is at most 70 characters wide; wider rows wrap on his screen and nothing is readable. A table that does not fit drops a column or becomes short bullets. Gate: `domain/full-address-trace-gate` v4.

@@ -143,6 +143,8 @@ function runFixtures() {
     ['v3 BLOCK: part path', 'See chat-pack\\13-plan.md now', 'blocked'],
     ['v3 BLOCK: forward-slash part path', 'See lib/foo.js now', 'blocked'],
     ['v3 BLOCK: pipe table', '| a | b |\n|---|---|\n| 1 | 2 |', 'blocked'],
+    ['v4 BLOCK: text table wider than 70', '```text\n+--------------------------------------------------------------------------------+\n| a |\n+--------------------------------------------------------------------------------+\n```', 'blocked'],
+    ['v4 PASS: text table within 70', '```text\n+---+---+\n| a | b |\n+---+---+\n```', 'passed'],
     ['v3 PASS: drive path with spaces', 'See C:\\Users\\x\\0. AI\\Proj\\a.md now', 'passed'],
     ['v3 PASS: fenced grid and fenced path', '```text\n| a | b |\n|---|---|\nchat-pack\\x.md\n```', 'passed'],
     ['v3 PASS: url and plain and/or', 'https://a.b/c.js and/or 1 of 2', 'passed'],

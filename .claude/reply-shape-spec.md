@@ -270,7 +270,7 @@ C:\Users\vice4\OneDrive - Pymsoft Sdn Bhd\<the whole folder path>
 
 The file name follows on its own line. A fenced block gives him the copy button. Banned: part of a path, a path from a project or repo root, a folder list of every changed file.
 
-**Full border lines.** The horizontal-rules-only table is banned. In chat a table is a fenced `text` block drawn with `+---+` and `|`, cells wrapped by hand to about 90 characters. In a picture, page or document, every cell has a line on all four sides. Every table this spec or a skill asks for keeps its columns and is drawn this way. Files read by agents (`.md` data, ledgers) keep pipe tables.
+**Full border lines.** The horizontal-rules-only table is banned. In chat a table is a fenced `text` block drawn with `+---+` and `|`, at most 70 characters wide in total, because a wider row wraps on his screen and breaks the grid (2026-11-02 per みや). A table that does not fit drops a column or becomes short bullets. In a picture, page or document, every cell has a line on all four sides. Every table this spec or a skill asks for keeps its columns and is drawn this way. Files read by agents (`.md` data, ledgers) keep pipe tables.
 
 **Enforced**: `domain/full-address-trace-gate` v3 blocks a part path and a pipe table in chat. Bypass `[skip-full-address: <reason>]`.
 
