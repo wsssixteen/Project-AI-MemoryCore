@@ -10,6 +10,11 @@
 
 ---
 
+## v2.04 (2026-11-02)
+
+- Rule 10 replaced per みや: "I didn't fucking say anything about using code blocks. I just said your current tables do not have lines." Dropped and named: the v2.02 code-block table and the block on pipe tables. Kept: pictures, pages and documents have lines on all four sides. A reply cannot add vertical lines to a chat table; the app draws them.
+- Paired: reply-shape-spec §3j, `domain/pre-reply-contract`, `domain/full-address-trace-gate` v4 (blocks a `+---+` table in a code block, pipe tables pass), memory reply-mechanics.
+
 ## v2.03 (2026-11-01)
 
 - Rule 9 narrowed per みや: "be more specific on listing the folder path ... Not every single file changes path. That will bloat the reply." Dropped and named: the v2.02 wording "any file I point to". Gate unchanged: it still blocks part paths; a bare file name passes.
