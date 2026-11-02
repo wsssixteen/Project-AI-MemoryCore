@@ -128,6 +128,7 @@ check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && 
   check('S1d disciplines kept (KEY-PATH · IDs VERBATIM · CROSS-VERIFY · script-check)', /KEY-PATH EVIDENCE/.test(s.out) && /IDs VERBATIM/.test(s.out) && /CROSS-VERIFY/.test(s.out) && /script-check/.test(s.out), 'effect');
   // S2: bare 7-segment id, nothing else -> fires (the generic id regex cannot see the second 2-digit block).
   s = fireS('PTTRG/07/01/L/PLPS/2026/135');
+  check('S2t LOOKUP carries the Tracker rule in the hook text', /eSOKONGAN = Tracker, never Project/.test(s.out), s.out);
   check('S2 bare PTTRG id fires LOOKUP on terengganu/index.md', /LOOKUP lane/.test(s.out) && s.out.includes(KD + 'terengganu/index.md') && !/melaka/i.test(s.out), s.out);
   // S3: state named as a word; lane file absent on disk -> index.md + STATE-FACTS.md, never a missing file.
   s = fireS('Terengganu: skrin tugasan papar ralat bila klik dropdown');
@@ -206,10 +207,11 @@ check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && 
     ['M5 no-route index.md fallback', 'permohonan tu macam mana?', '9939386f424e070c590f2258ec154a7594eab129'],
     ['M6 "Melaka" word ADHOC-CANDIDATE', 'Melaka: kenapa tugasan SKM tak papar dropdown, error', '9410f1005ff924af0ddbe939da02dde18b4ac7ad'],
   ];
+  const noRule = (s) => s.replace(/\n   🚨 eSOKONGAN = Tracker[^\n]*/, ''); // the goldens predate the Tracker rule line; everything else stays byte-identical
   for (const [n, p, h] of GOLD) {
     const a = fireS(p);
-    check(n + ' byte-identical (sandbox registry)', sha(a.out) === h, sha(a.out));
-    if (!process.env.ETANAH_STATE) { const live = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt: p }), encoding: 'utf8', timeout: 30000, env: process.env }); check(n + ' byte-identical (live registry)', sha(live.stdout || '') === h, sha(live.stdout || '')); }
+    check(n + ' byte-identical (sandbox registry)', sha(noRule(a.out)) === h, sha(noRule(a.out)));
+    if (!process.env.ETANAH_STATE) { const live = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt: p }), encoding: 'utf8', timeout: 30000, env: process.env }); check(n + ' byte-identical (live registry)', sha(noRule(live.stdout || '')) === h, sha(noRule(live.stdout || ''))); }
   }
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 }
