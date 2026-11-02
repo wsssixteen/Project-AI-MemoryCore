@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Etanah intake gate</title>
+<style>body{margin:0;background:#fff}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330" role="img" aria-labelledby="diagram-eig-title diagram-eig-desc" font-family="Segoe UI, Arial, sans-serif">
+  <title id="diagram-eig-title">Etanah intake gate</title>
+  <desc id="diagram-eig-desc">An etanah prompt with no ticket number goes to the intake gate, which resolves the state, picks a lane of data patch, adhoc candidate or lookup, and injects the knowledge files to read plus the general rule eSOKONGAN = Tracker, never Project. A hotfix prompt gets the hotfix lane. A prompt with a ticket goes to ticket-gate instead.</desc>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1b1b1b">Etanah intake gate: a prompt with no ticket number</text>
+  <text x="24" y="56" font-size="13" fill="#555">A prompt with a ticket number stays silent here; ticket-gate owns it and injects the same rule.</text>
+  <g font-size="14" fill="#1b1b1b">
+    <rect x="24" y="84" width="190" height="72" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="40" y="112">Etanah prompt</text><text x="40" y="134" font-size="12" fill="#555">id, table or domain word</text>
+    <rect x="254" y="84" width="190" height="72" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="270" y="112">Resolve the state</text><text x="270" y="134" font-size="12" fill="#555">lib/states.js</text>
+    <rect x="484" y="84" width="230" height="72" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="500" y="112">Pick the lane</text><text x="500" y="134" font-size="12" fill="#555">data patch · adhoc · lookup</text>
+    <rect x="754" y="60" width="320" height="56" rx="6" fill="#eef7ee" stroke="#3c8d40"/><text x="770" y="84" font-weight="700">Knowledge files to read now</text><text x="770" y="104" font-size="12">routed by the words in the prompt</text>
+    <rect x="754" y="136" width="320" height="64" rx="6" fill="#fdecea" stroke="#d93025" stroke-width="2.5"/><text x="770" y="162" font-weight="700">General rule, in the hook text</text><text x="770" y="184" font-size="12">eSOKONGAN = Tracker, never Project</text>
+  </g>
+  <g stroke="#555" stroke-width="2" fill="none"><path d="M214 120 H250"/><path d="M444 120 H480"/><path d="M714 120 H734 V88 H750"/><path d="M734 120 V168 H750"/></g>
+  <text x="24" y="290" font-size="13" fill="#555">Rule text comes from domain/knowledge-schema-audit. The hook injects context and never blocks a prompt.</text>
+</svg>
+</body></html>

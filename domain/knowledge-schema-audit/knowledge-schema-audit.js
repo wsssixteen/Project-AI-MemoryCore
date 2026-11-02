@@ -54,10 +54,14 @@ function moduleOf(key, stateCode) {
   return (parts.length > 1 && known.has(parts[0])) ? parts[1] : parts[0];
 }
 
+// General rule every state's index.md carries first; ticket-gate + etanah-intake-gate inject the same text.
+const TRACKER_RULE_MARKER = 'eSOKONGAN = Tracker, never Project';
+const TRACKER_RULE = `🚨 ${TRACKER_RULE_MARKER}. "eSOKONGAN ticket" means Tracker = eSOKONGAN (Redmine tracker id 51). A Redmine project named eSOKONGAN <state> also holds Internal Issue and Data Patching tickets, so the project name never makes a ticket eSOKONGAN. Filter, count and talk by Tracker.`;
+
 // ---------- audit ----------
 function auditState(kroot, schema, state) {
   const dir = path.join(kroot, state);
-  const res = { state, dir, exists: fs.existsSync(dir), missing_files: [], missing_dirs: [], legacy: [], unindexed_extras: [], flowables: [], drift: 0 };
+  const res = { state, dir, exists: fs.existsSync(dir), missing_files: [], missing_dirs: [], legacy: [], unindexed_extras: [], flowables: [], missing_rule: false, drift: 0 };
   if (!res.exists) { res.drift = 1; return res; }
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   const files = new Set(entries.filter(e => e.isFile()).map(e => e.name));
@@ -71,6 +75,7 @@ function auditState(kroot, schema, state) {
   // extras: files that are neither required nor optional nor legacy → must be named in index.md
   let indexText = '';
   try { indexText = fs.readFileSync(path.join(dir, 'index.md'), 'utf8'); } catch (_) {}
+  res.missing_rule = !!indexText && !indexText.includes(TRACKER_RULE_MARKER);
   const patterns = (schema.allowed_patterns || []).map(p => new RegExp(p));
   for (const f of files) {
     if (schema.required_files[f] || optional.has(f) || legacyMap[f]) continue;
@@ -93,7 +98,7 @@ function auditState(kroot, schema, state) {
       }
     }
   }
-  res.drift = res.missing_files.length + res.missing_dirs.length + res.legacy.length + res.unindexed_extras.length + res.flowables.length;
+  res.drift = res.missing_files.length + res.missing_dirs.length + res.legacy.length + res.unindexed_extras.length + res.flowables.length + (res.missing_rule ? 1 : 0);
   return res;
 }
 function auditAll(kroot, schema, only) {
@@ -109,6 +114,7 @@ function renderLine(r, schema) {
   if (r.missing_dirs.length) bits.push(`missing dirs: ${r.missing_dirs.join(', ')}`);
   if (r.legacy.length) bits.push('legacy names: ' + r.legacy.map(l => `${l.file}→${l.canonical}`).join(', '));
   if (r.unindexed_extras.length) bits.push('extras not in index.md: ' + r.unindexed_extras.join(', '));
+  if (r.missing_rule) bits.push(`index.md lacks the general rule "${TRACKER_RULE_MARKER}"`);
   if (r.flowables.length) bits.push('flowables: ' + r.flowables.map(f => `${f.name} [${f.kind} → ${f.fix}]`).join(', '));
   return `${r.state.padEnd(11)} ⚠️ ${r.drift} drift — ` + bits.join(' · ');
 }
@@ -134,7 +140,7 @@ function scaffoldState(kroot, schema, state, dry) {
     if (f === 'index.md') {
       const rows = Object.entries(schema.required_files).map(([g, s]) => `| [${g}](${g}) | ${s} | ${fs.existsSync(path.join(dir, g)) || g === 'index.md' ? '⬜ skeleton' : '⬜ skeleton'} |`).join('\n');
       const dirsRows = Object.entries(schema.required_dirs || {}).map(([g, s]) => `| \`${g}/\` | ${s} | ⬜ |`).join('\n');
-      mk(p, `# etanah-knowledge / ${state} — Navigation Index\n\n> Entry point for all ${STATE} etanah knowledge. Load at Quest Phase 0 for any ${STATE} ticket. Layout = \`../KNOWLEDGE-SCHEMA.json\` (identical across states so the quest workflow resolves the same file names everywhere). Audit: \`node domain/knowledge-schema-audit/knowledge-schema-audit.js audit --state ${state}\`.\n>\n> Files carrying \`⚠️ UNVERIFIED-FOR-${STATE}\` are SCAFFOLD, not truth — verify against a ${state} source, then lift the banner (see ../STATE-MIGRATION-PLAYBOOK.md).\n\n## Knowledge files\n\n| File | Scope | Status |\n|---|---|---|\n${rows}\n${dirsRows}\n\n## Extras (state-specific topic files — every extra MUST be listed here or the audit flags it)\n\n| File | Scope | Status |\n|---|---|---|\n`);
+      mk(p, `# etanah-knowledge / ${state} — Navigation Index\n\n> ${TRACKER_RULE}\n\n> Entry point for all ${STATE} etanah knowledge. Load at Quest Phase 0 for any ${STATE} ticket. Layout = \`../KNOWLEDGE-SCHEMA.json\` (identical across states so the quest workflow resolves the same file names everywhere). Audit: \`node domain/knowledge-schema-audit/knowledge-schema-audit.js audit --state ${state}\`.\n>\n> Files carrying \`⚠️ UNVERIFIED-FOR-${STATE}\` are SCAFFOLD, not truth — verify against a ${state} source, then lift the banner (see ../STATE-MIGRATION-PLAYBOOK.md).\n\n## Knowledge files\n\n| File | Scope | Status |\n|---|---|---|\n${rows}\n${dirsRows}\n\n## Extras (state-specific topic files — every extra MUST be listed here or the audit flags it)\n\n| File | Scope | Status |\n|---|---|---|\n`);
       continue;
     }
     if (f === 'STATE-FACTS.md') {
@@ -162,7 +168,7 @@ function stateDirFor(nameOrPrefix, schema) {
   return null;
 }
 
-module.exports = { knowledgeRoot, loadSchema, auditState, auditAll, renderLine, scaffoldState, moduleOf, stateDirFor };
+module.exports = { knowledgeRoot, loadSchema, auditState, auditAll, renderLine, scaffoldState, moduleOf, stateDirFor, TRACKER_RULE, TRACKER_RULE_MARKER };
 
 if (require.main === module) {
   const cmd = process.argv[2];

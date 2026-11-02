@@ -1,5 +1,7 @@
 # etanah-knowledge / melaka — Navigation Index
 
+> 🚨 eSOKONGAN = Tracker, never Project. "eSOKONGAN ticket" means Tracker = eSOKONGAN (Redmine tracker id 51). A Redmine project named eSOKONGAN <state> also holds Internal Issue and Data Patching tickets, so the project name never makes a ticket eSOKONGAN. Filter, count and talk by Tracker.
+
 > Entry point for all Melaka etanah knowledge files.
 > Load this at Quest Phase 0 to select which files overlap the ticket's symptom.
 > Each file has a **SCOPE** and **NOT FOR** blockquote at the top — read those first.
