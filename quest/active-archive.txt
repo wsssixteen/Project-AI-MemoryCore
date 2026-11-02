@@ -6126,3 +6126,19 @@ qa_doc=projects/coding-projects/archive/ADHOC-PLP-2026-5/ADHOC-PLP-2026-5.md
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\348. AH - PLP - Alter tool without login
 issue_one_liner=Alter on STG/MLIT needed a CAS login that kept stopping work; headless runner built outside git, eval 10/10 urusan + different-step move, wired into quest
 title=Alter tool without login
+
+qa=ADHOC-PPTPB-2026-8
+phase=0
+status=archived
+ticket_type=adhoc
+env=PROD
+state=melaka
+urusan=PPTPB
+quest_start=2026-11-02
+local_test_confirmed=false
+adhoc_register_row=A91
+qa_doc=projects/coding-projects/archive/ADHOC-PPTPB-2026-8/ADHOC-PPTPB-2026-8.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\357. AH - PPTPB - Keputusan Pentadbir Tanah Hantar error
+branch=none-until-ticket
+title=PPTPB Keputusan Pentadbir Tanah Hantar error
+issue_one_liner=PROD PPTPB PTMLK/02/L/PPTPB/2026/2 KDO Pembetulan=Ya to PT: gateway sid-AD61958D has no PT route (KPPD, PPD, KPT only); permohonan already moved via PPD; flow fix waiting TSO ticket and miya go-ahead
