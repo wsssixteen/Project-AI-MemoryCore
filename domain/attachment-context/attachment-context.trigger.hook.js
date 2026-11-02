@@ -38,15 +38,27 @@ process.stdin.on('data', d => input += d);
 process.stdin.on('end', () => {
   try {
     const { prompt = '' } = JSON.parse(input);
+    // A file he gives from Downloads or Desktop during a quest moves to its home (2026-11-02 per miya, 287773).
+    const given = [...new Set([...prompt.matchAll(/[A-Za-z]:\\Users\\[^\\"\n]+\\(?:Downloads|Desktop)\\[^"\n]+?\.[A-Za-z0-9]{1,8}(?=["\s]|$)/g)].map(x => x[0]))];
+    const placeNote = !given.length ? [] : [
+      '📦 FILE GIVEN: if this belongs to a quest, move it to its home in this same turn, once its role is clear:',
+      ...given.map(f => '   node quest/place-file.js "' + f + '" --qa <num> [--as fix|brief|original]'),
+      'fix = what he changed · brief = what the BA or user sent · original = a reference or latest copy of a flow model. Read it first if you still need it; give the new full path in the reply.',
+    ];
+    const finish = lines => {
+      const all = placeNote.concat(lines);
+      if (all.length) { if (placeNote.length) log({ action: 'file-given', n: given.length }); process.stdout.write(JSON.stringify({ additionalContext: all.join('\n') })); }
+      process.exit(0);
+    };
     const m = prompt.match(/\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|Redmine|ticket|issue)\s*#?\s*(\d{4,})\b/i);
-    if (!m) process.exit(0);
+    if (!m) finish([]);
     const qa = m[1];
     const tf = taskFolderFor(qa);
-    if (!tf) process.exit(0);
+    if (!tf) finish([]);
     const brief = require('../../lib/task-folder').briefDir(tf); // 1. Brief, legacy 0. Brief
     let files = [];
-    try { files = fs.readdirSync(brief).filter(f => !f.startsWith('.')); } catch (_) { process.exit(0); }
-    if (!files.length) process.exit(0);
+    try { files = fs.readdirSync(brief).filter(f => !f.startsWith('.')); } catch (_) { finish([]); }
+    if (!files.length) finish([]);
     log({ action: 'fired', qa, n: files.length });
     const lines = [
       '📎 ATTACHMENT-CONTEXT GATE — ticket #' + qa + ' has ' + files.length + ' file(s) in 0. Brief/.',
@@ -55,7 +67,6 @@ process.stdin.on('end', () => {
       'Filename-based prioritization is BANNED — a .docx/.pdf may carry per-urusan/per-screen detail',
       '(2026-06-24: a skipped prototype .docx → a "TBD" lie). Read ALL, then proceed.',
     ];
-    process.stdout.write(JSON.stringify({ additionalContext: lines.join('\n') }));
-    process.exit(0);
+    finish(lines);
   } catch (e) { process.exit(0); }
 });
