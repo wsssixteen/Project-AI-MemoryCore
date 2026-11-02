@@ -71,7 +71,7 @@
       "rojak"
     ],
     "pointers": [
-      ".claude/skills/bpmn-check/SKILL.md (Step 2: one line, ends with the tracker and ticket number, the existing text stays)"
+      ".claude/skills/bpmn-check/SKILL.md (Step 2: one line, ends with the tracker and ticket number, replaces the old text)"
     ]
   },
   "infra-handoff": {
