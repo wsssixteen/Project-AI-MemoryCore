@@ -38,7 +38,7 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 
 - Identify every arrow by **source-node → target-node pair**, never by label alone (two arrows can share a label/condition — the "which arrow" incident (he was frustrated)).
 - One instruction per arrow · state the Default-flow tick explicitly · name what must NOT be touched.
-- **Save model Description (2026-11-02 per みや, 287773)**: every modeler change for a ticket comes with the exact text for the Description field, in a fenced `text` block: one Malay sentence on what the flow now does, ending `(<TRACKER> #<num>)` (the wording goes through `pena`). The existing text stays; the new line goes below it. A layout-only save changes no flow, so it adds no Description line; its note goes in the version comment.
+- **Save model Description (2026-11-02 per みや, 287773)**: every modeler change for a ticket comes with the exact text for the Description field, in a fenced `text` block: one Malay sentence on what the flow now does, ending `(<TRACKER> #<num>)` (wording: `node lib/pena.js show --profile flowable-description`, then `check` on the draft). The existing text stays; the new line goes below it. A layout-only save changes no flow, so it adds no Description line; its note goes in the version comment.
 - After miya applies: get the exported XML (or re-pull the model) and re-run Step 0 on it — the APPLIED model is the truth, not my spec.
 
 ## Banned
