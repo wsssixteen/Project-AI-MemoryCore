@@ -1,4 +1,11 @@
-**Last Activity**: 2026-11-02 14:46 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), sweep audit false-alarm fix landed on main, Domain Expansion.
+**Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
+
+## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
+- Done: PROD PTMLK/02/L/PPTPB/2026/2 Hantar error traced to gateway sid-AD61958D (routes KPPD, PPD, KPT only, no default). Permohonan moved on through PPD and sits with norlina at PKPPT. Adhoc archived: block in active-archive.txt, doc in archive/, Task folder 357 in Archive\, video deleted.
+- Wrong: I told him the fix is an added PT route. BA Fizah's journal of 16:39 on 287773 asks to remove PT from the dropdown (To-Be V3.0). The PT route is on MLIT v14 only. The ticket session (worktree `ticket-287773-quest-run-66ac6f`) holds this conflict and waits his decision.
+- Not done: the save audit stays 30/31, a false FAIL on A91 shared with the ticket block (proposal logged). Archived doc and L36 still name the PT route as the fix until the background save corrects them. The BA reply I drafted says the route will be added, so it must not go out as written.
+- Blocker: app sync with main refused (protected .claude/skills files, origin needs confirming in Help, Troubleshooting, Review Pinned Git Origins).
+- Assessment: A1 a gate matched the audit's name inside a slip's quoted text. A2 promote left the adhoc open and the audit cannot pass with a ticket block on the same row. A3 PROD engine read refused, so the PROD gateway is inferred from the error text. A4 the fix came from analogs before the ticket journal was read. A5 ⏭ no sweep run.
 
 ## Session Recap (2026-11-02, sweep audit false alarms)
 - Landed: GitHub main eb81f5b9, main folder 834af613. Evals: audit 97/97, sweep contract 23/23. Watch wmvyr3ow9. No ticket touched; the session was started by the esokongan sweep session.
@@ -18,13 +25,3 @@
 - system-rules Rule 9 added per his ask (design and trial by Fable 5.1): boundary line covers, never, stops; forge and birth gate refuse a new part without it; census counts, old parts not forced. Trial found two real crossings of mine: report-only became gate C10, and hook-runtime + dispatch-hooks changed, both on a blanket Proceed.
 - Open: Pendaftaran verify; his ruling on keeping the hook-runtime change.
 **Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
-
-## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
-- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
-- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
-- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
-- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
-- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
-- Open: nothing from this session. No ticket worked.
-- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
-**Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
