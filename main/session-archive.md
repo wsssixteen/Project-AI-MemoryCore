@@ -4,6 +4,18 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
+- ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
+- The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
+- My misses: boot files never read, no briefing · FLOWABLE-KNOWLEDGE never read after the path failed in the worktree (line 630 names this PLTP to PSPM pattern) · two guessed SQL names · runner run twice because I cut its output · "Semakan Permohonan Isian" invented · rule 8 picture skipped · A0-A6 rows never emitted.
+- Tools: alter.js live prints the root process variables, not those of the process holding the task, which hid the answer · run.ps1 alter-flow said "no live engine task" for a live grandchild task · audit-briefing from a worktree reads the worktree's near-empty telemetry and reports every hook as never fired (proposal already logged earlier today, still open).
+- Improvement sweep: see slips proposals A1-A5 dated today from this session.
+- Audit of the audit (2 Fable 5.1 agents, verified counts): DE enforces saves (de-close-gate 222 blocks) but does not audit the session. Scripts caught 0 of 13 failures, a usual DE about 1-2, today's 7 with the audit in view. 888 proposals, 0 rulings; the worktree telemetry bug proposed 34 times. Upgrade design: lib/session-audit.js reads the transcript and emits typed findings (10 mechanical classes), de-close-gate C10 needs each routed (knowledge / tool / gate / workflow / memory, wrong-fix verdict shape), watch row per change, slips fingerprint escalates at 2 and 3, audit-briefing telemetry from main, notifications not counted as his turns; retire steps 5, 6, Checklist D, free-text 7.5. Built today, on the goal hook's reading of his Proceed: lib/session-audit.js (eval 36/36, this transcript 10 of 10 mechanical classes), de-close-gate C10 (eval 54/54), repeat table in core/slips.js, audit-briefing telemetry from main, prompt hooks silent on agent notifications through hook-runtime and dispatch-hooks. Kept against Fable's advice: the second-stop waiver, removing it can trap a session. Retired on his ruling: step 5 and Checklist D (CLAUDE.md v2.01). Kept: step 6, it reads a live log; free-text 7.5 until session-audit proves itself over real closes. Routed, not built: alter-ticket-gate wording, knowledge-first-gate false pass, branch-guard matcher, alter.js variables, runner blind spot.
+- Knowledge baked: FLOWABLE-KNOWLEDGE section 13, altering back into a sub-process after the child was born.
+- system-rules Rule 9 added per his ask (design and trial by Fable 5.1): boundary line covers, never, stops; forge and birth gate refuse a new part without it; census counts, old parts not forced. Trial found two real crossings of mine: report-only became gate C10, and hook-runtime + dispatch-hooks changed, both on a blanket Proceed.
+- Open: Pendaftaran verify; his ruling on keeping the hook-runtime change.
+**Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
+
 ## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
 - His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
 - Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
@@ -7084,6 +7096,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
