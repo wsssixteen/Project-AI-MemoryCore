@@ -190,7 +190,8 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
   const etanahContext = hasId || ETANAH_TABLE_RE.test(prompt) || DOMAIN_WORD_RE.test(prompt);
   if (!etanahContext) return { fired: false };
 
-  const knowledge = routeKnowledge(prompt, st).map(f => '      - ' + f).join('\n') + missingNote();
+  const trackerRule = (() => { try { return require('../knowledge-schema-audit/knowledge-schema-audit.js').TRACKER_RULE; } catch (_) { return '🚨 eSOKONGAN = Tracker, never Project.'; } })();
+  const knowledge = routeKnowledge(prompt, st).map(f => '      - ' + f).join('\n') + missingNote() + '\n   ' + trackerRule;
   let lane, lines;
 
   if (MUTATION_RE.test(prompt) && (hasId || ETANAH_TABLE_RE.test(prompt) || ENV_RE.test(prompt))) {

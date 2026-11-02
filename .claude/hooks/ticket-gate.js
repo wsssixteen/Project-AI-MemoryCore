@@ -244,6 +244,7 @@ process.stdin.on('end', () => {
         ...(patchFlag ? [patchFlag, ``] : []),
         `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}${state.state ? ', state=' + state.state : fromPrompt}).`,
         `🗂 KNOWLEDGE DIR for this ticket: \`${kdir}\` — read its \`index.md\` FIRST (knowledge-first rule); every file name below resolves inside it (identical layout in every state per \`etanah-knowledge/KNOWLEDGE-SCHEMA.json\`).`,
+        (() => { try { return require('../../domain/knowledge-schema-audit/knowledge-schema-audit.js').TRACKER_RULE; } catch (e) { return '🚨 eSOKONGAN = Tracker, never Project.'; } })(),
         ``,
         `MANDATORY — emit the Phase-0 gate checklist FIRST as ✓/⬜ rows (a skipped item must be VISIBLE):`,
         ``,

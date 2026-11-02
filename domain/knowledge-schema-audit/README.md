@@ -41,3 +41,10 @@ Boot = always fires (drift is discovered every session, not only when a state ti
 
 ## Observability
 `log.jsonl` rows: `{ts, cmd:"audit", states, drift}` and `{ts, cmd:"scaffold", state, dry, created:[…]}`. The boot hook's fires land in `system/telemetry/hook-fires.jsonl` via hook-runtime.
+
+
+## 2026-11-02: general rule (per miya)
+
+Tracker rule: "eSOKONGAN = Tracker, never Project". Text home = `domain/knowledge-schema-audit/knowledge-schema-audit.js` `TRACKER_RULE`. Every state's index.md carries it first; ticket-gate + etanah-intake-gate inject it; the audit counts a missing one as drift. Why: miya asked for it to load on every etanah-knowledge load so it is never got wrong. Rollback: git revert of this commit; the six untracked state index.md files keep one harmless line.
+diagram: diagram.png
+
