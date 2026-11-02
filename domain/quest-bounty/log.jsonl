@@ -255,3 +255,5 @@
 {"ts":"2026-10-30T08:41:59.701Z","qa":"QA-287292","kind":"wrong-fix","n":2,"verdict":"phrase:.claude/skills/patch-mlk-doc/SKILL.md Re-dating a generated letter (commit 1d784946)"}
 {"ts":"2026-10-30T10:14:00.294Z","qa":"ADHOC-PLP-2026-5","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-30T10:14:27.032Z","qa":"ADHOC-PLP-2026-5","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"tool adhoc: runner outside git, routing already banked in ALTER-TICKET-PLAYBOOK A5 and quest wiring 3fa92232; no new eTanah knowledge"}
+{"ts":"2026-11-02T09:46:56.878Z","qa":"ADHOC-PPTPB-2026-8","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-02T09:47:17.408Z","qa":"ADHOC-PPTPB-2026-8","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
