@@ -1,0 +1,47 @@
+{
+ "urusan": "MCL",
+ "tugasan": "SKM",
+ "key": "MLK_PLP_MCL",
+ "env": "mlit",
+ "source": "engine v8 mlit",
+ "ts": "2026-10-30T10:29:30.835Z",
+ "ids": [
+  "first-pass",
+  "subflow:4-0-Endorsan-Nota-Mohon-SBTM-dan-MCLM",
+  "subflow:5-0-Charting-Mohon-MLK-TKL-CM",
+  "alter",
+  "initiate",
+  "reassign",
+  "migrated"
+ ],
+ "rows": [
+  {
+   "id": "first-pass",
+   "how": "DELAY (35 s) sends to SKM"
+  },
+  {
+   "id": "subflow:4-0-Endorsan-Nota-Mohon-SBTM-dan-MCLM",
+   "how": "sub-process 4.0 Endorsan Nota Mohon (SBTM dan MCLM) returns here"
+  },
+  {
+   "id": "subflow:5-0-Charting-Mohon-MLK-TKL-CM",
+   "how": "sub-process 5.0 Charting Mohon (MLK_TKL_CM) returns here"
+  },
+  {
+   "id": "alter",
+   "how": "Alter Flow to this tugasan or to an earlier node; app rows are not deleted"
+  },
+  {
+   "id": "initiate",
+   "how": "Initiate or Initiate & Alter: a new process runs to this tugasan; app rows are not deleted"
+  },
+  {
+   "id": "reassign",
+   "how": "agihan or admin changes the holder inside the same pass"
+  },
+  {
+   "id": "migrated",
+   "how": "data migration created the rows; no user pass produced them"
+  }
+ ]
+}

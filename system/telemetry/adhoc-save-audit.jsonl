@@ -540,3 +540,41 @@
 {"ts":"2026-10-30T10:23:40.082Z","id":"ADHOC-DMPRU-2026-1","outcome":"pass","fails":[],"dur_ms":68}
 {"ts":"2026-10-30T11:20:24.492Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":41}
 {"ts":"2026-10-30T11:31:06.243Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":53}
+{"ts":"2026-10-30T11:05:45.985Z","id":"ADHOC-PLTP-2026-4","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":56}
+{"ts":"2026-10-30T11:05:52.393Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":34}
+{"ts":"2026-11-02T03:38:06.142Z","id":"ADHOC-MCL-2026-4","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":62}
+{"ts":"2026-11-02T03:38:28.635Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":128}
+{"ts":"2026-11-02T03:56:42.478Z","id":"ADHOC-PRBB-2026-21","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-11-02T03:56:48.943Z","id":"ADHOC-PRBB-2026-21","outcome":"pass","fails":[],"dur_ms":38}
+{"ts":"2026-11-02T04:01:34.392Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":31}
+{"ts":"2026-11-02T04:01:55.986Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":29}
+{"ts":"2026-11-02T04:02:00.924Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-11-02T04:08:24.771Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":173}
+{"ts":"2026-11-02T04:09:37.567Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-11-02T04:12:08.731Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":78}
+{"ts":"2026-11-02T04:18:24.225Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":63}
+{"ts":"2026-11-02T04:18:56.229Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":78}
+{"ts":"2026-11-02T04:27:49.467Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":69}
+{"ts":"2026-11-02T04:29:16.528Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":56}
+{"ts":"2026-11-02T04:29:35.324Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-11-02T06:36:00.690Z","id":"ADHOC-MCL-2026-4","outcome":"fail","fails":["register: row A87 cites ADHOC-MCL-2026-4"],"dur_ms":75}
+{"ts":"2026-11-02T06:36:28.891Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-11-02T06:59:42.332Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-11-02T06:59:55.338Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":36}
+{"ts":"2026-11-02T07:01:39.993Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":68}
+{"ts":"2026-11-02T07:01:56.027Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":47}
+{"ts":"2026-11-02T07:03:36.282Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-11-02T07:04:47.435Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":49}
+{"ts":"2026-11-02T07:06:09.675Z","id":"ADHOC-MCL-2026-4","outcome":"pass","fails":[],"dur_ms":64}
+{"ts":"2026-11-02T07:43:05.649Z","id":"ADHOC-MCL-2026-6","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","register: status ↔ block status"],"dur_ms":57}
+{"ts":"2026-11-02T07:43:24.314Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":53}
+{"ts":"2026-11-02T07:45:57.773Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":44}
+{"ts":"2026-11-02T07:47:38.618Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":72}
+{"ts":"2026-11-02T07:54:06.483Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":55}
+{"ts":"2026-11-02T07:55:21.660Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":44}
+{"ts":"2026-11-02T08:05:15.999Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":44}
+{"ts":"2026-11-02T08:08:17.717Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":80}
+{"ts":"2026-11-02T08:26:46.856Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":186}
+{"ts":"2026-11-02T08:36:15.454Z","id":"ADHOC-PPTPB-2026-8","outcome":"pass","fails":[],"dur_ms":75}
+{"ts":"2026-11-02T09:47:23.497Z","id":"ADHOC-PPTPB-2026-8","outcome":"fail","fails":["register: A91 not claimed by another open block"],"dur_ms":48}
+{"ts":"2026-11-02T10:03:06.550Z","id":"ADHOC-PPTPB-2026-8","outcome":"fail","fails":["register: A91 not claimed by another open block"],"dur_ms":33}
