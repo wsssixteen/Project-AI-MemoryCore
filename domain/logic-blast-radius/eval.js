@@ -160,7 +160,7 @@ const BANNER = '═══ LOGIC BLAST RADIUS ═══\n| Scenario | Change fire
 const row = (id, rows, verdict) => `| ${id} | how | ${rows} | r | s | t | ${verdict} |`;
 const table = (opts) => {
   const o = Object.assign({ ticket: '287048', source: 'engine v15 mlit', ids: IDS, rows: 'SELECT 1', verdict: '✓' }, opts);
-  return `ARRIVAL PATHS · ${o.ticket} · PRBB · PB4CE · source: ${o.source}\n| id | how | rows | check | today | should | verdict |\n|---|---|---|---|---|---|---|\n` + o.ids.map(i => row(i, o.rows, o.verdict)).join('\n') + '\n';
+  return `ARRIVAL SCREEN: MlkLaporanP1eForm · PRBB · PB4CE\nARRIVAL PATHS · ${o.ticket} · PRBB · PB4CE · source: ${o.source}\n| id | how | rows | check | today | should | verdict |\n|---|---|---|---|---|---|---|\n` + o.ids.map(i => row(i, o.rows, o.verdict)).join('\n') + '\n';
 };
 const say = (t) => JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: t }] } }) + '\n';
 function runV3(file, newString, text, extra) {
@@ -193,12 +193,48 @@ blocks('A12 shared Lite form, one urusan table of seven → BLOCK', LITE_FORM, G
 blocks('A13 isSignedAllReport edit on the service → fires and asks for the shared urusan', SERVICE, 'boolean isSignedAllReport() {}', BANNER + table(), /shared/);
 blocks('A14 table only inside a code fence → BLOCK', FORM, GATE, BANNER + '```\n' + table() + '```\n', /no ARRIVAL PATHS/);
 blocks('A15 source line differs from the script (stale file not declared) → BLOCK', FORM, GATE, BANNER + table({ source: 'engine v11 mlit' }), /the script says/);
-allows('A16 NOT VERIFIED source with no cache: admin rows only → ALLOW', FORM, GATE, BANNER + 'ARRIVAL PATHS · 287048 · OPRBB · SB · source: NOT VERIFIED: no BPMN\n| id | how | rows | c | t | s | verdict |\n|---|---|---|---|---|---|---|\n' + ['alter', 'initiate', 'reassign', 'migrated'].map(i => row(i, 'n/a — none', 'BA-Q')).join('\n') + '\n');
-blocks('A17 no cache and an engine source → BLOCK, run the script', FORM, GATE, BANNER + 'ARRIVAL PATHS · 287048 · PRU · PB4DE · source: engine v3 mlit\n| id | how | rows | c | t | s | verdict |\n', /run node domain/);
+allows('A16 NOT VERIFIED source with no cache: admin rows only → ALLOW', FORM, GATE, BANNER + 'ARRIVAL SCREEN: MlkLaporanP1eForm · OPRBB · SB\nARRIVAL PATHS · 287048 · OPRBB · SB · source: NOT VERIFIED: no BPMN\n| id | how | rows | c | t | s | verdict |\n|---|---|---|---|---|---|---|\n' + ['alter', 'initiate', 'reassign', 'migrated'].map(i => row(i, 'SELECT 1', 'BA-Q')).join('\n') + '\n');
+blocks('A17 no cache and an engine source → BLOCK, run the script', FORM, GATE, BANNER + 'ARRIVAL PATHS · 287048 · MCL · SKM · source: engine v3 mlit\n| id | how | rows | c | t | s | verdict |\n', /run node domain/);
 tests.push({ name: 'A18 table kept in the quest doc through the DOC line → ALLOW', run: () => { const d = path.join(tmpRoot, 'projects', 'coding-projects', 'active', 'QA-287048'); fs.mkdirSync(d, { recursive: true }); fs.writeFileSync(path.join(d, 'QA-287048.md'), '## Arrival paths\n' + table()); return runV3(FORM, GATE, BANNER + 'ARRIVAL PATHS DOC: QA-287048'); }, check: (r) => !r.denied });
 tests.push({ name: 'A18b a stale doc copy in the session folder does not hide the main folder copy → ALLOW', run: () => { const d1 = path.join(tmpRoot, 'stale', 'projects', 'coding-projects', 'active', 'QA-287048'); fs.mkdirSync(d1, { recursive: true }); fs.writeFileSync(path.join(d1, 'QA-287048.md'), 'no table here'); const tp = makeTranscript('v3-doc.jsonl', say(BANNER + 'ARRIVAL PATHS DOC: QA-287048')); const rr = spawnSync('node', [HOOK], { input: JSON.stringify({ tool_name: 'Edit', tool_input: { file_path: FORM, new_string: GATE }, transcript_path: tp }), encoding: 'utf8', env: Object.assign({}, process.env, { LOGIC_BLAST_LOG: logPath, ARRIVAL_CACHE_DIR: cacheDir, ARRIVAL_ACTIVE_FILE: activeFile, ARRIVAL_DOC_ROOT: path.join(tmpRoot, 'stale'), CLAUDE_PROJECT_DIR: tmpRoot }) }); return { raw: rr.stdout, denied: /"deny"/.test(rr.stdout || ''), exitCode: rr.status, stderr: rr.stderr }; }, check: (r) => !r.denied });
 tests.push({ name: 'A19 [skip-logic-blast: audit] in the current turn → bypass', run: () => { const tp = makeTranscript('v3-skip.jsonl', JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'go' }] } }) + '\n' + say('[skip-logic-blast: audit edit]')); const rr = spawnSync('node', [HOOK], { input: JSON.stringify({ tool_name: 'Edit', tool_input: { file_path: FORM, new_string: GATE }, transcript_path: tp }), encoding: 'utf8', env: Object.assign({}, process.env, { LOGIC_BLAST_LOG: logPath, ARRIVAL_CACHE_DIR: cacheDir, ARRIVAL_ACTIVE_FILE: activeFile }) }); return { raw: rr.stdout, denied: /"deny"/.test(rr.stdout || ''), exitCode: rr.status, stderr: rr.stderr }; }, check: (r) => !r.denied });
 tests.push({ name: 'A20 broken stdin → fail-open', run: () => { const rr = spawnSync('node', [HOOK], { input: 'not json', encoding: 'utf8' }); return { raw: rr.stdout, denied: false, exitCode: rr.status, stderr: rr.stderr }; }, check: (r) => r.exitCode === 0 && !r.raw });
+
+// v4: the holes Fable 5.1 found in v3 (2026-10-31)
+const OTHER_FORM = 'E:\\Dev\\etanah-work\\etanah-pelupusan\\src\\main\\java\\my\\gov\\MlkOtherForm.java';
+const BASE_FORM = 'E:\\Dev\\etanah-work\\etanah-pelupusan\\src\\main\\java\\my\\gov\\BasePelupusanForm.java';
+const lite = u => `ARRIVAL PATHS · 287048 · ${u} · SB · source: NOT VERIFIED: no BPMN\n| id | how | rows | c | t | s | verdict |\n|---|---|---|---|---|---|---|\n` + ['alter', 'initiate', 'reassign', 'migrated'].map(i => row(i, 'SELECT 1', 'BA-Q')).join('\n') + '\n';
+const pru = 'ARRIVAL PATHS · 287048 · PRU · PB4DE · source: NOT VERIFIED: no BPMN\n| id | how | rows | c | t | s | verdict |\n|---|---|---|---|---|---|---|\n' + ['alter', 'initiate', 'reassign', 'migrated'].map(i => row(i, 'SELECT 1', 'BA-Q')).join('\n') + '\n';
+const everyOther = [...LITE_URUSAN(), 'MLPS', 'PLPS'].map(lite).join('\n');
+function LITE_URUSAN() { return ['OPLPS', 'OMLPS', 'OPRU', 'OPRBB', 'OPLBP', 'OPPJK', 'OPPTPB']; }
+const NV = { source: 'NOT VERIFIED: no BPMN', ids: ['alter', 'initiate', 'reassign', 'migrated'] };
+[...LITE_URUSAN(), 'MLPS', 'PLPS'].forEach(u => fs.writeFileSync(path.join(cacheDir, `${u}-SB.json`), JSON.stringify(NV)));
+fs.writeFileSync(path.join(cacheDir, 'PRU-PB4DE.json'), JSON.stringify(NV));
+const FILE_XHTML = path.join(tmpRoot, 'etanah-pelupusan', 'x.xhtml');
+fs.mkdirSync(path.dirname(FILE_XHTML), { recursive: true });
+fs.writeFileSync(FILE_XHTML, '<et:commandButton id="hantar"\n  rendered="#{mb.a}"/>\n<h:panelGroup\n  rendered="#{mb.b}"/>\n<et:commandButton value="#{a > b}"\n  rendered="#{mb.d}"/>\n');
+blocks('H9 alter or initiate marked n/a → BLOCK (the original miss)', FORM, GATE, BANNER + table({ ids: IDS.filter(i => i !== 'alter') }) + row('alter', 'n/a — not relevant', 'BA-Q'), /row "alter" has no SELECT/);
+allows('H9b reassign may say n/a → ALLOW', FORM, GATE, BANNER + table({ ids: IDS.filter(i => i !== 'reassign') }) + row('reassign', 'n/a — one holder', 'BA-Q'));
+blocks('H10 etanah worktree path with no module folder → fires', 'E:\\Dev\\etanah-work\\wt-286655\\src\\main\\java\\MlkLaporanP1eForm.java', GATE, 'nothing', /no ARRIVAL PATHS/);
+tests.push({ name: 'H11 wrong --env → exit 2, nothing written', run: () => { const before = fs.readdirSync(path.join(__dirname, 'arrival')).length; const rr = spawnSync('node', [path.join(__dirname, 'arrival-paths.js'), 'QQQ', 'XYZ', '--env', 'nope'], { encoding: 'utf8' }); return { exitCode: rr.status, same: fs.readdirSync(path.join(__dirname, 'arrival')).length === before, raw: rr.stdout, stderr: rr.stderr, denied: false }; }, check: (r) => r.exitCode === 2 && r.same });
+blocks('H2b hand-written NOT VERIFIED table for an urusan the script never ran → BLOCK', OTHER_FORM, GATE, BANNER + 'ARRIVAL SCREEN: MlkOtherForm · ZZZ · SKM\n' + lite('ZZZ').replace('· SB ·', '· SKM ·'), /no scenario list for ZZZ SKM/);
+blocks('H5c Base form with two invented urusan → BLOCK', BASE_FORM, GATE, BANNER + lite('AAA') + '\n' + lite('BBB'), /no scenario list for AAA/);
+blocks('H7 other state check on a Service, one urusan → BLOCK', SERVICE, 'boolean verifySign() {}', BANNER + table(), /base class/);
+tests.push({ name: 'H8 rendered= line in a button whose earlier attribute holds #{a > b} → BLOCK', run: () => runOld(FILE_XHTML, '  rendered="#{mb.d}"/>', '  rendered="#{mb.c}"/>', 'nothing'), check: (r) => r.denied });
+const runOld = (file, oldString, newString, text) => { const tp = makeTranscript('v4-' + Math.random().toString(36).slice(2) + '.jsonl', say(text)); const rr = spawnSync('node', [HOOK], { input: JSON.stringify({ tool_name: 'Edit', tool_input: { file_path: file, old_string: oldString, new_string: newString }, transcript_path: tp }), encoding: 'utf8', env: Object.assign({}, process.env, { LOGIC_BLAST_LOG: logPath, ARRIVAL_CACHE_DIR: cacheDir, ARRIVAL_ACTIVE_FILE: activeFile, ARRIVAL_DOC_ROOT: tmpRoot, CLAUDE_PROJECT_DIR: tmpRoot }) }); return { raw: rr.stdout, denied: /"deny"/.test(rr.stdout || ''), reason: rr.stdout || '', exitCode: rr.status, stderr: rr.stderr }; };
+blocks('H1 service edit with every table but PRU → BLOCK, names PRU', SERVICE, 'boolean isSignedAllReport() {}', BANNER + table() + '\n' + everyOther, /owed for PRU/);
+allows('H1b service edit with PRU too → ALLOW', SERVICE, 'boolean isSignedAllReport() {}', BANNER + table() + '\n' + everyOther + '\n' + pru);
+tests.push({ name: 'H2 engine answered with no row → refused; an unreadable engine stays NOT VERIFIED', run: () => { const { noProcess } = require('./arrival-paths.js'); return [noProcess(null, true, null), noProcess(null, false, null), noProcess(null, true, 'f.xml'), noProcess({}, true, null)]; }, check: (r) => r[0] === true && r[1] === false && r[2] === false && r[3] === false });
+blocks('H3 field assignment, other case → fires', FORM, 'hantarSeterusnyaDisabled = true;', BANNER, /no ARRIVAL PATHS/);
+tests.push({ name: 'H4 xhtml removing disabled= → BLOCK', run: () => runOld(XHTML, '<et:commandButton disabled="#{mb.x}"/>', '<et:commandButton/>', 'nothing'), check: (r) => r.denied });
+blocks('H4b rendered= on a button, whole tag in the edit → BLOCK', XHTML, '<et:commandButton rendered="#{mb.x}"/>', 'nothing', /no ARRIVAL PATHS/);
+tests.push({ name: 'H4c rendered= line alone inside a button tag on disk → BLOCK', run: () => runOld(FILE_XHTML, '  rendered="#{mb.a}"/>', '  rendered="#{mb.c}"/>', 'nothing'), check: (r) => r.denied });
+tests.push({ name: 'H4d rendered= line alone inside a panel on disk → silent', run: () => runOld(FILE_XHTML, '  rendered="#{mb.b}"/>', '  rendered="#{mb.c}"/>', 'nothing'), check: (r) => !r.denied });
+blocks('H5 other Base form, one urusan → BLOCK', BASE_FORM, GATE, BANNER + table(), /base class/);
+allows('H5b other Base form, two urusan → ALLOW', BASE_FORM, GATE, BANNER + table() + '\n' + lite('OPRBB'));
+blocks('H6 complete table for another screen → BLOCK', OTHER_FORM, GATE, BANNER + table(), /no table is tied to MlkOtherForm/);
+blocks('H6b screen line names an urusan with no table → BLOCK', OTHER_FORM, GATE, BANNER + table() + '\nARRIVAL SCREEN: MlkOtherForm · PRU · PB4DE\n', /no table has that/);
+allows('H6c screen line ties the file to its table → ALLOW', OTHER_FORM, GATE, BANNER + table() + '\nARRIVAL SCREEN: MlkOtherForm · PRBB · PB4CE\n');
 
 // arrival-paths.js derive(): the scenario list comes from the flowable
 const { derive } = require('./arrival-paths.js');
