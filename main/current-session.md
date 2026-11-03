@@ -6,6 +6,15 @@
 - Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
 - Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
 - Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
 
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
