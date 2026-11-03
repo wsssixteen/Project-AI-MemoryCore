@@ -1,13 +1,13 @@
 **Last Activity**: 2026-11-03 11:05 — worktree `baseline-wednesday-release-029181` (branch claude/plp-melaka-esokongan-tickets-6e83ab), eSOKONGAN + Internal Issue sweeps, Domain Expansion.
 
-STEP-3: change route step 3 check + design-consult-gate step-3 rider + highest-model-id
+STEP-3: change route step 8 report = change-map picture (lib/change-map.js, INDEX step 8, reply-shape-spec 3i, system-change-title v4)
 session: 162ad23b-073b-47dc-96a2-24d389f22a89
-his words: "Go, build it" (order)
+his words: "change this to always show a diagram drawn always" (order)
 fix or report: fix
-who pays: per-tool: inside the existing design-consult-gate on Edit|Write, no new process
-goal without the part: no system change is built before its ask, cost and fix are checked and shown to him
+who pays: on-demand: once per system change, one headless Edge about 5 s, exits; Stop gate stays under 50 ms
+goal without the part: after every system change he sees on the map's own boxes which parts are new, changed or removed
 model: claude-fable-5-1
-shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\step3-rule.png
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\report-picture-plan.png
 
 ## Session Recap (2026-11-02, ticket 287773 PPTPB)
 - Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.

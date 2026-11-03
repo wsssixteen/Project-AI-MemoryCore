@@ -49,12 +49,20 @@ for (const [name, text, want] of cases) {
 // signal (a): system files edited this turn, whatever the reply says
 const editCases = [
   ['edited a system file, reply says nothing about it -> block', 'Done.', ['C:/repo/domain/pena/modules.json'], 'block'],
-  ['edited a system file, breadcrumb heading present -> pass', '## System › Memory › Pena (changed)\nBans ye.', ['C:/repo/domain/pena/modules.json'], 'pass'],
+  // v4 (2026-11-03): after an edit the report is the change-map picture; tables only beside a render FAIL
+  ['v4: edited, tables only, no picture -> block', '## System › Memory (changed)\n| Name | Change |\n|---|---|\n| Pena | bans ye |', ['C:/repo/domain/pena/modules.json'], 'block'],
+  ['v4: edited, tables + CHANGE-MAP: FAIL line -> pass', 'CHANGE-MAP: FAIL render: no Edge\n## System › Memory (changed)\n| Name | Change |\n|---|---|\n| Pena | bans ye |', ['C:/repo/domain/pena/modules.json'], 'pass'],
+  ['v4: edited, FAIL line but no tables -> block', 'CHANGE-MAP: FAIL render: no Edge\nDone.', ['C:/repo/domain/pena/modules.json'], 'block'],
+  ['v4: edited, change-map png sent -> pass', 'Done.', ['C:/repo/domain/pena/modules.json'], 'pass', ['C:/Temp/scratchpad/change-map-20261103-065547.png']],
+  ['v4: edited, a different png sent (plan picture) -> block', 'Done.', ['C:/repo/domain/pena/modules.json'], 'block', ['C:/Temp/scratchpad/report-picture-plan.png']],
+  ['v4: edited, change-map .html sent, not the png -> block', 'Done.', ['C:/repo/domain/pena/modules.json'], 'block', ['C:/Temp/scratchpad/change-map-20261103.html']],
+  ['v4: no edit, reply names a change, picture sent -> pass', 'Added domain/x/ today.', [], 'pass', ['C:\\Temp\\change-map-1.png']],
+  ['v4: no edit, reply names a change, heading -> pass (v3 kept)', '## System › Feature (new)\nAdded domain/x/.', [], 'pass'],
   ['edited only a Task-folder file -> pass', 'Done.', ['C:/Users/x/1. Tasks/Melaka/321/2. Fix/a.jrxml'], 'pass'],
   ['edited only a scratchpad draft -> pass', 'Done.', ['C:/Temp/scratchpad/yati.txt'], 'pass'],
 ];
-for (const [name, text, edited, want] of editCases) {
-  const got = evaluate(text, edited).verdict;
+for (const [name, text, edited, want, sent] of editCases) {
+  const got = evaluate(text, edited, sent).verdict;
   if (got === want) { pass++; console.log('PASS ' + name); } else { fail++; console.log('FAIL ' + name + ' :: got ' + got); }
 }
 
@@ -69,6 +77,17 @@ const rowsE = [
 fs.writeFileSync(tmpE, rowsE.map(r => JSON.stringify(r)).join('\n') + '\n');
 const rE = spawnSync(process.execPath, [path.join(__dirname, 'system-change-title.check.hook.js')], { input: JSON.stringify({ transcript_path: tmpE }), encoding: 'utf8' });
 if (/"decision":"block"/.test(rE.stdout) && /modules\.json/.test(rE.stdout)) { pass++; console.log('PASS hook process blocks a silent reply after an Edit to a system file'); } else { fail++; console.log('FAIL edit-turn hook process :: ' + rE.stdout); }
+// v4 through the real reader: the same Edit turn, plus a SendUserFile of a change-map png -> no block
+const rowsPic = [rowsE[0], rowsE[1], rowsE[2],
+  { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', name: 'SendUserFile', input: { files: ['C:/Temp/scratchpad/change-map-20261103-070000.png'], status: 'normal' } }] } },
+  { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: 'delivered' }] } },
+  rowsE[3]];
+fs.writeFileSync(tmpE, rowsPic.map(r => JSON.stringify(r)).join('\n') + '\n');
+const rPic = spawnSync(process.execPath, [path.join(__dirname, 'system-change-title.check.hook.js')], { input: JSON.stringify({ transcript_path: tmpE }), encoding: 'utf8' });
+if (!rPic.stdout) { pass++; console.log('PASS hook process passes an Edit turn that sent a change-map picture'); } else { fail++; console.log('FAIL change-map sent :: ' + rPic.stdout); }
+fs.writeFileSync(tmpE, rowsE.map(r => JSON.stringify(r)).join('\n') + '\n');
+const rNoPic = spawnSync(process.execPath, [path.join(__dirname, 'system-change-title.check.hook.js')], { input: JSON.stringify({ transcript_path: tmpE }), encoding: 'utf8' });
+if (/change-map\.js/.test(rNoPic.stdout)) { pass++; console.log('PASS the block text names node lib/change-map.js'); } else { fail++; console.log('FAIL block text :: ' + rNoPic.stdout); }
 const rowsOld = [rowsE[1], rowsE[2], { type: 'user', message: { role: 'user', content: 'thanks' } }, { type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'You are welcome.' }] } }];
 fs.writeFileSync(tmpE, rowsOld.map(r => JSON.stringify(r)).join('\n') + '\n');
 const rOld = spawnSync(process.execPath, [path.join(__dirname, 'system-change-title.check.hook.js')], { input: JSON.stringify({ transcript_path: tmpE }), encoding: 'utf8' });

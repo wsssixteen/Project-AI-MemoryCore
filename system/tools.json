@@ -475,6 +475,22 @@
       "status": "unused"
     },
     {
+      "id": "change-map",
+      "answers": "What changed in this system change, drawn on the system map boxes with new / changed / removed tags",
+      "call": "node lib/change-map.js <spec.json> [--out <folder>]",
+      "home": "lib/change-map.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "redmine-board",
       "answers": "The open ticket board",
       "call": "node quest/redmine-board.js",
