@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-03 10:35 — worktree `dreamy-pike-08af0b` (branch claude/quest-workflow-diagram-b6c854), QA-287048 rework pass to BA, Domain Expansion.
+
+## Session Recap (2026-10-30 to 11-03, ticket 287048 rework)
+- Done: fix 9443c7e853 (Hantar needs a signature from the current round, also after Alter or Pembetulan), merged int-env a036d3d568 and stag-env 9f8f5d6a14. Redmine rework pass submitted 2026-11-02 12:25 to Fizah with `1. Scenarios covered.png`. stg1 PTMLK/03/L/PRBB/2026/12 altered to PB4CE for the Alter test (new a_tgsn 2884531).
+- System landed on main: logic-blast-radius gate v4 (arrival paths, eval 51/51) 92e604e6; explain-diagram red only for issues 19f46992; CLAUDE.md v2.04 chat tables are normal Markdown, never code blocks, c770b98c.
+- Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
+- Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
+- Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
 ## Session Recap (2026-11-02 to 11-03, Pelupusan 1.9.1 baseline)
@@ -19,10 +28,3 @@
 
 **Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
 **Last Activity**: 2026-11-02 18:50 — worktree `sweep-orchestration-audit-39e710` (branch claude/redmine-quest-sweep-92d16e), eSOKONGAN sweep of 287346, 287509, 287607 finished, Domain Expansion.
-
-## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
-- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
-- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
-- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
-- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
-- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
