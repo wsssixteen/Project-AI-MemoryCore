@@ -99,7 +99,20 @@ function repeatBlock(surface) {
 const BROWSER_NET = /\b(?:fetch|XMLHttpRequest|\$\.(?:ajax|get|post|getJSON)|axios)\b/;
 const BROWSER_REDMINE_URL = /\/redmine\/|172\.16\.90\.169|\/issues\/[^'"`\s]*\.json|\.json\b[^\n]{0,40}issues/i;
 const BROWSER_SUBMIT = /(?:issue-form|name=["']?commit|#issue_notes|issue_status_id)[\s\S]*(?:\.submit\s*\(|requestSubmit|\.click\s*\(\s*\))|(?:\.submit\s*\(|requestSubmit|\.click\s*\(\s*\))[\s\S]*(?:issue-form|name=["']?commit)/i;
-const isBrowserTool = n => /(?:claude-in-chrome|Claude_Browser)__(?:javascript_tool|computer|browser_batch)$/.test(String(n || ''));
+const isBrowserTool = n => /(?:claude-in-chrome|Claude_Browser)__(?:javascript_tool|computer|browser_batch|form_input)$/.test(String(n || ''));
+// v1.9 (2026-11-02, 286610): a STATUS write on the staged form needs his order naming THAT status. I set a ticket to
+// Resolved while staging a BA note he had not asked a status change for; a status at or past Resolved (Verified ·
+// Ready in PROD · Closed) is never set back (redmine-phase1-prefill Step 3, prose since 2026-10-21, #282587). The gate
+// cannot read the live status, so every status value set through the form (form_input value = a status name, or JS
+// assigning issue_status_id) is blocked unless his words set that status. Assignee, notes, % done and files stay staging.
+const STATUS_NAME = /^(?:New|Open|In Progress|Resolved|Closed|KIV|Reviewing|Rework|Verified|Cancelled|Ready in PROD)$/i;
+const STATUS_JS = /issue_status_id[^\n]{0,120}?(?:\.value\s*=|\.selectedIndex\s*=|selected\s*=\s*true)/i;
+const STATUS_ACTION = /\b(?:set|change|update|tukar|kemaskini|mark|put|make|move|resolve|close|reopen|status)\w*/i;
+const statusOrder = v => {
+  const name = v && v !== '?' ? v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '(?:new|open|in progress|resolved|closed|kiv|reviewing|rework|verified|cancelled|ready in prod)';
+  return new RegExp('(?<!\\b(?:don\'?t|do not|jangan|not|never)\\s)(?:\\b(?:set|change|update|tukar|kemaskini|mark|put|make|move)\\b[^.\\n]{0,40}\\b' + name + '\\b|\\b' + name + '\\b[^.\\n]{0,12}\\b(?:status|it|the ticket)\\b|\\bstatus\\b[^.\\n]{0,20}\\b' + name + '\\b|\\[redmine-status-ok(?::\\s*' + name + ')?\\])', 'i');
+};
+const hisStatusWords = (tp, value) => decide(tp, { approve: statusOrder(value), action: STATUS_ACTION, hold: REDMINE_HOLD, bypass: BYPASS });
 // v1.5 (2026-10-07, miya: "straight away update the Redmine ticket's Status as In progress IF the status is New"):
 // ONE standing-approved API write, the quest-start claim. Exempt only the forge-born script at
 // <repo or its worktree>/lib/quest-start-claim.js, only as the EXECUTED script, only while its body stays status-only,
@@ -135,10 +148,15 @@ function browserVerdict(name, input, tail) {
     for (const a of (ti.actions || [])) { const v = browserVerdict(a && a.name, a && a.input, tail); if (v) return v; }
     return '';
   }
+  if (/form_input$/.test(n) || (ti.ref && Object.prototype.hasOwnProperty.call(ti, 'value') && !ti.action)) {
+    const v = typeof ti.value === 'string' ? ti.value.trim() : '';
+    return STATUS_NAME.test(v) ? 'status:' + v : '';
+  }
   if (/javascript_tool$/.test(n) || typeof ti.text === 'string') {
     const t = String(ti.text || '');
     if (BROWSER_NET.test(t) && BROWSER_REDMINE_URL.test(t)) return 'net';
     if (BROWSER_SUBMIT.test(t)) return 'submit';
+    if (STATUS_JS.test(t)) return 'status:?';
     return '';
   }
   if (/computer$/.test(n) && /click/.test(String(ti.action || '')) && ti.ref) {
@@ -161,6 +179,24 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
     if (!verdict) return { fired: false };
     const his = data.transcript_path ? hisSubmitWords(String(data.transcript_path)) : { verdict: 'none', text: '' };
     const lastB = his.text || '';
+    if (verdict.startsWith('status:')) {
+      const value = verdict.slice(7);
+      const st = data.transcript_path ? hisStatusWords(String(data.transcript_path), value) : { verdict: 'none', text: '' };
+      const lastS = st.text || '';
+      if (st.verdict === 'approve') {
+        const said = st.via === 'bypass' ? 'bypass' : (lastS.match(statusOrder(value)) || [st.via])[0];
+        logRow({ outcome: 'allowed', surface: 'browser-status', value, approval: said, back: st.back });
+        return { fired: true, blocked: false, contextOut: `redmine-write-gate: Status "${value}" set on miya's order ("${said}")\n` };
+      }
+      logRow({ outcome: 'blocked', surface: 'browser-status', value, why: st.verdict === 'deny' ? 'his ' + st.via : 'no status order', last_user: lastS.slice(0, 120) });
+      return { fired: true, blocked: true, blockReason: [
+        `⛔ redmine-write-gate: this sets the ticket Status${value === '?' ? '' : ' to "' + value + '"'} and none of miya's messages orders that status.`,
+        '   A status at or past Resolved (Verified · Ready in PROD · Closed) is never set back (2026-11-02, 286610; 2026-10-21, #282587).',
+        '   Leave the Status select as it is. Fill the other fields, show the staged values, and say in one line which status',
+        '   you would set and why. His words unblock it: "set status to <name>" / "change it to <name>" / [redmine-status-ok: <name>].',
+        st.verdict === 'deny' ? `   He held or refused it: "${lastS.replace(/\s+/g, ' ').slice(0, 100)}"` : '',
+      ].filter(Boolean).join('\n') };
+    }
     if (verdict === 'net') {
       logRow({ outcome: 'blocked', surface: 'browser-net', last_user: lastB.slice(0, 120) });
       return { fired: true, blocked: true, blockReason: [
