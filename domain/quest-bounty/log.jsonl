@@ -262,3 +262,6 @@
 {"ts":"2026-11-03T02:13:22.157Z","qa":"QA-286655","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-11-03T02:13:22.1858731Z","qa":"QA-287201","harvests":{"quest":true,"system":false,"knowledge":true},"refinement":"none","banked_sha":"at-de-commit"}
 {"ts":"2026-11-03T02:13:22.1858731Z","qa":"QA-286655","harvests":{"quest":true,"system":false,"knowledge":true},"refinement":"proposed","banked_sha":"at-de-commit"}
+{"ts":"2026-11-03T02:48:31.402Z","qa":"QA-287273","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-03T02:49:07.551Z","qa":"QA-287273","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"340e75124e","branch":"mlk/esokongan/287273"}
+{"ts":"2026-11-03T04:05:25.148Z","qa":"QA-287350","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}

@@ -580,3 +580,8 @@
 {"ts":"2026-11-02T08:36:15.454Z","id":"ADHOC-PPTPB-2026-8","outcome":"pass","fails":[],"dur_ms":75}
 {"ts":"2026-11-02T09:47:23.497Z","id":"ADHOC-PPTPB-2026-8","outcome":"fail","fails":["register: A91 not claimed by another open block"],"dur_ms":48}
 {"ts":"2026-11-02T10:03:06.550Z","id":"ADHOC-PPTPB-2026-8","outcome":"fail","fails":["register: A91 not claimed by another open block"],"dur_ms":33}
+{"ts":"2026-11-03T02:32:24.431Z","id":"ADHOC-MCL-2026-6","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":77}
+{"ts":"2026-11-03T02:32:33.561Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":65}
+{"ts":"2026-11-03T02:33:02.776Z","id":"ADHOC-MCL-2026-6","outcome":"pass","fails":[],"dur_ms":78}
+{"ts":"2026-11-03T02:56:40.366Z","id":"ADHOC-PT-2026-16","outcome":"pass","fails":[],"dur_ms":71}
+{"ts":"2026-11-03T03:25:50.745Z","id":"ADHOC-PT-2026-16","outcome":"pass","fails":[],"dur_ms":31}
