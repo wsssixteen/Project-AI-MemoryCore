@@ -1750,3 +1750,6 @@
 {"ts":"2026-11-03T02:18:09.353Z","category":"A4"}
 {"ts":"2026-11-03T02:18:10.074Z","category":"ask-no-picture"}
 {"ts":"2026-11-03T02:20:15.568Z","category":"blocker"}
+{"ts":"2026-11-03T03:43:04.069Z","category":"blocker"}
+{"ts":"2026-11-03T03:48:10.810Z","category":"gate/repeat-block"}
+{"ts":"2026-11-03T04:05:23.977Z","category":"bounty"}
