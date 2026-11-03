@@ -1,3 +1,14 @@
+**Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
+
+## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
+- Asked: BA Fizah: alter MLPS/2026/1, /2, /5, /6, /10 and OMLPS/2026/1 to Penyediaan Borang 4Ae dan L1e (wrong Jadual dates); patch MLPS/1 and /2 back to Sedang Diproses.
+- Done: Alter Flow cannot reach PYB4AE from the Cetakan sub-flow; Initiate & Alter reset No ran on PROD (codes C1F5-62FF, A293-188D), 6 of 6 verified by DB (new a_tgsn 2919960-2919964, 2919967). Patch 287925.sql rewritten (alter had already set status_awam), run by infra, MLPS/1 and /2 now Awalan / Sedang Diproses, dates empty. Redmine submitted: Resolved to Fizah, journal #4. Quest archived (patch ticket, ahead of Redmine).
+- Side session: next-steps-shape v5 (approval text in its own copy block), main 71ae8698.
+- Knowledge: ALTER-TICKET-PLAYBOOK §3 (ended flow: Init & Alter resets status_awam only; tool AFTER check denied on PROD for rjk_parameter_sistem).
+- Open: OMLPS/1 is Tamat / Sedang Diproses from before this ticket, not in BA scope. Routing PYB4AE to PB4AE not yet exercised (user's Hantar).
+- Mistakes: approval codes quoted in a table cell; status patch written before the alter, would have matched 0 rows; two guessed column names (id_pengguna, trkh_kemaskini).
+- Assessment: A1 prod-alter-gate refused codes found inside his quoted complaint; the popup path worked. A2 write data patches after the alter's AFTER read. A3 the AFTER engine check fails on PROD, DB rows were the proof. A4 Alter Flow cannot cross from a sub-flow to a parent node; Initiate & Alter can. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
 
 ## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 rounds 2-3: unlink the Pendaftaran branch)
@@ -20,13 +31,3 @@
 - Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
-
-## Session Recap (2026-11-03, ADHOC-OPLPS-2026-1 OPLPS pelan L1e tidak penuh)
-- Asked: PROD PTMLK/02/L/OPLPS/2026/8 (nurulazura, PDTJ): pelan on Borang L1e looks cut, other OPLPS fine; margin? ours or the reports team?
-- Found: not margin, not cut. DMS file 2000x1410 complete; pixel script: black border top, bottom, left, none on right. Chain: pelukis azizah uploads in Teknikal (LAIN-37353842), Tandatangan Pelan stamps on the same canvas (CommonImageUtil.overlayImages), OPLPS users upload those exact bytes (932673 B), LaporanPelan.jrxml RetainShape only shrinks. Jrxml is in our own repo, so not a reports-team issue.
-- Closed: miya, no issue. Route ANSWER. Task folder 365 archived, register A93 ANSWERED, audit 31/31.
-- Not verified: azizah's own upload not opened (not needed after close).
-- Mistakes: said the file itself was cut, then that the bottom border was missing; both withdrawn after measuring. Wrong column guesses (medan_pk, no_dokumen, ind_jns_dok) before reading the schema.
-- Assessment: A1 the brief-first gate blocked the save agent and the audit in a closing round with no new finding. A2 ⏭ no ticket quest. A3 a pixel count settled "cut vs missing line" where eyeballing failed twice. A4 compare the file bytes across Teknikal and OPLPS before blaming either module. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
