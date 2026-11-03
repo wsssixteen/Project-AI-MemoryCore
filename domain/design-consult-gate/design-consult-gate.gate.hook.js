@@ -197,6 +197,15 @@ process.stdin.on('end', () => {
       process.exit(0);
     }
 
+    // Step-3 rider (2026-11-03, change route step 3): a new part or a highest-order change needs its STEP-3 block.
+    let step3 = null; try { step3 = require('./step3-check.js').check(data); } catch (_) { step3 = null; }
+    if (step3 && step3.bypassed) logFire(filePath, 'bypassed-step3', 'skip-step3 in his message');
+    else if (step3) {
+      logFire(filePath, 'blocked-step3', step3.problems.join(' | '));
+      process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: require('./step3-check.js').denyText(step3) } }));
+      process.exit(0);
+    }
+
     if (!isGuarded && !isEtanah) process.exit(0);
 
     // Read transcript for skill invocations (session-wide by design)

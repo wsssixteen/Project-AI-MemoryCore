@@ -1,5 +1,14 @@
 **Last Activity**: 2026-11-02 18:45 — worktree `ticket-287773-quest-run-66ac6f`, QA-287773 Phase 1 closed, Domain Expansion.
 
+STEP-3: change route step 3 check + design-consult-gate step-3 rider + highest-model-id
+session: 162ad23b-073b-47dc-96a2-24d389f22a89
+his words: "Go, build it" (order)
+fix or report: fix
+who pays: per-tool: inside the existing design-consult-gate on Edit|Write, no new process
+goal without the part: no system change is built before its ask, cost and fix are checked and shown to him
+model: claude-fable-5-1
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\step3-rule.png
+
 ## Session Recap (2026-11-02, ticket 287773 PPTPB)
 - Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
 - System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
