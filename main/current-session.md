@@ -8,6 +8,16 @@
 - Wrong: swept older handed-off tickets without saying they were his; W3 launches first denied by the PROD-read classifier (reran with PROD barred).
 - Open: sweep audit Tool exits 1 on `no-return-table` (3 runs); the check looks wrong, cause not traced.
 
+**Last Activity**: 2026-11-03 10:45 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), 286610 cycle 2 on MLIT + adhoc MCL-2026-5, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 cycle 2 MCL on MLIT)
+- Done: BA unblocked on MLIT PTMLK/01/L/MCL/2026/1 (stray SKM row closed by his script run, Hantar moves). Pembetulan = Ya to PT verified at DB: 14:30:01 to iskandarz at 22.0, BA Expected 3 passed. MLIT model v8 = stg1 v5 by md5; PROD v13 same ids and routes. Redmine notes staged here, submitted by him.
+- New adhoc MCL-2026-5 (hold, waiting BA ticket): Surat Keputusan Lulus goes back to Baru when Maklumat Tanah is saved at Semakan or Pengesahan (QA-258004 delete at MlkMaklumatTanahPemberimilikanForm.java:1229). Fix shape told: delete only at PYSKN5A, after checking whether those steps can edit premium. Not drafted.
+- Gap: adhoc MCL-2026-4 block one-liner is stale (says Hantar after fix NOT tested; it was tested and passed). The brief-first gate refused the update on the DE turn; blocker row logged. Update it on the next adhoc turn.
+- Open: DB pids 1612050 and 1647300 left as found, waiting him. KPT is offered at 24.0 but the gateway has no KPT route.
+- Wrong: 14:03 alter without -Commit still committed on the engine. I told him Pembetulan to m.ikram was a stale page; DB showed Tidak then Ya from the same page. Several hours spent before the simple unblock; rule saved as internal-unblock-first.
+- redmine-write-gate v1.9 (form_input status needs his named status) landed with this DE. Eval 136/142: the 6 reds come from main f8af263c changing the claim script body; the live quest-start claim is blocked until the gate accepts the status-only payload. Proposal logged.
+- Assessment: A1 brief-first gate blocks adhoc saves on a DE turn. A2 the 286610 doc had three DE blocks from three sessions on one day. A3 the unblock took hours because I traced the cause before closing the one stray row. A4 an alter run without -Commit still wrote to the engine. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 10:35 — worktree `dreamy-pike-08af0b` (branch claude/quest-workflow-diagram-b6c854), QA-287048 rework pass to BA, Domain Expansion.
 
 ## Session Recap (2026-10-30 to 11-03, ticket 287048 rework)
