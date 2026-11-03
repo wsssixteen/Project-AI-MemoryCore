@@ -540,6 +540,8 @@
 {"ts":"2026-10-30T10:23:40.082Z","id":"ADHOC-DMPRU-2026-1","outcome":"pass","fails":[],"dur_ms":68}
 {"ts":"2026-10-30T11:20:24.492Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":41}
 {"ts":"2026-10-30T11:31:06.243Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":53}
+{"ts":"2026-11-02T07:34:17.096Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":69}
+{"ts":"2026-11-02T07:34:58.114Z","id":"ADHOC-MCL-2026-5","outcome":"pass","fails":[],"dur_ms":48}
 {"ts":"2026-10-30T11:05:45.985Z","id":"ADHOC-PLTP-2026-4","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":56}
 {"ts":"2026-10-30T11:05:52.393Z","id":"ADHOC-PLTP-2026-4","outcome":"pass","fails":[],"dur_ms":34}
 {"ts":"2026-11-02T03:38:06.142Z","id":"ADHOC-MCL-2026-4","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":62}

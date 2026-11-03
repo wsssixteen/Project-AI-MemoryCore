@@ -8,6 +8,30 @@
 - Wrong: 14:03 alter without -Commit still committed on the engine. I told him Pembetulan to m.ikram was a stale page; DB showed Tidak then Ya from the same page. Several hours spent before the simple unblock; rule saved as internal-unblock-first.
 - redmine-write-gate v1.9 (form_input status needs his named status) landed with this DE. Eval 136/142: the 6 reds come from main f8af263c changing the claim script body; the live quest-start claim is blocked until the gate accepts the status-only payload. Proposal logged.
 - Assessment: A1 brief-first gate blocks adhoc saves on a DE turn. A2 the 286610 doc had three DE blocks from three sessions on one day. A3 the unblock took hours because I traced the cause before closing the one stray row. A4 an alter run without -Commit still wrote to the engine. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:35 — worktree `dreamy-pike-08af0b` (branch claude/quest-workflow-diagram-b6c854), QA-287048 rework pass to BA, Domain Expansion.
+
+## Session Recap (2026-10-30 to 11-03, ticket 287048 rework)
+- Done: fix 9443c7e853 (Hantar needs a signature from the current round, also after Alter or Pembetulan), merged int-env a036d3d568 and stag-env 9f8f5d6a14. Redmine rework pass submitted 2026-11-02 12:25 to Fizah with `1. Scenarios covered.png`. stg1 PTMLK/03/L/PRBB/2026/12 altered to PB4CE for the Alter test (new a_tgsn 2884531).
+- System landed on main: logic-blast-radius gate v4 (arrival paths, eval 51/51) 92e604e6; explain-diagram red only for issues 19f46992; CLAUDE.md v2.04 chat tables are normal Markdown, never code blocks, c770b98c.
+- Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
+- Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
+- Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:45 — worktree `redmine-issue-286988-203306` (branch claude/melaka-internal-env-issue-dc2cef), MCL internal flow + Notis 5A sign fix for 286610, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 MCL internal for BA Mira)
+- Done: PTMLK/01/L/MCL/2026/1 on MLIT: 16 variables restored on process 7887848 after the 14:03 re-initiate lost them; stray rows closed; Pembetulan flow passed 15:18 (Mira: "Flow yg pembetulan ok"), now 23.0 task 7888046. Notis 5A sign fix: SSKN5A += STATUS_PENYEDIAAN_BARU, STATUS_PENYEDIAAN_SEDIA in report.config.json, commit 75c17441de on mlk/esokongan/286610, int-env 81af580e95, pushed. Scenario picture sent.
+- Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
+- Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
+- Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
 
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
