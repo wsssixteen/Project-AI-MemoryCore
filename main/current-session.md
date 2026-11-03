@@ -1,3 +1,11 @@
+**Last Activity**: 2026-11-03 10:45 — worktree `redmine-issue-286988-203306` (branch claude/melaka-internal-env-issue-dc2cef), MCL internal flow + Notis 5A sign fix for 286610, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 MCL internal for BA Mira)
+- Done: PTMLK/01/L/MCL/2026/1 on MLIT: 16 variables restored on process 7887848 after the 14:03 re-initiate lost them; stray rows closed; Pembetulan flow passed 15:18 (Mira: "Flow yg pembetulan ok"), now 23.0 task 7888046. Notis 5A sign fix: SSKN5A += STATUS_PENYEDIAAN_BARU, STATUS_PENYEDIAAN_SEDIA in report.config.json, commit 75c17441de on mlk/esokongan/286610, int-env 81af580e95, pushed. Scenario picture sent.
+- Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
+- Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
+- Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
 ## Session Recap (2026-11-02 to 11-03, Pelupusan 1.9.1 baseline)
@@ -19,10 +27,3 @@
 
 **Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
 **Last Activity**: 2026-11-02 18:50 — worktree `sweep-orchestration-audit-39e710` (branch claude/redmine-quest-sweep-92d16e), eSOKONGAN sweep of 287346, 287509, 287607 finished, Domain Expansion.
-
-## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
-- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
-- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
-- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
-- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
-- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
