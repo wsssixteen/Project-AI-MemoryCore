@@ -5,6 +5,15 @@
 - Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
 - Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
 - Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
 
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
