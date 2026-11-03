@@ -1694,6 +1694,7 @@
 {"ts":"2026-11-02T04:05:16.985Z","category":"reply-shape/table-wraps"}
 {"ts":"2026-11-02T04:06:45.952Z","category":"reply-shape/invented-workaround"}
 {"ts":"2026-11-02T04:12:55.044Z","category":"test-data/wrong-query"}
+{"ts":"2026-11-02T04:16:21.989Z","category":"slow-alter"}
 {"ts":"2026-10-30T10:09:17.014Z","category":"blocker"}
 {"ts":"2026-11-02T03:46:13.088Z","category":"blocker"}
 {"ts":"2026-11-02T03:46:14.764Z","category":"boundary"}
@@ -1757,6 +1758,11 @@
 {"ts":"2026-11-03T02:33:38.222Z","category":"A2"}
 {"ts":"2026-11-03T02:33:40.441Z","category":"A3"}
 {"ts":"2026-11-03T02:33:42.911Z","category":"A4"}
+{"ts":"2026-11-03T02:32:15.305Z","category":"blocker"}
+{"ts":"2026-11-03T02:33:46.424Z","category":"A1"}
+{"ts":"2026-11-03T02:33:46.588Z","category":"A2"}
+{"ts":"2026-11-03T02:33:46.768Z","category":"A3"}
+{"ts":"2026-11-03T02:33:47.058Z","category":"A4"}
 {"ts":"2026-11-03T02:32:21.224Z","category":"A1"}
 {"ts":"2026-11-03T02:32:22.225Z","category":"A2"}
 {"ts":"2026-11-03T02:32:23.866Z","category":"A3"}

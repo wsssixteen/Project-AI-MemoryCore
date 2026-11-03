@@ -6,6 +6,13 @@
 - Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
 - Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
 - Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:45 — worktree `redmine-issue-286988-203306` (branch claude/melaka-internal-env-issue-dc2cef), MCL internal flow + Notis 5A sign fix for 286610, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 MCL internal for BA Mira)
+- Done: PTMLK/01/L/MCL/2026/1 on MLIT: 16 variables restored on process 7887848 after the 14:03 re-initiate lost them; stray rows closed; Pembetulan flow passed 15:18 (Mira: "Flow yg pembetulan ok"), now 23.0 task 7888046. Notis 5A sign fix: SSKN5A += STATUS_PENYEDIAAN_BARU, STATUS_PENYEDIAAN_SEDIA in report.config.json, commit 75c17441de on mlk/esokongan/286610, int-env 81af580e95, pushed. Scenario picture sent.
+- Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
+- Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
+- Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
 
 ## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
