@@ -118,8 +118,9 @@ const hisStatusWords = (tp, value) => decide(tp, { approve: statusOrder(value), 
 // <repo or its worktree>/lib/quest-start-claim.js, only as the EXECUTED script, only while its body stays status-only,
 // only when the command text itself carries no mutation. It holds inside the stage-only window too.
 const CLAIM_SCRIPT = /(?:^|[\\/])lib[\\/]quest-start-claim\.js$/i;
-const CLAIM_PAYLOAD = /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/;
-const CLAIM_FORBIDDEN = /assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
+// v1.10 (f8af263c, 2026-10-27): % done only for Pelupusan/Awam, so the payload is built as status, then done_ratio = START_PERCENT.
+const CLAIM_PAYLOAD = /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}|const payload = \{ status_id: IN_PROGRESS_ID \};\s*\n[^\n]*payload\.done_ratio = START_PERCENT;\s*\n[\s\S]*\{ issue: payload \}/;
+const CLAIM_FORBIDDEN = /assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:|payload\.(?!done_ratio = START_PERCENT;)\w+\s*=|payload\[/i;
 const WORKTREE_SEG =/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+/i;
 function isStandingClaim(scriptPath, cwd) {
   if (!CLAIM_SCRIPT.test(scriptPath)) return false;

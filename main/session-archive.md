@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
+- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
+- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
+- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
+- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
+- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
+
 ## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
 - Done: PROD PTMLK/02/L/PPTPB/2026/2 Hantar error traced to gateway sid-AD61958D (routes KPPD, PPD, KPT only, no default). Permohonan moved on through PPD and sits with norlina at PKPPT. Adhoc archived: block in active-archive.txt, doc in archive/, Task folder 357 in Archive\, video deleted.
 - Wrong: I told him the fix is an added PT route. BA Fizah's journal of 16:39 on 287773 asks to remove PT from the dropdown (To-Be V3.0). The PT route is on MLIT v14 only. The ticket session (worktree `ticket-287773-quest-run-66ac6f`) holds this conflict and waits his decision.
@@ -7110,6 +7117,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
