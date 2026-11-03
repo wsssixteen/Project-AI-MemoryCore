@@ -26,6 +26,7 @@ THIS memory contradicted Rule 0 and is now retired.
   inline backticks. Same test as a command: he pastes it into the shell, so it needs the copy button.
   Banned: "at the branch prompt choose `mlk/int-env`" (inline). Correct: a plain fenced block holding
   just `mlk/int-env` under a one-line "paste at the prompt:".
+- **🚨 Approval text he types back counts too** (2026-11-03, 287925: "do not put in quotation marks like that, put it like the easy way to copy and pastse"): an approval code (`C1F5-62FF`) or an "approve …" / "post it" / "submit it" phrase goes in its OWN ```text block under the row's heading; the Next steps "Your reply" cell says "the block above", never the text in quotes. A popup (AskUserQuestion) is better where the gate takes it. Gate: `domain/next-steps-shape` v5.
 - **Not covered**: code shown for *reading* — a Java diff, JSF snippet, an SQL script he saves to a
   file. The test stays **"will he type/paste/RUN this in a shell?"** → own fenced block.
 

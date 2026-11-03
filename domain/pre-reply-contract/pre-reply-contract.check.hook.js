@@ -47,6 +47,7 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '   · End with a **Next steps** TABLE — columns `# | Action | What it means | Your reply` — priority-first, one row per decision or action for みや; NEVER a numbered list, NEVER prose. Omit only when no user action.',
     '     Every row has its OWN heading or table row ABOVE, in the same words: he scrolls back from a row and must land on what explains it (an opening-paragraph mention does not count).',
     '     "What it means" = ONE plain sentence (5+ words): what the item is and why it needs him. No hook names, watch ids, row codes or line numbers there. Only offer actions he asked for or the task needs.',
+    '     "Your reply": text he must type back (an approval code like C1F5-62FF, "approve …", "post it", "submit it") goes in its own ```text block under the row\'s heading, never in quotes in the cell; the cell says "the block above". A popup (AskUserQuestion) is better where the gate takes it.',
     '   · Verification you ran for YOURSELF (git log, fsck, eval output, grep dumps) stays OUT of the reply — one line "verified: <what>" is the whole of it.',
     '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply. It still ends on one line: what it means and the next step.',
     '   · In quest work NEVER end on a bare fact. Do what I can do now; the last line says what happens next and who does it. Short replies always.',
