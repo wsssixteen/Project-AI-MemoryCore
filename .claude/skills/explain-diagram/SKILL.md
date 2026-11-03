@@ -24,6 +24,7 @@ One sentence of answer, then one drawing. Nothing he did not ask for.
 | Box text = plain words he already knows; a technical name only as the small second line | `file:line`, SQL, class names as box titles |
 | Mark ONE thing: his action, or the one changed step (the picture's accent colour, the chat diagram's `◄`) | three highlights |
 | At most 9 boxes and 12 arrows; more = split into an overview + one detail | "complete" diagrams that need a legend to read |
+| Red or sharp colours only for explaining an issue or root cause. A picture of a fix or for a ticket keeps the default colours with no accent (2026-11-02 per みや, 287048) | red on a scenario picture · stripping a picture to black and white when he asks for neutral |
 | Title says what it shows ("Running a PROD alter: your one step") | "Diagram", "Overview" |
 | Remove test before sending: can a box, an arrow or a label go? Then it goes | — |
 

@@ -14,6 +14,7 @@ A ticket asks to **patch/replace a generated document** (Surat JPPH, Surat Keput
 in the codebase is fixed — this is a data/file operation for the infra + patching teams.
 
 ## The two-part process (from みや's patching runbook)
+**A document patch always ends with the patching team, after the upload** (2026-11-03 per みや, 287350: "we still need to send to the patching team again ... don't waste their time"). So plan it at the start: every data patch of the ticket waits and goes in the SAME message as the PDF reset, one message to the patching team after the upload is confirmed. **Banned**: a data patch sent before the upload when the ticket also has a document patch · showing him steps that leave out the PDF reset. **A report generated as a PDF (Jasper) needs no reset**: its `lokasi_fail_pdf` is the same path as `lokasi_fail` and the file starts with `%PDF`, so the uploaded file is shown as it is; read both before writing a reset (287350: all 6 reports were PDFs).
 1. **Locate + replace** — find `lokasi_fail` (the `.main` file on disk) → ask infra to overwrite it with the edited docx.
 2. **Null the PDF** — after infra confirms, run `UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL` on the latest active revision, so the system regenerates the PDF from the new `.main`. **Order matters: null AFTER the replace, never before.**
 
