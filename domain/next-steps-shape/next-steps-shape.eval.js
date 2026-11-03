@@ -95,6 +95,66 @@ check('Q15 upper-case .JPG sent → pass', r.status === 0, 'exit=' + r.status);
 r = run(quest);
 check('Q16 no transcript path (real hook call without one) → fail-open pass', r.status === 0, 'exit=' + r.status);
 
+// ── v5: approval text he types back sits in its own ```text block, never inside the "Your reply" cell (2026-11-03 miya on 287925) ──
+const HEAD = '## 1. Alter the two PROD tasks\nBoth alter plans are ready.\n\n```text\napprove C1F5-62FF and A293-188D\n```\n\n';
+const MEAN = 'The alter tool moves both permohonan back to Penyediaan Borang.';
+function ns(reply, o) {
+  o = o || {};
+  const hdr = o.header || '| # | Action | What it means | Your reply |\n|---|---|---|---|\n';
+  return (o.head === undefined ? HEAD : o.head) + '**Next steps**\n\n' + hdr + '| 1 | ' + (o.action || 'Alter the two PROD tasks') + ' | ' + (o.mean || MEAN) + ' | ' + reply + ' |\n' + (o.extra || '');
+}
+const blocks = (x, re) => x.status === 2 && /approval-in-cell|Your reply" cell/.test(x.stderr) && (!re || re.test(x.stderr));
+r = run(ns('the block above'));
+check('A1 code in its own ```text block above, cell says "the block above" → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('"approve C1F5-62FF and A293-188D"'));
+check('A2 the 2026-11-03 287925 cell, code in quotes → block with the ```text fix + DELTA ONLY', blocks(r, /```text/) && /DELTA ONLY/.test(r.stderr) && /1 "/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('`C1F5-62FF`'));
+check('A3 code in inline backticks in the cell → block', blocks(r), 'exit=' + r.status);
+r = run(ns('C1F5-62FF'));
+check('A4 bare code in the cell → block', blocks(r), 'exit=' + r.status);
+r = run(ns('"approve both"'));
+check('A5 "approve both" in the cell → block', blocks(r), 'exit=' + r.status);
+r = run(ns('Approve / Hold'));
+check('A6 capital "Approve" as a button word → block', blocks(r), 'exit=' + r.status);
+r = run(ns('"post it"'));
+check('A7 "post it" in the cell → block', blocks(r), 'exit=' + r.status);
+r = run(ns('submit it'));
+check('A8 "submit it" in the cell → block', blocks(r), 'exit=' + r.status);
+r = run(ns('the block above', { mean: 'You approve the alter, then the tool moves both permohonan back.' }));
+check('A9 "approve" inside the What it means cell → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('nothing, already approved'));
+check('A10 "approved" (past tense, nothing to type) → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('"keep" / "long-term fix"'));
+check('A11 lower-case hyphen word "long-term" → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('"open ADHOC-MLPS-2026-4"'));
+check('A12 an adhoc id ADHOC-MLPS-2026-4 in the cell → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('"run it on 2026-11-03"'));
+check('A13 a date in the cell → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('the block above', { head: '## 1. Alter C1F5-62FF on PROD\nThe plan is ready.\n\n', action: 'Alter C1F5-62FF on PROD' }));
+check('A14 code in the Action cell only, reply cell clean → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('C1F5-62FF', { header: '| # | Action | What it means | Code |\n|---|---|---|---|\n' }));
+check('A15 no "Your reply" column → the v5 check does not run → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('the block above', { head: HEAD.replace('ready.', 'ready.\n\n## 2. Publish on staging\nThe BA tests next.'), extra: '| 2 | Publish on staging | The BA can then test the fix on the real flow. | "approve A293-188D" |\n' }));
+check('A16 two rows, only row 2 holds a code → block naming row 2 only', blocks(r, /2 "/) && !/1 "the block/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run('Example of the banned shape:\n```\n**Next steps**\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | Alter | The alter tool moves both permohonan back. | "approve C1F5-62FF" |\n```\nNoted.');
+check('A17 the banned shape only quoted inside a code fence → pass', r.status === 0, 'exit=' + r.status);
+r = run(ns('"approve C1F5-62FF"') + '\n[skip-next-steps-shape: miya asked for the code inline]');
+check('A18 bypass token → pass', r.status === 0, 'exit=' + r.status);
+r = run(ns('pick in the popup; it records your approval'));
+check('A19 "approval" (the noun) and a popup pointer → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('"c1f5-62ff"'));
+check('A20 lower-case code → pass (accepted-risk: alter.js prints codes upper case)', r.status === 0, 'exit=' + r.status);
+r = run(ns('"approve C1F5-62FF"', { mean: 'alter it' }));
+check('A21 short meaning AND code in cell → the meaning block comes first', r.status === 2 && /shorter than 5 words/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run(ns('approve the block above'));
+check('A22 "approve the block above" still carries the approval word → block', blocks(r), 'exit=' + r.status);
+r = run(ns('"C1F562FF"'));
+check('A23 code with no hyphen → pass (accepted-risk: alter codes carry the hyphen)', r.status === 0, 'exit=' + r.status);
+r = run(ns('"approve C1F5-62FF and A293-188D"'.replace(/"/g, '“').replace(/“$/, '”')));
+check('A24 code in curly quotes → block', blocks(r), 'exit=' + r.status);
+r = run(ns('"resubmit it later"'));
+check('A25 "resubmit it" (submit inside a longer word) → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+
 // P6 — broken stdin → fail-open
 r = spawnSync(process.execPath, [HOOK], { input: 'not json {{', encoding: 'utf8', timeout: 30000 });
 check('P6 broken stdin → fail-open exit 0', r.status === 0, 'exit=' + r.status);
