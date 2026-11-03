@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-03 17:25 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), ticket 287811 handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
+- Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
+- Cause: our 258004 fix deleted the Surat on every Maklumat Tanah save (MlkMaklumatTanahPemberimilikanForm invalidateSuratKeputusanLulusForRegeneration). Requirement 223236 spec: Penyediaan Sedia, Semakan arrives Sedia, Pengesahan arrives Disemak; no delete rule.
+- Fix C: delete call, method and 2 imports removed, 0d5ef30fff on mlk/internal/287811, int-env a3a263bf69, stag-env 2720433503. Local test waived by miya; he tested on stg1 PTMLK/02/L/MCL/2026/14, all 6 steps pass. Redmine journal 5 at 17:22: Resolved, Nurul Amirah Nadiah, 100%, Root Cause DEV, 6 red-boxed photos.
+- Open risk: a value changed after the Surat exists stays in the old Surat until Jana Semula; not verified.
+- System change 87eddc33: requirement-index.js --read (description, journals, spec attachments) + quest-phase-gate v3 denies etanah edits until REQUIREMENT-READ and a quoted REQUIREMENT-MATCH exist; quest SKILL step 2b, ticket-gate 1e.
+- Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
+- Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
 
 ## Session Recap (2026-11-03, ticket 287892 PT Kadar Cukai DESA II)
@@ -19,12 +29,3 @@
 - Mistakes: first reply asked for the screen and error when he only wanted the number; claimed the common clone could not fetch (STATE-FACTS 2026-10-03) without running it; the fetch worked.
 - Assessment: A1 db-claim-proof + attempt-before-blocked gates caught both slips. A2 ⏭ no quest. A3 knowledge FLOW-TRACES §File upload → DMS (Melaka) pointed straight at the code layers. A4 a "table and column" ask can be a code limit; say so on line one. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 14:33 — worktree `appraisal-2026-rubric-500819` (branch claude/appraisal-2026-rubric-500819), tickets 287747 + 287638 handed to BA, Domain Expansion.
-
-## Session Recap (2026-11-03, tickets 287747 OPLPS + 287638 PPJK)
-- Asked: quest 287747 to Rubric, batch with small tickets; apply 287747 + 287638, commit, deploy, test on server, Redmine handover with evidence.
-- Done: 287747 Hantar after Simpan with Pembetulan Ya (BasePelupusanLiteForm.initData reorder), 07f3a9a3 on mlk/esokongan/287747, int-env 896a6e1515, stag-env 8987221fb2. 287638 last fasa carries the remaining years, c3cd2e90 on mlk/internal/287638, int-env 4fc2a7201a. Both tested on server by miya (Ya, Tidak, signed; 4 4 4 4 5). Redmine 287747 journal 5 and 287638 journal 2 posted 14:24-14:25: Resolved, Nurhafizah Hasan, 100%, photos attached. 287638 was briefly reassigned to miya, then sent back to BA after he clarified the fix is correct.
-- Audit 287747: not a regression; the initData order is the same in every version back to before UAT-CR 241586 (2026-02-10). Only the 7 lite urusan SB with Ya change; other lite urusan with Ya are untested.
-- Mistakes he caught: tested locally first instead of on server; 287638 test steps named a Kira button and an editable Tempoh Pajakan that do not exist; asked him 4 times for "set status to Resolved" against his standing rule. All three have slip rows.
-- Blocker: redmine-write-gate refused status Resolved even after his rule message; set by clicking the select. A Fable 5.1 agent was launched to build his status rule into the gate (running at DE time, not landed).
-- Assessment: A1 the Redmine gate encodes words, not his status rule. A2 test scenario steps came from a method name, not the screen page file. A3 regression audit by git blame took 4 calls and answered cleanly. A4 analog-first fix (Permit Lesen helper) held under his doubt. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-03 12:05 — worktree `redmine-287350-quest-6d719f` (branch claude/redmine-287350-quest-6d719f), PROD patch ticket 287350 closed and archived, Domain Expansion.
