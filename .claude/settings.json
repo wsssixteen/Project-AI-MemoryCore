@@ -33,10 +33,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\kpi-pending\\\\kpi-pending.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\remote-access-check\\\\remote-access-check.check.hook.js\""
           }
         ]
       },
