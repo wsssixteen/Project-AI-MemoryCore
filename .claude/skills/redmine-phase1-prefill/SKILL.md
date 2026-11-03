@@ -66,13 +66,21 @@ If page redirects to login → STOP, emit: `Redmine not logged in. Log in at <UR
 
 **🚨 STAGE-ONLY until 2026-10-30 (or until みや lifts it)** — every Redmine update goes through THIS form, never the API: fill, show him the staged values as a table, STOP. Submit only after "I approve" / "submit it" / "post it" in his latest message. Also a view-first ask ("let me see", "prepare first", "same page") = staging, after the date too. **Read the open page's DOM only** — never `fetch`/XHR a `/redmine/….json` URL from the browser: it pops a sign-in password box in his Chrome (#282555). Enforced by `domain/redmine-write-gate` v1.4.
 
+### Step 2b — Read the ticket's live state, then decide the Status by his rule (2026-11-03)
+
+```bash
+node domain/redmine-write-gate/status-rule.js <qaNum> --assignee "<assignee>"
+```
+
+It prints the live status and assignee and whether Resolved is ALLOWED or BLOCKED, by the rule rows in `domain/redmine-write-gate/status-rule.json` (the one home of the rule and the BA list; `redmine-write-gate` v1.11 enforces the same function). Fill the **Assignee before the Status**: on a New ticket under someone else, the rule allows Resolved only once a BA is in the Assignee field.
+
 ### Step 3 — Fill the 6 fields (per みや's photo)
 
 Use `mcp__Claude_in_Chrome__form_input` for each:
 
 | Field | Selector hint | Value |
 |---|---|---|
-| Status | `#issue_status_id` (select) | `Resolved` — ONLY when the live status is lower (New · Open · In Progress · Rework · KIV · Reviewing). A status at or past Resolved (**Verified** · Ready in PROD · Closed) stays as it is: never set it back (2026-10-21 per みや, #282587: Verified was set back to Resolved) |
+| Status | `#issue_status_id` (select) | `Resolved` when Step 2b says ALLOWED, with no question to him: under him and lower than Resolved (New · Open · In Progress · Rework · KIV · Reviewing), or New under someone else and sent back to a BA. BLOCKED = leave the select as it is and say in one line why: a status at or past Resolved (Resolved · **Verified** · Ready in PROD · Closed · Cancelled) is never set back, whoever holds it (2026-11-03 per みや; 2026-10-21 #282587: Verified was set back to Resolved), and someone else's In Progress / Rework is their work. His named order ("set status to X") always outranks the rule. Rule + BA list: `domain/redmine-write-gate/status-rule.json` |
 | Assignee | `#issue_assigned_to_id` (select) | `<assignee>` (default Aaron Loh Zhi Yong) |
 | % Done | `#issue_done_ratio` (select) | `100` |
 | Resolved By | `#issue_custom_field_values_<id>` (select) | `Ahmad Ridhwan Anuar` |
