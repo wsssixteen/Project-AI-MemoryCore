@@ -1709,3 +1709,16 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - Stored in `plp_a_pelupusan.mklmt_tmbhn`, JSON key `maklumatRisalatList`, one entry per `jenisDokumen` (`NO_DOC` at tugasan with no document, for example SKM), field `tajukRisalat`.
 - Written by `onSaveMaklumatRisalatPanel()` in the Maklumat Tanah forms, normally at Semakan Kemasukan Maklumat. Teknikal says its Laporan Tanah Perkara comes from this store; their code is not read here.
 - At Penyediaan Laporan Tanah on PROD: PT, PLPS, PRBB, PLTP, PRZ all have it, MCL 0 of 37 (QA-287509, LATENT-BUGS L31).
+
+
+## §27 Kadar cukai tables (added 2026-11-03, #287892)
+| Table | Key columns | Note |
+|---|---|---|
+| `ind_kadar_premium_cukai` | `kadar_premium_cukai_id`, `jns_tnh_id`, `kegunaan_tnh_id`, `btrn_kegunaan_tnh_id`, `flag_kadar_awal` (char Y/N, not boolean) | the rate header; stores NO Desa class |
+| `ind_kadar_cukai_bpm` | `kadar_cukai_bpm_id`, `kadar_premium_cukai_id`, `bandar_pekan_mukim_id`, `kadar_cukai`, `kadar_cukai_sebelum` | one row per mukim per rate |
+| `ind_bandar_pekan_mukim` | `bandar_pekan_mukim_id` (not `bpm_id`), `nama`, `jns_kwsn_id`, `jns_kwsn_ptbrn` ("38584\|38585") | the Desa class lives HERE; 38583 DESA_1, 38584 DESA_2, 38585 DESA_3, 38582 PEKAN |
+| `umm_a_permohonan_tnh` | `a_permohonan_tnh_id`, `bandar_pekan_mukim_id`, `mklmt_tmbhn` JSON (`pengkelasanTnh`, `kadarCukaiString`) | the plot's chosen class is in the JSON |
+- Code lookups go through `rjk_senarai_ahli_kumpulan` (`senarai_ahli_kumpulan_id`, `kod`); there is no `sak_ahli_kumpulan` table.
+- `pcp_pengguna` has `nama_pengguna` (the login e-mail); there is no `emel` column.
+- A rate's class = the intersection of its mukim's class sets. MLIT rates 88 and 287 mix Desa I, II and III (no single class); PROD and stg1 are clean.
+- The calculator floors the result for Melaka: non-MCL RM 50, MCL RM 25 (etanah-common CukaiCalculationService.java on origin/mlk/beta :509-529); the screen then shows "Cukai Minimum untuk selain MCL".
