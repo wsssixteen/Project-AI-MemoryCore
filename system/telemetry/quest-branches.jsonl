@@ -55,3 +55,8 @@
 {"ts":"2026-11-03T02:53:03.748Z","num":"284544","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":32655}
 {"ts":"2026-11-03T02:53:27.841Z","num":"287638","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":20764}
 {"ts":"2026-11-03T02:53:35.892Z","num":"286927","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":7881}
+{"ts":"2026-11-03T03:49:31.669Z","num":"287747","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":6005}
+{"ts":"2026-11-03T04:05:09.308Z","num":"287638","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/internal/287638"],"dur_ms":5209}
+{"ts":"2026-11-03T04:05:27.962Z","num":"287638","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/internal/287638"],"dur_ms":4199}
+{"ts":"2026-11-03T04:05:49.018Z","num":"287638","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/internal/287638"],"dur_ms":4695}
+{"ts":"2026-11-03T04:06:26.051Z","num":"287638","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":4475}
