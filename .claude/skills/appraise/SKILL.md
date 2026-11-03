@@ -20,6 +20,8 @@ allowed-tools: Read, Grep, Glob, Bash
 
 **Verdict line**: `PROCEED / PROCEED WITH CAUTION / STOP AND RETHINK` + 1 sentence.
 
+**At change-route step 3** (2026-11-03): A, S and C fill the `STEP-3:` block (`system/INDEX.md` §The change route, step 3); R is the build itself, after his nod. The block reaches him as one picture with short lines.
+
 ## Scrutinize vocabulary (the old 3 axes, kept as checklists — consult, don't recite)
 
 | Axis | Checks |

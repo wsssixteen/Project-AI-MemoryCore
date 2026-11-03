@@ -128,3 +128,5 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 **[2026-10-30]** T1 — **A gate fix is not finished until the path that satisfies the gate is walked.** 287164: the Seterusnya check worked, but the dialog that fills the premium had a missing method and a stale value; three deploys. Promote if it recurs.
 
 **[2026-10-30]** T1 — **The blocker he names is the job.** 286650: he said the login was what stopped alters; I hardened the page tool around it three times before removing it with the headless runner. When he names a blocker, the next build removes it, it does not work around it.
+
+**[2026-11-03]** T2 recurrence of the 2026-10-19 T1 "his fence comes before the work": the 2026-11-02 sweep order said "just do not update the tickets in any way". The sweep wrote nothing to Redmine; its local side effects (Task folders and active.txt blocks from redmine-sync) stayed local. A per-ticket no-Redmine switch still does not exist (proposal A2 of 2026-10-19 stands).
