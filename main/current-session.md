@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
+
 **Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
 
 ## Session Recap (2026-11-02 to 11-03, Pelupusan 1.9.1 baseline)
@@ -19,10 +29,3 @@
 
 **Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
 **Last Activity**: 2026-11-02 18:50 — worktree `sweep-orchestration-audit-39e710` (branch claude/redmine-quest-sweep-92d16e), eSOKONGAN sweep of 287346, 287509, 287607 finished, Domain Expansion.
-
-## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
-- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
-- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
-- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
-- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
-- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
