@@ -1722,3 +1722,11 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - `pcp_pengguna` has `nama_pengguna` (the login e-mail); there is no `emel` column.
 - A rate's class = the intersection of its mukim's class sets. MLIT rates 88 and 287 mix Desa I, II and III (no single class); PROD and stg1 are clean.
 - The calculator floors the result for Melaka: non-MCL RM 50, MCL RM 25 (etanah-common CukaiCalculationService.java on origin/mlk/beta :509-529); the screen then shows "Cukai Minimum untuk selain MCL".
+
+## Column-name traps seen on PROD (verified 2026-11-03, ADHOC-PPTPB-2026-9)
+| Wrong guess | Real name |
+|---|---|
+| `umm_aplikasi.pjbt_id` | `umm_aplikasi.pejabat_id` → `ind_pejabat.pejabat_id` (kod 00 = PTG Melaka, 02 = Jasin) |
+| `ind_mklmt_hkmlk.id_hakmilik` | hakmilik id lives in `umm_a_hkmlk.id_hkmlk` (and `ind_hkmlk.id_hkmlk`) |
+| `ind_jns_hkmlk` | no such table; the type is the 7th-8th characters of `id_hkmlk` (PN, PM, HS, GRN …) |
+- Perserahan made from a PLP permohonan: `umm_aplikasi.hubungan_aplikasi_id` = the parent `aplikasi_id`; `flag_integrasi` = Y.

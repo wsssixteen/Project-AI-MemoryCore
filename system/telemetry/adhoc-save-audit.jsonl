@@ -586,3 +586,14 @@
 {"ts":"2026-11-03T02:56:40.366Z","id":"ADHOC-PT-2026-16","outcome":"pass","fails":[],"dur_ms":71}
 {"ts":"2026-11-03T03:25:50.745Z","id":"ADHOC-PT-2026-16","outcome":"pass","fails":[],"dur_ms":31}
 {"ts":"2026-11-03T03:36:30.072Z","id":"ADHOC-PT-2026-16","outcome":"pass","fails":[],"dur_ms":52}
+{"ts":"2026-11-03T07:08:39.167Z","id":"ADHOC-OPLPS-2026-1","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":58}
+{"ts":"2026-11-03T07:08:48.605Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":50}
+{"ts":"2026-11-03T07:14:13.836Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":45}
+{"ts":"2026-11-03T07:25:38.296Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":71}
+{"ts":"2026-11-03T08:12:13.755Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":38}
+{"ts":"2026-11-03T08:13:56.968Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":48}
+{"ts":"2026-11-03T08:43:28.704Z","id":"ADHOC-PRBB-2026-22","outcome":"fail","fails":["block: title is ProTime-short (<=8 words, <=60 chars)","qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":31}
+{"ts":"2026-11-03T08:43:38.110Z","id":"ADHOC-PRBB-2026-22","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-11-03T09:48:28.042Z","id":"ADHOC-PPTPB-2026-9","outcome":"fail","fails":["block: required keys present","register: status ↔ block status","qa_doc: OWNED-ELSEWHERE carries an \"Input check:\" line (cross-module-check)"],"dur_ms":36}
+{"ts":"2026-11-03T09:48:48.826Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-11-03T09:52:15.335Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":40}

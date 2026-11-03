@@ -20,6 +20,7 @@
 | Id | Date | Ticket | Code | What happened | Counts when |
 |---|---|---|---|---|---|
 | P-262027-B4-20261023 | 2026-10-23 | #262027 | B4 | Changed the Tolak letter salutation from Tuan to Datuk on our own initiative, to match Requirement #237882 and the Lulus template, though the BA did not mark it. | BA verifies #262027 AND no BA journal mentions the salutation change; if the BA objects, drop it |
+| P-287892-C2-20261103 | 2026-11-03 | #287892 | C2 | Proved the Desa rate data was correct and fixed the lookup in pelupusan alone, by handing common a pre-chosen rate row, so no common-team change was needed. | BA verifies #287892 |
 
 ## B1 — Technical & Domain Knowledge
 
