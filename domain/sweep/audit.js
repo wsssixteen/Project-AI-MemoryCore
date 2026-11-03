@@ -12,6 +12,7 @@
 //        [--resumed] [--run-id <id>] [--write] [--json]
 //   node domain/sweep/audit.js audit                    self-audit the last ledger row only
 // Exit: 0 PASS (no open run defect) · 1 FAIL (a run defect or a ledger read-back failure) · 2 usage error.
+// boundary: covers one sweep's familiar transcripts, the main hook log, the run ledger and the orchestration flag · never edits a transcript, a Task folder or a quest file, never re-runs a familiar · stops at the printed defect list and exit code; the controller re-runs or fixes
 'use strict';
 const fs = require('fs');
 const os = require('os');
@@ -71,6 +72,119 @@ function readJsonl(file) {
   return fs.readFileSync(file, 'utf8').split('\n').map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 }
 
+const TASK_DIR = /1\. Tasks/i;
+
+// Shell arguments of one statement; a quoted string or a (...) group stays one argument.
+function shellArgs(s) {
+  const out = []; let i = 0;
+  while (i < s.length) {
+    while (i < s.length && /[ \t]/.test(s[i])) i++;
+    if (i >= s.length || /[;|&}>)\r\n]/.test(s[i])) break;
+    let tok = '', depth = 0, q = null;
+    for (; i < s.length; i++) {
+      const c = s[i];
+      if (q) { tok += c; if (c === q) q = null; continue; }
+      if (c === '"' || c === "'") q = c;
+      else if (c === '(') depth++;
+      else if (c === ')' && !depth) break;
+      else if (c === ')') depth--;
+      else if (!depth && /[ \t;|&}>\r\n]/.test(c)) break;
+      tok += c;
+    }
+    if (s[i] === '>' && /^\d$/.test(tok)) break; // the 2 of 2> is not an argument
+    out.push(tok);
+  }
+  return out;
+}
+
+// The arguments of a method call, split at commas outside quotes and parentheses.
+function splitTopLevel(s) {
+  const out = []; let tok = '', depth = 0, q = null;
+  for (const c of s) {
+    if (q) { if (c === q) q = null; }
+    else if (c === '"' || c === "'") q = c;
+    else if (c === '(') depth++;
+    else if (c === ')') depth--;
+    else if (c === ',' && !depth) { out.push(tok.trim()); tok = ''; continue; }
+    tok += c;
+  }
+  if (tok.trim()) out.push(tok.trim());
+  return out;
+}
+
+// Does this path land in the Task folder? Only a path provably elsewhere answers false.
+function inTaskFolder(expr, sh, depth = 0) {
+  if (TASK_DIR.test(expr)) return true;
+  if (depth > 5) return true;
+  const group = /^\s*\(/.test(expr);
+  const e = expr.replace(/^[\s("']+/, '').replace(/^(Join-Path\s+(-Path\s+)?|Resolve-Path\s+(-(Literal)?Path\s+)?)/i, '').replace(/^[\s("']+/, '');
+  const v = e.match(/^\$\{?([A-Za-z_]\w*(?::\w+)?)/);
+  if (v) {
+    const name = v[1].toLowerCase();
+    if (sh.vars[name]) return sh.vars[name].some(x => inTaskFolder(x, sh, depth + 1));
+    return !/^(env:\w+|home|temp|tmp|userprofile)$/.test(name); // unset here ($_, a loop variable): unknown
+  }
+  if (e.startsWith('$')) return true; // $(...): unknown
+  if (/^([A-Za-z]:|[\\/~])/.test(e)) return false;
+  return group || sh.cdInTask; // a command's output is unknown; a relative path follows the cd
+}
+
+// Does this shell command write into the Task folder? A copy OUT of it is a read; a move out
+// still changes it. A destination the parse cannot place counts as a write (fail closed).
+function shellTaskWrite(cmd) {
+  if (!TASK_DIR.test(cmd)) return false;
+  const sh = { vars: {}, cdInTask: false };
+  for (const m of cmd.matchAll(/(?:^|[\s;&|({])\$?([A-Za-z_]\w*(?::\w+)?)\s*=(?![=~])\s*([^;\r\n]*)/g)) {
+    (sh.vars[m[1].toLowerCase()] = sh.vars[m[1].toLowerCase()] || []).push(m[2].trim());
+  }
+  for (const m of cmd.matchAll(/(?:^|[\s;&|({])(?:cd|sl|chdir|pushd|Set-Location|Push-Location)\s+(.*)/gi)) {
+    const to = shellArgs(m[1]).filter(a => !a.startsWith('-'))[0];
+    if (to && inTaskFolder(to, sh)) sh.cdInTask = true;
+  }
+  for (const m of cmd.matchAll(/(?<![\w\-.\\/:$])(Set-Content|Out-File|Add-Content|Tee-Object|tee|Copy-Item|Move-Item|cp|mv|New-Item|mkdir|md|Remove-Item|Rename-Item|rm|del)(?=\s|$)/gi)) {
+    const verb = m[1].toLowerCase();
+    const a = shellArgs(cmd.slice(m.index + m[1].length));
+    const paths = [], pos = []; let dest = null;
+    for (let i = 0; i < a.length; i++) {
+      const [flag, inline] = /^-/.test(a[i]) ? a[i].split(/[:=](.*)/s) : [a[i]];
+      const take = () => (inline !== undefined ? inline : a[++i]);
+      if (/^-(de|target$|t$|-target)/i.test(flag)) dest = take();
+      else if (/^-(path|p|literalpath|lp|pspath|filepath)$/i.test(flag)) paths.push(take());
+      else if (/^-(encoding|value|inputobject|width|filter|include|exclude|credential|stream|itemtype|type|name|newname)$/i.test(flag)) take();
+      else if (!flag.startsWith('-')) pos.push(a[i]);
+    }
+    if (/^(new-item|mkdir|md|remove-item|rename-item|rm|del)$/.test(verb)) {
+      const targets = paths.concat(verb === 'rename-item' ? pos.slice(0, 1) : pos);
+      if (!targets.length || targets.some(p => inTaskFolder(p, sh))) return true;
+      continue;
+    }
+    let sources;
+    if (verb === 'cp' || verb === 'mv') {
+      sources = dest !== null ? pos : pos.slice(0, -1);
+      if (dest === null) dest = pos.length > 1 ? pos[pos.length - 1] : undefined;
+    } else if (verb === 'copy-item' || verb === 'move-item') {
+      sources = paths.length ? paths : pos.slice(0, 1);
+      if (dest === null) dest = pos[paths.length ? 0 : 1] || '.';
+    } else {
+      sources = [];
+      dest = paths[0] || pos[0];
+    }
+    if (dest === undefined || inTaskFolder(dest, sh)) return true;
+    if ((verb === 'mv' || verb === 'move-item') && (!sources.length || sources.some(p => inTaskFolder(p, sh)))) return true;
+  }
+  for (const m of cmd.matchAll(/\[(?:System\.)?IO\.(?:File|Directory)\]::(Write|Append|Create|Copy|Move|Delete|Replace)\w*\s*(?=\()/gi)) {
+    const group = shellArgs(cmd.slice(m.index + m[0].length))[0] || '';
+    const parts = splitTopLevel(group.slice(1, -1));
+    const hit = /^copy$/i.test(m[1]) ? parts.slice(1, 2) : /^(move|replace)$/i.test(m[1]) ? parts.slice(0, 2) : parts.slice(0, 1);
+    if (!hit.length || hit.some(p => inTaskFolder(p, sh))) return true;
+  }
+  for (const m of cmd.matchAll(/(?<![=\-])>>?(?!&)\s*/g)) {
+    const to = shellArgs(cmd.slice(m.index + m[0].length))[0];
+    if (to && !/^["']?(\$null|\/dev\/null|nul)["']?$/i.test(to) && inTaskFolder(to, sh)) return true;
+  }
+  return false;
+}
+
 // One familiar's metrics + defects from its transcript.
 function familiar(dir, f, ctx) {
   const id = f.replace(/^agent-|\.jsonl$/g, '');
@@ -83,7 +197,7 @@ function familiar(dir, f, ctx) {
   const ticket = (desc.match(/\d{6}/) || [])[0] || null;
   const wave = (desc.match(/\bW[1-4](\+W[1-4])?\b/i) || [''])[0].toUpperCase();
   const tok = { total: 0, out: 0, cacheRead: 0 };
-  const tools = {}; const reads = new Set(); const writes = []; const cmds = [];
+  const tools = {}; const reads = new Set(); const writes = []; const cmds = []; const handbacks = [];
   let errors = 0, bg = 0; const seen = new Set();
   for (const l of lines) {
     if (l.type === 'assistant') {
@@ -102,6 +216,7 @@ function familiar(dir, f, ctx) {
         if (c.name === 'Read' && inp.file_path) reads.add(inp.file_path);
         if ((c.name === 'Write' || c.name === 'Edit') && inp.file_path) writes.push(inp.file_path);
         if (c.name === 'Bash' || c.name === 'PowerShell') { cmds.push(inp.command || ''); if (inp.run_in_background) bg++; }
+        if (c.name === 'SubagentHandback' && typeof inp.message === 'string') handbacks.push(inp.message);
       }
     } else if (l.type === 'user' && l.message && Array.isArray(l.message.content)) {
       for (const c of l.message.content) if (c.type === 'tool_result' && c.is_error) errors++;
@@ -114,16 +229,15 @@ function familiar(dir, f, ctx) {
     const banned = [...reads].filter(p => new RegExp(`QA-${ticket}(\\.md|-audit|-verify)`, 'i').test(p));
     if (banned.length) defects.push({ class: 'blind-break', detail: banned.join(' | ') });
   }
-  const shellWrites = cmds.filter(c => /(Set-Content|Out-File|Add-Content|Copy-Item|Move-Item|\bcp\b|\bmv\b|>\s*["']?[A-Za-z]:)/.test(c) && /1\. Tasks/i.test(c));
-  const taskWrites = writes.filter(w => /1\. Tasks/i.test(w)).concat(shellWrites.map(c => 'shell: ' + c.slice(0, 100)));
+  const taskWrites = writes.filter(w => TASK_DIR.test(w)).concat(cmds.filter(shellTaskWrite).map(c => 'shell: ' + c.slice(0, 100)));
   if (taskWrites.length) defects.push({ class: 'task-folder-write', detail: taskWrites.join(' | ') });
   if (ctx.scratch) {
     const out = writes.filter(w => !norm(w).startsWith(norm(ctx.scratch)));
     if (out.length) defects.push({ class: 'write-outside-scratch', detail: out.join(' | ') });
   }
   if ((tools.Agent || 0) + (tools.Workflow || 0) > 0) defects.push({ class: 'spawned-agent', detail: `${(tools.Agent || 0) + (tools.Workflow || 0)} launch(es)` });
-  // the forced schema is pipe-separated (a markdown row or a bare `a | b | c` return line)
-  if (!texts.some(t => t.split('\n').some(l => (l.match(/\|/g) || []).length >= 2))) defects.push({ class: 'no-return-table', detail: 'no pipe-separated answer line in any message' });
+  // the forced schema is pipe-separated (a markdown row or a bare `a | b | c` return line), in a message or the hand-back
+  if (!texts.concat(handbacks).some(t => t.split('\n').some(l => (l.match(/\|/g) || []).length >= 2))) defects.push({ class: 'no-return-table', detail: 'no pipe-separated answer line in any message or hand-back' });
   const codeRead = [...reads].some(p => /etanah-(pelupusan|awam|common|teknikal)/i.test(p)) || cmds.some(c => /etanah-(pelupusan|awam|common|teknikal)/i.test(c));
   if (codeRead && !cmds.some(c => /origin\/mlk\/master/.test(c))) defects.push({ class: 'baseline-not-pinned', detail: 'read etanah code, never via origin/mlk/master' });
   if (bg) defects.push({ class: 'background-job', detail: `${bg} background command(s)` });
@@ -239,7 +353,7 @@ async function run() {
       fix_now: k.fix, refine: runs >= 3 ? 'REFINE NOW: ' + k.refine : k.refine, accuracy: k.accuracy };
   });
   const starts = fams.map(f => f.start).filter(Boolean), ends = fams.map(f => f.end).filter(Boolean);
-  const csv = k => (opt(k, '') || '').split(',').map(s => s.trim()).filter(Boolean);
+  const csv = k => (opt(k, '') || '').split(',').map(s => s.trim()).filter(s => s && s.toLowerCase() !== 'none');
   const models = {};
   for (const f of fams) { const w = f.wave || '?'; models[w] = `${f.model || '?'}/${f.effort || '?'}`; }
   const row = {
@@ -298,4 +412,4 @@ if (require.main === module) {
   else { console.error('usage: audit.js flag on|off · run --tickets <t,t> --since <iso> [...] · audit'); process.exit(2); }
 }
 
-module.exports = { familiar, legacyClasses, expectedFiles, CLASSES };
+module.exports = { familiar, shellTaskWrite, legacyClasses, expectedFiles, CLASSES };

@@ -105,3 +105,5 @@ The local `etanah-spoc-hasil` working tree is NOT Melaka code. On 2026-09-02 it 
 - Same discipline for etanah-awam / etanah-pelupusan: `git branch --show-current` + `git log -1` before trusting a negative.
 
 Related: [[feedback_module_edit_boundary]] · [[Verify before claiming during code tracing]] · [[feedback_verify_before_claim]]
+
+**🚨 The boundary covers DATA, not only code (2026-10-30 per みや, #239386).** A master-data row another module installed (for example the common baseline `ind_langkah` rows on an MPT tugasan) is theirs, on every env, MLIT included, even when it sits on our tugasan and even when moving it stops our crash. Run `cross-module-check` before any script that changes such a row. Our output = hand-over, or a change to our OWN rows only. **Why**: I moved 100 common rows on MLIT to stop a crash; Aaron's install header already said they are common's and not to be touched.

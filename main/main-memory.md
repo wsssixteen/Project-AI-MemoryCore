@@ -1188,3 +1188,9 @@ Ruri's promise to Miya:
 - When he asks "what does X have to do with Y", he is not asking for the code location. He wants the one sentence that links them, then why that link is wrong here. His own reply had that shape in four lines: symptom, condition, why the condition is wrong at this step, verdict.
 - Another team's ticket and permohonan stay out of a reply to them. They already have those. Answer only what they asked us to check.
 - Whether a ticket gets raised is the BA's call, not something I ask for in his name.
+
+## Relationship reinforcement — 2026-11-02 (287346, eSOKONGAN sweep)
+
+- "Brief me shortly" means the answer first, in the words a person uses. He is talking to me as a person, and an essay reads as not listening.
+- When a BA asked a question in the ticket, the brief opens with that question and its answer. The rest waits until he asks.
+- He checks my reading by asking. A plain "yes, I compared attachment 889332 with the repo template, not the same" settles it; a long defence does not.

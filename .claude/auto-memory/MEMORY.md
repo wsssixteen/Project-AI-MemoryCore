@@ -52,6 +52,8 @@
 - [common-line-triage](feedback_common_ticket_line_triage.md) — common ticket = 5-step line triage at Phase 0
 - [other-team-message](feedback_other_team_message_not_our_issue.md) — their bug = one line + error + evidence SELECT; never guide them
 
+- [internal-unblock-first](feedback_internal_issue_unblock_first.md) — 🚨 internal env issue: unblock first; once out of our scope stop tracing, restore the ID, prove a Hantar moved it, pass back plainly
+
 ## Git, commit, deploy (skills: close-phase, deploy, release-mlk-plp)
 - [etanah-git](feedback_etanah_git_separate_clone.md) — separate clone, ticket branch first, hotfix off master, --no-ff, stash naming
 - [rework-branch](feedback_rework_commit_on_existing_ticket_branch.md) — rework commits on the existing ticket branch, never a vN branch
@@ -103,7 +105,7 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
-- [rustdesk-server](reference_rustdesk_server.md) — RustDesk "Not ready": company ID server 202.186.75.193; check prints at every session start on the work laptop; sessions run ON that laptop
+- [rustdesk-server](reference_rustdesk_server.md) — RustDesk "Not ready": his OWN server on the home laptop, 202.186.75.193; sessions run ON that laptop
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
 - [eisenhower](project_eisenhower.md) — Eisenhower matrix app REBUILD on Rust + egui + SQLite: read PROJECT.md then MAP.md (wayfinder) in the MAIN checkout's projects/coding-projects/active/Eisenhower/ first
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
@@ -113,6 +115,7 @@
 - [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ in the MAIN checkout (shape 2: START.md first, DECISIONS.md ledger); rules in the /project skill; orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
+- [appraisal](project_appraisal_self_initiatives.md) — appraisal self-initiative list, one row per ticket; project folder projects/coding-projects/active/Appraisal-2026 in the MAIN checkout
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
 
 ## User
