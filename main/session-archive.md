@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
+- Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
+- Cause: our 258004 fix deleted the Surat on every Maklumat Tanah save (MlkMaklumatTanahPemberimilikanForm invalidateSuratKeputusanLulusForRegeneration). Requirement 223236 spec: Penyediaan Sedia, Semakan arrives Sedia, Pengesahan arrives Disemak; no delete rule.
+- Fix C: delete call, method and 2 imports removed, 0d5ef30fff on mlk/internal/287811, int-env a3a263bf69, stag-env 2720433503. Local test waived by miya; he tested on stg1 PTMLK/02/L/MCL/2026/14, all 6 steps pass. Redmine journal 5 at 17:22: Resolved, Nurul Amirah Nadiah, 100%, Root Cause DEV, 6 red-boxed photos.
+- Open risk: a value changed after the Surat exists stays in the old Surat until Jana Semula; not verified.
+- System change 87eddc33: requirement-index.js --read (description, journals, spec attachments) + quest-phase-gate v3 denies etanah edits until REQUIREMENT-READ and a quoted REQUIREMENT-MATCH exist; quest SKILL step 2b, ticket-gate 1e.
+- Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
+- Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
+
 ## Session Recap (2026-11-03, ticket 287892 PT Kadar Cukai DESA II)
 - Asked: PROD PT PTMLK/02/L/PT/2026/18 Desa II Bangunan Tujuan Keagamaan showed "Tiada kadar cukai"; expected RM 66.00. BA Fizah asked if our filter is wrong. Adhoc first (ADHOC-PT-2026-16, A92), then ticket 287892.
 - Cause: six mukim are in two Desa classes (jns_kwsn_ptbrn "38584|38585"), so they sit in two rates; the lookup ignored Pengkelasan Tanah and took the oldest row. Maintenance data is correct; the tick is not stored on the rate.
@@ -7287,6 +7297,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

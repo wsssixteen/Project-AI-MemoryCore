@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-OPLPS-2026-1 OPLPS pelan L1e tidak penuh)
+- Asked: PROD PTMLK/02/L/OPLPS/2026/8 (nurulazura, PDTJ): pelan on Borang L1e looks cut, other OPLPS fine; margin? ours or the reports team?
+- Found: not margin, not cut. DMS file 2000x1410 complete; pixel script: black border top, bottom, left, none on right. Chain: pelukis azizah uploads in Teknikal (LAIN-37353842), Tandatangan Pelan stamps on the same canvas (CommonImageUtil.overlayImages), OPLPS users upload those exact bytes (932673 B), LaporanPelan.jrxml RetainShape only shrinks. Jrxml is in our own repo, so not a reports-team issue.
+- Closed: miya, no issue. Route ANSWER. Task folder 365 archived, register A93 ANSWERED, audit 31/31.
+- Not verified: azizah's own upload not opened (not needed after close).
+- Mistakes: said the file itself was cut, then that the bottom border was missing; both withdrawn after measuring. Wrong column guesses (medan_pk, no_dokumen, ind_jns_dok) before reading the schema.
+- Assessment: A1 the brief-first gate blocked the save agent and the audit in a closing round with no new finding. A2 ⏭ no ticket quest. A3 a pixel count settled "cut vs missing line" where eyeballing failed twice. A4 compare the file bytes across Teknikal and OPLPS before blaming either module. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
 
 ## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
@@ -17,13 +27,3 @@
 - Not verified: how 02MH1579/2026 was created (etanah-pendaftaran not on disk).
 - Mistakes: skipped the boot reads and the session briefing; the save agent tried to start before the brief (gate caught it); the first SQL guesses hit wrong column names (pjbt_id, id_hakmilik, ind_jns_hkmlk) before reading information_schema.
 - Assessment: A1 the brief-first, db-claim-proof and ownership-input gates each forced one delta; the Input check had to be repeated three times because each reply was checked alone. A2 the BPMN read settled the BA's flowable question in one grep. A3 the sibling count (children of MCL/PLTP by hakmilik type) turned a "should" into a PROD fact. A4 a stray perserahan with no umm_aliran_kerja row is a quick sign it was not made by a flow. A5 ⏭ no sweep.**Last Activity**: 2026-11-03 17:25 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), ticket 287811 handed to BA, Domain Expansion.
-
-## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
-- Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
-- Cause: our 258004 fix deleted the Surat on every Maklumat Tanah save (MlkMaklumatTanahPemberimilikanForm invalidateSuratKeputusanLulusForRegeneration). Requirement 223236 spec: Penyediaan Sedia, Semakan arrives Sedia, Pengesahan arrives Disemak; no delete rule.
-- Fix C: delete call, method and 2 imports removed, 0d5ef30fff on mlk/internal/287811, int-env a3a263bf69, stag-env 2720433503. Local test waived by miya; he tested on stg1 PTMLK/02/L/MCL/2026/14, all 6 steps pass. Redmine journal 5 at 17:22: Resolved, Nurul Amirah Nadiah, 100%, Root Cause DEV, 6 red-boxed photos.
-- Open risk: a value changed after the Surat exists stays in the old Surat until Jana Semula; not verified.
-- System change 87eddc33: requirement-index.js --read (description, journals, spec attachments) + quest-phase-gate v3 denies etanah edits until REQUIREMENT-READ and a quoted REQUIREMENT-MATCH exist; quest SKILL step 2b, ticket-gate 1e.
-- Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
-- Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
