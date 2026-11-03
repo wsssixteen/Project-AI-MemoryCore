@@ -1742,3 +1742,11 @@
 {"ts":"2026-11-02T10:52:33.380Z","category":"blocker"}
 {"ts":"2026-11-02T10:53:22.443Z","category":"verify-before-claim"}
 {"ts":"2026-11-03T02:03:15.021Z","category":"scope-creep"}
+{"ts":"2026-11-02T11:59:31.145Z","category":"blocker"}
+{"ts":"2026-11-03T02:13:22.311Z","category":"bounty"}
+{"ts":"2026-11-03T02:18:07.040Z","category":"A1"}
+{"ts":"2026-11-03T02:18:07.885Z","category":"A2"}
+{"ts":"2026-11-03T02:18:08.604Z","category":"A3"}
+{"ts":"2026-11-03T02:18:09.353Z","category":"A4"}
+{"ts":"2026-11-03T02:18:10.074Z","category":"ask-no-picture"}
+{"ts":"2026-11-03T02:20:15.568Z","category":"blocker"}

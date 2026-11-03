@@ -4,6 +4,20 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
+- Done: PROD PTMLK/02/L/PPTPB/2026/2 Hantar error traced to gateway sid-AD61958D (routes KPPD, PPD, KPT only, no default). Permohonan moved on through PPD and sits with norlina at PKPPT. Adhoc archived: block in active-archive.txt, doc in archive/, Task folder 357 in Archive\, video deleted.
+- Wrong: I told him the fix is an added PT route. BA Fizah's journal of 16:39 on 287773 asks to remove PT from the dropdown (To-Be V3.0). The PT route is on MLIT v14 only. The ticket session (worktree `ticket-287773-quest-run-66ac6f`) holds this conflict and waits his decision.
+- Not done: the save audit stays 30/31, a false FAIL on A91 shared with the ticket block (proposal logged). Archived doc and L36 still name the PT route as the fix until the background save corrects them. The BA reply I drafted says the route will be added, so it must not go out as written.
+- Blocker: app sync with main refused (protected .claude/skills files, origin needs confirming in Help, Troubleshooting, Review Pinned Git Origins).
+- Assessment: A1 a gate matched the audit's name inside a slip's quoted text. A2 promote left the adhoc open and the audit cannot pass with a ticket block on the same row. A3 PROD engine read refused, so the PROD gateway is inferred from the error text. A4 the fix came from analogs before the ticket journal was read. A5 ⏭ no sweep run.
+
+## Session Recap (2026-11-02, sweep audit false alarms)
+- Landed: GitHub main eb81f5b9, main folder 834af613. Evals: audit 97/97, sweep contract 23/23. Watch wmvyr3ow9. No ticket touched; the session was started by the esokongan sweep session.
+- Not done: run sweep-2026-11-02-internal not replayed. The flow picture was sent after the build, not before.
+- Assessment: A1 the old check counted a read-only copy as a Task-folder write, and the first fix missed real .NET writes until old and new verdicts were compared on 367 real commands. A2 ⏭ no quest run. A3 an early "exit=0" was grep's exit code, not the audit's. A4 ⏭ no etanah issue. A5 exit 1 on a false alarm would have re-bought 9 familiars, about 2.7M tokens.
+- `domain/sweep/audit.js`: no-return-table also reads the SubagentHandback message; task-folder-write judges where a shell command writes, and fails closed on a destination it cannot place; `--controller-caught none` = empty list. Replay of esokongan-2026-11-02: 9 + 1 false alarms gone, exit 0. Why: exit 1 would have re-bought all 9 familiars, about 2.7M tokens.
+- Old vs new on 367 real familiar commands: the first fix cleared a real `[IO.File]::WriteAllText` into a Task folder, so New-Item, mkdir, Remove-Item, Rename-Item, tee and .NET writes joined the writer list. 19 commands cleared, 23 real writes newly caught. Scripts in python or node stay unparsed (README accepted risk).
+
 ## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
 - ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
 - The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
@@ -7096,6 +7110,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
