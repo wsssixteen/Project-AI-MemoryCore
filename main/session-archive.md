@@ -4,6 +4,30 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-30 to 11-03, Selangor warta 2352 delete)
+- Asked: delete no warta 2352 + tarikh warta 04/07/2013 for PTSEL/01/L/BPRZ/2026/7, Selangor internal env.
+- Not done: internal DB oracle-slt 172.16.93.32:1521 refused TCP (WinError 10061, host pings, gateway 7411 up), 3 tries on 30/10; blocker row in core/slips.js. No DB written anywhere.
+- Found (read only): staging oracle-sgr-stag has the permohonan (aplikasi_id 46486398) with umm_a_rizab 8946 warta asal 3622 06/12/1918, not 2352; 2352 04/07/2013 sits on six ind_rizab rows (1, 65-69) on staging, shared registry. PAT has no such permohonan.
+- Resume point: when internal is up, read umm_a_rizab for the permohonan on internal, clear only the pair holding 2352 (1 row, script-check first); if 2352 is only in ind_rizab, stop and show him.
+- No adhoc scaffold made (no finding on internal yet). Selangor ENV-ARCHITECTURE.md is still an empty skeleton.
+- Assessment: A1 ⏭ nothing new. A2 ⏭ no quest. A3 the internal host refused while staging answered; no tool tells which Selangor env is "internal". A4 the warta is shared registry data on staging, so a blind clear on ind_rizab would hit other rizab rows. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 11:05 — worktree `baseline-wednesday-release-029181` (branch claude/plp-melaka-esokongan-tickets-6e83ab), eSOKONGAN + Internal Issue sweeps, Domain Expansion.
+
+STEP-3: change route step 8 report = change-map picture (lib/change-map.js, INDEX step 8, reply-shape-spec 3i, system-change-title v4)
+session: 162ad23b-073b-47dc-96a2-24d389f22a89
+his words: "change this to always show a diagram drawn always" (order)
+fix or report: fix
+who pays: on-demand: once per system change, one headless Edge about 5 s, exits; Stop gate stays under 50 ms
+goal without the part: after every system change he sees on the map's own boxes which parts are new, changed or removed
+model: claude-fable-5-1
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\report-picture-plan.png
+
+## 2026-11-03 — redmine-write-gate v1.11: his status rule, no more asking (subagent, worktree appraisal-2026-rubric-500819)
+- **Ask**: 287747/287638 were blocked four times on Status = Resolved; his rule (under him + New/In Progress; New under someone else sent to a BA; Verified/Closed/Ready in PROD never changed) is now mechanical.
+- **Built**: `domain/redmine-write-gate/status-rule.json` (owner 1311 · hand-back Resolved · lower · frozen · BA list with ids) + `status-rule.js` (`verdict`, `isBA`, `liveState`, CLI). Hook v1.11: ticket from the last navigate, one read-only GET for status + assignee, a staged BA assignee remembered 30 min. Prefill skill Step 2b + Step 3, memory `feedback_redmine_write_needs_nod` exception 2.
+- **Verified**: eval 165/165 (F143 to F165); live CLI: 287747/287638 now Resolved under Nurhafizah → row 4 block; 287925 In Progress under him → row 2 allow.
+- **Open**: none. Landed on main the same turn (SHAs in the reply).
+
 ## Session Recap (2026-11-02, ticket 287773 PPTPB)
 - Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
 - System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
@@ -7225,6 +7249,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
