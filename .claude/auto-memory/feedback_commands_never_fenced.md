@@ -63,6 +63,8 @@ folder (`…\1. Tasks\Melaka\`) and `projects/` live in entirely different subtr
 href has nothing to resolve against and the link dies. Backslashes and spaces in the path make it
 worse.
 
+**2026-11-01 update (miya)**: the thing he asked about or asked me to create = the whole folder path from the drive letter in a fenced text block, then the file name on its own line; never a path list of every changed file ("That will bloat the reply"). Tables have full border lines: in chat a fenced text block with +---+ and |; pipe tables banned. Rule: `.claude/reply-shape-spec.md` §3j.
+
 **How to apply**
 - Anything OUTSIDE the current working directory → **plain-text absolute path, no markdown link.**
   A dead link is worse than no link; it looks actionable and isn't.
@@ -104,3 +106,5 @@ Related: [[feedback_commands_never_fenced]] · [[Tasks folder file format]] ·
 **Why**: the Ammar brief was emitted under 60 lines of DE ritual and the fuller reply was pointed at `QA-275847.md` — he could not find either. Pairs with [[feedback_ticket_writing_style]] and [[feedback_reply_separation_of_concerns]].
 
 **How to apply**: when a message contains "brief me / summary to send / reply for X", the FIRST block of the answer is the sendable text; everything else follows.
+
+**2026-11-02 update (miya, replaces the 2026-11-01 table part above)**: chat tables are normal Markdown tables, never a code block. He asked for lines, never for code blocks; the app draws the lines and a reply cannot add them, so say that plainly instead of working around it.

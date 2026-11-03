@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Knowledge schema audit</title>
+<style>body{margin:0;background:#fff}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="340" viewBox="0 0 1100 340" role="img" aria-labelledby="diagram-ksa-title diagram-ksa-desc" font-family="Segoe UI, Arial, sans-serif">
+  <title id="diagram-ksa-title">Knowledge schema audit and the general rule</title>
+  <desc id="diagram-ksa-desc">The audit reads each state's knowledge folder against the schema, and now also checks that index.md carries the rule eSOKONGAN = Tracker, never Project. It reports drift per state. The scaffold writes the rule into every new index.md, and the two intake hooks read the same rule text from this file.</desc>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1b1b1b">Knowledge schema audit: every state folder, same shape, same general rule</text>
+  <text x="24" y="56" font-size="13" fill="#555">The rule text has one home, this script. Red marks what the 2026-11-02 change added.</text>
+  <g font-size="14" fill="#1b1b1b">
+    <rect x="24" y="84" width="220" height="72" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="40" y="112">State folder</text><text x="40" y="134" font-size="12" fill="#555">melaka, perak, wp and the rest</text>
+    <rect x="284" y="84" width="240" height="72" rx="6" fill="#f3f4f6" stroke="#9aa3ad"/><text x="300" y="112">Check against the schema</text><text x="300" y="134" font-size="12" fill="#555">files, names, flowables layout</text>
+    <rect x="564" y="84" width="240" height="72" rx="6" fill="#fdecea" stroke="#d93025" stroke-width="2.5"/><text x="580" y="112" font-weight="700">index.md has the rule?</text><text x="580" y="134" font-size="12">eSOKONGAN = Tracker, never Project</text>
+    <rect x="844" y="84" width="230" height="72" rx="6" fill="#eef7ee" stroke="#3c8d40"/><text x="860" y="112" font-weight="700">Report per state</text><text x="860" y="134" font-size="12">canonical, or the drift named</text>
+    <rect x="284" y="210" width="240" height="72" rx="6" fill="#fdecea" stroke="#d93025" stroke-width="2.5"/><text x="300" y="238" font-weight="700">Scaffold</text><text x="300" y="260" font-size="12">a new index.md starts with the rule</text>
+    <rect x="564" y="210" width="240" height="72" rx="6" fill="#fdecea" stroke="#d93025" stroke-width="2.5"/><text x="580" y="238" font-weight="700">ticket-gate + etanah-intake</text><text x="580" y="260" font-size="12">read the same rule text, inject it</text>
+  </g>
+  <g stroke="#555" stroke-width="2" fill="none"><path d="M244 120 H280"/><path d="M524 120 H560"/><path d="M804 120 H840"/><path d="M404 156 V206"/><path d="M684 156 V206"/></g>
+  <text x="24" y="316" font-size="13" fill="#555">The audit only reports. It never moves or edits a knowledge file.</text>
+</svg>
+</body></html>

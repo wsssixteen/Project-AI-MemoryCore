@@ -1,6 +1,7 @@
 /**
  * logic-blast-radius.discipline.hook.js — PreToolUse hook (Edit | Write)
  *
+ * v4 2026-11-02 — closes the holes Fable 5.1 found on 287048 (README "v4 holes closed").
  * v2 2026-07-07 — quest-gate REMOVED per みや ("checks must always fire on etanah
  * fix work even outside quests"); relocated from .claude/hooks/logic-blast-radius-gate.js.
  * v1 (2026-07-02, QA-268273) required a status=active block in quest/active.txt,
@@ -57,12 +58,35 @@ function logFire(action, detail) {
 
 // --- v3 arrival paths (2026-10-30, 287048) ------------------------------------------------------
 // his-words: not an approval reader — reads assistant text and the quest doc, never his messages
-const GATE_TOKEN = /setHantarSeterusnyaDisabled\(|HantarSeterusnyaDisabled|adalahBolehDihantar|submitDisabled|\bverifySign\b|\bisSigned\w*|\w*BolehDihantar\w*/;
+const GATE_TOKEN = /setHantarSeterusnyaDisabled\(|HantarSeterusnyaDisabled|adalahBolehDihantar|submitDisabled|\bverifySign\b|\bisSigned\w*|\w*BolehDihantar\w*/i;
+const BUTTON_TAG = '<[\\w:]*(?:commandButton|commandLink|button)\\b';
+const BUTTON_ATTR = new RegExp(BUTTON_TAG + '[^>]*\\b(?:disabled|rendered)\\s*=', 'i');
 const LITE = ['OPLPS', 'OMLPS', 'OPRU', 'OPRBB', 'OPLBP', 'OPPJK', 'OPPTPB'];
 const SHARED = [
   { file: /BasePelupusanLiteForm\.java$/i, urusan: LITE },
-  { file: /PelupusanService\.java$/i, token: /isSignedAllReport/, urusan: LITE.concat(['PRBB', 'MLPS', 'PLPS']) },
+  { file: /PelupusanService\.java$/i, token: /isSignedAllReport/, urusan: LITE.concat(['PRBB', 'MLPS', 'PLPS', 'PRU']) },
+  { file: /Base\w*Form\.java$/i, minUrusan: 2 },
+  { file: /Service\.java$/i, minUrusan: 2 },
 ];
+const stripEl = s => s.replace(/#\{[^}]*\}/g, '');
+
+function openTag(filePath, oldStr) {
+  try {
+    const file = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+    const at = file.indexOf(String(oldStr || '').replace(/\r\n/g, '\n'));
+    if (at < 0 || !oldStr) return '';
+    const before = stripEl(file.slice(0, at));
+    const tag = before.slice(before.lastIndexOf('<'));
+    return tag.includes('>') ? '' : tag;
+  } catch (e) { return ''; }
+}
+
+// a change to what can press the button: disabled= added or removed, or rendered= on the button itself
+function isGateXhtmlEdit(filePath, newStr, oldStr) {
+  const s = newStr + '\n' + oldStr;
+  if (/\bdisabled\s*=/.test(s) || BUTTON_ATTR.test(stripEl(s))) return true;
+  return /\brendered\s*=/.test(s) && new RegExp('^' + BUTTON_TAG, 'i').test(openTag(filePath, oldStr));
+}
 const ADMIN_IDS = ['alter', 'initiate', 'reassign', 'migrated'];
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 
@@ -105,7 +129,7 @@ function docText(text) {
   for (const m of text.matchAll(/ARRIVAL PATHS DOC:\s*QA-(\d{5,7})/g)) {
     const rel = path.join('projects', 'coding-projects', 'active', 'QA-' + m[1], 'QA-' + m[1] + '.md');
     for (const base of [process.env.ARRIVAL_DOC_ROOT, ROOT, path.resolve(ROOT, '..', '..', '..')].filter(Boolean)) {
-      try { out.push(fs.readFileSync(path.join(base, rel), 'utf8').replace(/```[\s\S]*?```/g, '')); break; } catch (e) {}
+      try { out.push(fs.readFileSync(path.join(base, rel), 'utf8').replace(/```[\s\S]*?```/g, '')); } catch (e) {}
     }
   }
   return out.join('\n');
@@ -137,7 +161,7 @@ function checkTable(t, active) {
   const errs = [];
   if (active && !active.includes(t.ticket)) errs.push(`${t.ticket} is not an active quest (a table from an earlier ticket does not count)`);
   const cache = cacheFor(t.urusan, t.tugasan);
-  if (!cache && !/^NOT VERIFIED: no BPMN/.test(t.source)) errs.push(`no scenario list for ${t.urusan} ${t.tugasan}: run node domain/logic-blast-radius/arrival-paths.js ${t.urusan} ${t.tugasan} --env <mlit|stg>`);
+  if (!cache) errs.push(`no scenario list for ${t.urusan} ${t.tugasan}: run node domain/logic-blast-radius/arrival-paths.js ${t.urusan} ${t.tugasan} --env <mlit|stg>`);
   if (cache && cache.source !== t.source) errs.push(`source line says "${t.source}", the script says "${cache.source}"`);
   const need = cache ? cache.ids : ADMIN_IDS;
   for (const id of need) {
@@ -145,7 +169,7 @@ function checkTable(t, active) {
     if (!c) { errs.push(`${t.urusan} ${t.tugasan}: row "${id}" is missing`); continue; }
     const rowsCell = c[2] || '';
     const verdict = (c[c.length - 1] || '').trim();
-    const flowRow = /^(first-pass|loop:|entry:|subflow:)/.test(id);
+    const flowRow = /^(first-pass|loop:|entry:|subflow:|alter$|initiate$)/.test(id);
     if (!/SELECT/i.test(rowsCell) && (flowRow || !/n\/a\s*[—-]/i.test(rowsCell))) errs.push(`${t.urusan} ${t.tugasan}: row "${id}" has no SELECT for the rows on arrival${flowRow ? ' (the flowable has this path, n/a is not allowed)' : ''}`);
     if (!/^(✓|✗|BA-Q)/.test(verdict)) errs.push(`${t.urusan} ${t.tugasan}: row "${id}" verdict must be ✓, ✗ or BA-Q`);
   }
@@ -154,19 +178,26 @@ function checkTable(t, active) {
 
 function arrivalErrors(filePath, combined, rawTranscript) {
   const assistant = assistantText(rawTranscript);
-  const tables = parseTables(assistant + '\n' + docText(assistant));
+  const allText = assistant + '\n' + docText(assistant);
+  const tables = parseTables(allText);
   const active = activeTickets();
   if (!tables.length) return ['no ARRIVAL PATHS table this session.'];
   const latest = new Map();
   tables.forEach(t => latest.set(t.urusan + '/' + t.tugasan, t));
   const errs = [];
   latest.forEach(t => errs.push(...checkTable(t, active)));
-  for (const s of SHARED) {
-    if (s.file.test(filePath) && (!s.token || s.token.test(combined))) {
-      const have = new Set([...latest.values()].map(t => t.urusan));
-      const missing = s.urusan.filter(u => !have.has(u));
-      if (missing.length) errs.push(`${path.basename(filePath)} is shared: a table is also owed for ${missing.join(', ')}`);
-    }
+  const have = new Set([...latest.values()].map(t => t.urusan));
+  const shared = SHARED.find(s => s.file.test(filePath) && (!s.token || s.token.test(combined)));
+  if (shared && shared.urusan) {
+    const missing = shared.urusan.filter(u => !have.has(u));
+    if (missing.length) errs.push(`${path.basename(filePath)} is shared: a table is also owed for ${missing.join(', ')}`);
+  }
+  if (shared && shared.minUrusan && have.size < shared.minUrusan) errs.push(`${path.basename(filePath)} is a base class or service many screens use: a table is owed for each urusan its subclasses serve (at least ${shared.minUrusan})`);
+  if (!shared) {
+    const screen = path.basename(filePath).replace(/\.\w+$/, '');
+    const said = [...allText.matchAll(/ARRIVAL SCREEN:\s*(\w+)\s*·\s*([A-Z0-9_]+)\s*·\s*([A-Z0-9_]+)/g)].filter(m => m[1] === screen);
+    if (!said.length) errs.push(`no table is tied to ${screen}: write the line ARRIVAL SCREEN: ${screen} · <URUSAN> · <TUGASAN>`);
+    else if (!said.some(m => latest.has(m[2] + '/' + m[3]))) errs.push(`ARRIVAL SCREEN names ${said[0][2]} ${said[0][3]} for ${screen}, and no table has that urusan and tugasan`);
   }
   return errs;
 }
@@ -183,14 +214,13 @@ process.stdin.on('end', () => {
     const filePath = toolInput.file_path || toolInput.path || '';
 
     // Predicate — etanah STATEFUL-FLOW .java path (the ONLY gate condition in v2)
-    const isEtanahJava =
-      /etanah-(pelupusan|awam|common|teknikal)[\\/]/i.test(filePath) &&
-      /\.java$/i.test(filePath);
+    const isEtanahPath = /etanah-(pelupusan|awam|common|teknikal|work)[\\/]/i.test(filePath);
+    const isEtanahJava = isEtanahPath && /\.java$/i.test(filePath);
     const isStatefulFlow =
       /(Form|Bean|Handler|Helper|Service|Controller|Manager)\.java$/i.test(filePath);
     const newStr = toolInput.new_string || toolInput.content || '';
     const oldStr = toolInput.old_string || '';
-    const isGateXhtml = /etanah-(pelupusan|awam|common|teknikal)[\\/]/i.test(filePath) && /\.xhtml$/i.test(filePath) && /\bdisabled\s*=/.test(newStr);
+    const isGateXhtml = isEtanahPath && /\.xhtml$/i.test(filePath) && isGateXhtmlEdit(filePath, newStr, oldStr);
     const isJavaFlow = isEtanahJava && isStatefulFlow;
     if (!isJavaFlow && !isGateXhtml) process.exit(0);
 
@@ -218,7 +248,7 @@ process.stdin.on('end', () => {
       const errs = arrivalErrors(filePath, combined, transcript);
       if (errs.length) {
         logFire('blocked-arrival', { file: filePath, errs: errs.slice(0, 6) });
-        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: ['🚫 logic-blast-radius v3: this edit changes a state check on a tugasan, so every way the permohonan can ARRIVE there must be proven first.', ...errs.map(e => '   - ' + e), '   List the paths from the flowable: node domain/logic-blast-radius/arrival-paths.js <URUSAN> <TUGASAN> --env <mlit|stg>', '   Fill the table under its header line (rows on arrival = a SELECT, verdict = ✓ ✗ BA-Q) in the quest doc under ## Arrival paths, then write the line: ARRIVAL PATHS DOC: QA-<num>', '   Not a tugasan state check? [skip-logic-blast: <reason>]'].join('\n') } }));
+        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: ['🚫 logic-blast-radius v3: this edit changes a state check on a tugasan, so every way the permohonan can ARRIVE there must be proven first.', ...errs.map(e => '   - ' + e), '   List the paths from the flowable: node domain/logic-blast-radius/arrival-paths.js <URUSAN> <TUGASAN> --env <mlit|stg>', '   Fill the table under its header line (rows on arrival = a SELECT, verdict = ✓ ✗ BA-Q) in the quest doc under ## Arrival paths, then write the lines: ARRIVAL PATHS DOC: QA-<num> and ARRIVAL SCREEN: <file name> · <URUSAN> · <TUGASAN>','   Not a tugasan state check? [skip-logic-blast: <reason>]'].join('\n') } }));
         process.exit(0);
       }
       logFire('arrival-ok', { file: filePath });

@@ -91,10 +91,31 @@ state-scoped: yes, the script's process keys and engine schemas are Melaka (`MLK
 | 13 | isSignedAllReport edit | fixture A13 |
 | 14 | table inside a code fence | fixture A14 |
 | 15 | source differs from the script (stale undeclared) | fixture A15 |
-| 16 | no BPMN and no cache | fixture A16 |
+| 16 | no BPMN: the script wrote a NOT VERIFIED cache | fixture A16; v4: a hand-written NOT VERIFIED table with no cache blocks (H2b) |
 | 17 | engine source and no cache | fixture A17 |
 | 18 | table in the quest doc | fixture A18 |
 | 19 | bypass token | fixture A19 |
 | 20 | broken stdin | fixture A20 |
 | 21 | self-closed sequenceFlow in a model | accepted-risk: `parseXml` swallows it; Flowable writes open and close tags, the engine models read fine |
 | 22 | hook runs from the main folder, script cache in a worktree | handled: landed with the change |
+
+## v4 holes closed (2026-10-31, Fable 5.1's second assessment on 287048)
+
+| Hole in v3 | v4 | Fixture |
+|---|---|---|
+| PRU missing from the `isSignedAllReport` shared list | added | H1, H1b |
+| An urusan the engine does not know wrote a cache and passed as NOT VERIFIED | exit 4, nothing written; an unreadable engine stays NOT VERIFIED; the hook trusts a table only when the script wrote its cache | H2, H2b, H5c + live `ZZZ SKM` |
+| A state check on a Service other than `isSignedAllReport` counted as one screen (Fable's re-check) | any `*Service.java` owes at least 2 urusan tables | H7 |
+| `#{a > b}` before `rendered=` hid the button tag (Fable's re-check) | EL is stripped before the tag is read | H8 |
+| Token was case-sensitive: `hantarSeterusnyaDisabled =` passed | token is case-insensitive | H3 |
+| xhtml: `disabled=` removed, `rendered=` on the button | both fire; `rendered=` on a panel stays silent | H4, H4b, H4c, H4d |
+| `Base*Form` not shared | the other Base forms owe at least 2 urusan tables | H5, H5b |
+| Any table satisfied any screen's edit | a non-shared file needs `ARRIVAL SCREEN: <file name> · <URUSAN> · <TUGASAN>`, and that table must exist | H6, H6b, H6c |
+
+| Alter or Initiate marked `n/a` passed, the same miss as 287048 (Fable's third check) | both need a SELECT; `reassign` and `migrated` may still say n/a | H9, H9b |
+| `E:\Dev\etanah-work\wt-*` paths have no module folder and skipped the gate (Fable's third check) | `etanah-work` counts as an etanah path | H10 |
+| A wrong `--env` wrote a NOT VERIFIED cache for any urusan (Fable's third check) | exit 2, nothing written; only a real gateway failure gives NOT VERIFIED | H11 |
+
+**Accepted risk**: with the gateway down, the script still writes a NOT VERIFIED cache, even for an invented urusan, and a matching table passes. It is kept so a DB outage does not stop work; the source line says NOT VERIFIED and alter and initiate still need a SELECT.
+
+**Limits, stated**: `ARRIVAL SCREEN` is self-declared, so it forces the question and does not prove the mapping. `rendered=` on a wrapper panel around the button stays silent, because firing on every panel would block ordinary screen edits. Hantar logic moved to a file outside the token list stays invisible.

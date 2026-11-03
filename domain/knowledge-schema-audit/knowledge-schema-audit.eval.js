@@ -33,7 +33,7 @@ for (const d of Object.keys(schema.required_dirs)) fs.mkdirSync(path.join(K, 'me
 mk(path.join(K, 'melaka', 'SPOC-COUNTER.md'), '# optional');
 mk(path.join(K, 'melaka', 'LISTED-EXTRA.md'), '# extra');
 mk(path.join(K, 'melaka', 'ORPHAN-EXTRA.md'), '# extra');
-fs.appendFileSync(path.join(K, 'melaka', 'index.md'), '\n| [LISTED-EXTRA.md](LISTED-EXTRA.md) | x | ✅ |\n');
+fs.appendFileSync(path.join(K, 'melaka', 'index.md'), '\n> eSOKONGAN = Tracker, never Project.\n\n| [LISTED-EXTRA.md](LISTED-EXTRA.md) | x | ✅ |\n');
 mk(path.join(K, 'melaka', 'flowables-bpmn', 'MLK_PLP_PT.bpmn20.xml'), '<definitions/>');
 // perak: legacy name + missing most files
 mk(path.join(K, 'perak', 'PERAK-FACTS.md'), '# facts');
@@ -55,6 +55,8 @@ let j = []; try { j = JSON.parse(r.out); } catch (_) {}
 const by = Object.fromEntries(j.map(x => [x.state, x]));
 check('F1 audit exits 1 when drift exists', r.code === 1, 'exit=' + r.code);
 check('F2 melaka: only the un-indexed extra is drift', by.melaka && by.melaka.drift === 1 && by.melaka.unindexed_extras.join() === 'ORPHAN-EXTRA.md', JSON.stringify(by.melaka && { d: by.melaka.drift, u: by.melaka.unindexed_extras }));
+check('F2b perak: index.md without the Tracker rule is drift, and the line says so', by.perak && by.perak.missing_rule === true && /eSOKONGAN = Tracker, never Project/.test(require(CLI).renderLine(by.perak, schema)), JSON.stringify(by.perak && by.perak.missing_rule));
+check('F2c melaka: index.md with the Tracker rule is not drift', by.melaka && by.melaka.missing_rule === false, '');
 check('F3 melaka: listed extra + optional file are NOT drift', by.melaka && !by.melaka.unindexed_extras.includes('LISTED-EXTRA.md') && !by.melaka.unindexed_extras.includes('SPOC-COUNTER.md'), '');
 check('F4 perak: legacy PERAK-FACTS.md → STATE-FACTS.md', by.perak && by.perak.legacy.some(l => l.file === 'PERAK-FACTS.md' && l.canonical === 'STATE-FACTS.md'), JSON.stringify(by.perak && by.perak.legacy));
 check('F5 perak: missing required files listed (STATE-FACTS.md, DATABASE.md ...)', by.perak && by.perak.missing_files.includes('STATE-FACTS.md') && by.perak.missing_files.includes('DATABASE.md'), '');

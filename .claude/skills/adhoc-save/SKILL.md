@@ -18,7 +18,7 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 | 2 | Test data | qa_doc `## Test data` — Task folder v13 (2026-09-30): notes txt + `1. Simulate\` RETIRED, new folders use `1. Brief\` (legacy `0. Brief\` accepted); read/write via `lib/task-folder.js` | `node quest/notes.js --qa <ADHOC-ID> --env <ENV> --urusan <X> --id "<permohonan or No Resit ...>" --user "<login>" --reset` (never hand-written) |
 | 3 | active.txt block | `quest/active.txt` (main checkout) — keys `qa phase status ticket_type=adhoc env urusan quest_start local_test_confirmed adhoc_register_row qa_doc task_folder issue_one_liner branch title` (`branch=none-until-ticket` is fine) | `node quest/active-cli.js start <ADHOC-ID> ...` or append |
 | 4 | Register row | `etanah-knowledge/<state>/ADHOC-REGISTER.md` next free `A#` — conclusion carries `file:line` / `table.column`; Status cell starts `OPEN` / `ANSWERED` / `OWNED-ELSEWHERE` / `LATENT` / `TICKETED` / `RESOLVED` | append |
-| 5 | qa_doc | `projects/coding-projects/active/<ADHOC-ID>/<ADHOC-ID>.md` — opens with `## Issue Summary` (Title · Symptom · Screen · Verdict) + `## Match Keys` (permohonan · aplikasi · warta · lesen/resit/hakmilik), then `## 0. Resume Point` (mandatory while status is hold/blocked/delegated — expansion-protocol §Step 2b rows) · Status · Env · evidence SELECTs · mechanism · analog · `## Next-Steps Checklist` | Write to scratchpad → copy (projects/ is main-checkout only) |
+| 5 | qa_doc | `projects/coding-projects/active/<ADHOC-ID>/<ADHOC-ID>.md` — opens with `## Issue Summary` (Title · Symptom · Screen · Verdict) + `## Match Keys` (permohonan · aplikasi · warta · lesen/resit/hakmilik), then `## Quest Story` (updated every round, 4 lines: `- Asked :` · `- Paths :` with wrong ones marked `wrong:` · `- Cost :` · `- Result :`; rule and reading side: quest skill save list item 6; the audit checks it for adhocs opened from 2026-11-01) · `## 0. Resume Point` (mandatory while status is hold/blocked/delegated — expansion-protocol §Step 2b rows) · Status · Env · evidence SELECTs · mechanism · analog · `## Next-Steps Checklist` | Write to scratchpad → copy (projects/ is main-checkout only) |
 | 6 | Bug awareness (when the adhoc finds a bug with NO ticket yet) | `etanah-knowledge/<state>/LATENT-BUGS.md` row `L<next>` + Sweep-log row (a live bug a ticket already owns goes in that ticket's qa_doc instead); if a BUG-BESTIARY pattern covers the family, add a pointer line there | append, then `node domain/bug-db/build-index.js --state <key>` |
 
 ## Adhoc title (ProTime) — the ONE rule (v2, 2026-10-14 per みや; read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12)
@@ -94,6 +94,24 @@ Every brief carries ONE line just before `## Reply to BA`: `Adhoc route: <ROUTE>
 - **Quest tickets** emit the same names at quest Phase 0 step 6f.
 - **Gate**: the Stop half of `domain/adhoc-brief-first/` blocks a brief without the line.
 - **Banned**: a route picked from the BA's wording · a ticket ask on a non-PROD patch or alter we can run ourselves · `CODE-FIX` without saying why no patch shape exists.
+
+### Ticket check — before any reply tells the BA to open a code ticket (2026-10-30 per みや, ADHOC-DMPRU-2026-1)
+
+All six must pass with evidence read THIS session. One fail = no ticket ask yet; do what the row says.
+
+| # | Sign | Evidence | If it fails | Register rows behind it |
+|---|---|---|---|---|
+| 1 | The failure is on record, on the user's own action | error-store row (`et_sistem_<env>.pt_application_ex_entity`, a schema apart from `et_main_*`) or a repro | keep investigating | A12, A28, A32 |
+| 2 | The code line is read on the branch that is running | `file:line` from `git show <branch>:<path>`, with Build-match | keep investigating | A18, A24, A52 |
+| 3 | No data state or user step can stop it | every condition the line reads is traced; no row value avoids it, or a patch would come back | PATCH or USER-STEP, no code ticket | A17, A21, A46 (data, no code ticket); A12→A27, A28→A31 (patched, came back) |
+| 4 | It is our module | `Input check:` clean; no other team's code in the path | OWNED-ELSEWHERE | A38 |
+| 5 | A requirement says it should work | `REQUIREMENT-MATCH: aligned` from `node quest/requirement-index.js --find "<words>"` | CR | ADHOC-DMPRU-2026-1 (219144) |
+| 6 | Nobody has fixed or owned it | `git log --remotes -S"<symbol>" -- <file>` and a ticket search | point to that ticket | A29 |
+
+- **Emit**: `Ticket check: 1 ✓ · 2 ✓ · 3 ✓ · 4 ✓ · 5 ✓ · 6 ✓`, one short evidence phrase each, just above `Adhoc route:`.
+- **After any fix round**: read the error store for the user's login BEFORE saying the user can proceed. A cleared error says nothing about the next one. (ADHOC-DMPRU-2026-1: the menu patch cleared the first error; the white page came next, and the error store named its cause in one query.)
+- **Say what is still open**: the check proves a ticket is due, not that the proposed fix works. Name what has not run on screen.
+- **Why this list**: read from the register's ticketed and not-ticketed rows; it is a direction from past cases, not a measured rate.
 
 - Anything else that can wait runs the same way, AFTER the brief and in the background: moving his files, memory notes, register and knowledge edits, a slip row, a skill edit, a commit.
 - No agent tool in the session: after the brief the save-set may be written on the main thread.

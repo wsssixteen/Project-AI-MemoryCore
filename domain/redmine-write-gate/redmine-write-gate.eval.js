@@ -165,7 +165,10 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('form.
 check('F55 quoted "notes": JSON key → BLOCK', blocked(r), r.out.slice(0, 160));
 const tlvBody = fs.readFileSync(TLV, 'utf8');
 check('F29 guard: ticket-load-verify.js stays network-free (else re-review its exemption)',
-  !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)|\bfetch\s*\(/.test(tlvBody), 'network/process I/O found in ' + TLV);
+  // v1.10: one local spawn allowed since b1e2c96e, python on quest/pdf-annotations.py, which must import no network module.
+  !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)(?!\.spawnSync\(process\.env\.TLV_PYTHON \|\| 'python',\s*\n\s*\['-I', path\.join\(__dirname, 'pdf-annotations\.py'\))|\bfetch\s*\(/.test(tlvBody)
+  && (tlvBody.match(/child_process/g) || []).length <= 1
+  && !/^\s*(?:import|from)\s+(?:urllib|requests|socket|http|ftplib|smtplib)/m.test(fs.readFileSync(path.join(path.dirname(TLV), 'pdf-annotations.py'), 'utf8')), 'network/process I/O found in ' + TLV);
 // F15 log rows
 const logP = path.join(__dirname, 'log.jsonl');
 const lastLog = fs.existsSync(logP) ? fs.readFileSync(logP, 'utf8').trim().split('\n').pop() : '';
@@ -188,8 +191,33 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: READ_CMD }, transcript
 check('F59 stage-only window: read-only redmine-sync stays silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: POPUP_JS }, transcript_path: transcript([user('can you prepare first the Redmine')]) }, STAGE);
 check('F60 REPLAY popup: browser fetch of /redmine/issues/N.json → BLOCK (password box)', blocked(r) && /password/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.getElementById('issue_notes').value = 'Salam Amirah'" }, transcript_path: transcript([user('prepare first')]) }, STAGE);
+check('F61 staging JS (set the notes value) → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+// ── v1.9 (2026-11-02, 286610): a STATUS write on the staged form needs his order naming that status ──────────────
+const CHROME_FORM = 'mcp__claude-in-chrome__form_input';
+const formRun = (value, lines, ref = 'ref_549') => run({ tool_name: CHROME_FORM, tool_input: { tabId: 1, ref, value, action_summary: 'sets a field' }, transcript_path: transcript(lines) }, STAGE);
+r = formRun('Resolved', [user('Okay please stage the Redmine and share here as well, we can ask BA to proceed I guess')]);
+check('F132 REPLAY 286610: form_input Status = Resolved while staging a BA note, no status order → BLOCK', blocked(r) && /never set back/.test(r.out), r.out.slice(0, 200));
+r = formRun('Resolved', [user('set status to Resolved and stage the note')]);
+check('F133 form_input Status = Resolved after "set status to Resolved" → allow', !blocked(r) && /set on miya's order/.test(r.out), r.out.slice(0, 200));
+r = formRun('Nurul Amirah Nadiah', [user('stage the redmine')], 'ref_568');
+check('F134 form_input Assignee (not a status name) → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = formRun('Salam Mira, Isu 3 is not from the MCL flow.\n\nThank you.', [user('stage the redmine')], 'ref_2482');
+check('F135 form_input Notes text → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = formRun('Verified', [user('post it')]);
+check('F136 form_input Status = Verified with only "post it" → BLOCK (a post order is not a status order)', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: 'mcp__claude-in-chrome__browser_batch', tool_input: { actions: [{ name: 'form_input', input: { tabId: 1, ref: 'ref_549', value: 'Closed' } }] }, transcript_path: transcript([user('stage it')]) }, STAGE);
+check('F137 browser_batch hiding a form_input Status = Closed → BLOCK', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: FILL_JS }, transcript_path: transcript([user('prepare first')]) }, STAGE);
-check('F61 staging JS (set field values) → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+check('F138 JS assigning issue_status_id.value with no status order → BLOCK', blocked(r), r.out.slice(0, 200));
+r = formRun('In Progress', [user('update it to in progress')]);
+check('F139 "update it to in progress" → form_input Status = In Progress allowed', !blocked(r), r.out.slice(0, 200));
+r = formRun('Resolved', [user('set status to Resolved'), toolResult(), user("no, don't change the status")]);
+check('F140 a later "don\'t change the status" wins over an older order → BLOCK', blocked(r), r.out.slice(0, 200));
+r = formRun('Resolved', [user('[redmine-status-ok: Resolved]')]);
+check('F141 [redmine-status-ok: Resolved] → allow', !blocked(r), r.out.slice(0, 200));
+r = formRun('Rework', [user('set status to Resolved')]);
+check('F142 his order names Resolved, the form sets Rework → BLOCK (the named status only)', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('Beautiful, audit again')]) }, STAGE);
 check('F62 JS submit of the issue form without approval → BLOCK, says stop at staging', blocked(r) && /STOP AT STAGING/.test(r.out), r.out.slice(0, 200));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('Then proceed to update that ticket. I approve current send.')]) }, STAGE);
@@ -331,9 +359,11 @@ const mkRepo = (name, body) => { const d = path.join(sb, name); fs.mkdirSync(pat
   for (const f of ['hook-runtime.js', 'turn-context.js', 'his-words.js']) { try { fs.copyFileSync(path.join(ROOT, 'lib', f), path.join(d, 'lib', f)); } catch (_) { /* optional */ } }
   fs.writeFileSync(path.join(d, 'lib', 'quest-start-claim.js'), body); return d; };
 const cleanRepo = mkRepo('repo-clean', claimBody);
-const tamperedRepo = mkRepo('repo-tampered', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', "{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, notes: 'taken' } }"));
-const assigneeRepo = mkRepo('repo-assignee', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', '{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, assigned_to_id: 5 } }'));
-const statusOnlyRepo = mkRepo('repo-status-only', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', '{ issue: { status_id: IN_PROGRESS_ID, done_ratio: 100 } }'));
+// v1.10: the claim builds `payload` (f8af263c); each tamper edits whichever form the live body has.
+const tamper = (oldTo, newTo) => claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', oldTo).replace('payload.done_ratio = START_PERCENT;', newTo);
+const tamperedRepo = mkRepo('repo-tampered', tamper("{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, notes: 'taken' } }", "payload.done_ratio = START_PERCENT; payload.notes = 'taken';"));
+const assigneeRepo = mkRepo('repo-assignee', tamper('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, assigned_to_id: 5 } }', 'payload.done_ratio = START_PERCENT; payload.assigned_to_id = 5;'));
+const statusOnlyRepo = mkRepo('repo-status-only', tamper('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: 100 } }', 'payload.done_ratio = 100;'));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, cleanRepo);
 check('F82 control: an untouched copy at <root>/lib of another root → allowed', standingOk(r), r.out.slice(0, 200));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, tamperedRepo);
@@ -341,7 +371,7 @@ check('F83 the script edited to also send a note → exemption void → BLOCK', 
 r = run({ tool_name: 'PowerShell', tool_input: { command: 'node quest/active-cli.js update QA-281324 status=active phase=0 quest_start=@now' }, transcript_path: noApproval() }, STAGE);
 check('F84 the quest start command itself (active-cli update … quest_start=@now) → silent, never blocked', silent(r), r.out.slice(0, 160));
 check('F85 guard: lib/quest-start-claim.js sends status + 20 percent only (else re-review its exemption)',
-  /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/.test(claimBody) && /const START_PERCENT = 20;/.test(claimBody) && !/assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i.test(claimBody) && (claimBody.match(/'PUT'/g) || []).length === 1, 'shape changed in ' + CLAIM);
+  /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}|const payload = \{ status_id: IN_PROGRESS_ID \};\s*\n[^\n]*payload\.done_ratio = START_PERCENT;\s*\n[\s\S]*\{ issue: payload \}/.test(claimBody) && !/payload\.(?!done_ratio = START_PERCENT;)\w+\s*=|payload\[/.test(claimBody) && /const START_PERCENT = 20;/.test(claimBody) && !/assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i.test(claimBody) && (claimBody.match(/'PUT'/g) || []).length === 1, 'shape changed in ' + CLAIM);
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, assigneeRepo);
 check('F88 the script edited to also change the assignee → exemption void → BLOCK', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, statusOnlyRepo);

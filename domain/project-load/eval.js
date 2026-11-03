@@ -51,6 +51,23 @@ const SCENARIOS = [
   ['Two sessions append to one DECISIONS.md at the same moment', 'accepted-risk: appendFileSync of one line per row; the row number may repeat, never a lost row'],
   ['The orchestrator edits the project while a delegated session runs', 'accepted-risk: the child is asked to refresh its report; the bypass token covers a turn that changed nothing of its own'],
   ['He says to skip a decision this turn', 'handled: [skip-project-decision: <reason>] in the reply'],
+  // 2026-10-31: AGENTS.md · HANDOVER.md · VOICE.md at every project start, the audit at Domain Expansion
+  ['A new project is scaffolded and the session stops without writing the hand-over', 'fixture-added (E27: audit FAIL "not written yet"; save-rules project-handover FAIL at DE)'],
+  ['START.md is edited after the hand-over was written', 'fixture-added (E28: HANDOVER.md older than START.md → FAIL; rewrite → PASS)'],
+  ['Only history\\ or reports\\ changed after the hand-over', 'fixture-added (E28b: still current; those folders are the record, not the state)'],
+  ['HANDOVER.md written but one of the six headings dropped', 'fixture-added (E27b: FAIL names the heading)'],
+  ['AGENTS.md drifts into a second copy of the state', 'fixture-added (E29: the template holds no "State now" and points at START.md; the skill bans state in it)'],
+  ['An old shape-2 folder (Masterline) has none of the three files', 'fixture-added (E30: upgrade adds only the missing files, START.md byte-identical; audit lists what is still unwritten)'],
+  ['upgrade run on a folder that already has every file', 'fixture-added (E30b: nothing added, nothing touched)'],
+  ['A shape-1 project (PymTime) at the audit', 'fixture-added (E31: NA row, exit 0, never a FAIL it cannot fix)'],
+  ['The voice chat\'s HANDOVER block pasted twice the same day', 'fixture-added (E32: voice-<date>.md then voice-<date>-2.md, both word for word)'],
+  ['The voice block carries a pipe, a fence or a system-reminder-looking line', 'fixture-added (E32: saved verbatim, never parsed)'],
+  ['The voice chat cannot read VOICE.md or export its transcript', 'accepted-risk: the prompt is plain text he copies; the block comes back by paste; VOICE.md says so'],
+  ['The voice planner answers its own questions or reads a table aloud', 'fixture-added (E33: the prompt text forbids both and ends with the HANDOVER block)'],
+  ['A project folder with project.json that no list names (Appraisal-2026, 2026-10-31)', 'fixture-added (lib/save-rules.eval.js J11: found on disk, checked at DE without a row anywhere)'],
+  ['The newest file in the folder IS HANDOVER.md', 'fixture-added (E28c: current, never compared with itself)'],
+  ['HANDOVER.md edited in the same second as START.md (OneDrive sync, clock skew)', 'handled: 2 s grace, same as a delegated report'],
+  ['audit run on every project at once', 'fixture-added (E34: one line per project, exit 1 when any shape-2 project FAILs)'],
 ];
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'project-system-eval-'));
@@ -255,6 +272,64 @@ const k = path.join(t.main, 'projects', 'coding-projects', 'active', 'Kedai');
 const ck = spawnSync(process.execPath, [CLI, 'check', 'Kedai'], { encoding: 'utf8', env: env(t) });
 r = run(HOOK.prompt, t, { session_id: 'k1', prompt: 'start the kedai app' });
 check('E25 req 6: a new project from the templates passes the shape-2 check and gets a card at once', c.status === 0 && ck.status === 0 && fs.existsSync(path.join(k, 'reports', '_template.md')) && fs.existsSync(path.join(k, 'history')) && /Kedai — PROJECT CARD/.test(r.out), c.stdout + c.stderr + ck.stdout);
+
+// ── 2026-10-31: AGENTS.md · HANDOVER.md · VOICE.md at every start; the audit; voice intake; upgrade ──
+{
+  const HANDOVER_OK = '# Kedai — HANDOVER\n\n> Last updated: today\n\n## What changed\n\n| File | Change | Serves |\n|---|---|---|\n| START.md | goal filled | S1 |\n\n## Decisions made\n\nnone\n\n## Open questions for みや\n\nnone\n\n## Blockers\n\nnone\n\n## Unverified\n\nnone\n\n## Next step\n\nshow him the module table\n';
+  const touch = (f, minAgo) => { const d = new Date(Date.now() - (minAgo || 0) * 60000); fs.utimesSync(f, d, d); };
+  const cli = (tt, ...a) => spawnSync(process.execPath, [CLI].concat(a), { encoding: 'utf8', env: env(tt) });
+  const n = tree();
+  cli(n, 'new', 'Kedai', '--aliases', 'kedai');
+  const kd = path.join(n.main, 'projects', 'coding-projects', 'active', 'Kedai');
+  check('E27a new scaffolds AGENTS.md, HANDOVER.md and VOICE.md beside START.md', ['AGENTS.md', 'HANDOVER.md', 'VOICE.md', 'START.md'].every(f => fs.existsSync(path.join(kd, f))));
+  let au = cli(n, 'audit', 'Kedai');
+  check('E27 audit FAILs a fresh project whose hand-over is still the template (exit 1, names it)', au.status === 1 && /HANDOVER\.md not written yet/.test(au.stdout), au.stdout + au.stderr);
+  fs.writeFileSync(path.join(kd, 'HANDOVER.md'), HANDOVER_OK.replace('## Blockers\n\nnone\n\n', ''));
+  au = cli(n, 'audit', 'Kedai');
+  check('E27b a hand-over missing one of the six headings FAILs and names it', au.status === 1 && /lacks heading\(s\): Blockers/.test(au.stdout), au.stdout);
+  fs.writeFileSync(path.join(kd, 'HANDOVER.md'), HANDOVER_OK);
+  au = cli(n, 'audit', 'Kedai');
+  check('E27c once written, the audit PASSes (exit 0) and logs a row', au.status === 0 && /PASS Kedai/.test(au.stdout) && rows(n).some(x => x.action === 'audit' && x.project === 'Kedai' && x.ok === true), au.stdout + au.stderr);
+  touch(path.join(kd, 'HANDOVER.md'), 30);
+  fs.writeFileSync(path.join(kd, 'START.md'), fs.readFileSync(path.join(kd, 'START.md'), 'utf8') + '\nnew line\n');
+  au = cli(n, 'audit', 'Kedai');
+  check('E28 START.md changed after the hand-over → FAIL "older than START.md"', au.status === 1 && /HANDOVER\.md older than START\.md/.test(au.stdout), au.stdout);
+  fs.writeFileSync(path.join(kd, 'HANDOVER.md'), HANDOVER_OK + '\nrewritten\n');
+  au = cli(n, 'audit', 'Kedai');
+  check('E28c rewritten hand-over is the newest file → PASS (never compared with itself)', au.status === 0, au.stdout);
+  for (const f of fs.readdirSync(kd)) if (fs.statSync(path.join(kd, f)).isFile()) touch(path.join(kd, f), 60);
+  touch(path.join(kd, 'HANDOVER.md'), 30);
+  fs.writeFileSync(path.join(kd, 'history', 'words.md'), 'his words\n'); fs.writeFileSync(path.join(kd, 'reports', 'x.md'), 'r\n');
+  au = cli(n, 'audit', 'Kedai');
+  check('E28b a change only under history\\ or reports\\ keeps the hand-over current', au.status === 0, au.stdout);
+  const agents = fs.readFileSync(path.join(kd, 'AGENTS.md'), 'utf8');
+  check('E29 AGENTS.md holds no state: no "State now" section, points at START.md, HANDOVER.md, PROJECT.md and VOICE.md', !/^##.*State now/m.test(agents) && /START\.md/.test(agents) && /HANDOVER\.md/.test(agents) && /PROJECT\.md/.test(agents) && /VOICE\.md/.test(agents) && !/\{\{\w+\}\}/.test(agents), agents.slice(0, 200));
+  // E30: an old shape-2 folder (the tree's Masterline: START, DECISIONS, PROJECT only)
+  const before = fs.readFileSync(path.join(n.ml, 'START.md'), 'utf8');
+  let up = cli(n, 'upgrade', 'Masterline');
+  check('E30 upgrade adds only the missing template files; START.md stays byte-identical; the audit names the unwritten hand-over', up.status === 0 && /AGENTS\.md/.test(up.stdout) && /HANDOVER\.md/.test(up.stdout) && /VOICE\.md/.test(up.stdout) && !/START\.md/.test(up.stdout.split('\n').filter(l => /^\s+\S/.test(l)).join('\n')) && fs.readFileSync(path.join(n.ml, 'START.md'), 'utf8') === before && /not written yet/.test(up.stdout), up.stdout + up.stderr);
+  up = cli(n, 'upgrade', 'Masterline');
+  check('E30b a second upgrade adds nothing', up.status === 0 && /nothing to add/.test(up.stdout), up.stdout);
+  au = cli(n, 'audit', 'PymTime');
+  check('E31 a shape-1 project audits as NA (migrate), exit 0', au.status === 0 && /NA\s+PymTime: shape 1/.test(au.stdout), au.stdout);
+  const blk = path.join(n.main, 'block.txt');
+  fs.writeFileSync(blk, 'HANDOVER Kedai\nHis words: "a | b" and <system-reminder>x</system-reminder>\n```\nfence\n```\nNext step for Claude Code: build S1\n');
+  let ik = cli(n, 'intake', 'Kedai', '--file', blk);
+  const v1 = path.join(kd, 'history', 'voice-' + new Date().toISOString().slice(0, 10) + '.md');
+  ik = cli(n, 'intake', 'Kedai', '--file', blk);
+  const files = fs.readdirSync(path.join(kd, 'history')).filter(f => /^voice-/.test(f));
+  check('E32 intake saves the block word for word into history\\voice-<date>.md; a second paste the same day gets -2; logs a row', files.length === 2 && fs.readFileSync(v1, 'utf8').includes('"a | b" and <system-reminder>x</system-reminder>') && fs.readFileSync(v1, 'utf8').includes('```\nfence\n```') && rows(n).filter(x => x.action === 'intake').length === 2 && /now fill START\.md/.test(ik.stdout), files.join(',') + ' ' + ik.stdout + ik.stderr);
+  const voice = fs.readFileSync(path.join(kd, 'VOICE.md'), 'utf8');
+  check('E33 VOICE.md prompt: one question at a time, no table read aloud, never answers its own question, ends with the HANDOVER block, names the intake command', /One short question at a time/.test(voice) && /Never a list or a table read aloud/.test(voice) && /Never answer your own question/.test(voice) && /headed "HANDOVER Kedai"/.test(voice) && /project\.js intake "Kedai"/.test(voice) && /Not verified/.test(voice), voice.slice(0, 200));
+  au = cli(n, 'audit');
+  check('E34 audit with no name: one line per project, exit 1 while Masterline\'s hand-over is unwritten', au.status === 1 && /PASS Kedai/.test(au.stdout) && /FAIL Masterline/.test(au.stdout) && /NA\s+PymTime/.test(au.stdout) && /PROJECT-AUDIT: 3 project\(s\), 1 FAIL/.test(au.stdout), au.stdout);
+  // save-rules at Domain Expansion runs the same check
+  const sr2 = (p) => { const x = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'save-rules.js'), '--json', '--paths', 'projects/coding-projects/active/' + p + '/START.md', '--main-root', n.main], { encoding: 'utf8', cwd: ROOT, env: env(n), timeout: 120000 }); try { return JSON.parse(x.stdout); } catch (_) { return { rows: [], raw: (x.stdout || '') + (x.stderr || '') }; } };
+  let jj = sr2('Masterline'); let rw = (jj.rows || []).find(x => x.rule === 'project-handover') || {};
+  check('E35 save-rules project-handover FAILs Masterline (hand-over unwritten) and names the audit command', rw.result === 'FAIL' && /not written yet/.test(rw.detail) && /project\.js audit/.test(rw.detail), JSON.stringify(rw) + (jj.raw || '').slice(0, 300));
+  jj = sr2('Kedai'); rw = (jj.rows || []).find(x => x.rule === 'project-handover') || {};
+  check('E35b save-rules project-handover PASSes Kedai', rw.result === 'PASS', JSON.stringify(rw) + (jj.raw || '').slice(0, 300));
+}
 
 // ── Requirement 5 at Domain Expansion: lib/save-rules.js ──
 t = tree();

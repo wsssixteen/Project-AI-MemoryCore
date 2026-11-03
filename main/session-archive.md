@@ -4,6 +4,123 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
+
+**Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, Pelupusan 1.9.1 baseline)
+- Release 1.9.1: 287201, 286655, 287048, 286610 merged into mlk/release/1.9.1 (tip 3cf52efea6, common 1.10.20-MLK). BA passed baseline Pelupusan and Awam Pelupusan 2026-11-02. MR !12 to mlk/master, reviewer Alex. stag-env caught up to 7506e27958, compile green.
+- Open: at 2026-11-03 10:07 origin/mlk/master is still 74982588f9, yet Redmine says "Released and ready in Prod : 02/11/2026" (Hakiim Majid) on all four. On his "merged": `node domain/release-mlk-plp/release-prep.js merge-to-master --release 1.9.1 --check` from the main folder.
+- Awam stag-catchup for 1.15.1 refused: conflict in pom.xml and BaseConsentForm.java (consent changes 276583, 284760), and it would move common 1.10.19-MLK.beta.patch3 to 1.9.2-MLK. Nothing pushed. Slip row logged.
+- Staging error 42342 (2026-11-02 18:56, PTMLK/01/L/MCL/2026/24, PSKN5A Selesai, null documentId): not from 1.9.1, PROD has it 4 times since July. Pembetulan branch has no null check (MlkSuratTemplateForm.java:3504-3507). Cause of the missing ID not proven. LATENT-BUGS L37. BA reply drafted.
+- Quests saved at DE: 287201 + 286655 archived (Redmine Closed), 287048 Phase 1 closed (Pending User, user at a meeting), 286610 WAIT (Pending User).
+- Assessment: A1 objective locks for 21 quests were injected on a "DE" prompt that named none. A2 287048's Resume Point said "Phase 0 done" while the fix was on PROD. A3 branch-guard blocked a Read on his checkout (mlk/int-env); git show on the release branch worked. A4 PROD release before master merge is not seen by release-prep. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-02 18:45 — worktree `ticket-287773-quest-run-66ac6f`, QA-287773 Phase 1 closed, Domain Expansion.
+
+## Session Recap (2026-11-02, ticket 287773 PPTPB)
+- Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
+- System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
+- Wrong: I advised the PT route from requirement 219931 on a 16:36 sync, BA wrote the opposite at 16:39. The v4 Flowable tidy left 174 of 249 arrows off the gateway diamonds, not saved. Both have slip rows; wrong-fix row 1 added.
+- Open: (1) posted Solutions names KPT, his screenshot shows only PPD and KPPD, reason not verified. (2) MLIT PTMLK/03/L/PPTPB/2026/9 still with sabrina, must go back to PKPPT/suhaila. (3) MLIT engine v14 PT route undo not confirmed. All three are in the qa_doc Resume Point.
+- Assessment: A1 save-quest read QUEST-STORY as MISSING for an absolute qa_doc, and the doc existed only in the worktree. A2 the Resume Point still said hold after the fix was posted. A3 Solutions text named KPT without being compared to the photo. A4 fix advice ran on a journal read 9 minutes old. A5 ⏭ no sweep run.
+
+**Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
+**Last Activity**: 2026-11-02 18:50 — worktree `sweep-orchestration-audit-39e710` (branch claude/redmine-quest-sweep-92d16e), eSOKONGAN sweep of 287346, 287509, 287607 finished, Domain Expansion.
+
+## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
+- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
+- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
+- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
+- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
+- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
+
+## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
+- Done: PROD PTMLK/02/L/PPTPB/2026/2 Hantar error traced to gateway sid-AD61958D (routes KPPD, PPD, KPT only, no default). Permohonan moved on through PPD and sits with norlina at PKPPT. Adhoc archived: block in active-archive.txt, doc in archive/, Task folder 357 in Archive\, video deleted.
+- Wrong: I told him the fix is an added PT route. BA Fizah's journal of 16:39 on 287773 asks to remove PT from the dropdown (To-Be V3.0). The PT route is on MLIT v14 only. The ticket session (worktree `ticket-287773-quest-run-66ac6f`) holds this conflict and waits his decision.
+- Not done: the save audit stays 30/31, a false FAIL on A91 shared with the ticket block (proposal logged). Archived doc and L36 still name the PT route as the fix until the background save corrects them. The BA reply I drafted says the route will be added, so it must not go out as written.
+- Blocker: app sync with main refused (protected .claude/skills files, origin needs confirming in Help, Troubleshooting, Review Pinned Git Origins).
+- Assessment: A1 a gate matched the audit's name inside a slip's quoted text. A2 promote left the adhoc open and the audit cannot pass with a ticket block on the same row. A3 PROD engine read refused, so the PROD gateway is inferred from the error text. A4 the fix came from analogs before the ticket journal was read. A5 ⏭ no sweep run.
+
+## Session Recap (2026-11-02, sweep audit false alarms)
+- Landed: GitHub main eb81f5b9, main folder 834af613. Evals: audit 97/97, sweep contract 23/23. Watch wmvyr3ow9. No ticket touched; the session was started by the esokongan sweep session.
+- Not done: run sweep-2026-11-02-internal not replayed. The flow picture was sent after the build, not before.
+- Assessment: A1 the old check counted a read-only copy as a Task-folder write, and the first fix missed real .NET writes until old and new verdicts were compared on 367 real commands. A2 ⏭ no quest run. A3 an early "exit=0" was grep's exit code, not the audit's. A4 ⏭ no etanah issue. A5 exit 1 on a false alarm would have re-bought 9 familiars, about 2.7M tokens.
+- `domain/sweep/audit.js`: no-return-table also reads the SubagentHandback message; task-folder-write judges where a shell command writes, and fails closed on a destination it cannot place; `--controller-caught none` = empty list. Replay of esokongan-2026-11-02: 9 + 1 false alarms gone, exit 0. Why: exit 1 would have re-bought all 9 familiars, about 2.7M tokens.
+- Old vs new on 367 real familiar commands: the first fix cleared a real `[IO.File]::WriteAllText` into a Task folder, so New-Item, mkdir, Remove-Item, Rename-Item, tee and .NET writes joined the writer list. 19 commands cleared, 23 real writes newly caught. Scripts in python or node stay unparsed (README accepted risk).
+
+## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
+- ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
+- The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
+- My misses: boot files never read, no briefing · FLOWABLE-KNOWLEDGE never read after the path failed in the worktree (line 630 names this PLTP to PSPM pattern) · two guessed SQL names · runner run twice because I cut its output · "Semakan Permohonan Isian" invented · rule 8 picture skipped · A0-A6 rows never emitted.
+- Tools: alter.js live prints the root process variables, not those of the process holding the task, which hid the answer · run.ps1 alter-flow said "no live engine task" for a live grandchild task · audit-briefing from a worktree reads the worktree's near-empty telemetry and reports every hook as never fired (proposal already logged earlier today, still open).
+- Improvement sweep: see slips proposals A1-A5 dated today from this session.
+- Audit of the audit (2 Fable 5.1 agents, verified counts): DE enforces saves (de-close-gate 222 blocks) but does not audit the session. Scripts caught 0 of 13 failures, a usual DE about 1-2, today's 7 with the audit in view. 888 proposals, 0 rulings; the worktree telemetry bug proposed 34 times. Upgrade design: lib/session-audit.js reads the transcript and emits typed findings (10 mechanical classes), de-close-gate C10 needs each routed (knowledge / tool / gate / workflow / memory, wrong-fix verdict shape), watch row per change, slips fingerprint escalates at 2 and 3, audit-briefing telemetry from main, notifications not counted as his turns; retire steps 5, 6, Checklist D, free-text 7.5. Built today, on the goal hook's reading of his Proceed: lib/session-audit.js (eval 36/36, this transcript 10 of 10 mechanical classes), de-close-gate C10 (eval 54/54), repeat table in core/slips.js, audit-briefing telemetry from main, prompt hooks silent on agent notifications through hook-runtime and dispatch-hooks. Kept against Fable's advice: the second-stop waiver, removing it can trap a session. Retired on his ruling: step 5 and Checklist D (CLAUDE.md v2.01). Kept: step 6, it reads a live log; free-text 7.5 until session-audit proves itself over real closes. Routed, not built: alter-ticket-gate wording, knowledge-first-gate false pass, branch-guard matcher, alter.js variables, runner blind spot.
+- Knowledge baked: FLOWABLE-KNOWLEDGE section 13, altering back into a sub-process after the child was born.
+- system-rules Rule 9 added per his ask (design and trial by Fable 5.1): boundary line covers, never, stops; forge and birth gate refuse a new part without it; census counts, old parts not forced. Trial found two real crossings of mine: report-only became gate C10, and hook-runtime + dispatch-hooks changed, both on a blanket Proceed.
+- Open: Pendaftaran verify; his ruling on keeping the hook-runtime change.
+**Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
+- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
+- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
+- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
+- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
+- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
+- Open: nothing from this session. No ticket worked.
+- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
+**Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
+- 287201 PLTP Syor Keputusan PDT labels: fix 6f93448d46, Redmine Verified by Fizah, closed at Phase 1, waits for release.
+- 287164 MCL premium gate: 761ec96f82 + 784d3e57e2 + 0c97566203, tested on MLIT by miya, Redmine Resolved to Fizah, closed at Phase 1. Photos do not show the Syarat pick or the dialog reopen.
+- System, on main: test data by alter rule, `lib/chat-images.js`, no Redmine submit with 0 files, CLAUDE.md v2.00 rule 8 plan first.
+- Open: gate-fail and slip audit child session (brief in `main/todo.md`, start from the desktop app).
+- Assessment: A1 gates fired on replies that had no scenario and no ask. A2 two test-data slips from not checking the holder after an alter. A3 his "why can't I open it" took 4 queries and minutes before a plain answer. A4 alter can create a task with no holder. A5 mid-turn photos lived only in the transcript.
+**Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
+
+## Session Recap (2026-10-29/30, worktree "alter-patching-a323d9", 286650 STG alter + headless runner)
+- 286650: STG scenario ready (miya did the alter himself after my tool failed on login); ticket held by Pendaftaran, block stays delegated.
+- Built `E:\Dev\scripts\FlowableAlter\runner\`: STG/MLIT Alter Flow with no login. Eval 10/10 urusan + one different-step move, all checked in the DB. Refuses PROD. No Initiate & Alter yet.
+- Wired into the quest: alter-ticket-gate v1.2 (ticket found in active, archive or disk; env + tracker; A5 tool by env), quest-phase0.js alter layer, playbook A5 = one table. Fable 5.1 final PASS. Commit 3fa92232, land 7cbd56d7.
+- Open: Initiate & Alter in the runner needs an etanah repo change; alter-sim and the runner overlap, not ruled.
+
+**Last Activity**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
+**Last Activity**: 2026-10-30 17:50 — worktree `sweep-orchestration-audit-39e710`, parent of the 286655 / 286646 / 286610 sweep; all three children archived; own Domain Expansion.
+
+## Session Recap (2026-10-29 to 30, worktree "sweep-orchestration-audit-39e710", sweep parent close)
+- Redmine live 2026-10-30: 286646 Verified (Nurul Amirah Nadiah, release 2/11) · 286655 Resolved (Amani) · 286610 Resolved (Amani). All WAIT per save-quest.
+- verify2 pass banked: `QA-<n>-verify2.md` in each quest folder. 286655 MLPS 92 / OMLPS 88 (miya accepted) · 286646 92 · 286610 92 / 92.
+- All three children ran their own DE and are archived.
+- System: sweep audit Tool + Step 8 landed 2026-10-29. Next real /sweep is the live proof (watch wmvtdigs8).
+- Open: 286655 test photos not attached to the ticket (the child asked miya; no answer seen).
+
+**Previous**: 2026-10-30 17:15 — worktree `baseline-wednesday-release-029181`, audit of DE and save-quest built, evaluated and live-checked, Domain Expansion 2 of 2.
+
+## Session Recap (2026-10-30, same worktree, audit of "DE" and "save quest")
+- Answer: DE alone now does save quest, enforced. Save quest picks Close or Archive from live Redmine: not Closed = Phase 1 only, Closed = Phase 2 (Phase 1 first when still open), patch ticket past "in work" = both together.
+- Built, on main: `lib/save-quest.js` reads ticket_type (patch tickets were told "Do not archive" against the 2026-10-29 rule) · `quest/archive-quest.js` Step -1.5 refuses an archive the verdict does not allow, `--ahead-of-redmine "<his words>"` is the only override · `de-close-gate` C9 blocks a DE close on a touched ticket with no verdict or a stage not done, unless "Phase 1 not ready: <QA> ...".
+- Evals: save-quest 69/69, feature 27/27, de-close-gate 44/44, archive Redmine gate 16/16, archive 27/27, archive-hold 27/27. Live: QA-287273 archive refused exit 3, nothing moved.
+- Open: 287273 BA verify, planned-release list. Wrong-fix row 1 verdict names BUG-BESTIARY: write it at Phase 2.
+**Last Activity**: 2026-10-30 16:45 — worktree `cranky-wilson-4cb38e` (branch claude/ticket-287292-return-audit-072795), 287292 returned by BA, re-patched, Redmine posted, quest saved, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "cranky-wilson-4cb38e", 287292 PROD letter returned)
+- 287292 came back because yesterday's patch used the ADO day (19, 19, 21 Oktober) while the BA asked for the first-generated dates (30/9, 30/9, 20/10, Document Maintenance = umm_a_dok_keluaran.created_date). Same request, our miss.
+- Re-patched: 3 letters with first-generated dates + Hijri from e-Solat, 287292.zip + 287292.sql in the archived Task folder 2. Fix. Infra uploaded and reset PDFs (all 3 lokasi_fail_pdf empty). Redmine note 09:57 to Fizah, ProTime resolved. Redmine now Ready in PROD. SAVE-QUEST AHEAD, stays archived.
+- System on main: patch-mlk-doc (2+ files = one <num>.zip, deliverable-check takes several names, eval 26/26; letter date = created_date, ADO day banned; infra boxes #<num> only, no description, no instruction lines). Knowledge WORD-TEMPLATE-RENDERING corrected. Pena c65.
+- Slips: ba-spec-overridden, vague-term, wrong-rule-encoded, reask/redundant (QA-287292). I also held the upload for a BA answer after he said to do it straight away, and said "yesterday's patch wasn't wrong" before he corrected it.
+- Not verified: where infra's file names LAIN-40346432 / 40346446 / 40346447 came from (no PROD, stg1 or stg2 row, not on local disk); the content of the uploaded files in PROD, BA verify is the check.
+- 285768 is finished: Closed, QA Verified STAG 2026-10-29, not an open item. Open: infra box for data patches (memory infra-requests) still carries the #ticket sentence; only document boxes changed.
+- Improvement sweep: A1 skipped, no agents this session · A2 a BA's explicit value was replaced with no check (proposal) · A3 date source took a second session (proposal: letter-dates script) · A4 returned archived quest invisible to save-quest (proposal) · A5 skipped, no sweep.
+
+**Last Activity**: 2026-10-30 16:30 — worktree `redmine-issue-286988-203306` (session "30/10/2026 - 287350"), ADHOC-MCL-2026-3 answered to BA and saved, Domain Expansion.
+
 ## Session Recap (2026-10-30, worktree "redmine-issue-286988-203306", ADHOC-MCL-2026-3 MCL Laporan Tanah Perkara)
 - ADHOC-MCL-2026-3: PROD MCL Laporan Tanah has no Perkara. Tajuk Risalat is never saved at SKM since 5734174bd9 (Aaron, 2026-06-19, ticket 265081) added else-return on empty premium in MlkMaklumatTanahLesenPendudukanForm.performCustomSave. PROD 0 of 37 MCL at PLT have it; PT, PLPS, PRBB, PLTP, PRZ all do. Requirement 223227 says the tajuk is created at SKM, verified 2026-05-21; its commits are all still in master.
 - Answered BA in miya's words ("So need code fix"). Teknikal patches /18 and /26 through their own 287350. Save-set: Task folder 345, register A83, latent L31, audit 33/33. On hold + archive hold, waiting a code-fix ticket; not simulated on STG (candidate PTMLK/01/L/MCL/2026/21, login iskandarz@melaka.gov.my).
@@ -7030,6 +7147,13 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
+
+
+
+
 
 
 

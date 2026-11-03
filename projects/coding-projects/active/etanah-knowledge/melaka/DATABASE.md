@@ -717,6 +717,7 @@ SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
 | `skg_dok` | `a_dok_keluaran_id` / `a_dok_kmskn_id` | direct FKs to the output / input doc row — either may be NULL |
 | `skg_dok` | `id_dok` | the `LAIN-nnnnnnnn` string · UNIQUE (`uk_sd_doc_id`) · **the join key into DMS** |
 | `skg_dok` | `versi_dok`, `flag_aktif`, `flag_draf` | version + active/draft flags (see the `versi_dok=0` duplicate trap, quest MIGRATOR-DUP-V0) |
+| `skg_dok` | `created_by` = `'SYSTEM'` | **a signed copy** (Tandatangan writes it). "Signed" for one borang = SYSTEM row whose `medan_pk_id` is that borang's `umm_a_dok_keluaran` row, filtered by its `jns_dok_id` (PRBB: 326 Borang 4Ce, 943 Borang P1e). Never count all SYSTEM rows of the permohonan: Pelan and other documents have them too (287048, 2026-11-02: two first-round permohonan were wrongly called signed). Signed this round = SYSTEM `created_date` >= the active `umm_a_tgsn.created_date` |
 | `dokumen` | `id_dokumen` | matches `skg_dok.id_dok` · UNIQUE (`uk_dok_id_dokumen`) |
 | `dokumen` | `versi_terkini` | current version number — pair with `dokumen_revision.versi` to pick the live row |
 | `dokumen_revision` | **`lokasi_fail`** | **the server file path** |

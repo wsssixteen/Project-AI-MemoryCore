@@ -90,7 +90,7 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 The `assigned_to_id=me` arm is a safety net, not a duplicate: #273919 is `Module=Awam` and a pure Pelupusan filter dropped one of his own Apply-ready tickets.
 
 **Two tables, both rendered ENTIRELY by the script — nothing hand-typed** (みや 2026-08-05: *"I need to make the table deterministic so that it will CONSISTENTLY load the same way"*). Paste the script's output; do not re-derive a cell:
-- **Mine** — `# · Days · Due date · Subject · State`, ranked.
+- **Mine** — `# · Days · Hours left · Subject · State`, ranked.
 - **Tracking** — `# · Tracker · Status · Assignee · Train · Subject`, colleagues' rows, no ranking.
 - **Excluded line** — every row removed by a filter is named by number underneath.
 
@@ -100,7 +100,7 @@ The `assigned_to_id=me` arm is a safety net, not a duplicate: #273919 is `Module
 - **`Days` holds a BARE NUMBER — nothing else.** No `d` suffix, no date, no "past", no arrow.
 - **`Deadline` column is BANNED** (2026-08-05) — `Days` already says it; the overdue/ok word was noise.
 - **`Start` column is BANNED** (2026-08-05) — `Days` already carries it.
-- **Say `Due date`, never "Redmine due"** (2026-08-05) — there is only one due date on the table.
+- **`Due date` column is BANNED** (2026-11-01, was the 2026-08-05 column) — `Hours left` replaces it: a bare number, the developer's SLA hours left, from `lib/sla-hours.js`.
 - **`+3d` column is BANNED** — derivable from `Days`; printing it duplicated what `Days` says.
 - **`Days left` column is BANNED** — it mixed rulers (read as "days until Redmine due" while every other column served the 3-day rule), so the table argued with itself.
 

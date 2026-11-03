@@ -14,3 +14,6 @@ retention: rotate monthly
 **Why it exists** (todo.md Q1 rows 42+44; みや 2026-07-28 + 2026-08-16): the reply-shape gates lived ONLY at Stop, which evaluates a reply already shown to みや — every rejection forced a full re-emit he read twice. This Feature front-loads the mechanical rules so the reply is right the first time; the Stop gates stay as backstop but their block messages now demand a delta, not a re-emit (same-day edits to `domain/terse-gate/` · `domain/show-gate/` · `domain/full-address-trace-gate/` · `domain/stop-point-summary/`).
 
 **Eval**: `pre-reply-contract.eval.js` — 6 fixtures incl. the 2026-07-28 verbatim "reply with ONLY a table" replay. 6/6 green at ship (2026-08-16).
+
+2026-11-03 (miya, 287350): a correction reply and every quest reply end on what it means and the next step; a bare fact is banned. Rollback: git revert this commit.
+diagram: diagram.png

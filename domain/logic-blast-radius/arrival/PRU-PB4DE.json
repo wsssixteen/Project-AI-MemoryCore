@@ -1,0 +1,42 @@
+{
+ "urusan": "PRU",
+ "tugasan": "PB4DE",
+ "key": "MLK_PLP_PRU",
+ "env": "mlit",
+ "source": "engine v5 mlit",
+ "ts": "2026-10-31T09:14:05.344Z",
+ "ids": [
+  "first-pass",
+  "loop:peraku4De",
+  "alter",
+  "initiate",
+  "reassign",
+  "migrated"
+ ],
+ "rows": [
+  {
+   "id": "first-pass",
+   "how": "PYB4DE sends to PB4DE"
+  },
+  {
+   "id": "loop:peraku4De",
+   "how": "PB4DE goes back to PYB4DE through Pembetulan, then forward again"
+  },
+  {
+   "id": "alter",
+   "how": "Alter Flow to this tugasan or to an earlier node; app rows are not deleted"
+  },
+  {
+   "id": "initiate",
+   "how": "Initiate or Initiate & Alter: a new process runs to this tugasan; app rows are not deleted"
+  },
+  {
+   "id": "reassign",
+   "how": "agihan or admin changes the holder inside the same pass"
+  },
+  {
+   "id": "migrated",
+   "how": "data migration created the rows; no user pass produced them"
+  }
+ ]
+}

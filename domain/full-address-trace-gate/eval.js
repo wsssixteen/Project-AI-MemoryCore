@@ -28,7 +28,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { evaluate } = require('./full-address-trace-gate.discipline.hook.js');
+const { evaluate, evaluateShape } = require('./full-address-trace-gate.discipline.hook.js');
 
 const args = process.argv.slice(2);
 const opt = {
@@ -137,6 +137,19 @@ function runFixtures() {
       console.log(`      got:      ${JSON.stringify(got)}`);
       if (detail) console.log(`      detail:   ${detail}`);
     }
+  }
+
+  for (const [name, text, want] of [
+    ['v3 BLOCK: part path', 'See chat-pack\\13-plan.md now', 'blocked'],
+    ['v3 BLOCK: forward-slash part path', 'See lib/foo.js now', 'blocked'],
+    ['v4 PASS: normal Markdown table', '| a | b |\n|---|---|\n| 1 | 2 |', 'passed'],    ['v4 BLOCK: table in a code block', '```text\n+---+---+\n| a | b |\n+---+---+\n```', 'blocked'],
+    ['v3 PASS: drive path with spaces', 'See C:\\Users\\x\\0. AI\\Proj\\a.md now', 'passed'],
+    ['v3 PASS: fenced grid and fenced path', '```text\n| a | b |\n|---|---|\nchat-pack\\x.md\n```', 'passed'],
+    ['v3 PASS: url and plain and/or', 'https://a.b/c.js and/or 1 of 2', 'passed'],
+    ['v3 SILENT: bypass', '[skip-full-address: quote] lib/foo.js', 'silent'],
+  ]) {
+    const v = evaluateShape(text).verdict;
+    if (v === want) { passed++; console.log('  ✓ ' + name); } else { failed++; console.log('  ✗ ' + name + ' got ' + v); }
   }
 
   // Effect check — the runtime block message must render with expected fields
