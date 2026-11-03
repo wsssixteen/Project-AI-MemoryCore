@@ -49,6 +49,19 @@ function logFire(action, detail) {
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), action, detail }) + '\n'); } catch (_) {}
 }
 
+const MATCH_RE = /REQUIREMENT-MATCH:\s*#?(\d{5,7})\s*(?:→|->|\\u2192)\s*(#?\d{5,7}|none)\b([\s\S]{0,400}?)(?:—|-{1,2}|\\u2014)\s*(aligned|extends|contradicts|none found|not needed)\b(?!\s*\|)([\s\S]{0,40})/g;
+function requirementRead(transcript) {
+  let m;
+  MATCH_RE.lastIndex = 0;
+  while ((m = MATCH_RE.exec(transcript))) {
+    const req = m[2].replace('#', '');
+    if (/^(none found|not needed)$/.test(m[4])) return true;
+    const quoted = /^\s*(?:—|-{1,2}|\\u2014)\s*read:\s*\\?["“]/.test(m[5]);
+    if (quoted && new RegExp('REQUIREMENT-READ #' + req + '\\b').test(transcript)) return true;
+  }
+  return false;
+}
+
 let input = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -96,7 +109,12 @@ process.stdin.on('end', () => {
       { name: 'Recon', re: /═══\s*RECON\b|\bRECON EMIT\b|Recon Context Re-load/i },
       { name: 'Rubric', re: /═══\s*RUBRIC\b|\bRUBRIC EMIT\b|Logic Blast Radius/i },
     ];
-    const missing = phases.filter(p => !p.re.test(transcript)).map(p => p.name);
+    // v3 (2026-11-03, 287811 "Always read"): a requirement verdict counts only when the requirement was
+    // read in full this session (REQUIREMENT-READ #<req> from requirement-index.js --read) and the line
+    // quotes the deciding rule. none found / not needed pass as they are. Template lines ("<req>",
+    // "aligned | extends") never match: the req must be digits or none, the verdict one word.
+    phases.push({ name: 'Requirement read', test: requirementRead });
+    const missing = phases.filter(p => !(p.test ? p.test(transcript) : p.re.test(transcript))).map(p => p.name);
     if (missing.length === 0) {
       logFire('allowed', filePath);
       // v2 (2026-07-03, audit E2+E3): phases exist — run the two ADVISORY checks that
@@ -121,7 +139,11 @@ process.stdin.on('end', () => {
       `   Edit blocked: ${filePath}`,
       '   An active quest is running and you are about to edit etanah code without the full loop.',
       '   Emit the missing phase(s) FIRST — Scout → Recon → Rubric — each with its banner:',
-      ...missing.map(m => `     ═══ ${m.toUpperCase()} ═══`),
+      ...missing.filter(m => m !== 'Requirement read').map(m => `     ═══ ${m.toUpperCase()} ═══`),
+      ...(missing.includes('Requirement read') ? [
+        '   Requirement read: run node quest/requirement-index.js --read <req> --for <ticket> (description, journals,',
+        '   spec attachments), then write REQUIREMENT-MATCH: <ticket> → #<req> "<subject>" — <verdict> — read: "<the rule, quoted>"',
+        '   (or — none found / — not needed). A subject match is never a verdict (287811).'] : []),
       '',
       '   This gate checks the phases EXIST (anti-skip). It does NOT verify they are correct —',
       "   tracing data-flow honestly (OBSERVED, not ASSUMED) is still your job + みや's glance",

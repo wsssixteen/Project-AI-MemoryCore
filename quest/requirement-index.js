@@ -22,9 +22,13 @@
  *               script) + REQUIREMENT-INDEX.md (the same list for miya, grouped by module).
  *
  * Listing and index only: the Description is kept as a short snippet for matching. The full
- * requirement is read on the ticket itself (node quest/redmine-sync.js <id>, or the link).
+ * requirement is read with --read: description, journals and the text of every spec attachment
+ * (.docx/.pdf/.xlsx). A verdict is written only from that text, with the deciding rule quoted
+ * (2026-11-03 miya, 287811: "Always read, this was supposed to be part of our steps" — 223236 was
+ * matched by subject only and its spec, which forbids the 258004 delete, was never opened).
  *
  * CLI:
+ *   node quest/requirement-index.js --read <req> --for <ticket>       read the requirement in full (prints REQUIREMENT-READ #<req>)
  *   node quest/requirement-index.js --ticket <num> [--state <key>]   Phase 0: requirements that match a ticket
  *   node quest/requirement-index.js --find "<words>" [--module <m>]  search by words (screen, urusan, field)
  *   node quest/requirement-index.js --build [--state <key>]          rebuild now
@@ -424,10 +428,11 @@ async function main(argv, log) {
     console.log(`requirement-index ${stateKey}: ${idxLine(idx)}${idx.ageDays > STALE_DAYS ? ' · stale, rebuilds on the next search' : ''}`);
     return idx.missing ? 1 : 0;
   }
+  if (flag('read')) return readRequirement(flag('read'), flag('for'), log);
   const findQ = flag('find');
   const ticket = flag('ticket');
   if (findQ == null && !ticket) {
-    console.log('usage: node quest/requirement-index.js --ticket <num> | --find "<words>" [--module <m>] | --build | --status  [--state <key>] [--json] [--top <n>] [--no-refresh]');
+    console.log('usage: node quest/requirement-index.js --read <req> --for <ticket> | --ticket <num> | --find "<words>" [--module <m>] | --build | --status  [--state <key>] [--json] [--top <n>] [--no-refresh]');
     return 2;
   }
   const idx = await ensure(stateKey, { refresh });
@@ -477,14 +482,75 @@ async function main(argv, log) {
   hits.forEach((h, n) => console.log(fmtHit(h, n + 1, stateKey)));
   if (!hits.length && !chain.length) console.log('  no match — say "no original requirement found" in the hand-back, then try --find with the screen or tab name');
   else if (!chain.length && !self && hits[0].match === 'none') console.log('  ⚠ top match is weak on the subject — likely no requirement for this exact ask; say "none found" unless a row above clearly fits, or try --find with the screen or tab name');
-  console.log('  Next: open the closest match (node quest/redmine-sync.js <id> or the link) and compare its ask with this ticket\'s; write the verdict as REQUIREMENT-MATCH: aligned | extends | contradicts | none found | not needed.');
+  const first = chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null;
+  if (first) console.log(`  Next: read it in full before any verdict: node quest/requirement-index.js --read ${first} --for ${issue.id} (a subject match is never a verdict). Then write REQUIREMENT-MATCH: ${issue.id} → #<req> "<subject>" — <aligned | extends | contradicts> — read: "<the rule that decides, quoted>", or none found / not needed.`);
   return 0;
+}
+
+// ---- --read: the requirement in full (description, journals, spec attachments) ----
+function download(url, file) {
+  return new Promise((resolve, reject) => {
+    const go = (u, hops) => http.get(u, { headers: { 'X-Redmine-API-Key': REDMINE_KEY }, timeout: 60000 }, res => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && hops < 3) { res.resume(); return go(new URL(res.headers.location, u).href, hops + 1); }
+      if (res.statusCode !== 200) { res.resume(); return reject(new Error(`HTTP ${res.statusCode}`)); }
+      const out = fs.createWriteStream(file); res.pipe(out); out.on('finish', () => resolve(file)); out.on('error', reject);
+    }).on('error', reject);
+    go(url, 0);
+  });
+}
+// docx paragraphs + tables · pdf pages · xlsx cells, through python (python-docx / PyMuPDF / openpyxl).
+const EXTRACT_PY = [
+  'import sys', 'p = sys.argv[1]; x = p.lower()',
+  'if x.endswith(".docx"):',
+  '    import docx; d = docx.Document(p)',
+  '    for q in d.paragraphs:',
+  '        if q.text.strip(): print(q.text)',
+  '    for t in d.tables:',
+  '        for r in t.rows: print(" | ".join(c.text.strip() for c in r.cells))',
+  'elif x.endswith(".pdf"):',
+  '    import fitz',
+  '    for pg in fitz.open(p): print(pg.get_text())',
+  'elif x.endswith(".xlsx"):',
+  '    import openpyxl; wb = openpyxl.load_workbook(p, data_only=True)',
+  '    for ws in wb:',
+  '        print("## " + ws.title)',
+  '        for r in ws.iter_rows(values_only=True):',
+  '            if any(v is not None for v in r): print(" | ".join("" if v is None else str(v) for v in r))',
+].join('\n');
+const SPEC_EXT = /\.(docx|pdf|xlsx)$/i;
+async function readRequirement(req, forTicket, log) {
+  const i = (await get(`/issues/${encodeURIComponent(req)}.json?include=journals,attachments`)).issue;
+  const dir = path.join(require('os').tmpdir(), 'requirement-read', String(i.id));
+  fs.mkdirSync(dir, { recursive: true });
+  console.log(`REQUIREMENT-READ #${i.id}${forTicket ? ` for ${forTicket}` : ''} · ${i.tracker.name} · ${i.status.name} · by ${i.author.name} · ${REDMINE_BASE}/issues/${i.id}`);
+  console.log(`Subject: ${i.subject}\n--- DESCRIPTION ---\n${i.description || '(empty)'}`);
+  const notes = (i.journals || []).filter(j => j.notes && j.notes.trim());
+  console.log(`--- JOURNALS (${notes.length}) ---`);
+  notes.forEach(j => console.log(`[${j.created_on.slice(0, 10)} ${j.user.name}] ${j.notes.trim()}`));
+  const atts = i.attachments || [];
+  let read = 0;
+  for (const a of atts) {
+    if (!SPEC_EXT.test(a.filename)) { console.log(`--- ATTACHMENT ${a.filename}: not a text spec, open it by eye if it shows the screen (${REDMINE_BASE}/attachments/${a.id})`); continue; }
+    const file = path.join(dir, a.filename.replace(/[\\/:*?"<>|]/g, '_'));
+    try {
+      await download(`${REDMINE_BASE}/attachments/download/${a.id}`, file);
+      const text = require('child_process').execFileSync('python', ['-I', '-c', EXTRACT_PY, file], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, windowsHide: true, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+      console.log(`--- ATTACHMENT ${a.filename} (${a.created_on.slice(0, 10)}, ${a.author.name}) ---\n${text.trim()}`);
+      read++;
+    } catch (e) { console.log(`--- ATTACHMENT ${a.filename}: ⚠ NOT READ (${String(e.message).split('\n')[0]}); open ${REDMINE_BASE}/attachments/${a.id} by hand before any verdict`); }
+  }
+  const specs = atts.filter(a => SPEC_EXT.test(a.filename)).length;
+  console.log(`--- END REQUIREMENT-READ #${i.id}: description + ${notes.length} journal notes + ${read} of ${specs} spec attachments read ---`);
+  if (read < specs) console.log('  ⚠ a spec attachment was not read: no verdict until it is.');
+  console.log(`  Next: quote the rule that decides in the line: REQUIREMENT-MATCH: ${forTicket || '<ticket>'} → #${i.id} "${i.subject}" — <aligned | extends | contradicts> — read: "<quoted rule>"`);
+  Object.assign(log, { mode: 'read', req: i.id, ticket: forTicket ? Number(forTicket) : null, outcome: read < specs ? 'partial' : 'read', specs, read });
+  return read < specs ? 1 : 0;
 }
 
 module.exports = { requestKind, screenHint, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {
-  const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket)$/.test(a)) || 'usage' };
+  const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket|read)$/.test(a)) || 'usage' };
   const t0 = Date.now();
   const done = (code, err) => { log.mode = String(log.mode).replace(/^--/, ''); logRow({ ...log, exit: code, err: err || undefined, dur_ms: Date.now() - t0 }); process.exit(code); };
   main(process.argv.slice(2), log).then(code => done(code), e => { console.error('requirement-index: ' + e.message); done(2, e.message); });

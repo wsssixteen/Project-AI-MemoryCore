@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * eval.js — quest-phase-gate fixtures (5)
+ * eval.js — quest-phase-gate fixtures (16; 6-16 = v3 requirement read, 2026-11-03 287811)
  *
  * The hook locates active.txt via path.resolve(__dirname, '..', '..') + quest/active.txt
  * (two levels up from the hook file — NOT env, NOT cwd). So the eval sandbox-copies the
  * hook into a temp depth-2 tree (<tmp>/domain/quest-phase-gate/) and writes a controlled
  * <tmp>/quest/active.txt beside it. This also keeps eval fires out of the real log.jsonl.
  *
- * Exit 0 only if 5/5 PASS.
+ * Exit 0 only if every fixture PASSes.
  */
 const { spawnSync } = require('child_process');
 const fs = require('fs');
@@ -54,6 +54,20 @@ function lastLogAction() {
 const ACTIVE_BLOCK = 'qa=QA-999999\nstatus=active\ntask_folder=1. Tasks\\Melaka\\99. test\n';
 const ETANAH_JAVA = 'E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\melaka\\MlkFooForm.java';
 const results = [];
+const PHASES = ['Issue Checklist', '═══ SCOUT ═══', '═══ RECON ═══', '═══ RUBRIC ═══',
+  'git log --oneline -20 -- src/main/java/my/gov/melaka/MlkFooForm.java', 'ENTRY-POINT: someForm.xhtml:42 -> MlkFooForm.onSave()'];
+const READ_223236 = 'REQUIREMENT-READ #223236 for 287811 · Requirement · Rework';
+const REQ_OK = READ_223236 + '\nREQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN PENYEDIAAN/SEMAKAN" — contradicts — read: "status dokumen adalah Sedia"';
+function reqCase(n, name, extra, expectAllow) {
+  setActive(ACTIVE_BLOCK);
+  const t = writeTranscript('r' + n + '.txt', [...PHASES, ...extra, ''].join('\n'));
+  const r = runHook({ tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  const hso = r.out && r.out.hookSpecificOutput;
+  const pass = expectAllow
+    ? r.status === 0 && r.stdout.trim() === '' && lastLogAction() === 'allowed'
+    : !!(hso && hso.permissionDecision === 'deny' && /Requirement read/.test(hso.permissionDecisionReason || '') && /--read <req>/.test(hso.permissionDecisionReason || '') && lastLogAction() === 'blocked');
+  results.push({ name: n + '. ' + name + (expectAllow ? ' -> allow' : ' -> deny'), pass });
+}
 
 // ── Fixture 1: etanah .java edit + active quest + transcript missing banners → deny ──
 {
@@ -81,6 +95,7 @@ const results = [];
     '═══ RUBRIC ═══',
     'git log --oneline -20 -- src/main/java/my/gov/melaka/MlkFooForm.java',
     'ENTRY-POINT: someForm.xhtml:42 -> MlkFooForm.onSave()',
+    REQ_OK,
     '',
   ].join('\n'));
   const r = runHook({ tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
@@ -117,6 +132,19 @@ const results = [];
   const pass = r.status === 0 && r.stdout.trim() === '';
   results.push({ name: '5. non-etanah path -> silent', pass });
 }
+
+// ── Fixtures 6-16: v3 requirement read ──
+reqCase(6, 'phases present, no REQUIREMENT-MATCH line', [], false);
+reqCase(7, 'subject-only verdict, no read quote (the 287811 slip)', [READ_223236, 'REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — aligned — a prepared letter carries forward'], false);
+reqCase(8, 'quoted verdict but the requirement was never read this session', ['REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — aligned — read: "Sedia"'], false);
+reqCase(9, 'quoted verdict + REQUIREMENT-READ of the same req', [REQ_OK], true);
+reqCase(10, 'none found', ['REQUIREMENT-MATCH: 287811 → none — none found — no requirement covers this screen'], true);
+reqCase(11, 'not needed (alter request)', ['REQUIREMENT-MATCH: 287811 → none — not needed — alter request'], true);
+reqCase(12, 'ticket-gate template text only (self-disarm guard)', ['emit `REQUIREMENT-MATCH: 287811 → <req> — aligned | extends | contradicts | none found | not needed`'], false);
+reqCase(13, 'requirement-index --ticket Next line only', ['  Next: read it in full before any verdict: node quest/requirement-index.js --read 223236 --for 287811 (a subject match is never a verdict). Then write REQUIREMENT-MATCH: 287811 → #<req> "<subject>" — <aligned | extends | contradicts> — read: "<the rule that decides, quoted>", or none found / not needed.'], false);
+reqCase(14, 'requirement-index --read Next line + READ banner, no verdict of mine', [READ_223236, '  Next: quote the rule that decides in the line: REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN PENYEDIAAN/SEMAKAN DAN PENGESAHAN SURAT KEPUTUSAN DAN NOTIS 5A - PDT" — <aligned | extends | contradicts> — read: "<quoted rule>"'], false);
+reqCase(15, 'JSONL-escaped quote in assistant text', [JSON.stringify({ type: 'user', message: { content: [{ type: 'tool_result', content: READ_223236 }] } }), JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: 'REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — contradicts — read: "status Sedia"' }] } })], true);
+reqCase(16, 'READ banner is for a different requirement', ['REQUIREMENT-READ #111111 for 287811', 'REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — aligned — read: "Sedia"'], false);
 
 // ── Report ──
 let failed = 0;
