@@ -268,3 +268,5 @@
 {"ts":"2026-11-03T08:31:40.953Z","qa":"QA-287892","kind":"wrong-fix","n":1,"was":"Advised BA to remove dual-class mukim from the RM 4.00 Desa III rate","why":"jns_kwsn_ptbrn shows 6 mukim genuinely in two Desa classes; maintenance data is correct","learned":"Check ind_bandar_pekan_mukim.jns_kwsn_ptbrn before calling a rate's mukim list wrong"}
 {"ts":"2026-11-03T10:07:35.828Z","qa":"ADHOC-OPLPS-2026-1","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-11-03T10:07:45.354Z","qa":"ADHOC-OPLPS-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"closed no issue by miya 2026-11-03; no fix, no new knowledge beyond the register row A93"}
+{"ts":"2026-11-03T14:40:47.544Z","qa":"QA-287925","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-03T14:41:40.887Z","qa":"QA-287925","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
