@@ -3,7 +3,7 @@ symptom: #275847 2026-09-04: note posted + reassigned to Ammar on the strength o
 goal: BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first
 goal_signal: the PreToolUse fire produced: BLOCK unless the LAST user message is an explicit post approval (post it / post 
 retention: rotate monthly
-# redmine-write-gate (hook-only Feature, v1.5 — born 2026-09-04 via core/forge.js)
+# redmine-write-gate (hook-only Feature, v1.11 — born 2026-09-04 via core/forge.js)
 
 **What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or any `.js` it executes) references the Redmine host / API key AND carries a mutation: a write verb (`method:'PUT'|'POST'|'DELETE'|'PATCH'`, `-X PUT`, `--request POST`, `-Method Put`, a quoted `'PUT'` literal, `requests.put(`, `wget --post-data`), a request body (`-Body`, `curl -d/--data*/-F/-T`), or a payload KEY (`issue: {` · `notes:` · `status_id:` · `assigned_to_id:` · `done_ratio:` · `journal:` · `uploads:`). A field READ (`i.done_ratio`, `i['notes']`) is not a mutation (v1.3).
 
@@ -18,7 +18,8 @@ retention: rotate monthly
 | Piece | File | Role |
 |---|---|---|
 | Hook | `redmine-write-gate.check.hook.js` | PreToolUse block/allow |
-| Eval | `redmine-write-gate.eval.js` | 56 fixtures, sandboxed transcripts (F2 = the #275847 replay · F18 = the 2026-09-25 replay · F39 = the 2026-09-28 replay) |
+| Eval | `redmine-write-gate.eval.js` | 165 fixtures, sandboxed transcripts (F2 = the #275847 replay · F18 = the 2026-09-25 replay · F39 = the 2026-09-28 replay · F143 = the 287747 replay) |
+| Rule | `status-rule.json` + `status-rule.js` | his standing status rule: config (owner · hand-back · lower · frozen · BA list) + `verdict()` / `isBA()` / `liveState()`; CLI `node domain/redmine-write-gate/status-rule.js <num>` (v1.11) |
 | Log | `log.jsonl` | `{ts, outcome: blocked\|allowed, approval\|last_user}` |
 
 **Layer choice (Rule 7)**: hook-only — the decision is mechanical (is the last user turn an approval?). **Trigger moment (Rule 8)**: PreToolUse on the shell tools that can reach the API; not Stop (too late — the write has happened). **state-scoped**: no — one Redmine host for every state.
@@ -217,7 +218,7 @@ self_audit: every fire writes a log.jsonl row (outcome, approval or last_user); 
 | 21 | two sessions, two forms, one blocked in each within 30 min | accepted-risk: the repeat counter reads one log per checkout; two true first blocks read as a repeat, which costs one wrong slip row, never a wrong allow |
 
 **v1.9 (2026-11-02, 286610)**: per みや ("No do not change verified status of ticket. I thought I've asked you to build this" · "Statuses higher than resolved like Verified, closed, and others"). While staging the cycle-2 BA note I set the Status select to Resolved on a ticket he had not asked a status change for; the prose rule (redmine-phase1-prefill Step 3, since 2026-10-21 #282587) did not stop me. Now mechanical: a **status write through the staged form** (`form_input` whose value is a Redmine status name, a `browser_batch` carrying one, or browser JS assigning `issue_status_id`) is BLOCKED unless his words order THAT status (`set status to <name>` · `change it to <name>` · `<name> status` · `[redmine-status-ok: <name>]`, read by `lib/his-words.js`; a later hold wins). The gate cannot read the live status, so every status value needs his named order; a status at or past Resolved (Verified · Ready in PROD · Closed) is therefore never set back by me. Assignee, Notes, % Done and files stay staging (silent). New matcher entries: `mcp__claude-in-chrome__form_input` + `mcp__Claude_Browser__form_input`. Spec preservation: every v1.4 to v1.8 rule kept; F61 re-shaped to a notes-only JS fill (a status JS fill is now F138 BLOCK); dropped and named: "setting field values is always staging" for the ONE field Status. Fixtures F132 to F142.
-boundary: covers one browser form_input / JS / click on the Redmine edit form and one Bash/PowerShell command that writes to Redmine, read against his words · never edits a file, never reads the live Redmine status, never blocks a non-status field fill · stops at a block naming the status and the words that unblock it; the status choice is his
+boundary: covers one browser form_input / JS / click on the Redmine edit form and one Bash/PowerShell command that writes to Redmine, read against his words and, for a Status = Resolved fill, against his standing rule (`status-rule.json`) with one read-only GET of the ticket · never edits a file, never writes to Redmine itself, never sets a status at or past Resolved by the rule, never blocks a non-status field fill · stops at a block naming the rule row and the words that unblock it; a status outside the rule is his choice
 
 ### v1.9 adversarial scenarios (Rule 12 — 20)
 
@@ -246,5 +247,35 @@ boundary: covers one browser form_input / JS / click on the Redmine edit form an
 | 21 | he orders "Resolved" and I set it on a Verified ticket | accepted-risk: his order is the decision; the skill's Step 3 still says to read the select first and leave Verified or higher alone |
 
 **v1.8 patch-close line (2026-10-30, 287186/287233)**: an approved browser Submit now carries the next step — when the ticket's quest block is ticket_type=patch, run close-phase (Phase 1 + Phase 2) in the same turn, no question. Paired: playbook row A7, quest skill 6c line. Fixture F131. Why: both tickets waited for his 'Archive' after their handover was posted, because the close rule lived only in close-phase, which loads on 'close' words.
+
+**v1.11 (2026-11-03, 287747/287638)**: per みや, after four blocks of Status = Resolved on his own In Progress tickets ("why do you keep asking for status? I already told you to automatically set it to Resolve when: 1. The ticket is under me 2. The status is new or in progress. 3. When it is under someone else but NEW, we can set it to resolve when sending back to BA … 4. When the status is higher VERIFIED, CLOSED … READY IN PROD, REGARDLESS OF IT IS UNDER WHO, you must not change it … No more asking this part."). The rule is now one config + one function: `status-rule.json` (owner id 1311 · hand-back = Resolved · lower statuses · frozen statuses · the BA list with Redmine ids and sources) and `status-rule.js` (`verdict()`, `isBA()` = the list or roster class BA/QA via `lib/redmine-role.js`, `liveState()`). **How the gate learns the ticket and its state**: the ticket number is the last `navigate` to `/issues/<num>` in the transcript (same tab first; 4 MB tail), the live status and assignee come from ONE read-only GET through `quest/redmine-status-check.js` (`fetchIssue`, 6 s, run in a child process because the hook is sync). Chosen over a state file written by the prefill skill (a self-report the gate would have to trust) and over parsing `read_page` output (format not verifiable without the browser). A BA staged in the Assignee field of the same form is remembered as a `browser-assignee` log row (same ticket, 30 min). Order of decision on a Status fill: his named order → a later hold → the rule (Resolved only) → block. Rule rows: 1 under him and Open/Rework/KIV/Reviewing · 2 under him and New/In Progress · 3 under someone else and New, allowed only when the ticket is already under a BA or a BA is staged as Assignee · 4 Resolved/Verified/Closed/Ready in PROD/Cancelled: never set back. Gaps he left open, resolved: Open/Rework/KIV/Reviewing under him = row 1 (lower than Resolved, his ticket) · any non-New status under someone else = that person's work, blocked · Cancelled = terminal like Closed, frozen · Resolved itself = frozen (nothing to set). The rule covers a hand-back to Resolved only; any other target keeps v1.9 (his named order). Unknown ticket or Redmine not answering = the v1.9 block, with the reason. Eval env: `REDMINE_GATE_TICKET_STATE` (fixture states) and `REDMINE_GATE_LOG` (sandbox log). Paired: `redmine-phase1-prefill` Step 2b + Step 3 Status row, memory `feedback_redmine_write_needs_nod` (second standing exception). Spec preservation: every v1.4 to v1.10 rule kept (F1 to F142 unchanged); dropped and named: "every status value needs his named order" for the one value Resolved when the rule allows it. Fixtures F143 to F165; eval 165/165.
+
+### v1.11 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | the live replay: his In Progress ticket, Status = Resolved, no words | fixture-added (F143 allow, row 2) |
+| 2 | his Rework / KIV ticket (a gap he left open) | fixture-added (F144, F145 allow, row 1) |
+| 3 | someone else's New ticket, no BA staged | fixture-added (F146 BLOCK, says stage the Assignee first) |
+| 4 | a BA staged as Assignee, then Status on the same ticket | fixture-added (F147 silent, F148 allow, row 3) |
+| 5 | someone else's In Progress / Rework ticket | fixture-added (F149, F150 BLOCK) |
+| 6 | Verified · Closed · Ready in PROD · Cancelled · Resolved current status | fixture-added (F151 to F155 BLOCK, row 4) |
+| 7 | Verified ticket + his named order "set status to Resolved" | fixture-added (F156 allow: his words come before the rule) |
+| 8 | his ticket, then "don't change the status" | fixture-added (F157 BLOCK: a hold wins) |
+| 9 | New and already under a BA | fixture-added (F158 allow, row 3) |
+| 10 | no navigate in the transcript | fixture-added (F159 BLOCK, names the cause) |
+| 11 | Redmine unreachable or no such ticket | fixture-added (F160 BLOCK, names the cause) |
+| 12 | Status = In Progress on his New ticket through the form | fixture-added (F161 BLOCK: the rule covers Resolved only; the API claim covers New → In Progress) |
+| 13 | Assignee + Status in one browser_batch | fixture-added (F162 allow) |
+| 14 | two tabs, two tickets | fixture-added (F163: the tab's own navigate wins) |
+| 15 | the CLI used by the skill | fixture-added (F164) |
+| 16 | config drift (owner id, hand-back, frozen list) | fixture-added (F165 guard) |
+| 17 | a browser-assignee row from another ticket or with no ticket number | handled: the lookup needs the same number (F146 passed only after this fix: F134's row with no number had matched) |
+| 18 | a Notes text that is exactly a BA's name | accepted-risk: it is remembered as a staged assignee; a one-word note equal to a name does not occur |
+| 19 | the navigate was more than 4 MB back in the transcript | accepted-risk: the gate blocks with "ticket is not known"; navigate again (the skill opens the edit page right before filling) |
+| 20 | the roster (REDMINE-PEOPLE.md, main checkout only) missing | handled: `isBA` falls back to the config list; the eight listed BAs still pass |
+| 21 | the Redmine GET takes the full 6 s on every status fill | accepted-risk: one fill per hand-back; the child process has a 15 s cap and a null answer blocks, never allows |
+| 22 | a non-Melaka BA (Terengganu, Perak) staged | handled: `roleOf` reads every state roster after the ticket's own; a listed name can be added to the config with its source |
+| 23 | he reverses the rule ("ask me again for status") | handled outside the gate: set `handback_status` to "" in status-rule.json; every status fill is back on his named order |
 
 **v1.10 (2026-11-03, Domain Expansion save rule 12.7)**: two exemption guards had gone stale, so the eval sat at 136/142 since the 2026-10-27 battery. (1) Main f8af263c builds the quest-start claim payload in two lines (status, then done_ratio = START_PERCENT only for Pelupusan or Awam). The hook's one-line pattern no longer matched, so the exemption voided and the live claim was blocked. The hook and F85 now accept that form, and they still void it for any other `payload.<key> =` or `payload[`. The F83, F88 and F89 tamper fixtures now edit the live form. (2) ticket-load-verify v1.5 (b1e2c96e) spawns python on quest/pdf-annotations.py, a local-only helper. F29 allows that one spawn and fails on a second child_process or on a network import in the helper. Spec preservation: every v1.5 and v1.6 rule is kept (one script path, status plus 20 percent only, no note, assignee, journal or upload); nothing is dropped. Eval 142/142.

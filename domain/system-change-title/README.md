@@ -10,6 +10,8 @@ footprint: per-turn: 0 new processes, runs inside the stop-reply-shape bundle, u
 
 **Contract** (v3, 2026-10-28): block unless the reply has at least one heading `## System › <kind> (new|changed)` with one table under it, one row per part; block when the same kind is headed twice (the 2026-10-28 reply carried four `System › Memory` headings, miya: "if it is under memory, just put it in a single table").
 
+**v4 (2026-11-03, miya: "always show a diagram drawn always … use the boxes I've shown to you before"; ruling by Fable 5.1):** after an Edit or Write to a system file this turn, the gate passes only when a `change-map*.png` (from `lib/change-map.js`) was sent with SendUserFile this turn; the §3i tables pass only beside a quoted `CHANGE-MAP: FAIL` line. A reply that only names a change (no edit) keeps v3: headings or the picture. Eval 43/43.
+
 **Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.
 
 **Trigger moment (Rule 8)**: TODO(forge): justify this is the LEANEST trigger.

@@ -1799,3 +1799,15 @@
 {"ts":"2026-11-03T04:07:54.955Z","category":"A3"}
 {"ts":"2026-11-03T04:07:55.045Z","category":"A4"}
 {"ts":"2026-11-03T03:43:54.542Z","category":"reask/redundant"}
+{"ts":"2026-11-03T05:56:25.147Z","category":"test-scenario-unverified"}
+{"ts":"2026-11-03T06:23:19.962Z","category":"reask/redundant"}
+{"ts":"2026-11-03T06:36:14.997Z","category":"A1"}
+{"ts":"2026-11-03T06:36:16.009Z","category":"A2"}
+{"ts":"2026-11-03T06:36:17.035Z","category":"A3"}
+{"ts":"2026-11-03T06:36:17.891Z","category":"A4"}
+{"ts":"2026-11-03T06:39:29.429Z","category":"blocker"}
+{"ts":"2026-11-03T07:18:33.947Z","category":"reask/verbose"}
+{"ts":"2026-11-03T07:18:34.856Z","category":"verify-before-claim"}
+{"ts":"2026-11-03T07:18:35.704Z","category":"boot-skip"}
+{"ts":"2026-11-03T07:18:36.632Z","category":"A4"}
+{"ts":"2026-11-03T07:18:37.415Z","category":"A1"}
