@@ -6231,3 +6231,17 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\
 issue_one_liner=PROD OPLPS PTMLK/02/L/OPLPS/2026/8 pelan L1e: file complete, pelukis export has no right border line; no issue, closed by miya 2026-11-03
 title=OPLPS pelan L1e tidak penuh
 branch=none-until-ticket
+
+qa=QA-287925
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\364. II #287925 - Pelupusan - MLPS dan OMLPS - Request untuk Alter Permohonan ke Tugsan (PROD)
+phase=patch
+status=archived
+ticket_type=patch
+env=Pelupusan > MLPS dan OMLPS > Request untuk Alter Permohonan ke Tugsan  Penyediaan Borang 4Ae dan L1e
+issue_one_liner=Pelupusan > MLPS dan OMLPS > Request untuk Alter Permohonan ke Tugsan  Penyediaan Borang 4Ae dan L1e
+assigned_to_me=2026-11-03
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-11-03
+qa_doc=projects/coding-projects/archive/QA-287925/QA-287925.md
+closed=2026-11-03
