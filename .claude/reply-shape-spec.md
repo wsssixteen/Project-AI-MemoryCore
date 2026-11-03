@@ -112,7 +112,7 @@ fourth strike lands.
 | 7 | Wins visible: state what now works, concretely | — |
 | 8 | Errors matter-of-fact: cause + fix, no "uh oh" | — |
 | 9 | No preamble / recap / closing pleasantries | First line answers; last line is the next action |
-| 10 | **Stop-hook correction = DELTA ONLY** — token + missing line, never a re-emit | みや never reads the same content twice |
+| 10 | **Stop-hook correction = DELTA ONLY** — token + missing line, never a re-emit; it still ends on what it means and the next step | みや never reads the same content twice; a bare fact leaves him asking "so what?" (2026-11-03, 287350) |
 
 **Precedence**: a constrained-format ask from みや ("only a table", "one sentence") outranks every row above — the injector detects it and suppresses the contract for that turn.
 

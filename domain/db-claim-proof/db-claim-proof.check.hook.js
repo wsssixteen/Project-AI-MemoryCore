@@ -69,6 +69,7 @@ if (require.main === module) {
       blockReason: `⛔ db-claim-proof: this turn ran ${turn.dbTools.length} DB query(s) and the reply shows no SELECT.\n` +
         '   Every DB fact miya reads ships with the SELECT that proves it (unqualified, no JOIN, runnable by him).\n' +
         '   ⚡ DELTA ONLY: output just the proving SELECT(s) under the claim they prove; do not re-emit the reply.\n' +
+        '   End on one line: what it means and the next step. A bare SELECT is not an answer (miya 2026-11-03, 287350).\n' +
         '   No DB fact in the reply? add [skip-db-proof: <why>] to it.',
     };
   });
