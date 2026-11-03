@@ -1103,3 +1103,8 @@
 {"ts":"2026-11-03T09:49:14.386Z","turn_id":"d544e337-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
 {"ts":"2026-11-03T09:49:14.391Z","turn_id":"d544e337-1","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
 {"ts":"2026-11-03T09:51:11.895Z","turn_id":"d544e337-2","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-03T09:57:36.985Z","turn_id":"d544e337-2","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-03T09:57:37.025Z","turn_id":"d544e337-2","feature":"ownership-input-check","goal":"an ownership hand-off only leaves us after the values we sent into the other module were traced, so a bad input of ours is never billed to another team"}
+{"ts":"2026-11-03T09:57:37.041Z","turn_id":"d544e337-2","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-03T10:02:34.708Z","turn_id":"0875c5b6-3","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-03T10:06:35.604Z","turn_id":"6c2113a8-10","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}

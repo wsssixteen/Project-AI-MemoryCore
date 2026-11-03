@@ -597,3 +597,5 @@
 {"ts":"2026-11-03T09:48:28.042Z","id":"ADHOC-PPTPB-2026-9","outcome":"fail","fails":["block: required keys present","register: status ↔ block status","qa_doc: OWNED-ELSEWHERE carries an \"Input check:\" line (cross-module-check)"],"dur_ms":36}
 {"ts":"2026-11-03T09:48:48.826Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":35}
 {"ts":"2026-11-03T09:52:15.335Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":40}
+{"ts":"2026-11-03T10:07:36.070Z","id":"ADHOC-OPLPS-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":48}
+{"ts":"2026-11-03T10:07:45.487Z","id":"ADHOC-OPLPS-2026-1","outcome":"pass","fails":[],"dur_ms":37}

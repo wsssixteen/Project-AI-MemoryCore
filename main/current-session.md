@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-OPLPS-2026-1 OPLPS pelan L1e tidak penuh)
+- Asked: PROD PTMLK/02/L/OPLPS/2026/8 (nurulazura, PDTJ): pelan on Borang L1e looks cut, other OPLPS fine; margin? ours or the reports team?
+- Found: not margin, not cut. DMS file 2000x1410 complete; pixel script: black border top, bottom, left, none on right. Chain: pelukis azizah uploads in Teknikal (LAIN-37353842), Tandatangan Pelan stamps on the same canvas (CommonImageUtil.overlayImages), OPLPS users upload those exact bytes (932673 B), LaporanPelan.jrxml RetainShape only shrinks. Jrxml is in our own repo, so not a reports-team issue.
+- Closed: miya, no issue. Route ANSWER. Task folder 365 archived, register A93 ANSWERED, audit 31/31.
+- Not verified: azizah's own upload not opened (not needed after close).
+- Mistakes: said the file itself was cut, then that the bottom border was missing; both withdrawn after measuring. Wrong column guesses (medan_pk, no_dokumen, ind_jns_dok) before reading the schema.
+- Assessment: A1 the brief-first gate blocked the save agent and the audit in a closing round with no new finding. A2 ⏭ no ticket quest. A3 a pixel count settled "cut vs missing line" where eyeballing failed twice. A4 compare the file bytes across Teknikal and OPLPS before blaming either module. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
 
 ## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
