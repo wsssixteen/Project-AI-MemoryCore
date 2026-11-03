@@ -1108,3 +1108,19 @@
 {"ts":"2026-11-03T09:57:37.041Z","turn_id":"d544e337-2","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
 {"ts":"2026-11-03T10:02:34.708Z","turn_id":"0875c5b6-3","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
 {"ts":"2026-11-03T10:06:35.604Z","turn_id":"6c2113a8-10","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-03T10:12:55.849Z","turn_id":"6c2113a8-10","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-03T10:12:55.885Z","turn_id":"6c2113a8-10","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-03T10:12:55.938Z","turn_id":"6c2113a8-10","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-03T10:21:07.200Z","turn_id":"f86ea014-2","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-03T10:47:03.470Z","turn_id":"f86ea014-5","feature":"terse-gate","goal":"terse-gate.discipline.hook.js — Stop hook Power: domain/terse-gate/ PURPOSE (みや 2026-06-24, \"you're still blabbering stupidly\"): block a reply that is"}
+{"ts":"2026-11-03T10:57:05.255Z","turn_id":"3b7af671-3","feature":"prod-alter-gate","goal":"a PROD alter runs only on a plan miya approved in chat, bound to the exact plan code"}
+{"ts":"2026-11-03T10:57:05.260Z","turn_id":"3b7af671-3","feature":"memory-write-gate","goal":"no feedback memory is written before the rule has a named enforcing home in its workflow"}
+{"ts":"2026-11-03T10:57:05.264Z","turn_id":"3b7af671-3","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-03T11:02:27.218Z","turn_id":"3b7af671-5","feature":"redmine-write-gate","goal":"BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first"}
+{"ts":"2026-11-03T11:02:27.223Z","turn_id":"3b7af671-5","feature":"design-consult-gate","goal":"design-consult-gate.gate.hook.js — PreToolUse hook (matcher: Edit|Write) Feature: domain/design-consult-gate/ PURPOSE: creating/editing a system-shape file MUST be preceded by consulting BOTH"}
+{"ts":"2026-11-03T11:02:27.229Z","turn_id":"3b7af671-5","feature":"session-name","goal":"every session (new, resumed, child, machine-first) carries a name '<D/M/YYYY> - <ticket or keywords>' with no manual rename"}
+{"ts":"2026-11-03T11:09:46.158Z","turn_id":"2e232e3e-1","feature":"memory-write-gate","goal":"no feedback memory is written before the rule has a named enforcing home in its workflow"}
+{"ts":"2026-11-03T11:18:26.726Z","turn_id":"2e232e3e-2","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-03T11:22:25.257Z","turn_id":"f86ea014-15","feature":"terse-gate","goal":"terse-gate.discipline.hook.js — Stop hook Power: domain/terse-gate/ PURPOSE (みや 2026-06-24, \"you're still blabbering stupidly\"): block a reply that is"}
+{"ts":"2026-11-03T14:09:43.177Z","turn_id":"b34c462c-31","feature":"memory-write-gate","goal":"no feedback memory is written before the rule has a named enforcing home in its workflow"}
+{"ts":"2026-11-03T14:25:40.450Z","turn_id":"146ffb8b-40","feature":"full-address-trace-gate","goal":"full-address-trace-gate.discipline.hook.js — Stop hook (BLOCKING) Feature: domain/full-address-trace-gate/ PURPOSE: every code reference in a trace / class chain must be GREPPABLE by"}
