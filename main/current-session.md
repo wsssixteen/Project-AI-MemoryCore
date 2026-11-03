@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
+
+## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
+- Asked: why the false alarms; drop the RustDesk session-start alert; a real check step in the change route (justify, scrutinize, assess, highest model, a picture, no essays); then every system change reported as a coloured picture on the system map's own boxes.
+- Done: RustDesk alert removed. Step 3 Check + nod built (STEP-3 block, step3-check eval 20/20), on main 28f3eb1e / main folder af03ca97. Step 8: new Tool `lib/change-map.js` (spec JSON → coloured map, NEW green · CHANGED blue · REMOVED red, untouched kinds faded), system-change-title v4 (after a system edit, passes only on a sent change-map PNG; tables only beside `CHANGE-MAP: FAIL`), INDEX step 8, reply-shape-spec 3i, explain-diagram colour exception, tools.json row. Gate eval 43/43. On main 026cb251 / main folder 23c15230 (patch applied by hand: land-on-main refused on dirty main + current-session.md conflict).
+- Mistakes he caught: report given as tables, "I don't think this is working"; the first map was bland because my 2026-11-02 no-accent rule overrode the plugin's colours ("did you add a certain rule that overwrite the original skill?").
+- Open: the RustDesk connection itself is not fixed; 12 tool-registry problems existed before this change; Appraisal-2026 handover draft still in the notes folder.
+- Assessment: A1 a rule I wrote for one picture type silently stripped colour from every picture; a skill-wide rule needs its scope named. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 17:59 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), second Domain Expansion after 287811 handover: pulled main 0caed659, watch rows for quest-phase-gate (gate + eval) and redmine-write-gate; miya to confirm the pinned git origin in the app (Help, Troubleshooting, Review Pinned Git Origins) so sync_with_base_branch works again.
 **Last Activity**: 2026-11-03 17:53 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/pptpb-hakmilik-assignment-639100), ADHOC-PPTPB-2026-9 answered and BA reply sent, Domain Expansion.
 
@@ -18,14 +27,3 @@
 - Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
 - Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
-
-## Session Recap (2026-11-03, ticket 287892 PT Kadar Cukai DESA II)
-- Asked: PROD PT PTMLK/02/L/PT/2026/18 Desa II Bangunan Tujuan Keagamaan showed "Tiada kadar cukai"; expected RM 66.00. BA Fizah asked if our filter is wrong. Adhoc first (ADHOC-PT-2026-16, A92), then ticket 287892.
-- Cause: six mukim are in two Desa classes (jns_kwsn_ptbrn "38584|38585"), so they sit in two rates; the lookup ignored Pengkelasan Tanah and took the oldest row. Maintenance data is correct; the tick is not stored on the rate.
-- Fix: pelupusan only, PelupusanService.onCalculateCukaiTanah picks the rate whose mukim all share the chosen class and hands it to common (calculate():197 uses a given row). 55782d7ce1 on mlk/esokongan/287892, int-env 1295a676b4, stag-env 81097d7eae. No common change.
-- Tested on stg1 by miya on PT/2026/18: DESA II RM 66.00; DESA III RM 50.00 (RM 4.00 x 6 = 24 raised to the RM 50 non-MCL minimum, common :509-529). Redmine Resolved to Nurhafizah Hasan, 3 photos, submitted by miya ~16:25.
-- MLIT reference data cannot show the fix (rates 88 and 287 hold mukim of all three classes there).
-- Also: picture added to Appraisal (DECISIONS row 50, ticket card).
-- Mistakes: first WhatsApp advice told the BA to remove mukim from the RM 4 rate (retracted, data is correct); deploy card claimed staging test before checking the minimum rule explained his RM 50.
-- Assessment: A1 redmine-write-gate still blocks Status even when status-rule.js says ALLOWED (needed his words twice). A2 deploy skill test scenario did not compute the minimum floor, so his RM 4 expectation was wrong. A3 git grep across origin/mlk/beta found the floor rule in one call after rg timed out. A4 reuse of common's pre-chosen-row path avoided a common hand-over. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-03 15:16 — worktree `ticket-287773-quest-run-66ac6f` (branch claude/dms-dokumen-kemasukan-limit-b60a31), Terengganu DMS upload size limit question, Domain Expansion.
