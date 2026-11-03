@@ -1,4 +1,12 @@
-**Last Activity**: 2026-11-03 17:25 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), ticket 287811 handed to BA, Domain Expansion.
+**Last Activity**: 2026-11-03 17:53 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/pptpb-hakmilik-assignment-639100), ADHOC-PPTPB-2026-9 answered and BA reply sent, Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 PPTPB TSP endorsement)
+- Asked: PROD PPTPB PTMLK/02/L/PPTPB/2026/5 (norlina, Jasin): is PPTPB connected to the right TSP subflow in Flowable; HKBM 02MH1579/2026 on PN 040214PN00037703 went to Jasin, BA expects PTG 00.
+- Found: MLK_PLP_PPTPB.bpmn20.xml:575-591 41.0 Endosan TSP calls MLK_DFT_NOTA_HKMLK with nextUrusan TSP, same as MCL and PLTP; the permohonan sits at SPIL Semakan Permohonan Lulus (TSP), Dalam Tindakan. 02MH1579/2026 is HKBM (MH), not TSP (nota), made 20/10 by norlina with no workflow row and no tugasan, so not made by the flow. No PPTPB in PROD ever made a TSP perserahan. PROD nota on PN always goes to the district office (MCL 19, PLTP 114), never 00.
+- Route: OWNED-ELSEWHERE, refer Pendaftaran (how HKBM was made; should a PN nota go to PTG 00). BA reply sent by miya 2026-11-03. Saved: Task folder 367, register A95, audit 31/31.
+- Not verified: how 02MH1579/2026 was created (etanah-pendaftaran not on disk).
+- Mistakes: skipped the boot reads and the session briefing; the save agent tried to start before the brief (gate caught it); the first SQL guesses hit wrong column names (pjbt_id, id_hakmilik, ind_jns_hkmlk) before reading information_schema.
+- Assessment: A1 the brief-first, db-claim-proof and ownership-input gates each forced one delta; the Input check had to be repeated three times because each reply was checked alone. A2 the BPMN read settled the BA's flowable question in one grep. A3 the sibling count (children of MCL/PLTP by hakmilik type) turned a "should" into a PROD fact. A4 a stray perserahan with no umm_aliran_kerja row is a quick sign it was not made by a flow. A5 ⏭ no sweep.**Last Activity**: 2026-11-03 17:25 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), ticket 287811 handed to BA, Domain Expansion.
 
 ## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
 - Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
@@ -20,12 +28,3 @@
 - Mistakes: first WhatsApp advice told the BA to remove mukim from the RM 4 rate (retracted, data is correct); deploy card claimed staging test before checking the minimum rule explained his RM 50.
 - Assessment: A1 redmine-write-gate still blocks Status even when status-rule.js says ALLOWED (needed his words twice). A2 deploy skill test scenario did not compute the minimum floor, so his RM 4 expectation was wrong. A3 git grep across origin/mlk/beta found the floor rule in one call after rg timed out. A4 reuse of common's pre-chosen-row path avoided a common hand-over. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 15:16 — worktree `ticket-287773-quest-run-66ac6f` (branch claude/dms-dokumen-kemasukan-limit-b60a31), Terengganu DMS upload size limit question, Domain Expansion.
-
-## Session Recap (2026-11-03, Terengganu dokumen kemasukan upload size limit)
-- Asked: the DMS size limit for dokumen kemasukan on Terengganu; they want 10MB; find the table and column.
-- Found: no table or column holds it. trgstg2 checked: information_schema columns saiz/size/max (only dokumen_revision.saiz_fail_byte, a stored size), rjk_parameter_sistem (no upload parameter), et_dms_stg2 (no settings table).
-- Code on trg/master: etanah-common WebUtil.java:1635 getFileUploadSizeLimit = 1,000,000,000 B (1 GB, upload box default); WebUtil.java:2540 server check 209,715,200 B (200 MB). AWAM extra-document tabs 100 MB (tooltip wrongly says 1Mb). Pelupusan 1 MB outliers: SuratTemplateForm.xhtml:89, KeputusanSiasatanForm.xhtml:149, UtilitiPajakanBerfasa.xhtml:134.
-- Answer given: limit already 200 MB, so 10MB would be a cut. Not verified: which screen they use; JBoss max-post-size on the Terengganu servers (infra).
-- Mistakes: first reply asked for the screen and error when he only wanted the number; claimed the common clone could not fetch (STATE-FACTS 2026-10-03) without running it; the fetch worked.
-- Assessment: A1 db-claim-proof + attempt-before-blocked gates caught both slips. A2 ⏭ no quest. A3 knowledge FLOW-TRACES §File upload → DMS (Melaka) pointed straight at the code layers. A4 a "table and column" ask can be a code limit; say so on line one. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-03 14:33 — worktree `appraisal-2026-rubric-500819` (branch claude/appraisal-2026-rubric-500819), tickets 287747 + 287638 handed to BA, Domain Expansion.

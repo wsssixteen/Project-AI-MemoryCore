@@ -1814,3 +1814,7 @@
 {"ts":"2026-11-03T09:26:40.654Z","category":"blocker"}
 {"ts":"2026-11-03T09:26:43.324Z","category":"A2"}
 {"ts":"2026-11-03T09:26:44.474Z","category":"A3"}
+{"ts":"2026-11-03T09:54:38.582Z","category":"boot-skip"}
+{"ts":"2026-11-03T09:54:39.327Z","category":"verify-before-claim"}
+{"ts":"2026-11-03T09:54:40.031Z","category":"A1"}
+{"ts":"2026-11-03T09:54:40.857Z","category":"A3"}
