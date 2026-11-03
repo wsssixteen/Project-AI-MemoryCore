@@ -1,0 +1,19 @@
+{
+  "_what": "miya's standing rule for a Redmine status hand-back (2026-11-03): read by domain/redmine-write-gate/status-rule.js, the hook and the redmine-phase1-prefill skill. One list; nothing here is repeated elsewhere.",
+  "owner": { "name": "Ahmad Ridhwan Anuar", "id": 1311 },
+  "handback_status": "Resolved",
+  "lower": ["New", "Open", "In Progress", "Rework", "KIV", "Reviewing"],
+  "frozen": ["Resolved", "Verified", "Closed", "Ready in PROD", "Cancelled"],
+  "ba": [
+    { "name": "Anis Nabilah J Daud", "id": 559, "short": "Anis", "cls": "BA", "source": "STATE-FACTS melaka §8; miya 2026-10-12 (#282303)" },
+    { "name": "Nurul Amirah Nadiah", "id": 1119, "short": "Mira", "cls": "BA", "source": "STATE-FACTS melaka §8; #282587" },
+    { "name": "Nurhafizah Hasan", "id": 699, "short": "Fizah", "cls": "BA", "source": "STATE-FACTS melaka §8 (as Nurhafizah); roster" },
+    { "name": "Devayani Priya Shanmugam", "id": 1299, "short": "Devayani", "cls": "BA", "source": "roster REDMINE-PEOPLE melaka; 287747/287638 2026-11-03" },
+    { "name": "Mira Munira Mohamad", "id": 1423, "short": "Mira Munira", "cls": "BA", "source": "roster REDMINE-PEOPLE melaka; 287747/287638 2026-11-03" },
+    { "name": "Nurul Amani", "id": 976, "short": "Amani", "cls": "QA", "source": "#285768; roster class QA" },
+    { "name": "Izzah Filzah", "id": 947, "short": "Izzah", "cls": "BA", "source": "STATE-FACTS melaka §8 (BA Pembangunan); #282303" },
+    { "name": "Faizliyana Ebbie Izman", "id": 1018, "short": "Lyana", "cls": "BA", "source": "STATE-FACTS melaka §8 (BA Pembangunan); #282303" }
+  ],
+  "roster_classes": ["BA", "QA"],
+  "staged_assignee_minutes": 30
+}

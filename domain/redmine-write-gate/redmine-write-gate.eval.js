@@ -381,6 +381,71 @@ check('F86 look-alike name + outside copy chained → BLOCK', blocked(r), r.out.
 r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user('ok post it')]) }, STAGE);
 check('F87 the stage-only window still blocks every OTHER API write (F56 unchanged by v1.5)', blocked(r) && /STAGE-ONLY/.test(r.out), r.out.slice(0, 160));
 
+// ── v1.11 (2026-11-03, 287747/287638): his standing rule decides a Status = Resolved fill; the gate reads the ticket from
+// the last navigate, its live status + assignee through status-rule.js (REDMINE_GATE_TICKET_STATE = a fixture file here).
+const STATE_FILE = path.join(sb, 'ticket-state.json');
+fs.writeFileSync(STATE_FILE, JSON.stringify({
+  287747: { status: 'In Progress', assignee: 'Ahmad Ridhwan Anuar (Dev PLP)', assigneeId: 1311 },
+  287638: { status: 'Rework', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300001: { status: 'New', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777 },
+  300002: { status: 'In Progress', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777 },
+  300003: { status: 'Verified', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300004: { status: 'Closed', assignee: 'Anis Nabilah J Daud', assigneeId: 559 },
+  300005: { status: 'Ready in PROD', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300006: { status: 'Cancelled', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300007: { status: 'Resolved', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300008: { status: 'New', assignee: 'Anis Nabilah J Daud', assigneeId: 559 },
+  300009: { status: 'New', assignee: null, assigneeId: null },
+  300010: { status: 'KIV', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300011: { status: 'New', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  300012: { status: 'Rework', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777 },
+}));
+const nav = (num, tabId = 1) => JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + num, name: 'mcp__claude-in-chrome__navigate', input: { url: 'http://172.16.90.169/redmine/issues/' + num + '/edit', tabId } }] } });
+const run11 = (toolName, toolInput, lines) => { const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: toolName, tool_input: toolInput, transcript_path: transcript(lines) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS, REDMINE_GATE_TICKET_STATE: STATE_FILE, REDMINE_GATE_LOG: path.join(sb, 'gate-log.jsonl') } }); return { out: (r.stdout || '') + (r.stderr || ''), status: r.status }; };
+const statusFill = (value, lines, tabId = 1) => run11(CHROME_FORM, { tabId, ref: 'ref_549', value, action_summary: 'sets the Status' }, lines);
+const ruled = r => !blocked(r) && /allowed by miya's standing rule/.test(r.out);
+const staging = [user('Retry prefill')];
+r = statusFill('Resolved', [nav(287747), ...staging]);
+check('F143 REPLAY 287747: his ticket, In Progress → Resolved, no words → allowed by the rule (row 2)', ruled(r) && /row 2/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(287638), ...staging]);
+check('F144 his ticket, Rework → Resolved → allowed (row 1, a gap he left open)', ruled(r) && /row 1/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300010), ...staging]);
+check('F145 his ticket, KIV → Resolved → allowed (row 1)', ruled(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300001), ...staging]);
+check('F146 someone else\'s ticket, New, no BA staged → BLOCK, says stage the Assignee first', blocked(r) && /Stage the Assignee/.test(r.out), r.out.slice(0, 240));
+r = run11(CHROME_FORM, { tabId: 1, ref: 'ref_568', value: 'Nurul Amirah Nadiah', action_summary: 'sets the Assignee' }, [nav(300001), ...staging]);
+check('F147 Assignee = a BA on that form → silent (remembered)', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = statusFill('Resolved', [nav(300001), ...staging]);
+check('F148 then Status = Resolved on the same New ticket → allowed (row 3: sent back to the BA)', ruled(r) && /row 3/.test(r.out) && /Nurul Amirah Nadiah/.test(r.out), r.out.slice(0, 240));
+r = statusFill('Resolved', [nav(300002), ...staging]);
+check('F149 someone else\'s ticket, In Progress → BLOCK (row 3 covers New only)', blocked(r) && /someone else's work/.test(r.out), r.out.slice(0, 240));
+r = statusFill('Resolved', [nav(300012), ...staging]);
+check('F150 someone else\'s ticket, Rework → BLOCK', blocked(r), r.out.slice(0, 200));
+for (const [id, num, name] of [['F151', 300003, 'Verified'], ['F152', 300004, 'Closed'], ['F153', 300005, 'Ready in PROD'], ['F154', 300006, 'Cancelled'], ['F155', 300007, 'Resolved']]) {
+  r = statusFill('Resolved', [nav(num), ...staging]);
+  check(id + ' ' + name + ' → BLOCK always by the rule (row 4, never set back)', blocked(r) && /row 4/.test(r.out) && /never set back/.test(r.out), r.out.slice(0, 240));
+}
+r = statusFill('Resolved', [nav(300003), user('set status to Resolved')]);
+check('F156 Verified + his named order → allowed on his order (the rule never overrides his words)', !blocked(r) && /set on miya's order/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(287747), user("no, don't change the status")]);
+check('F157 his ticket, In Progress, but "don\'t change the status" → BLOCK (a hold wins over the rule)', blocked(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300008), ...staging]);
+check('F158 New and already under a BA (Anis) → allowed (row 3)', ruled(r) && /row 3/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', staging);
+check('F159 no navigate to /issues/<num> in the transcript → BLOCK, says the ticket is not known', blocked(r) && /ticket is not known/.test(r.out), r.out.slice(0, 240));
+r = statusFill('Resolved', [nav(399999), ...staging]);
+check('F160 Redmine does not answer for the ticket → BLOCK, says so', blocked(r) && /did not answer/.test(r.out), r.out.slice(0, 240));
+r = statusFill('In Progress', [nav(300011), ...staging]);
+check('F161 his New ticket, Status = In Progress through the form, no words → BLOCK (the rule covers Resolved only)', blocked(r), r.out.slice(0, 200));
+r = run11('mcp__claude-in-chrome__browser_batch', { actions: [{ name: 'form_input', input: { tabId: 1, ref: 'ref_568', value: 'Devayani Priya Shanmugam' } }, { name: 'form_input', input: { tabId: 1, ref: 'ref_549', value: 'Resolved' } }] }, [nav(300009), ...staging]);
+check('F162 browser_batch: Assignee = BA then Status = Resolved on an unassigned New ticket → allowed (row 3)', ruled(r) && /Devayani/.test(r.out), r.out.slice(0, 240));
+r = statusFill('Resolved', [nav(300002, 1), nav(287747, 2), ...staging], 2);
+check('F163 two tabs: the status fill on tab 2 reads tab 2\'s ticket (287747, his) → allowed', ruled(r) && /#287747/.test(r.out), r.out.slice(0, 200));
+const cli = spawnSync(process.execPath, [path.join(__dirname, 'status-rule.js'), '287747', '--json'], { encoding: 'utf8', timeout: 20000, env: { ...process.env, REDMINE_GATE_TICKET_STATE: STATE_FILE } });
+check('F164 status-rule.js CLI prints the state and the verdict as JSON', /"allow":true/.test(cli.stdout || '') && /"row":2/.test(cli.stdout || ''), (cli.stdout || cli.stderr || '').slice(0, 200));
+const SRM = require(path.join(__dirname, 'status-rule.js'));
+check('F165 guard: status-rule.json keeps the owner id 1311, Resolved as the hand-back and the five frozen statuses', SRM.rule().owner.id === 1311 && SRM.rule().handback_status === 'Resolved' && ['Resolved', 'Verified', 'Closed', 'Ready in PROD', 'Cancelled'].every(x => SRM.rule().frozen.includes(x)), JSON.stringify(SRM.rule().frozen));
+
 let failed = 0; for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nredmine-write-gate.eval: ' + (results.length - failed) + '/' + results.length + (failed ? ' RED' : ' green'));
 fs.rmSync(sb, { recursive: true, force: true });

@@ -70,3 +70,11 @@ resolution is unchanged by the relocation. If this folder ever nests deeper, thi
 
 Built 2026-06-08 (QA-262762) · v2 2026-07-03 E2 entry-point + E3 mechanism-history advisories
 (quest-system-audit, QA-268273) · **2026-07-07 relocated here, behavior unchanged, log.jsonl added**.
+
+## v3 — requirement read (2026-11-03, per みや, 287811)
+
+symptom: 287811 Phase 0 wrote REQUIREMENT-MATCH #223236 aligned from the subject only; the spec attachment (status Sedia at Semakan, Disemak at Pengesahan) was never opened and fix options were built on the 258004 delete it contradicts. miya: "Always read, this was supposed to be part of our steps".
+
+A fifth required item, **Requirement read**: an etanah code edit in an active quest is denied until this session holds `REQUIREMENT-READ #<req>` (printed by `node quest/requirement-index.js --read <req> --for <ticket>`) and a line `REQUIREMENT-MATCH: <ticket> → #<req> "<subject>" — <aligned|extends|contradicts> — read: "<quoted rule>"` for that same req, or a `— none found` / `— not needed` line. Template and tool hint lines never pass (req must be digits or none, the verdict one word, not followed by `|`). Eval fixtures 6-16.
+
+boundary: covers etanah code edits during an active quest and this session's transcript · never edits a file, never checks the verdict is right (only that the requirement was read and quoted) · stops at a deny naming the missing item and the command that clears it.
