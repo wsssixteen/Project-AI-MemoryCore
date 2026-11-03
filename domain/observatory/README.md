@@ -1,5 +1,6 @@
 goal: one screen shows every Lapis Lazuli Feature (the unit of skill + hooks + scripts + eval) with its purpose, parts, liveness and gaps, plus the stray files nothing owns; every finding reads fact, context, judgement with evidence, and Ruri retrieves the same findings in one command to diagnose the system and brief miya without missing anything
 retention: regenerate
+footprint: on-demand: 1 node process while server.js runs (127.0.0.1:7790, started by hand or the launch.json entry), or 1 per `lib/observatory.js` CLI call; nothing at boot, per prompt or per session
 symptom: 2026-09-27 miya: prove monitoring and observability visually for every feature; estate state was split across 4 markdown views and worktree telemetry was invisible
 goal_signal: observatory.eval.js green (counts equal the disk per kind, every non-healthy component sits in a finding, every finding carries all layers), every Feature is its worst live part and every component has exactly one home, every view renders with 0 console errors, the Overview fits one desktop screen
 

@@ -146,6 +146,7 @@
 {"ts":"2026-10-30T11:44:54.204Z","commit":"36c1baef28aa223a20ef73d1960d19734121aaf4","outcome":"LANDED","exit":0,"dur_ms":18977}
 {"ts":"2026-11-01T04:07:08.096Z","commit":"fa782af1","outcome":"REFUSED","exit":2,"dur_ms":1374}
 {"ts":"2026-11-01T04:07:33.561Z","commit":"fa782af1","outcome":"LANDED","exit":0,"dur_ms":12626}
+{"ts":"2026-11-02T04:07:06.256Z","commit":"c770b98c5ac071cf2b4fc37d0eb7a91e75932584","outcome":"LANDED","exit":0,"dur_ms":7572}
 {"ts":"2026-11-02T04:21:25.793Z","commit":"eb81f5b9076849d93d84bb87a77938bfa887ca4d","outcome":"LANDED","exit":0,"dur_ms":5038}
 {"ts":"2026-11-02T06:55:13.968Z","commit":"4ddc1143ac6be0ac0589662552d55f25ecc5df85","outcome":"REFUSED","exit":2,"dur_ms":912}
 {"ts":"2026-11-02T06:55:49.053Z","commit":"4ddc1143ac6be0ac0589662552d55f25ecc5df85","outcome":"LANDED","exit":0,"dur_ms":17858}
@@ -160,3 +161,14 @@
 {"ts":"2026-11-02T10:53:44.526Z","commit":"HEAD","outcome":"LANDED","exit":0,"dur_ms":2339}
 {"ts":"2026-11-03T02:05:10.995Z","commit":"079c152925ef8eb020cac6fc0ab19b76aa6f4117","outcome":"LANDED","exit":0,"dur_ms":2090}
 {"ts":"2026-11-03T02:05:44.034Z","commit":"79f9a4e03ff6f8e80bd83f193be0517ea8c838f5","outcome":"LANDED","exit":0,"dur_ms":19084}
+{"ts":"2026-11-03T02:38:50.350Z","outcome":"land-on-main:","exit":2,"dur_ms":8}
+{"ts":"2026-11-03T02:38:59.913Z","commit":"1648cb07","outcome":"REFUSED","exit":2,"dur_ms":2023}
+{"ts":"2026-11-03T02:39:23.609Z","commit":"1648cb07","outcome":"REFUSED","exit":2,"dur_ms":10036}
+{"ts":"2026-11-03T02:50:55.819Z","commit":"27701e59","outcome":"DRY","exit":0,"dur_ms":3575}
+{"ts":"2026-11-03T02:51:05.229Z","commit":"d04a461d","outcome":"REFUSED","exit":2,"dur_ms":9255}
+{"ts":"2026-11-03T02:51:45.343Z","commit":"27701e59","outcome":"LANDED","exit":0,"dur_ms":27335}
+{"ts":"2026-11-03T02:51:56.809Z","commit":"d04a461d","outcome":"DRY","exit":0,"dur_ms":9580}
+{"ts":"2026-11-03T02:52:42.975Z","commit":"d04a461d","outcome":"LANDED","exit":0,"dur_ms":30338}
+{"ts":"2026-11-03T02:58:55.816Z","commit":"14aeb31d539e6fe76cebac051af18d45eb8c6f91","outcome":"REFUSED","exit":2,"dur_ms":610}
+{"ts":"2026-11-03T02:59:06.828Z","commit":"14aeb31d539e6fe76cebac051af18d45eb8c6f91","outcome":"REFUSED","exit":2,"dur_ms":2552}
+{"ts":"2026-11-03T02:59:53.687Z","commit":"b10d49f2ab2c362d52d2cfbb405b8e6741c7ad49","outcome":"REFUSED","exit":2,"dur_ms":2865}
