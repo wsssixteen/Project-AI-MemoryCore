@@ -1,3 +1,14 @@
+**Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, ticket 287892 PT Kadar Cukai DESA II)
+- Asked: PROD PT PTMLK/02/L/PT/2026/18 Desa II Bangunan Tujuan Keagamaan showed "Tiada kadar cukai"; expected RM 66.00. BA Fizah asked if our filter is wrong. Adhoc first (ADHOC-PT-2026-16, A92), then ticket 287892.
+- Cause: six mukim are in two Desa classes (jns_kwsn_ptbrn "38584|38585"), so they sit in two rates; the lookup ignored Pengkelasan Tanah and took the oldest row. Maintenance data is correct; the tick is not stored on the rate.
+- Fix: pelupusan only, PelupusanService.onCalculateCukaiTanah picks the rate whose mukim all share the chosen class and hands it to common (calculate():197 uses a given row). 55782d7ce1 on mlk/esokongan/287892, int-env 1295a676b4, stag-env 81097d7eae. No common change.
+- Tested on stg1 by miya on PT/2026/18: DESA II RM 66.00; DESA III RM 50.00 (RM 4.00 x 6 = 24 raised to the RM 50 non-MCL minimum, common :509-529). Redmine Resolved to Nurhafizah Hasan, 3 photos, submitted by miya ~16:25.
+- MLIT reference data cannot show the fix (rates 88 and 287 hold mukim of all three classes there).
+- Also: picture added to Appraisal (DECISIONS row 50, ticket card).
+- Mistakes: first WhatsApp advice told the BA to remove mukim from the RM 4 rate (retracted, data is correct); deploy card claimed staging test before checking the minimum rule explained his RM 50.
+- Assessment: A1 redmine-write-gate still blocks Status even when status-rule.js says ALLOWED (needed his words twice). A2 deploy skill test scenario did not compute the minimum floor, so his RM 4 expectation was wrong. A3 git grep across origin/mlk/beta found the floor rule in one call after rg timed out. A4 reuse of common's pre-chosen-row path avoided a common hand-over. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 15:16 — worktree `ticket-287773-quest-run-66ac6f` (branch claude/dms-dokumen-kemasukan-limit-b60a31), Terengganu DMS upload size limit question, Domain Expansion.
 
 ## Session Recap (2026-11-03, Terengganu dokumen kemasukan upload size limit)
@@ -17,12 +28,3 @@
 - Blocker: redmine-write-gate refused status Resolved even after his rule message; set by clicking the select. A Fable 5.1 agent was launched to build his status rule into the gate (running at DE time, not landed).
 - Assessment: A1 the Redmine gate encodes words, not his status rule. A2 test scenario steps came from a method name, not the screen page file. A3 regression audit by git blame took 4 calls and answered cleanly. A4 analog-first fix (Permit Lesen helper) held under his doubt. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 12:05 — worktree `redmine-287350-quest-6d719f` (branch claude/redmine-287350-quest-6d719f), PROD patch ticket 287350 closed and archived, Domain Expansion.
-
-## Session Recap (2026-11-02 to 11-03, ticket 287350 MCL Perkara + Syarikat, PROD)
-- Asked: Perkara and Syarikat blank on Laporan Tanah, Map Info and Google reports for PTMLK/02/L/MCL/2026/18 and /26; BA asked to patch tajuk risalat.
-- Done: one infra round. Data patch of tajuk risalat (plp_a_pelupusan) and stored perkara (tkl_a_laporan_tnh); 6 report PDFs downloaded, Perkara and Syarikat written in with PyMuPDF, uploaded. No PDF reset: the reports are stored as PDF. Redmine posted by API after his "post it": Resolved, 100%, zip + sql attached; BA since reassigned it to Iffah.
-- Quest QA-287350 closed and archived ahead of Redmine (patch ticket). Archive pruning deleted the patched and original PDFs from the Task folder: patched copy is on Redmine (287350.zip), originals in Desktop dw.rar.
-- Deferred: report query filter drops No. Pertubuhan / No. Koperasi pemohon (latent L37, Teknikal); 35 other MCL at PLT with no tajuk (BA).
-- System: quest skill 6c fewest trips between people; patch-mlk-doc data patch goes with the reset after the upload + generated PDF needs no reset; pre-reply-contract and db-claim-proof every reply ends on its next step. All on main.
-- Mistakes he caught: bare fact with no next step; long replies; counted files not trips; missed the document route for Syarikat; planned a PDF reset before checking the file type; stopped after confirming the patch instead of staging Redmine.
-- Blockers: Claude in Chrome had no browser connected; memory-write-gate never saw the RULE-PLACEMENT line (memory note not written); redmine-write-gate refused "please submit".

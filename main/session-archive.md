@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-02 to 11-03, ticket 287350 MCL Perkara + Syarikat, PROD)
+- Asked: Perkara and Syarikat blank on Laporan Tanah, Map Info and Google reports for PTMLK/02/L/MCL/2026/18 and /26; BA asked to patch tajuk risalat.
+- Done: one infra round. Data patch of tajuk risalat (plp_a_pelupusan) and stored perkara (tkl_a_laporan_tnh); 6 report PDFs downloaded, Perkara and Syarikat written in with PyMuPDF, uploaded. No PDF reset: the reports are stored as PDF. Redmine posted by API after his "post it": Resolved, 100%, zip + sql attached; BA since reassigned it to Iffah.
+- Quest QA-287350 closed and archived ahead of Redmine (patch ticket). Archive pruning deleted the patched and original PDFs from the Task folder: patched copy is on Redmine (287350.zip), originals in Desktop dw.rar.
+- Deferred: report query filter drops No. Pertubuhan / No. Koperasi pemohon (latent L37, Teknikal); 35 other MCL at PLT with no tajuk (BA).
+- System: quest skill 6c fewest trips between people; patch-mlk-doc data patch goes with the reset after the upload + generated PDF needs no reset; pre-reply-contract and db-claim-proof every reply ends on its next step. All on main.
+- Mistakes he caught: bare fact with no next step; long replies; counted files not trips; missed the document route for Syarikat; planned a PDF reset before checking the file type; stopped after confirming the patch instead of staging Redmine.
+- Blockers: Claude in Chrome had no browser connected; memory-write-gate never saw the RULE-PLACEMENT line (memory note not written); redmine-write-gate refused "please submit".
+
 ## Session Recap (2026-10-30 to 11-03, Selangor warta 2352 delete)
 - Asked: delete no warta 2352 + tarikh warta 04/07/2013 for PTSEL/01/L/BPRZ/2026/7, Selangor internal env.
 - Not done: internal DB oracle-slt 172.16.93.32:1521 refused TCP (WinError 10061, host pings, gateway 7411 up), 3 tries on 30/10; blocker row in core/slips.js. No DB written anywhere.
@@ -7249,6 +7258,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
