@@ -35,3 +35,9 @@ who pays: per-tool: inside the existing design-consult-gate on Edit|Write, no ne
 goal without the part: no system change is built before its ask, cost and fix are checked and shown to him
 model: claude-fable-5-1
 shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\step3-rule.png
+
+## 2026-11-03 — redmine-write-gate v1.11: his status rule, no more asking (subagent, worktree appraisal-2026-rubric-500819)
+- **Ask**: 287747/287638 were blocked four times on Status = Resolved; his rule (under him + New/In Progress; New under someone else sent to a BA; Verified/Closed/Ready in PROD never changed) is now mechanical.
+- **Built**: `domain/redmine-write-gate/status-rule.json` (owner 1311 · hand-back Resolved · lower · frozen · BA list with ids) + `status-rule.js` (`verdict`, `isBA`, `liveState`, CLI). Hook v1.11: ticket from the last navigate, one read-only GET for status + assignee, a staged BA assignee remembered 30 min. Prefill skill Step 2b + Step 3, memory `feedback_redmine_write_needs_nod` exception 2.
+- **Verified**: eval 165/165 (F143 to F165); live CLI: 287747/287638 now Resolved under Nurhafizah → row 4 block; 287925 In Progress under him → row 2 allow.
+- **Open**: none. Landed on main the same turn (SHAs in the reply).
