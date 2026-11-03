@@ -105,7 +105,7 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
-- [rustdesk-server](reference_rustdesk_server.md) — RustDesk "Not ready": his OWN server on the home laptop, 202.186.75.193; sessions run ON that laptop
+- [rustdesk-server](reference_rustdesk_server.md) — RustDesk "Not ready": his OWN server on the home laptop, name ridhwanhome.duckdns.org (home address changes; DuckDNS task fixes it); check prints at every session start; sessions run ON the work laptop
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
 - [eisenhower](project_eisenhower.md) — Eisenhower matrix app REBUILD on Rust + egui + SQLite: read PROJECT.md then MAP.md (wayfinder) in the MAIN checkout's projects/coding-projects/active/Eisenhower/ first
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
