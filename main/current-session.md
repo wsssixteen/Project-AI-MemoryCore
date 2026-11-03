@@ -1,3 +1,14 @@
+**Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 rounds 2-3: unlink the Pendaftaran branch)
+- Asked: BA (Fizah) wants PPTPB unlinked from Pendaftaran (CR 256335, Pendaftaran side not released) for PTMLK/02/L/PPTPB/2026/5 and No Serahan 02MH1579/2026; one ticket incl. removing 41.0.
+- Found: our side reached Tamat Aplikasi on 2/10 (no SPOC); only the Endosan branch waits at SPIL; only PPTPB at SPIL in PROD. All staging PPTPB versions v1-v10 contain Endosan (no old version to revert to). Fable 5.1: Alter Flow cannot reach 40.0 from SPIL, Initiate & Alter can (latest model); join bug: "Ada spoc?" False bypasses the join, Endosan can never pass it (proven stg 7980291 since 17/8). 02MH1579/2026 = HKBM, 2 rows, Pendaftaran data.
+- Agreed (miya): one ticket: Initiate & Alter 2026/5 to 40.0 and hold until Pendaftaran release; Pendaftaran deletes 02MH1579/2026; remove 41.0 now, re-add with the join fix. Concise reply to Fizah prepared (miya sends).
+- CR check: 256335 is not Li Wen's 256334 (PDBB to Hasil); not our issue except the latent join bug.
+- Mistakes: said "cannot alter back to 40.0" as fact; miya's one question and the Fable review proved it wrong. Long replies after he asked for short ones; hashtags on ticket numbers.
+- Open: ticket from Fizah; staging rehearsal of Initiate & Alter on 7980291 before any PROD step; whether Initiate ends the child processes (not proven); PROD jar migrate behaviour (not proven).
+- Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
 
 ## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
@@ -19,13 +30,3 @@
 - Assessment: A1 the brief-first gate blocked the save agent and the audit in a closing round with no new finding. A2 ⏭ no ticket quest. A3 a pixel count settled "cut vs missing line" where eyeballing failed twice. A4 compare the file bytes across Teknikal and OPLPS before blaming either module. A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
-
-## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
-- Asked: why the false alarms; drop the RustDesk session-start alert; a real check step in the change route (justify, scrutinize, assess, highest model, a picture, no essays); then every system change reported as a coloured picture on the system map's own boxes.
-- Done: RustDesk alert removed. Step 3 Check + nod built (STEP-3 block, step3-check eval 20/20), on main 28f3eb1e / main folder af03ca97. Step 8: new Tool `lib/change-map.js` (spec JSON → coloured map, NEW green · CHANGED blue · REMOVED red, untouched kinds faded), system-change-title v4 (after a system edit, passes only on a sent change-map PNG; tables only beside `CHANGE-MAP: FAIL`), INDEX step 8, reply-shape-spec 3i, explain-diagram colour exception, tools.json row. Gate eval 43/43. On main 026cb251 / main folder 23c15230 (patch applied by hand: land-on-main refused on dirty main + current-session.md conflict).
-- Mistakes he caught: report given as tables, "I don't think this is working"; the first map was bland because my 2026-11-02 no-accent rule overrode the plugin's colours ("did you add a certain rule that overwrite the original skill?").
-- Open: the RustDesk connection itself is not fixed; 12 tool-registry problems existed before this change; Appraisal-2026 handover draft still in the notes folder.
-- Assessment: A1 a rule I wrote for one picture type silently stripped colour from every picture; a skill-wide rule needs its scope named. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 17:59 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), second Domain Expansion after 287811 handover: pulled main 0caed659, watch rows for quest-phase-gate (gate + eval) and redmine-write-gate; miya to confirm the pinned git origin in the app (Help, Troubleshooting, Review Pinned Git Origins) so sync_with_base_branch works again.
-**Last Activity**: 2026-11-03 17:53 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/pptpb-hakmilik-assignment-639100), ADHOC-PPTPB-2026-9 answered and BA reply sent, Domain Expansion.

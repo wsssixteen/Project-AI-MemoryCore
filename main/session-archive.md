@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
+- Asked: why the false alarms; drop the RustDesk session-start alert; a real check step in the change route (justify, scrutinize, assess, highest model, a picture, no essays); then every system change reported as a coloured picture on the system map's own boxes.
+- Done: RustDesk alert removed. Step 3 Check + nod built (STEP-3 block, step3-check eval 20/20), on main 28f3eb1e / main folder af03ca97. Step 8: new Tool `lib/change-map.js` (spec JSON → coloured map, NEW green · CHANGED blue · REMOVED red, untouched kinds faded), system-change-title v4 (after a system edit, passes only on a sent change-map PNG; tables only beside `CHANGE-MAP: FAIL`), INDEX step 8, reply-shape-spec 3i, explain-diagram colour exception, tools.json row. Gate eval 43/43. On main 026cb251 / main folder 23c15230 (patch applied by hand: land-on-main refused on dirty main + current-session.md conflict).
+- Mistakes he caught: report given as tables, "I don't think this is working"; the first map was bland because my 2026-11-02 no-accent rule overrode the plugin's colours ("did you add a certain rule that overwrite the original skill?").
+- Open: the RustDesk connection itself is not fixed; 12 tool-registry problems existed before this change; Appraisal-2026 handover draft still in the notes folder.
+- Assessment: A1 a rule I wrote for one picture type silently stripped colour from every picture; a skill-wide rule needs its scope named. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 17:59 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), second Domain Expansion after 287811 handover: pulled main 0caed659, watch rows for quest-phase-gate (gate + eval) and redmine-write-gate; miya to confirm the pinned git origin in the app (Help, Troubleshooting, Review Pinned Git Origins) so sync_with_base_branch works again.
+**Last Activity**: 2026-11-03 17:53 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/pptpb-hakmilik-assignment-639100), ADHOC-PPTPB-2026-9 answered and BA reply sent, Domain Expansion.
+
 ## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 PPTPB TSP endorsement)
 - Asked: PROD PPTPB PTMLK/02/L/PPTPB/2026/5 (norlina, Jasin): is PPTPB connected to the right TSP subflow in Flowable; HKBM 02MH1579/2026 on PN 040214PN00037703 went to Jasin, BA expects PTG 00.
 - Found: MLK_PLP_PPTPB.bpmn20.xml:575-591 41.0 Endosan TSP calls MLK_DFT_NOTA_HKMLK with nextUrusan TSP, same as MCL and PLTP; the permohonan sits at SPIL Semakan Permohonan Lulus (TSP), Dalam Tindakan. 02MH1579/2026 is HKBM (MH), not TSP (nota), made 20/10 by norlina with no workflow row and no tugasan, so not made by the flow. No PPTPB in PROD ever made a TSP perserahan. PROD nota on PN always goes to the district office (MCL 19, PLTP 114), never 00.
@@ -7315,6 +7325,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
