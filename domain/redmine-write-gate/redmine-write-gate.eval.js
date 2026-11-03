@@ -165,7 +165,10 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('form.
 check('F55 quoted "notes": JSON key → BLOCK', blocked(r), r.out.slice(0, 160));
 const tlvBody = fs.readFileSync(TLV, 'utf8');
 check('F29 guard: ticket-load-verify.js stays network-free (else re-review its exemption)',
-  !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)|\bfetch\s*\(/.test(tlvBody), 'network/process I/O found in ' + TLV);
+  // v1.10: one local spawn allowed since b1e2c96e, python on quest/pdf-annotations.py, which must import no network module.
+  !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)(?!\.spawnSync\(process\.env\.TLV_PYTHON \|\| 'python',\s*\n\s*\['-I', path\.join\(__dirname, 'pdf-annotations\.py'\))|\bfetch\s*\(/.test(tlvBody)
+  && (tlvBody.match(/child_process/g) || []).length <= 1
+  && !/^\s*(?:import|from)\s+(?:urllib|requests|socket|http|ftplib|smtplib)/m.test(fs.readFileSync(path.join(path.dirname(TLV), 'pdf-annotations.py'), 'utf8')), 'network/process I/O found in ' + TLV);
 // F15 log rows
 const logP = path.join(__dirname, 'log.jsonl');
 const lastLog = fs.existsSync(logP) ? fs.readFileSync(logP, 'utf8').trim().split('\n').pop() : '';
@@ -356,9 +359,11 @@ const mkRepo = (name, body) => { const d = path.join(sb, name); fs.mkdirSync(pat
   for (const f of ['hook-runtime.js', 'turn-context.js', 'his-words.js']) { try { fs.copyFileSync(path.join(ROOT, 'lib', f), path.join(d, 'lib', f)); } catch (_) { /* optional */ } }
   fs.writeFileSync(path.join(d, 'lib', 'quest-start-claim.js'), body); return d; };
 const cleanRepo = mkRepo('repo-clean', claimBody);
-const tamperedRepo = mkRepo('repo-tampered', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', "{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, notes: 'taken' } }"));
-const assigneeRepo = mkRepo('repo-assignee', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', '{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, assigned_to_id: 5 } }'));
-const statusOnlyRepo = mkRepo('repo-status-only', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', '{ issue: { status_id: IN_PROGRESS_ID, done_ratio: 100 } }'));
+// v1.10: the claim builds `payload` (f8af263c); each tamper edits whichever form the live body has.
+const tamper = (oldTo, newTo) => claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT } }', oldTo).replace('payload.done_ratio = START_PERCENT;', newTo);
+const tamperedRepo = mkRepo('repo-tampered', tamper("{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, notes: 'taken' } }", "payload.done_ratio = START_PERCENT; payload.notes = 'taken';"));
+const assigneeRepo = mkRepo('repo-assignee', tamper('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT, assigned_to_id: 5 } }', 'payload.done_ratio = START_PERCENT; payload.assigned_to_id = 5;'));
+const statusOnlyRepo = mkRepo('repo-status-only', tamper('{ issue: { status_id: IN_PROGRESS_ID, done_ratio: 100 } }', 'payload.done_ratio = 100;'));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, cleanRepo);
 check('F82 control: an untouched copy at <root>/lib of another root → allowed', standingOk(r), r.out.slice(0, 200));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, tamperedRepo);
@@ -366,7 +371,7 @@ check('F83 the script edited to also send a note → exemption void → BLOCK', 
 r = run({ tool_name: 'PowerShell', tool_input: { command: 'node quest/active-cli.js update QA-281324 status=active phase=0 quest_start=@now' }, transcript_path: noApproval() }, STAGE);
 check('F84 the quest start command itself (active-cli update … quest_start=@now) → silent, never blocked', silent(r), r.out.slice(0, 160));
 check('F85 guard: lib/quest-start-claim.js sends status + 20 percent only (else re-review its exemption)',
-  /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/.test(claimBody) && /const START_PERCENT = 20;/.test(claimBody) && !/assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i.test(claimBody) && (claimBody.match(/'PUT'/g) || []).length === 1, 'shape changed in ' + CLAIM);
+  /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}|const payload = \{ status_id: IN_PROGRESS_ID \};\s*\n[^\n]*payload\.done_ratio = START_PERCENT;\s*\n[\s\S]*\{ issue: payload \}/.test(claimBody) && !/payload\.(?!done_ratio = START_PERCENT;)\w+\s*=|payload\[/.test(claimBody) && /const START_PERCENT = 20;/.test(claimBody) && !/assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i.test(claimBody) && (claimBody.match(/'PUT'/g) || []).length === 1, 'shape changed in ' + CLAIM);
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, assigneeRepo);
 check('F88 the script edited to also change the assignee → exemption void → BLOCK', blocked(r), r.out.slice(0, 200));
 r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, statusOnlyRepo);
