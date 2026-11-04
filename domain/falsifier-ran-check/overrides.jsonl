@@ -31,3 +31,4 @@
 {"ts":"2026-11-04T03:58:17.179Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}
 {"ts":"2026-11-04T04:00:17.680Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}
 {"ts":"2026-11-04T04:00:30.774Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}
+{"ts":"2026-11-04T11:27:38.320Z","qa":"QA-288095","reason":"plain words: \"288095 test on server, skip local test\"","via":"plain"}

@@ -40,3 +40,12 @@
 - Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
+
+STEP-3: TEMPLATE-SCENARIO quest step (Feature domain/template-scenario)
+session: e3d9d871-f256-4aff-b9c3-2da4f3821835
+his words: "No cancel. Please summon Fable 5.1 to build this search back this session, slip logs maybe, to assess, scrutinize and plan a built for a proper/complete step when it comes to preparing the template test scenario ... As usual eval, verify this since you have a working ticket right now." (order)
+fix or report: fix
+who pays: per-turn Stop gate (node, under 50 ms, reads transcript tail) + on-demand script (doc-sim JVM 1-2 GB, 2-3 min) once per template hand-back
+goal without the part: 287346 shipped twice with requirement gaps my own audit listed, and 288095 handed back a placeholder; skill text alone (CC-PREFLIGHT row since 2026-08-19) did not stop either
+model: claude-fable-5-1 (plan) · claude-opus-5-5 (build)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\2acb86d5389b98c5\e3d9d871-f256-4aff-b9c3-2da4f3821835\scratchpad\change-map-20261104-161850.png
