@@ -8,6 +8,15 @@
 - Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
 - Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
 - Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
+
+## Session Recap (2026-11-04, Baseline Pelupusan 1.9.2, Redmine version 12166)
+- Asked: prepare Pelupusan 1.9.2 from the BAQA list (287773, 287747, 287509, 287638, 262027 via mlk/qa/262027v2); later add 287892 on top of the pushed branch; after "Baseline Pelupusan - Passed", the master merge.
+- Done: mlk/release/1.9.2 cut off master 09037833bf, 6 tickets merged, verify 0 missing, mvn compile exit 0, version 1.9.2, common 1.10.20-MLK kept, pushed (tip 15a8e36cfa). MR 15 to mlk/master, reviewer Alex, read back 9 of 9 ✓ (http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/15). stag-env caught up 248b053e8a (was 4 behind: 287509 287638 287773), compiled, pushed, read back. KPI P-287892-C2 confirmed.
+- Also: local mlk/master divergence fixed; SourceTree green vs blue labels explained; ghost docx files deleted; his 5 uncommitted files on mlk/release/1.9.1 stashed as `wip-5-files-on-release-1.9.1-20261104` (fc6d255101), checkout now on mlk/release/1.9.2. Only PelupusanWordCCMethodConstant.java in that stash is on no origin branch.
+- Open: Alex merges MR 15, then `merge-to-master --release 1.9.2 --check`. miya rebuilds staging from mlk/stag-env. KPI P-262027-B4 waits a check of BA journals for the salutation. Awam Pelupusan 287607 baseline not passed yet (list only).
+- Blocker: `release-prep.js add-ticket` refuses at phase pushed; phase hand-set to bumped (slip `blocker` logged).
+- Assessment: A1 add-ticket gap at pushed. A2 ⏭ no quest phase moved. A3 ⏭ no debugging. A4 adding a ticket after push re-runs verify and push cleanly. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
 
 ## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
