@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
+- Asked (from the 287925 session, his correction): never put an approval code or "approve ..." phrase in quotes inside the Next steps "Your reply" cell; put it in its own text block so he copies it in one click. "Yes, make it a rule".
+- Done: `domain/next-steps-shape` v5 blocks `approval-in-cell` (code C1F5-62FF standing alone, case-sensitive; approve / post it / submit it any case); eval 54/54 (A1 to A25); pre-reply-contract line, reply-shape-spec 3f, reply-mechanics memory + index line, README, diagram v5, watch wmw0l323a. Commit 8dc4cfb3; main folder and GitHub main 71ae8698. Live fire from the main folder exit 2.
+- Changed from the brief: one `/i` regex split in two, because `/i` on the code part blocked "long-term" and ADHOC-MLPS-2026-4.
+- Blockers: memory-write-gate could not see the RULE-PLACEMENT line written as reply text (only tool calls in the transcript for that message); passed through a Bash heredoc; slip row logged. land-on-main made its own commit c336af9b (same tree), merged origin/main in the main folder to make the SHAs equal.
+- Open: QA-287925 itself stays with the parent session (save-quest PHASE-1 verdict, not ready).
+- Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
+
 ## Session Recap (2026-11-03, ADHOC-OPLPS-2026-1 OPLPS pelan L1e tidak penuh)
 - Asked: PROD PTMLK/02/L/OPLPS/2026/8 (nurulazura, PDTJ): pelan on Borang L1e looks cut, other OPLPS fine; margin? ours or the reports team?
 - Found: not margin, not cut. DMS file 2000x1410 complete; pixel script: black border top, bottom, left, none on right. Chain: pelukis azizah uploads in Teknikal (LAIN-37353842), Tandatangan Pelan stamps on the same canvas (CommonImageUtil.overlayImages), OPLPS users upload those exact bytes (932673 B), LaporanPelan.jrxml RetainShape only shrinks. Jrxml is in our own repo, so not a reports-team issue.
@@ -7335,6 +7345,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
