@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-04, Appraisal-2026 talk flow, page map and ticket cards aligned to his last rulings)
+- Asked: keep chat-pack 13-presentation-plan.md, 12-who-does-what.md, 14-ticket-cards.md, 00-MASTER.md, START.md and infographics\appraisal-talk-flow.png in step with the rulings the home-laptop session relayed (DECISIONS rows 54 to 58); then one table per filled Part of the form; then two Redmine lookups (Lau Li Wen: Dev Hasil since June 2021, first ticket 98753).
+- Done: steps 5 to 7 of the talk flow follow the five Part D rows by stage and the settled ranking; 286650 card added (165 cards); page map at 14 pages; picture redrawn and sent 4 times; every change confirmed to the peer by message. Per-Part tables delivered from the Word file of 02:14. START.md Phase marked FINISHED 2026-11-04 on the peer's save order; nothing to commit (project folder gitignored).
+- Found: rows 59 to 62 (visuals pack 5 pages, form back to 11 pages, B4 screenshots) were written by the peer after my last sync, so 12-who-does-what.md still says 14 pages and a 4-page visuals pack; the peer owns the Word files and the final page map.
+- Open: his picks never arrived here: Part A on page 2 (write or say), Department IT or ID, C1 at 5 or 4, which Development or CR tickets to name. Self-archive refused (a background watcher still live); he archives from the sidebar.
+- Mistakes: terse-gate at 21 lines once (delta reply); three picture renders for text overflow before the lines fit.
+- Assessment: A1 OneDrive sync lag (4 to 10 min) between the two laptops made every relay a wait loop; a shared ledger read from one side would have been cheaper. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah fix. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `ticket-275608-reply-7d6b89`, REQUIREMENT 275608 PPTPB mapping reply posted to Anis, Domain Expansion.
+
 ## Session Recap (2026-11-04, 275608 PPTPB to Pendaftaran value mapping)
 - Asked: Anis (BA) wanted the mapping of Kegunaan, Unit/Luas, Tarikh Kuatkuasa, Tarikh Luput for PPTPB (Raja, Pendaftaran, asked how Pelupusan passes them).
 - Done: mapping verified on mlit PPTPB/2026/11 + master code; Redmine note posted by miya 08:53, matches the draft, assigned to Anis. Quest QA-275608 delegated, qa_doc written, PPTPB-TICKETS.md knowledge row added.
@@ -7395,6 +7404,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

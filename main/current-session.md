@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
+
+## Session Recap (2026-11-04, today's board + 248290 coverage per urusan)
+- Asked: today's tickets; 275608 missing from the ranked board; BA reply on 287892; Zarul's nextUrusan=PSPM PROD patch for 286650; Fizah's OPLPS/2026/2 infra paths; peer appraisal request; Mira's question whether 248290 covers all 7 urusan; "save adhoc".
+- Done: redmine-board counts "e-Tanah Melaka" as a Melaka project (07455cc9); 287892 BA reply posted; 286650 patch script + Redmine handover note drafted; ADHOC-PLP-2026-6 saved and archived (Task folder 374, register A98, audit 31/31 PASS).
+- Found: 248290 covers PLPS, MLPS, PRBB, PRU, PPJK, PPTPB; PLBP's AWAM Status Permohonan dialog (paparanBorang4BeL2eDialog, StatusPermohonanForm.xhtml:993) is commented out; the print-once lock is only for 4Ae/L1e.
+- Open: miya sends the corrected reply to Mira; 286650 handover note waits "post it"; ADHOC-PLP-2026-6 owes a quest-bounty harvest.
+- Mistakes: said "PLBP not on PROD" from an assumption; he corrected it, re-answered from the code. Stop corrections: unqualified proving SELECTs, terse gate, next-steps row wording.
+- Assessment: A1 adhoc-brief-first blocks the main-thread audit re-run after the agent reports (skill step 4 asks for it). A2 ⏭ no quest phase moved. A3 coverage question answered from code per urusan, not from a test. A4 an AWAM dialog commented out silently drops one urusan from a shared Requirement. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
 
 ## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
@@ -17,12 +26,3 @@
 - Mistakes: two Stop corrections for missing proving SELECTs (db-claim-proof) and one for no git-history probe; the branch-guard blocked a Read on kdh/beta (read-only).
 - Assessment: A1 branch-guard blocks reads, not only edits. A2 adhoc-save gate refused the save in the DE turn although the brief was given earlier. A3 DB-first found the cause in 4 queries once code was proven equal. A4 a new Penang urusan needs ind_pejabat_ursn rows per pejabat; the UPS_BGN rows were added the same morning. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:15 — worktree `appraisal-ratings-review-02cd68` (branch claude/appraisal-ratings-review-02cd68), session "2/11/2026 - appraisal flow", Appraisal-2026 talk flow kept in step with rows 54 to 58, appraisal finished, Domain Expansion.
-
-## Session Recap (2026-11-04, Appraisal-2026 talk flow, page map and ticket cards aligned to his last rulings)
-- Asked: keep chat-pack 13-presentation-plan.md, 12-who-does-what.md, 14-ticket-cards.md, 00-MASTER.md, START.md and infographics\appraisal-talk-flow.png in step with the rulings the home-laptop session relayed (DECISIONS rows 54 to 58); then one table per filled Part of the form; then two Redmine lookups (Lau Li Wen: Dev Hasil since June 2021, first ticket 98753).
-- Done: steps 5 to 7 of the talk flow follow the five Part D rows by stage and the settled ranking; 286650 card added (165 cards); page map at 14 pages; picture redrawn and sent 4 times; every change confirmed to the peer by message. Per-Part tables delivered from the Word file of 02:14. START.md Phase marked FINISHED 2026-11-04 on the peer's save order; nothing to commit (project folder gitignored).
-- Found: rows 59 to 62 (visuals pack 5 pages, form back to 11 pages, B4 screenshots) were written by the peer after my last sync, so 12-who-does-what.md still says 14 pages and a 4-page visuals pack; the peer owns the Word files and the final page map.
-- Open: his picks never arrived here: Part A on page 2 (write or say), Department IT or ID, C1 at 5 or 4, which Development or CR tickets to name. Self-archive refused (a background watcher still live); he archives from the sidebar.
-- Mistakes: terse-gate at 21 lines once (delta reply); three picture renders for text overflow before the lines fit.
-- Assessment: A1 OneDrive sync lag (4 to 10 min) between the two laptops made every relay a wait loop; a shared ledger read from one side would have been cheaper. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah fix. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:00 — worktree `ticket-275608-reply-7d6b89`, REQUIREMENT 275608 PPTPB mapping reply posted to Anis, Domain Expansion.
