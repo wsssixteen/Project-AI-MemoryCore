@@ -27,6 +27,19 @@
 - Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
 
+**Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 rounds 2-3: unlink the Pendaftaran branch)
+- Asked: BA (Fizah) wants PPTPB unlinked from Pendaftaran (CR 256335, Pendaftaran side not released) for PTMLK/02/L/PPTPB/2026/5 and No Serahan 02MH1579/2026; one ticket incl. removing 41.0.
+- Found: our side reached Tamat Aplikasi on 2/10 (no SPOC); only the Endosan branch waits at SPIL; only PPTPB at SPIL in PROD. All staging PPTPB versions v1-v10 contain Endosan (no old version to revert to). Fable 5.1: Alter Flow cannot reach 40.0 from SPIL, Initiate & Alter can (latest model); join bug: "Ada spoc?" False bypasses the join, Endosan can never pass it (proven stg 7980291 since 17/8). 02MH1579/2026 = HKBM, 2 rows, Pendaftaran data.
+- Agreed (miya): one ticket: Initiate & Alter 2026/5 to 40.0 and hold until Pendaftaran release; Pendaftaran deletes 02MH1579/2026; remove 41.0 now, re-add with the join fix. Concise reply to Fizah prepared (miya sends).
+- CR check: 256335 is not Li Wen's 256334 (PDBB to Hasil); not our issue except the latent join bug.
+- Mistakes: said "cannot alter back to 40.0" as fact; miya's one question and the Fable review proved it wrong. Long replies after he asked for short ones; hashtags on ticket numbers.
+- Open: ticket from Fizah; staging rehearsal of Initiate & Alter on 7980291 before any PROD step; whether Initiate ends the child processes (not proven); PROD jar migrate behaviour (not proven).
+- Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
+
 STEP-3: TEMPLATE-SCENARIO quest step (Feature domain/template-scenario)
 session: e3d9d871-f256-4aff-b9c3-2da4f3821835
 his words: "No cancel. Please summon Fable 5.1 to build this search back this session, slip logs maybe, to assess, scrutinize and plan a built for a proper/complete step when it comes to preparing the template test scenario ... As usual eval, verify this since you have a working ticket right now." (order)
