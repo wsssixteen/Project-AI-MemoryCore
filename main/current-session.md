@@ -26,3 +26,12 @@
 - Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
 - Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
+
+STEP-3: TEMPLATE-SCENARIO quest step (Feature domain/template-scenario)
+session: e3d9d871-f256-4aff-b9c3-2da4f3821835
+his words: "No cancel. Please summon Fable 5.1 to build this search back this session, slip logs maybe, to assess, scrutinize and plan a built for a proper/complete step when it comes to preparing the template test scenario ... As usual eval, verify this since you have a working ticket right now." (order)
+fix or report: fix
+who pays: per-turn Stop gate (node, under 50 ms, reads transcript tail) + on-demand script (doc-sim JVM 1-2 GB, 2-3 min) once per template hand-back
+goal without the part: 287346 shipped twice with requirement gaps my own audit listed, and 288095 handed back a placeholder; skill text alone (CC-PREFLIGHT row since 2026-08-19) did not stop either
+model: claude-fable-5-1 (plan) · claude-opus-5-5 (build)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\2acb86d5389b98c5\e3d9d871-f256-4aff-b9c3-2da4f3821835\scratchpad\change-map-20261104-161850.png

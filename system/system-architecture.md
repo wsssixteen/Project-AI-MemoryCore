@@ -144,7 +144,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
 | PreToolUse | AskUserQuestion | `question-self-contained.check.hook.js` | ✓ |
 | PreToolUse | mcp__claude-in-chrome__file_upload | `redmine-upload-path.check.hook.js` | ✓ |
-| PreToolUse | mcp__claude-in-chrome__javascript_tool|mcp__claude-in-chrome__computer|mcp__claude-in-chrome__browser_batch|mcp__Claude_Browser__javascript_tool|mcp__Claude_Browser__computer|mcp__Claude_Browser__browser_batch | `redmine-write-gate.check.hook.js` | ✓ |
+| PreToolUse | mcp__claude-in-chrome__javascript_tool|mcp__claude-in-chrome__computer|mcp__claude-in-chrome__browser_batch|mcp__claude-in-chrome__form_input|mcp__Claude_Browser__javascript_tool|mcp__Claude_Browser__computer|mcp__Claude_Browser__browser_batch|mcp__Claude_Browser__form_input | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
@@ -207,7 +207,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `silent-claim-drift-gate.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `sql-schema-verify.check.hook.js` | ✓ |
 | Stop | — | `system-change-title.check.hook.js (bundle stop-reply-shape)` | ✓ |
-| Stop | — | `template-cc-preflight.check.hook.js` | ✓ |
+| Stop | — | `template-scenario.check.hook.js` | ✓ |
 | Stop | — | `terse-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js (bundle stop-claim-integrity)` | ✓ |
