@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-04, 275608 PPTPB to Pendaftaran value mapping)
+- Asked: Anis (BA) wanted the mapping of Kegunaan, Unit/Luas, Tarikh Kuatkuasa, Tarikh Luput for PPTPB (Raja, Pendaftaran, asked how Pelupusan passes them).
+- Done: mapping verified on mlit PPTPB/2026/11 + master code; Redmine note posted by miya 08:53, matches the draft, assigned to Anis. Quest QA-275608 delegated, qa_doc written, PPTPB-TICKETS.md knowledge row added.
+- Found: PelupusanPendaftaranService:232 fills land data for PT, PSBP, MCL only; PPTPB sends none. Same Endosan branch as ADHOC-PPTPB-2026-9.
+- Open: miya to decide whether we add PPTPB to the service or Pendaftaran reads the tables.
+- Mistakes: one Next steps row without a heading above (gate caught); guessed column name unit_luas_dipohon (real: unit_luas_dipohon_id).
+- Assessment: A1 next-steps-shape caught a headless row. A2 quest flow fit a mapping-only requirement with no Rubric. A3 reading the service before the data answered the BA's real failure. A4 PPTPB dates live in mklmt_tmbhn JSON, not trkh_mula. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
+
 ## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
 - Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
 - Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
@@ -7386,6 +7395,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

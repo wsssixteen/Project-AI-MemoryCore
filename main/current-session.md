@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
+
+## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
+- Asked: run 2 Redmine data patches; then "replace" not "upload" for an overwrite; then hand both back to the BA.
+- Done: 288169.sql (6 umm_a_jabatan_teknikal rows agensi 8 → 6) and 288261.sql (3 UPDATEs) + renamed pelan PDF; infra ran them; PROD re-checked; both tickets Resolved to Fizah 22:33 with his note "have patched the data in PROD. Can proceed to verify."; patch-mlk-doc infra box says "replace" (8ebb3381); redmine-phase1-prefill Step 4 carries the PROD note (main 66cfedae).
+- Found: BA named agensi 6002 but the bad rows sit on agensi 8 (named MPAG 21/07 to 13/08); a PROD patch is checked by the user through the TSO, never by the BA.
+- Open: QA-288169.md and QA-288261.md are not in the main folder (worktree guard); drafts in this session's scratchpad. Quests stay Phase 1 until Redmine shows Closed.
+- Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
+- Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
 
 ## Session Recap (2026-11-04, Penang UPS_PLP Jana null pejabat)
@@ -17,12 +26,3 @@
 - Mistakes: terse-gate at 21 lines once (delta reply); three picture renders for text overflow before the lines fit.
 - Assessment: A1 OneDrive sync lag (4 to 10 min) between the two laptops made every relay a wait loop; a shared ledger read from one side would have been cheaper. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah fix. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:00 — worktree `ticket-275608-reply-7d6b89`, REQUIREMENT 275608 PPTPB mapping reply posted to Anis, Domain Expansion.
-
-## Session Recap (2026-11-04, 275608 PPTPB to Pendaftaran value mapping)
-- Asked: Anis (BA) wanted the mapping of Kegunaan, Unit/Luas, Tarikh Kuatkuasa, Tarikh Luput for PPTPB (Raja, Pendaftaran, asked how Pelupusan passes them).
-- Done: mapping verified on mlit PPTPB/2026/11 + master code; Redmine note posted by miya 08:53, matches the draft, assigned to Anis. Quest QA-275608 delegated, qa_doc written, PPTPB-TICKETS.md knowledge row added.
-- Found: PelupusanPendaftaranService:232 fills land data for PT, PSBP, MCL only; PPTPB sends none. Same Endosan branch as ADHOC-PPTPB-2026-9.
-- Open: miya to decide whether we add PPTPB to the service or Pendaftaran reads the tables.
-- Mistakes: one Next steps row without a heading above (gate caught); guessed column name unit_luas_dipohon (real: unit_luas_dipohon_id).
-- Assessment: A1 next-steps-shape caught a headless row. A2 quest flow fit a mapping-only requirement with no Rubric. A3 reading the service before the data answered the BA's real failure. A4 PPTPB dates live in mklmt_tmbhn JSON, not trkh_mula. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
