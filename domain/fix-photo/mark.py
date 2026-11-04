@@ -43,6 +43,39 @@ def parse_box(s):
     return (min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1))
 
 
+def overlap(a, b):
+    return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
+
+
+def union(a, b):
+    return (min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3]))
+
+
+def merge_boxes(boxes):
+    out = list(boxes)
+    changed = True
+    while changed:
+        changed = False
+        for i in range(len(out)):
+            for j in range(i + 1, len(out)):
+                if overlap(out[i], out[j]):
+                    out[i] = union(out[i], out[j])
+                    del out[j]
+                    changed = True
+                    break
+            if changed:
+                break
+    return out
+
+
+def first_clash(boxes):
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            if overlap(boxes[i], boxes[j]):
+                return i, j
+    return None
+
+
 def parse_label(s):
     if '=' not in s:
         raise ValueError('label needs "x,y=text": ' + s)
@@ -65,6 +98,7 @@ def main():
     ap.add_argument('--box', action='append', default=[])
     ap.add_argument('--label', action='append', default=[])
     ap.add_argument('--font-size', type=int, default=15)
+    ap.add_argument('--merge', action='store_true', help='draw one box for boxes that overlap or sit inside each other')
     a = ap.parse_args()
 
     try:
@@ -87,6 +121,15 @@ def main():
         labels = [parse_label(l) for l in a.label]
     except ValueError as e:
         fail(str(e), t0, a.dst)
+
+    clash = first_clash(boxes)
+    if clash and not a.merge:
+        i, j = clash
+        u = union(boxes[i], boxes[j])
+        fail('box %d and box %d overlap or one sits inside the other; red boxes never nest or overlap. '
+             'Use one box %d,%d,%d,%d or pass --merge' % (i + 1, j + 1, u[0], u[1], u[2], u[3]), t0, a.dst)
+    if clash:
+        boxes = merge_boxes(boxes)
 
     warns = []
     if not re.search(r'[\\/](2\. Fix|\d+\. Rework)$', dst_dir, re.I):
@@ -123,7 +166,7 @@ def main():
         if (nx, ny) != (x, y):
             warns.append('label %d shifted to stay inside the image' % (i + 1))
         tb = d.textbbox((nx, ny), text, font=font)
-        d.rectangle((tb[0] - 6, tb[1] - 4, tb[2] + 6, tb[3] + 4), fill=WHITE, outline=RED, width=2)
+        d.rectangle((tb[0] - 6, tb[1] - 4, tb[2] + 6, tb[3] + 4), fill=WHITE)
         d.text((nx, ny), text, fill=RED, font=font)
 
     existed = os.path.exists(a.dst)

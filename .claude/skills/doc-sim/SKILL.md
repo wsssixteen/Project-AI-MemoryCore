@@ -43,7 +43,7 @@ Only on a ticket that touches a generated Word document. Say `doc-sim applies` i
 | Phase 0, test data | `gen` on the candidate permohonan | Does it pick the template under test. `[config]` shows `needs x=[..](now y)` when it does not |
 | Recon | `gen --profile` on BA's permohonan | Which tag is empty, wrong, slow or failing, before any code trace |
 | Rubric, Falsifier ledger | `repro` or `compare` | A falsifier about a fill result or a Word save. Write `RAN: DOC-SIM …` in the row |
-| Before the hand-back, template edited | `gen --profile --template-dir` | A missing or mistyped tag, before a deploy |
+| Before the hand-back, template edited | `gen --profile --template-dir`, then `domain/template-scenario/template-scenario.js` (chain every config action) | A missing or mistyped tag before a deploy; the hand-back needs `TEMPLATE-SCENARIO: PASS` |
 
 The DOC-SIM line goes into `QA-<num>.md` and into the reply. The permohonan is picked by the quest's own test-data rules (`feedback_pengguna_semasa.md`: id + live holder from the DB).
 
@@ -51,7 +51,7 @@ The DOC-SIM line goes into `QA-<num>.md` and into the reply. The permohonan is p
 
 | Gate | What doc-sim gives it |
 |---|---|
-| `CC-PREFLIGHT:` (`domain/template-cc-preflight/`) | The data check per tag is run, not judged: `no value`, `tag not in the file`, `[ERROR]` rows are the data gaps |
+| `TEMPLATE-SCENARIO:` (`domain/template-scenario/`) | The chain output is the paper whose changed CC tags, word diff and green highlight are checked |
 | `RENDER-VERIFY:` (`domain/render-verify/`) | The generated `.docx` to open and read is `out\<run>\…__filled.docx` |
 
 ## What it never covers
@@ -83,3 +83,5 @@ goal: every document-ticket claim about a fill result or a Word save is backed b
 goal_signal: the quest doc or the reply carries a DOC-SIM line with the permohonan, the template and the verdict
 retention: rotate monthly
 footprint: on-demand: 1 java process about 1.1 to 2 GB per cold run; with --warm one shared JVM, about 1.1 GB, up to 15 idle minutes; 1 Word process for the save step
+
+*2026-11-05 — hand-back row and gate table point at TEMPLATE-SCENARIO (domain/template-scenario) instead of the retired CC-PREFLIGHT advisory. Spec-preservation: the per-tag data check is kept inside the new step; additive otherwise.*
