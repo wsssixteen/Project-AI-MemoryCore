@@ -58,6 +58,8 @@
 
 ## 🟢 Active
 
+- [x] **DONE 2026-11-05 as domain/template-scenario (word diff vs requirement + checklist + CC values + green paper, Stop gate; commit 230e548b): AUDIT after 287346 closes (2026-11-04 per miya)**: why the Requirement 223230 template check was not mechanical. My own QA-287346-audit.md listed Premium (Nominal) and the Mukim order on 2026-11-02, and both still shipped. Build a mechanical check: a word diff of the generated document against the requirement document, every difference listed before commit. Slip rows: requirement-gap-hidden, own-audit-not-applied.
+
 - [x] **DONE 2026-11-05 as domain/template-scenario (TEMPLATE-SCENARIO quest step, Fable 5.1 plan): Test-scenario data step, AFTER the 288095 Redmine note is submitted (2026-11-04 per miya)**: through /system-change, add a quest step before any test scenario or BA hand-back: (1) check the test permohonan holds real values for EVERY field the fix changes (288095: mlit Permohonan Dahulu held only the template placeholder, so 2.1.2 could not show the fix); (2) patch the missing data on the test env myself (MLIT/STG writable, script-check first); (3) generate the fixed output and send a screenshot of the fixed part before handing back. Also: "staging" in his Redmine context means stage the Redmine form, not the stag-env branch (I merged 288095 to stag-env on that misread).
 
 - **AUDIT OWED, QA-239386 (2026-10-30 per miya)**: right after the 239386 notes are submitted, run the 12-row checklist in `projects/coding-projects/active/QA-239386/QA-239386.md` section AUDIT OWED: why the quest run missed the related tickets, the env comparison, the code history and the owner check. Each row ends in a workflow fix through /system-change.
