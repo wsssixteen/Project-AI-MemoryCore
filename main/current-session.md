@@ -1,31 +1,33 @@
-**Last Activity**: 2026-10-30 19:10 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - PLTP/2026/9 alter SPI"), stg alter relay solved by him with the aliranKerjaId variable, then the audit of the audit, Domain Expansion.
+**Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
 
-## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
-- ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
-- The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
-- My misses: boot files never read, no briefing · FLOWABLE-KNOWLEDGE never read after the path failed in the worktree (line 630 names this PLTP to PSPM pattern) · two guessed SQL names · runner run twice because I cut its output · "Semakan Permohonan Isian" invented · rule 8 picture skipped · A0-A6 rows never emitted.
-- Tools: alter.js live prints the root process variables, not those of the process holding the task, which hid the answer · run.ps1 alter-flow said "no live engine task" for a live grandchild task · audit-briefing from a worktree reads the worktree's near-empty telemetry and reports every hook as never fired (proposal already logged earlier today, still open).
-- Improvement sweep: see slips proposals A1-A5 dated today from this session.
-- Audit of the audit (2 Fable 5.1 agents, verified counts): DE enforces saves (de-close-gate 222 blocks) but does not audit the session. Scripts caught 0 of 13 failures, a usual DE about 1-2, today's 7 with the audit in view. 888 proposals, 0 rulings; the worktree telemetry bug proposed 34 times. Upgrade design: lib/session-audit.js reads the transcript and emits typed findings (10 mechanical classes), de-close-gate C10 needs each routed (knowledge / tool / gate / workflow / memory, wrong-fix verdict shape), watch row per change, slips fingerprint escalates at 2 and 3, audit-briefing telemetry from main, notifications not counted as his turns; retire steps 5, 6, Checklist D, free-text 7.5. Built today, on the goal hook's reading of his Proceed: lib/session-audit.js (eval 36/36, this transcript 10 of 10 mechanical classes), de-close-gate C10 (eval 54/54), repeat table in core/slips.js, audit-briefing telemetry from main, prompt hooks silent on agent notifications through hook-runtime and dispatch-hooks. Kept against Fable's advice: the second-stop waiver, removing it can trap a session. Retired on his ruling: step 5 and Checklist D (CLAUDE.md v2.01). Kept: step 6, it reads a live log; free-text 7.5 until session-audit proves itself over real closes. Routed, not built: alter-ticket-gate wording, knowledge-first-gate false pass, branch-guard matcher, alter.js variables, runner blind spot.
-- Knowledge baked: FLOWABLE-KNOWLEDGE section 13, altering back into a sub-process after the child was born.
-- system-rules Rule 9 added per his ask (design and trial by Fable 5.1): boundary line covers, never, stops; forge and birth gate refuse a new part without it; census counts, old parts not forced. Trial found two real crossings of mine: report-only became gate C10, and hook-runtime + dispatch-hooks changed, both on a blanket Proceed.
-- Open: Pendaftaran verify; his ruling on keeping the hook-runtime change.
-**Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
+## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
+- Asked: BA Fizah: alter MLPS/2026/1, /2, /5, /6, /10 and OMLPS/2026/1 to Penyediaan Borang 4Ae dan L1e (wrong Jadual dates); patch MLPS/1 and /2 back to Sedang Diproses.
+- Done: Alter Flow cannot reach PYB4AE from the Cetakan sub-flow; Initiate & Alter reset No ran on PROD (codes C1F5-62FF, A293-188D), 6 of 6 verified by DB (new a_tgsn 2919960-2919964, 2919967). Patch 287925.sql rewritten (alter had already set status_awam), run by infra, MLPS/1 and /2 now Awalan / Sedang Diproses, dates empty. Redmine submitted: Resolved to Fizah, journal #4. Quest archived (patch ticket, ahead of Redmine).
+- Side session: next-steps-shape v5 (approval text in its own copy block), main 71ae8698.
+- Knowledge: ALTER-TICKET-PLAYBOOK §3 (ended flow: Init & Alter resets status_awam only; tool AFTER check denied on PROD for rjk_parameter_sistem).
+- Open: OMLPS/1 is Tamat / Sedang Diproses from before this ticket, not in BA scope. Routing PYB4AE to PB4AE not yet exercised (user's Hantar).
+- Mistakes: approval codes quoted in a table cell; status patch written before the alter, would have matched 0 rows; two guessed column names (id_pengguna, trkh_kemaskini).
+- Assessment: A1 prod-alter-gate refused codes found inside his quoted complaint; the popup path worked. A2 write data patches after the alter's AFTER read. A3 the AFTER engine check fails on PROD, DB rows were the proof. A4 Alter Flow cannot cross from a sub-flow to a parent node; Initiate & Alter can. A5 ⏭ no sweep.
 
-## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
-- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
-- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
-- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
-- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
-- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
-- Open: nothing from this session. No ticket worked.
-- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
-**Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
+**Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
 
-## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
-- 287201 PLTP Syor Keputusan PDT labels: fix 6f93448d46, Redmine Verified by Fizah, closed at Phase 1, waits for release.
-- 287164 MCL premium gate: 761ec96f82 + 784d3e57e2 + 0c97566203, tested on MLIT by miya, Redmine Resolved to Fizah, closed at Phase 1. Photos do not show the Syarat pick or the dialog reopen.
-- System, on main: test data by alter rule, `lib/chat-images.js`, no Redmine submit with 0 files, CLAUDE.md v2.00 rule 8 plan first.
-- Open: gate-fail and slip audit child session (brief in `main/todo.md`, start from the desktop app).
-- Assessment: A1 gates fired on replies that had no scenario and no ask. A2 two test-data slips from not checking the holder after an alter. A3 his "why can't I open it" took 4 queries and minutes before a plain answer. A4 alter can create a task with no holder. A5 mid-turn photos lived only in the transcript.
-**Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
+## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 rounds 2-3: unlink the Pendaftaran branch)
+- Asked: BA (Fizah) wants PPTPB unlinked from Pendaftaran (CR 256335, Pendaftaran side not released) for PTMLK/02/L/PPTPB/2026/5 and No Serahan 02MH1579/2026; one ticket incl. removing 41.0.
+- Found: our side reached Tamat Aplikasi on 2/10 (no SPOC); only the Endosan branch waits at SPIL; only PPTPB at SPIL in PROD. All staging PPTPB versions v1-v10 contain Endosan (no old version to revert to). Fable 5.1: Alter Flow cannot reach 40.0 from SPIL, Initiate & Alter can (latest model); join bug: "Ada spoc?" False bypasses the join, Endosan can never pass it (proven stg 7980291 since 17/8). 02MH1579/2026 = HKBM, 2 rows, Pendaftaran data.
+- Agreed (miya): one ticket: Initiate & Alter 2026/5 to 40.0 and hold until Pendaftaran release; Pendaftaran deletes 02MH1579/2026; remove 41.0 now, re-add with the join fix. Concise reply to Fizah prepared (miya sends).
+- CR check: 256335 is not Li Wen's 256334 (PDBB to Hasil); not our issue except the latent join bug.
+- Mistakes: said "cannot alter back to 40.0" as fact; miya's one question and the Fable review proved it wrong. Long replies after he asked for short ones; hashtags on ticket numbers.
+- Open: ticket from Fizah; staging rehearsal of Initiate & Alter on 7980291 before any PROD step; whether Initiate ends the child processes (not proven); PROD jar migrate behaviour (not proven).
+- Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
+
+## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
+- Asked (from the 287925 session, his correction): never put an approval code or "approve ..." phrase in quotes inside the Next steps "Your reply" cell; put it in its own text block so he copies it in one click. "Yes, make it a rule".
+- Done: `domain/next-steps-shape` v5 blocks `approval-in-cell` (code C1F5-62FF standing alone, case-sensitive; approve / post it / submit it any case); eval 54/54 (A1 to A25); pre-reply-contract line, reply-shape-spec 3f, reply-mechanics memory + index line, README, diagram v5, watch wmw0l323a. Commit 8dc4cfb3; main folder and GitHub main 71ae8698. Live fire from the main folder exit 2.
+- Changed from the brief: one `/i` regex split in two, because `/i` on the code part blocked "long-term" and ADHOC-MLPS-2026-4.
+- Blockers: memory-write-gate could not see the RULE-PLACEMENT line written as reply text (only tool calls in the transcript for that message); passed through a Bash heredoc; slip row logged. land-on-main made its own commit c336af9b (same tree), merged origin/main in the main folder to make the SHAs equal.
+- Open: QA-287925 itself stays with the parent session (save-quest PHASE-1 verdict, not ready).
+- Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.

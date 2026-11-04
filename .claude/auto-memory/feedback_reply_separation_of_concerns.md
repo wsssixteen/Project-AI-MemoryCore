@@ -216,6 +216,11 @@ When a reply explains how something works (a flow, a design, a proposal), the FI
 **Why:** he asked for the chat-mode design and got three numbered paragraphs; he wants to see it, not read it.
 **How to apply:** "how does X work / show me / design" = explain-diagram skill first, every time, chat sessions included.
 
+## 2026-11-02: a diagnosis over several rounds = steps and reason only
+In each round of a diagnosis or troubleshooting: the commands or steps to do, one short reason for each. No findings dump, no history, no theory, no memory or system report.
+**Why:** RustDesk diagnosis, 2026-11-02. "only give me the steps and reason per round. I don't understand all of this blabbering. Ban yourself."
+**How to apply:** one numbered step, its reason, its command. Then what each result means, only if he must act on it.
+
 ## 2026-10-27: session close-out = wait silently, then ONE table
 When he asks me to check other sessions (close-out, DE, archive), I relay nothing per message. I wait until every session has answered, then reply with one table: Session | Result (DE done + archived / needs your attention). No item lists, no Brief, no Next steps.
 **Why:** "I want you to wait untill all is finished and simply show me all sessions in a table with a simple answer ... Bloating my reply."

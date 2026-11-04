@@ -16,3 +16,6 @@ retention: rotate monthly
 **Observability**: `domain/db-claim-proof/log.jsonl`, one row per fire — `ts · tools (DB calls this turn) · outcome (pass|blocked|bypassed)`. Replay on the #281392 session transcript: 12 DB turns, 10 would have blocked (first = the DMMLMS claim). Eval: 20 fixtures, 22 adversarial scenarios.
 
 **state-scoped**: no, state-agnostic — matches every postgres-* and oracle-* MCP.
+
+2026-11-03 (miya, 287350): a correction reply and every quest reply end on what it means and the next step; a bare fact is banned. Rollback: git revert this commit.
+diagram: diagram.png

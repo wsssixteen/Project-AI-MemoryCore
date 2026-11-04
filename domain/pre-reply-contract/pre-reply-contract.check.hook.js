@@ -43,11 +43,13 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
     '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line. The thing he asked about or asked me to create: FULL folder path from the drive letter in a ```text block, file name on its own line; never part of a path; never a path list of every changed file.',
-    '   · Tables in chat = a ```text block drawn with +---+ and | around every cell; a pipe table is banned (no borders). Pictures, pages, documents: every cell has lines on all four sides.',
+    '   · Tables in chat = a normal Markdown table, NEVER a code block (the app draws the lines; say so if he asks for more). Pictures, pages, documents: every cell has lines on all four sides.',
     '   · End with a **Next steps** TABLE — columns `# | Action | What it means | Your reply` — priority-first, one row per decision or action for みや; NEVER a numbered list, NEVER prose. Omit only when no user action.',
     '     Every row has its OWN heading or table row ABOVE, in the same words: he scrolls back from a row and must land on what explains it (an opening-paragraph mention does not count).',
     '     "What it means" = ONE plain sentence (5+ words): what the item is and why it needs him. No hook names, watch ids, row codes or line numbers there. Only offer actions he asked for or the task needs.',
+    '     "Your reply": text he must type back (an approval code like C1F5-62FF, "approve …", "post it", "submit it") goes in its own ```text block under the row\'s heading, never in quotes in the cell; the cell says "the block above". A popup (AskUserQuestion) is better where the gate takes it.',
     '   · Verification you ran for YOURSELF (git log, fsck, eval output, grep dumps) stays OUT of the reply — one line "verified: <what>" is the whole of it.',
-    '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply.',
+    '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply. It still ends on one line: what it means and the next step.',
+    '   · In quest work NEVER end on a bare fact. Do what I can do now; the last line says what happens next and who does it. Short replies always.',
   ].join('\n') + '\n' };
 });

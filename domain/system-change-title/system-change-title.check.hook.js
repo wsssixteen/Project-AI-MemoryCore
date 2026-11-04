@@ -13,6 +13,10 @@
 // v2 (2026-10-27, miya): signal (a) added (mandatory after any system edit); heading = breadcrumb, not "[Kind · new]"
 // v3 (2026-10-28, miya): ONE heading per KIND (`## System › Memory (changed)`) with ONE table, one row per part;
 //    the same kind headed twice in one reply BLOCKS ("duplicates of System › Memory tables")
+// v4 (2026-11-03, miya: "always show a diagram ... use the boxes I've shown to you before"): after a system EDIT this
+//    turn, the report is the change-map picture (lib/change-map.js) sent with SendUserFile this turn; the §3i tables
+//    pass only beside a quoted `CHANGE-MAP: FAIL` line (render failed). Signal (b) alone (no edit) keeps v3: headings
+//    or the picture.
 // Runs inside the stop-reply-shape bundle (lib/dispatch-hooks.js), not a standalone registration (system-rules Rule 7)
 // Log: domain/system-change-title/log.jsonl
 'use strict';
@@ -40,15 +44,17 @@ const SYS_PATH_FILE = new RegExp(SYS, 'i');
 const VERB = /\b(built|created|added|new|updated|changed|refined|moved|born|installed|removed|deleted|tightened|banned)\b/i;
 const NEXT_STEPS = /^\s*(#{1,6}\s*|\*\*)\s*Next steps\b/i;
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit', 'MultiEdit']);
+const CHANGE_MAP_PNG = /(?:^|[\\/])change-map[^\\/]*\.png$/i;
+const MAP_FAIL = /CHANGE-MAP:\s*FAIL\b/;
 
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
 // Reads the transcript once: the last assistant text, and the system files edited since the last real user message.
 function readTurn(tp) {
-  let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return { text: null, edited: [] }; }
+  let raw; try { raw = fs.readFileSync(tp, 'utf8'); } catch (_) { return { text: null, edited: [], sent: [] }; }
   const rows = [];
   for (const l of raw.split(/\r?\n/)) { if (!l) continue; try { rows.push(JSON.parse(l)); } catch (_) {} }
-  let text = null; const edited = [];
+  let text = null; const edited = []; const sent = [];
   for (let i = rows.length - 1; i >= 0; i--) {
     const o = rows[i]; const m = o.message || o; const role = m.role || o.type; const c = m.content;
     if (role === 'user') {
@@ -65,13 +71,17 @@ function readTurn(tp) {
         const fp = String((b.input && (b.input.file_path || b.input.notebook_path)) || '');
         if (SYS_PATH_FILE.test(fp)) edited.push(fp);
       }
+      if (b && b.type === 'tool_use' && b.name === 'SendUserFile' && b.input && Array.isArray(b.input.files)) {
+        for (const f of b.input.files) sent.push(String(f));
+      }
     }
   }
-  return { text, edited };
+  return { text, edited, sent };
 }
 
-function evaluate(text, edited) {
+function evaluate(text, edited, sent) {
   edited = (edited || []).filter(p => SYS_PATH_FILE.test(String(p)));
+  const mapSent = (sent || []).some(f => CHANGE_MAP_PNG.test(String(f)));
   if (text && BYPASS.test(text)) return { verdict: 'pass', reason: 'bypass' };
   const body = String(text || '').replace(/```[\s\S]*?```/g, '');
   let hit = edited.length ? 'edited this turn: ' + path.basename(edited[0]) + (edited.length > 1 ? ' +' + (edited.length - 1) + ' more' : '') : null;
@@ -82,6 +92,10 @@ function evaluate(text, edited) {
     }
   }
   if (!hit) return { verdict: 'pass', reason: 'no-system-change' };
+  if (mapSent) return { verdict: 'pass', reason: 'change-map-sent' };
+  if (edited.length && !MAP_FAIL.test(String(text || ''))) {
+    return { verdict: 'block', reason: 'system files edited, no change-map picture sent', line: hit.slice(0, 160), map: true };
+  }
   const twice = repeatedKind(body);
   if (twice) return { verdict: 'block', reason: 'kind headed twice: ' + twice, line: 'System › ' + twice + ' appears more than once' };
   if (HEADING.test(body)) return { verdict: 'pass', reason: 'breadcrumb-heading-present' };
@@ -92,10 +106,12 @@ function main() {
   let input = {};
   try { input = JSON.parse(fs.readFileSync(0, 'utf8') || '{}'); } catch (_) {}
   if (input.stop_hook_active) return;
-  const turn = input.transcript_path ? readTurn(input.transcript_path) : { text: null, edited: [] };
-  const r = evaluate(turn.text, turn.edited);
+  const turn = input.transcript_path ? readTurn(input.transcript_path) : { text: null, edited: [], sent: [] };
+  const r = evaluate(turn.text, turn.edited, turn.sent);
   log({ verdict: r.verdict, reason: r.reason, edited: turn.edited.length });
-  if (r.verdict === 'block') {
+  if (r.verdict === 'block' && r.map) {
+    process.stdout.write(JSON.stringify({ decision: 'block', reason: '⛔ system-change-title: you changed the system this turn, but no change-map picture was sent.\n   Seen: "' + r.line + '"\n   Write the changed parts to a spec JSON (kind · tag new|changed|removed · name · dir · what), run `node lib/change-map.js <spec.json>`, Read the PNG, send it with SendUserFile (system/INDEX.md change route step 8).\n   Render failed? Quote its `CHANGE-MAP: FAIL` line and give the reply-shape-spec §3i tables instead.\n   ⚡ DELTA ONLY: send the picture, do not re-send the reply.\n   Not a system change? [skip-system-change-title: <reason>]' }));
+  } else if (r.verdict === 'block') {
     process.stdout.write(JSON.stringify({ decision: 'block', reason: '⛔ system-change-title: you changed the system this turn, but the reply does not show where each change sits, one table per kind.\n   Seen: "' + r.line + '"\n   ONE heading per KIND: `## System › <Rule|Workflow|Feature|Tool|Memory|Kernel|Project> (new|changed)`, then ONE table, one row per part: Name · Parent · New or changed · one line (reply-shape-spec §3i). Never the same kind headed twice.\n   ⚡ DELTA ONLY: re-send just those headed sections, not the whole reply.\n   Not a system change? [skip-system-change-title: <reason>]' }));
   }
 }

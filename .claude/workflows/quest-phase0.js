@@ -33,7 +33,7 @@ const FULL = t.depth === 'full' || t.depth === 'deep' || t.ticketType === 'bug'
 // ---- structured-output schemas ----
 const DISCOVERY_SCHEMA = { type: 'object', required: ['symptom', 'ticketType', 'entryContext', 'codebaseRoot', 'baseBranch', 'urusans', 'layerGuess', 'scopeAnchor', 'specSource', 'requirementMatch'], properties: {
   specSource: { type: 'string', description: 'the manifest B + B2 lines copied verbatim: who wrote the Description and the latest Issue/Expected list, each with [BA] / [TSO…] / [role unknown]' },
-  requirementMatch: { type: 'string', description: 'the REQUIREMENT-MATCH header + top match lines from quest/requirement-index.js, verbatim' },
+  requirementMatch: { type: 'string', description: 'the REQUIREMENT-MATCH header + top match lines from quest/requirement-index.js, verbatim, then the --read <req> --for <ticket> result of the closest match: REQUIREMENT-READ line + the deciding rule quoted (never a verdict from the subject; 287811)' },
   symptom: { type: 'string' }, ticketType: { type: 'string', description: 'bug | enhancement | template | cr' }, entryContext: { type: 'string', description: 'New | Rework | Addition' },
   codebaseRoot: { type: 'string' }, baseBranch: { type: 'string' }, urusans: { type: 'array', items: { type: 'string' } }, tugasans: { type: 'array', items: { type: 'string' } },
   layerGuess: { type: 'string', description: 'template | java | jsf | config | db | flowable' }, scopeAnchor: { type: 'string' }, baProvidedPermohonanId: { type: 'string' }, expected: { type: 'string' }, observed: { type: 'string' } } }

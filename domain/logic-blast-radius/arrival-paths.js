@@ -117,6 +117,9 @@ function derive(xml, kod) {
   return { task, rows: [...rows.values()] };
 }
 
+// The engine answered and has no such process: never the same as an engine that could not be read.
+const noProcess = (engine, engineRead, file) => engineRead && !engine && !file;
+
 async function main() {
   const argv = process.argv.slice(2);
   const pos = argv.filter((a, i) => !a.startsWith('--') && !(i > 0 && argv[i - 1].startsWith('--')));
@@ -124,13 +127,15 @@ async function main() {
   const [urusan, tugasan] = pos;
   if (!urusan || !tugasan) { console.error('usage: node arrival-paths.js <URUSAN> <TUGASAN> --env mlit|stg [--key <processKey>] [--file <bpmn>] [--json]'); process.exit(2); }
   const env = opt('env') || 'mlit';
+  if (!ENGINE[env]) { console.error(`unknown env ${env}: use ${Object.keys(ENGINE).join(' or ')}. Nothing written.`); process.exit(2); }
   // the online (Lite) urusan all run on one process, MLK_PLP_UPLP (engine, 2026-10-30)
   const LITE = ['OPLPS', 'OMLPS', 'OPRU', 'OPRBB', 'OPLBP', 'OPPJK', 'OPPTPB'];
   const key = opt('key') || (LITE.includes(urusan) ? 'MLK_PLP_UPLP' : 'MLK_PLP_' + urusan);
   let xml = null, source = null;
-  let engine = null;
-  try { engine = await loadEngine(env, key); } catch (e) { console.error('engine not readable: ' + e.message); }
+  let engine = null, engineRead = false;
+  try { engine = await loadEngine(env, key); engineRead = true; } catch (e) { console.error('engine not readable: ' + e.message); }
   const file = opt('file');
+  if (noProcess(engine, engineRead, file)) { console.error(`the engine has no process ${key}: wrong urusan or --key. Nothing written.`); process.exit(4); }
   if (file) {
     xml = fs.readFileSync(file, 'utf8');
     source = `file STALE ${Buffer.byteLength(xml)}/${engine ? engine.bytes : 'unknown'}`;
@@ -152,4 +157,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { console.error(e.message); process.exit(1); });
-module.exports = { derive, findTask, walkBack };
+module.exports = { derive, findTask, walkBack, noProcess };

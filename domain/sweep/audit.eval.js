@@ -120,6 +120,89 @@ check('bad --since = exit 2', run(['run', '--tickets', '1', '--since', 'yesterda
 check('missing subagents dir = exit 2', run(['run', '--tickets', '1', '--since', SINCE, '--subagents', path.join(T, 'nope')]).code === 2);
 check('unknown command = exit 2', run(['frobnicate']).code === 2);
 
+// ---- 7. the hand-back tool carries the answer (run esokongan-2026-11-02: 9 false alarms)
+const { familiar, shellTaskWrite } = require(AUDIT);
+const defectsOf = (desc, opts) => { fam(desc, opts); const d = familiar(SUB, `agent-f${n}.jsonl`, {}); return d.defects.map(x => x.class); };
+const answerText = 'done, see the file';
+check('answer only in the hand-back message = no no-return-table', !defectsOf('W1+W2 quest 444444 handback', { text: answerText, tools: [{ name: 'SubagentHandback', input: { message: 'issue | verdict | fix\n1 | CONFIRMED | x' } }] }).includes('no-return-table'));
+check('hand-back with no pipe line = still no-return-table', defectsOf('W1+W2 quest 444444 empty handback', { text: answerText, tools: [{ name: 'SubagentHandback', input: { message: 'all done, nothing to report' } }] }).includes('no-return-table'));
+check('hand-back whose message is not text = still no-return-table, no crash', defectsOf('W1+W2 quest 444444 bad handback', { text: answerText, tools: [{ name: 'SubagentHandback', input: { message: { a: 'x | y | z' } } }] }).includes('no-return-table'));
+check('no text and no hand-back = still no-return-table', defectsOf('W1+W2 quest 444444 silent', { text: answerText, tools: [{ name: 'Read', input: { file_path: 'C:/x.md' } }] }).includes('no-return-table'));
+check('pipes in a shell command are not an answer', defectsOf('W1+W2 quest 444444 pipes in bash', { text: answerText, tools: [{ name: 'Bash', input: { command: 'a | b | c' } }] }).includes('no-return-table'));
+check('pipes in a written file are not an answer', defectsOf('W1+W2 quest 444444 pipes in write', { text: answerText, tools: [{ name: 'Write', input: { file_path: 'C:/s/x.md', content: 'a | b | c' } }] }).includes('no-return-table'));
+
+// ---- 8. task-folder-write judges where the file lands, not which folder the command mentions
+const TASKS = 'C:\\Users\\R\\1. Tasks\\Melaka';
+const REAL_FALSE_ALARM = `$d=(Get-ChildItem "${TASKS}" -Directory | ? Name -like "336*").FullName; $s="C:\\Temp\\scratchpad"; New-Item -ItemType Directory -Force "$s\\w3img" | Out-Null; Get-ChildItem -LiteralPath "$d\\1. Brief" -Include *.png,*.jpeg | % { Copy-Item -LiteralPath $_.FullName ("$s\\w3img\\"+($_.Name -replace ' ','_')) }; Get-ChildItem "$s\\w3img" | % FullName`;
+for (const [name, cmd] of [
+  ['the run\'s real Copy-Item from the Task folder to scratch', REAL_FALSE_ALARM],
+  ['Copy-Item named source and -Destination scratch', `Copy-Item -LiteralPath "${TASKS}\\a.png" -Destination "C:\\Temp\\a.png"`],
+  ['Copy-Item positional, scratch second', `Copy-Item "${TASKS}\\a.png" "C:\\Temp\\a.png"`],
+  ['Copy-Item with a Join-Path destination in scratch', `$s="C:\\Temp"; Copy-Item "${TASKS}\\a.png" (Join-Path $s 'a.png')`],
+  ['cp out of the Task folder', `cp "${TASKS.replace(/\\/g, '/')}/a.png" /c/Temp/a.png`],
+  ['Move-Item is not named: reading the listing and piping to a scratch file', `Get-ChildItem "${TASKS}" | Out-File "C:\\Temp\\list.txt"`],
+  ['Set-Content to scratch from Task folder text', `Get-Content "${TASKS}\\a.txt" | Set-Content -Path "C:\\Temp\\a.txt" -Encoding utf8`],
+  ['redirect to scratch', `cat "${TASKS.replace(/\\/g, '/')}/a.txt" > "C:/Temp/a.txt"`],
+  ['redirect of errors to null', `Get-Content "${TASKS}\\a.txt" 2>$null`],
+  ['read only, no writer at all', `Get-ChildItem "${TASKS}" | Out-Null`],
+  ['New-Item in scratch', `$d=(Get-ChildItem "${TASKS}").FullName; $s="C:\\Temp"; New-Item -ItemType Directory -Force "$s\\w3" | Out-Null`],
+  ['mkdir in the project folder, Task folder only quoted in text', `mkdir -p projects/x && node lib/a.js "task_folder=${TASKS}\\x"`],
+  ['.NET write to a register resolved in the repo', `$tf="${TASKS}\\x"; $reg="C:\\repo\\r.md"; [IO.File]::WriteAllText((Resolve-Path $reg), $raw, $e)`],
+  ['.NET copy out of the Task folder', `[System.IO.File]::Copy("${TASKS}\\a.png", "C:\\Temp\\a.png")`],
+  ['a .md file name is not the md command', `Get-Content "${TASKS}\\x.md" -Raw`],
+  ['Remove-Item of a scratch file', `$s="C:\\Temp"; Get-Content "${TASKS}\\a.txt"; Remove-Item "$s\\a.txt"`],
+]) check('NOT a Task-folder write: ' + name, !shellTaskWrite(cmd), cmd);
+for (const [name, cmd] of [
+  ['Copy-Item positional into the Task folder', `Copy-Item a.md "${TASKS}\\x\\a.md"`],
+  ['Copy-Item -Destination into the Task folder', `Copy-Item -Path "C:\\Temp\\a.md" -Destination "${TASKS}\\x\\a.md" -Force`],
+  ['Copy-Item into a variable holding the Task folder', `$d="${TASKS}\\x"; Copy-Item a.md "$d\\a.md"`],
+  ['variable through a second variable', `$d="${TASKS}"; $f="$d\\x\\a.md"; Copy-Item a.md $f`],
+  ['Join-Path destination on the Task folder', `$d="${TASKS}"; Copy-Item a.md (Join-Path $d 'a.md')`],
+  ['destination from a loop variable over the Task folder', `Get-ChildItem "${TASKS}" | % { Set-Content $_.FullName 'x' }`],
+  ['relative destination after cd into the Task folder', `cd "${TASKS}\\x"; Copy-Item C:\\Temp\\a.md .`],
+  ['Copy-Item with no destination after Set-Location there', `Set-Location "${TASKS}\\x"; Copy-Item C:\\Temp\\a.md`],
+  ['Set-Content into the Task folder', `Set-Content -Path "${TASKS}\\x\\a.txt" -Value 'x'`],
+  ['Add-Content positional into the Task folder', `Add-Content "${TASKS}\\x\\a.txt" 'x'`],
+  ['Out-File into the Task folder', `'x' | Out-File -FilePath "${TASKS}\\x\\a.txt"`],
+  ['cp into the Task folder', `cp /c/Temp/a.md "${TASKS.replace(/\\/g, '/')}/x/a.md"`],
+  ['cp with -t into the Task folder', `cp -t "${TASKS.replace(/\\/g, '/')}/x" /c/Temp/a.md`],
+  ['bash variable holding the Task folder', `d="${TASKS.replace(/\\/g, '/')}"; cp /c/Temp/a.md "\${d}/a.md"`],
+  ['redirect into the Task folder', `echo x > "${TASKS}\\x\\a.txt"`],
+  ['append redirect into the Task folder', `echo x >> "${TASKS}\\x\\a.txt"`],
+  ['error redirect into the Task folder', `foo 2> "${TASKS}\\x\\e.txt"`],
+  ['Move-Item OUT of the Task folder removes the file there', `Move-Item "${TASKS}\\x\\a.md" "C:\\Temp\\a.md"`],
+  ['mv OUT of the Task folder removes the file there', `mv "${TASKS.replace(/\\/g, '/')}/x/a.md" /c/Temp/a.md`],
+  ['piped Move-Item from a Task-folder listing', `Get-ChildItem "${TASKS}" | Move-Item -Destination "C:\\Temp"`],
+  ['Set-Content with no path it can read', `Get-ChildItem "${TASKS}" | Set-Content`],
+  ['the real .NET write beside a copy elsewhere', `$tf="${TASKS}\\305. x"; Copy-Item -LiteralPath $sp -Destination "C:\\repo\\a.md"; [IO.File]::WriteAllText("$tf\\1. Brief\\brief.txt",$brief,$utf8)`],
+  ['.NET append into the Task folder', `[IO.File]::AppendAllText("${TASKS}\\x\\a.txt", 'x')`],
+  ['.NET copy into the Task folder', `[System.IO.File]::Copy("C:\\Temp\\a.png", "${TASKS}\\a.png")`],
+  ['.NET create folder in the Task folder', `$tf="${TASKS}\\x"; [void][IO.Directory]::CreateDirectory("$tf\\1. Brief")`],
+  ['New-Item folders in the Task folder', `$f="${TASKS}\\x"; New-Item -ItemType Directory -Force -LiteralPath "$f\\1. Brief","$f\\2. Fix" | Out-Null`],
+  ['New-Item with Join-Path on the Task folder', `$t="${TASKS}\\x"; New-Item -ItemType Directory -Force -Path (Join-Path $t '1. Brief') | Out-Null`],
+  ['mkdir into the Task folder', `mkdir -p "${TASKS.replace(/\\/g, '/')}/x/2. Fix"`],
+  ['second mkdir target in the Task folder', `mkdir -p /c/Temp/a "${TASKS.replace(/\\/g, '/')}/x"`],
+  ['relative mkdir after cd there', `cd "${TASKS.replace(/\\/g, '/')}" && F="298. x" && mkdir -p "$F/1. Brief"`],
+  ['Remove-Item in the Task folder', `Remove-Item -LiteralPath "${TASKS}\\x\\a.txt" -Force`],
+  ['rm in the Task folder', `rm -f "${TASKS.replace(/\\/g, '/')}/x/a.txt"`],
+  ['Rename-Item in the Task folder', `Rename-Item "${TASKS}\\x\\a.txt" -NewName b.txt`],
+  ['Tee-Object into the Task folder', `foo | Tee-Object -FilePath "${TASKS}\\x\\a.txt"`],
+  ['tee into the Task folder', `foo | tee "${TASKS.replace(/\\/g, '/')}/x/a.txt"`],
+]) check('IS a Task-folder write: ' + name, shellTaskWrite(cmd), cmd);
+check('familiar(): the real Copy-Item from the run raises no task-folder-write', !defectsOf('W3 blind 555555 copy out', { tools: [{ name: 'PowerShell', input: { command: REAL_FALSE_ALARM } }] }).includes('task-folder-write'));
+check('familiar(): a real shell copy into the Task folder still raises it', defectsOf('W3 blind 555555 copy in', { tools: [{ name: 'PowerShell', input: { command: `Copy-Item a.md "${TASKS}\\x\\a.md"` } }] }).includes('task-folder-write'));
+
+// ---- 9. --controller-caught none = an empty list; real tickets still count
+fs.rmSync(path.join(MAIN, 'system', 'orchestration-mode.flag'), { force: true });
+r = run(['run', '--tickets', '111111', '--since', SINCE, '--subagents', SUB, '--controller-caught', 'none', '--w4-changed', 'None', '--write', '--run-id', 'none-means-empty']);
+row = lastRow();
+check('--controller-caught none = empty list', row.accuracy.controller_caught.length === 0, JSON.stringify(row.accuracy));
+check('--w4-changed None = empty list', row.accuracy.w4_changed_fix.length === 0, JSON.stringify(row.accuracy));
+check('the close line says caught 0', /controller caught 0/.test(r.out), r.out);
+r = run(['run', '--tickets', '111111', '--since', SINCE, '--subagents', SUB, '--controller-caught', '111111,222222', '--write', '--run-id', 'two-caught']);
+row = lastRow();
+check('--controller-caught t,t = two tickets', row.accuracy.controller_caught.length === 2, JSON.stringify(row.accuracy));
+
 let failed = 0;
 for (const x of results) { if (!x.ok) failed++; console.log((x.ok ? 'PASS' : 'FAIL') + '  ' + x.name + (x.ok ? '' : '  -> ' + x.d)); }
 console.log(`\nsweep audit eval: ${results.length - failed}/${results.length} green`);

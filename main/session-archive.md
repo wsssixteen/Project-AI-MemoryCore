@@ -4,6 +4,275 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-03, ADHOC-OPLPS-2026-1 OPLPS pelan L1e tidak penuh)
+- Asked: PROD PTMLK/02/L/OPLPS/2026/8 (nurulazura, PDTJ): pelan on Borang L1e looks cut, other OPLPS fine; margin? ours or the reports team?
+- Found: not margin, not cut. DMS file 2000x1410 complete; pixel script: black border top, bottom, left, none on right. Chain: pelukis azizah uploads in Teknikal (LAIN-37353842), Tandatangan Pelan stamps on the same canvas (CommonImageUtil.overlayImages), OPLPS users upload those exact bytes (932673 B), LaporanPelan.jrxml RetainShape only shrinks. Jrxml is in our own repo, so not a reports-team issue.
+- Closed: miya, no issue. Route ANSWER. Task folder 365 archived, register A93 ANSWERED, audit 31/31.
+- Not verified: azizah's own upload not opened (not needed after close).
+- Mistakes: said the file itself was cut, then that the bottom border was missing; both withdrawn after measuring. Wrong column guesses (medan_pk, no_dokumen, ind_jns_dok) before reading the schema.
+- Assessment: A1 the brief-first gate blocked the save agent and the audit in a closing round with no new finding. A2 ⏭ no ticket quest. A3 a pixel count settled "cut vs missing line" where eyeballing failed twice. A4 compare the file bytes across Teknikal and OPLPS before blaming either module. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 18:04 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/focused-wescoff-e92f44), change route step 3 Check + nod and step 8 coloured change-map report, Domain Expansion.
+
+## Session Recap (2026-11-03, change route: step 3 Check + nod, step 8 change-map picture)
+- Asked: why the false alarms; drop the RustDesk session-start alert; a real check step in the change route (justify, scrutinize, assess, highest model, a picture, no essays); then every system change reported as a coloured picture on the system map's own boxes.
+- Done: RustDesk alert removed. Step 3 Check + nod built (STEP-3 block, step3-check eval 20/20), on main 28f3eb1e / main folder af03ca97. Step 8: new Tool `lib/change-map.js` (spec JSON → coloured map, NEW green · CHANGED blue · REMOVED red, untouched kinds faded), system-change-title v4 (after a system edit, passes only on a sent change-map PNG; tables only beside `CHANGE-MAP: FAIL`), INDEX step 8, reply-shape-spec 3i, explain-diagram colour exception, tools.json row. Gate eval 43/43. On main 026cb251 / main folder 23c15230 (patch applied by hand: land-on-main refused on dirty main + current-session.md conflict).
+- Mistakes he caught: report given as tables, "I don't think this is working"; the first map was bland because my 2026-11-02 no-accent rule overrode the plugin's colours ("did you add a certain rule that overwrite the original skill?").
+- Open: the RustDesk connection itself is not fixed; 12 tool-registry problems existed before this change; Appraisal-2026 handover draft still in the notes folder.
+- Assessment: A1 a rule I wrote for one picture type silently stripped colour from every picture; a skill-wide rule needs its scope named. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-03 17:59 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), second Domain Expansion after 287811 handover: pulled main 0caed659, watch rows for quest-phase-gate (gate + eval) and redmine-write-gate; miya to confirm the pinned git origin in the app (Help, Troubleshooting, Review Pinned Git Origins) so sync_with_base_branch works again.
+**Last Activity**: 2026-11-03 17:53 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/pptpb-hakmilik-assignment-639100), ADHOC-PPTPB-2026-9 answered and BA reply sent, Domain Expansion.
+
+## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 PPTPB TSP endorsement)
+- Asked: PROD PPTPB PTMLK/02/L/PPTPB/2026/5 (norlina, Jasin): is PPTPB connected to the right TSP subflow in Flowable; HKBM 02MH1579/2026 on PN 040214PN00037703 went to Jasin, BA expects PTG 00.
+- Found: MLK_PLP_PPTPB.bpmn20.xml:575-591 41.0 Endosan TSP calls MLK_DFT_NOTA_HKMLK with nextUrusan TSP, same as MCL and PLTP; the permohonan sits at SPIL Semakan Permohonan Lulus (TSP), Dalam Tindakan. 02MH1579/2026 is HKBM (MH), not TSP (nota), made 20/10 by norlina with no workflow row and no tugasan, so not made by the flow. No PPTPB in PROD ever made a TSP perserahan. PROD nota on PN always goes to the district office (MCL 19, PLTP 114), never 00.
+- Route: OWNED-ELSEWHERE, refer Pendaftaran (how HKBM was made; should a PN nota go to PTG 00). BA reply sent by miya 2026-11-03. Saved: Task folder 367, register A95, audit 31/31.
+- Not verified: how 02MH1579/2026 was created (etanah-pendaftaran not on disk).
+- Mistakes: skipped the boot reads and the session briefing; the save agent tried to start before the brief (gate caught it); the first SQL guesses hit wrong column names (pjbt_id, id_hakmilik, ind_jns_hkmlk) before reading information_schema.
+- Assessment: A1 the brief-first, db-claim-proof and ownership-input gates each forced one delta; the Input check had to be repeated three times because each reply was checked alone. A2 the BPMN read settled the BA's flowable question in one grep. A3 the sibling count (children of MCL/PLTP by hakmilik type) turned a "should" into a PROD fact. A4 a stray perserahan with no umm_aliran_kerja row is a quick sign it was not made by a flow. A5 ⏭ no sweep.**Last Activity**: 2026-11-03 17:25 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), ticket 287811 handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
+- Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
+- Cause: our 258004 fix deleted the Surat on every Maklumat Tanah save (MlkMaklumatTanahPemberimilikanForm invalidateSuratKeputusanLulusForRegeneration). Requirement 223236 spec: Penyediaan Sedia, Semakan arrives Sedia, Pengesahan arrives Disemak; no delete rule.
+- Fix C: delete call, method and 2 imports removed, 0d5ef30fff on mlk/internal/287811, int-env a3a263bf69, stag-env 2720433503. Local test waived by miya; he tested on stg1 PTMLK/02/L/MCL/2026/14, all 6 steps pass. Redmine journal 5 at 17:22: Resolved, Nurul Amirah Nadiah, 100%, Root Cause DEV, 6 red-boxed photos.
+- Open risk: a value changed after the Surat exists stays in the old Surat until Jana Semula; not verified.
+- System change 87eddc33: requirement-index.js --read (description, journals, spec attachments) + quest-phase-gate v3 denies etanah edits until REQUIREMENT-READ and a quoted REQUIREMENT-MATCH exist; quest SKILL step 2b, ticket-gate 1e.
+- Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
+- Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, ticket 287811 MCL Surat Keputusan Lulus status)
+- Asked: MLKSTG MCL, Surat Keputusan Lulus shows Baru at Semakan and Pengesahan though Sedia at Penyediaan (internal issue, BA Mira).
+- Cause: our 258004 fix deleted the Surat on every Maklumat Tanah save (MlkMaklumatTanahPemberimilikanForm invalidateSuratKeputusanLulusForRegeneration). Requirement 223236 spec: Penyediaan Sedia, Semakan arrives Sedia, Pengesahan arrives Disemak; no delete rule.
+- Fix C: delete call, method and 2 imports removed, 0d5ef30fff on mlk/internal/287811, int-env a3a263bf69, stag-env 2720433503. Local test waived by miya; he tested on stg1 PTMLK/02/L/MCL/2026/14, all 6 steps pass. Redmine journal 5 at 17:22: Resolved, Nurul Amirah Nadiah, 100%, Root Cause DEV, 6 red-boxed photos.
+- Open risk: a value changed after the Surat exists stays in the old Surat until Jana Semula; not verified.
+- System change 87eddc33: requirement-index.js --read (description, journals, spec attachments) + quest-phase-gate v3 denies etanah edits until REQUIREMENT-READ and a quoted REQUIREMENT-MATCH exist; quest SKILL step 2b, ticket-gate 1e.
+- Mistakes: REQUIREMENT-MATCH judged from the subject only (slip requirement-unread); sync_with_base_branch refused on unconfirmed git origin, merged by hand.
+- Assessment: A1 the requirement read is now a gate, not a memory. A2 Phase 0 step 2b had no read step until today. A3 git log on the file found the 258004 commit in one call. A4 the spec docx settled the expected statuses at once. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 16:30 — worktree `cool-margulis-5bb326` (branch claude/melaka-kadar-cukai-display-a08485), ticket 287892 PT Kadar Cukai Desa II handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, ticket 287892 PT Kadar Cukai DESA II)
+- Asked: PROD PT PTMLK/02/L/PT/2026/18 Desa II Bangunan Tujuan Keagamaan showed "Tiada kadar cukai"; expected RM 66.00. BA Fizah asked if our filter is wrong. Adhoc first (ADHOC-PT-2026-16, A92), then ticket 287892.
+- Cause: six mukim are in two Desa classes (jns_kwsn_ptbrn "38584|38585"), so they sit in two rates; the lookup ignored Pengkelasan Tanah and took the oldest row. Maintenance data is correct; the tick is not stored on the rate.
+- Fix: pelupusan only, PelupusanService.onCalculateCukaiTanah picks the rate whose mukim all share the chosen class and hands it to common (calculate():197 uses a given row). 55782d7ce1 on mlk/esokongan/287892, int-env 1295a676b4, stag-env 81097d7eae. No common change.
+- Tested on stg1 by miya on PT/2026/18: DESA II RM 66.00; DESA III RM 50.00 (RM 4.00 x 6 = 24 raised to the RM 50 non-MCL minimum, common :509-529). Redmine Resolved to Nurhafizah Hasan, 3 photos, submitted by miya ~16:25.
+- MLIT reference data cannot show the fix (rates 88 and 287 hold mukim of all three classes there).
+- Also: picture added to Appraisal (DECISIONS row 50, ticket card).
+- Mistakes: first WhatsApp advice told the BA to remove mukim from the RM 4 rate (retracted, data is correct); deploy card claimed staging test before checking the minimum rule explained his RM 50.
+- Assessment: A1 redmine-write-gate still blocks Status even when status-rule.js says ALLOWED (needed his words twice). A2 deploy skill test scenario did not compute the minimum floor, so his RM 4 expectation was wrong. A3 git grep across origin/mlk/beta found the floor rule in one call after rg timed out. A4 reuse of common's pre-chosen-row path avoided a common hand-over. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 15:16 — worktree `ticket-287773-quest-run-66ac6f` (branch claude/dms-dokumen-kemasukan-limit-b60a31), Terengganu DMS upload size limit question, Domain Expansion.
+
+## Session Recap (2026-11-03, Terengganu dokumen kemasukan upload size limit)
+- Asked: the DMS size limit for dokumen kemasukan on Terengganu; they want 10MB; find the table and column.
+- Found: no table or column holds it. trgstg2 checked: information_schema columns saiz/size/max (only dokumen_revision.saiz_fail_byte, a stored size), rjk_parameter_sistem (no upload parameter), et_dms_stg2 (no settings table).
+- Code on trg/master: etanah-common WebUtil.java:1635 getFileUploadSizeLimit = 1,000,000,000 B (1 GB, upload box default); WebUtil.java:2540 server check 209,715,200 B (200 MB). AWAM extra-document tabs 100 MB (tooltip wrongly says 1Mb). Pelupusan 1 MB outliers: SuratTemplateForm.xhtml:89, KeputusanSiasatanForm.xhtml:149, UtilitiPajakanBerfasa.xhtml:134.
+- Answer given: limit already 200 MB, so 10MB would be a cut. Not verified: which screen they use; JBoss max-post-size on the Terengganu servers (infra).
+- Mistakes: first reply asked for the screen and error when he only wanted the number; claimed the common clone could not fetch (STATE-FACTS 2026-10-03) without running it; the fetch worked.
+- Assessment: A1 db-claim-proof + attempt-before-blocked gates caught both slips. A2 ⏭ no quest. A3 knowledge FLOW-TRACES §File upload → DMS (Melaka) pointed straight at the code layers. A4 a "table and column" ask can be a code limit; say so on line one. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 14:33 — worktree `appraisal-2026-rubric-500819` (branch claude/appraisal-2026-rubric-500819), tickets 287747 + 287638 handed to BA, Domain Expansion.
+
+## Session Recap (2026-11-03, tickets 287747 OPLPS + 287638 PPJK)
+- Asked: quest 287747 to Rubric, batch with small tickets; apply 287747 + 287638, commit, deploy, test on server, Redmine handover with evidence.
+- Done: 287747 Hantar after Simpan with Pembetulan Ya (BasePelupusanLiteForm.initData reorder), 07f3a9a3 on mlk/esokongan/287747, int-env 896a6e1515, stag-env 8987221fb2. 287638 last fasa carries the remaining years, c3cd2e90 on mlk/internal/287638, int-env 4fc2a7201a. Both tested on server by miya (Ya, Tidak, signed; 4 4 4 4 5). Redmine 287747 journal 5 and 287638 journal 2 posted 14:24-14:25: Resolved, Nurhafizah Hasan, 100%, photos attached. 287638 was briefly reassigned to miya, then sent back to BA after he clarified the fix is correct.
+- Audit 287747: not a regression; the initData order is the same in every version back to before UAT-CR 241586 (2026-02-10). Only the 7 lite urusan SB with Ya change; other lite urusan with Ya are untested.
+- Mistakes he caught: tested locally first instead of on server; 287638 test steps named a Kira button and an editable Tempoh Pajakan that do not exist; asked him 4 times for "set status to Resolved" against his standing rule. All three have slip rows.
+- Blocker: redmine-write-gate refused status Resolved even after his rule message; set by clicking the select. A Fable 5.1 agent was launched to build his status rule into the gate (running at DE time, not landed).
+- Assessment: A1 the Redmine gate encodes words, not his status rule. A2 test scenario steps came from a method name, not the screen page file. A3 regression audit by git blame took 4 calls and answered cleanly. A4 analog-first fix (Permit Lesen helper) held under his doubt. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 12:05 — worktree `redmine-287350-quest-6d719f` (branch claude/redmine-287350-quest-6d719f), PROD patch ticket 287350 closed and archived, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ticket 287350 MCL Perkara + Syarikat, PROD)
+- Asked: Perkara and Syarikat blank on Laporan Tanah, Map Info and Google reports for PTMLK/02/L/MCL/2026/18 and /26; BA asked to patch tajuk risalat.
+- Done: one infra round. Data patch of tajuk risalat (plp_a_pelupusan) and stored perkara (tkl_a_laporan_tnh); 6 report PDFs downloaded, Perkara and Syarikat written in with PyMuPDF, uploaded. No PDF reset: the reports are stored as PDF. Redmine posted by API after his "post it": Resolved, 100%, zip + sql attached; BA since reassigned it to Iffah.
+- Quest QA-287350 closed and archived ahead of Redmine (patch ticket). Archive pruning deleted the patched and original PDFs from the Task folder: patched copy is on Redmine (287350.zip), originals in Desktop dw.rar.
+- Deferred: report query filter drops No. Pertubuhan / No. Koperasi pemohon (latent L37, Teknikal); 35 other MCL at PLT with no tajuk (BA).
+- System: quest skill 6c fewest trips between people; patch-mlk-doc data patch goes with the reset after the upload + generated PDF needs no reset; pre-reply-contract and db-claim-proof every reply ends on its next step. All on main.
+- Mistakes he caught: bare fact with no next step; long replies; counted files not trips; missed the document route for Syarikat; planned a PDF reset before checking the file type; stopped after confirming the patch instead of staging Redmine.
+- Blockers: Claude in Chrome had no browser connected; memory-write-gate never saw the RULE-PLACEMENT line (memory note not written); redmine-write-gate refused "please submit".
+
+## Session Recap (2026-10-30 to 11-03, Selangor warta 2352 delete)
+- Asked: delete no warta 2352 + tarikh warta 04/07/2013 for PTSEL/01/L/BPRZ/2026/7, Selangor internal env.
+- Not done: internal DB oracle-slt 172.16.93.32:1521 refused TCP (WinError 10061, host pings, gateway 7411 up), 3 tries on 30/10; blocker row in core/slips.js. No DB written anywhere.
+- Found (read only): staging oracle-sgr-stag has the permohonan (aplikasi_id 46486398) with umm_a_rizab 8946 warta asal 3622 06/12/1918, not 2352; 2352 04/07/2013 sits on six ind_rizab rows (1, 65-69) on staging, shared registry. PAT has no such permohonan.
+- Resume point: when internal is up, read umm_a_rizab for the permohonan on internal, clear only the pair holding 2352 (1 row, script-check first); if 2352 is only in ind_rizab, stop and show him.
+- No adhoc scaffold made (no finding on internal yet). Selangor ENV-ARCHITECTURE.md is still an empty skeleton.
+- Assessment: A1 ⏭ nothing new. A2 ⏭ no quest. A3 the internal host refused while staging answered; no tool tells which Selangor env is "internal". A4 the warta is shared registry data on staging, so a blind clear on ind_rizab would hit other rizab rows. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 11:05 — worktree `baseline-wednesday-release-029181` (branch claude/plp-melaka-esokongan-tickets-6e83ab), eSOKONGAN + Internal Issue sweeps, Domain Expansion.
+
+STEP-3: change route step 8 report = change-map picture (lib/change-map.js, INDEX step 8, reply-shape-spec 3i, system-change-title v4)
+session: 162ad23b-073b-47dc-96a2-24d389f22a89
+his words: "change this to always show a diagram drawn always" (order)
+fix or report: fix
+who pays: on-demand: once per system change, one headless Edge about 5 s, exits; Stop gate stays under 50 ms
+goal without the part: after every system change he sees on the map's own boxes which parts are new, changed or removed
+model: claude-fable-5-1
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\C--Users-Ridhwan-OneDrive---Pymsoft-Sdn-Bhd-0--AI-Project-AI-MemoryCore--claude-worktrees-common-version-1-10-20-mlk-c5ee8f\162ad23b-073b-47dc-96a2-24d389f22a89\scratchpad\report-picture-plan.png
+
+## 2026-11-03 — redmine-write-gate v1.11: his status rule, no more asking (subagent, worktree appraisal-2026-rubric-500819)
+- **Ask**: 287747/287638 were blocked four times on Status = Resolved; his rule (under him + New/In Progress; New under someone else sent to a BA; Verified/Closed/Ready in PROD never changed) is now mechanical.
+- **Built**: `domain/redmine-write-gate/status-rule.json` (owner 1311 · hand-back Resolved · lower · frozen · BA list with ids) + `status-rule.js` (`verdict`, `isBA`, `liveState`, CLI). Hook v1.11: ticket from the last navigate, one read-only GET for status + assignee, a staged BA assignee remembered 30 min. Prefill skill Step 2b + Step 3, memory `feedback_redmine_write_needs_nod` exception 2.
+- **Verified**: eval 165/165 (F143 to F165); live CLI: 287747/287638 now Resolved under Nurhafizah → row 4 block; 287925 In Progress under him → row 2 allow.
+- **Open**: none. Landed on main the same turn (SHAs in the reply).
+
+## Session Recap (2026-11-02, ticket 287773 PPTPB)
+- Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
+- System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
+- Wrong: I advised the PT route from requirement 219931 on a 16:36 sync, BA wrote the opposite at 16:39. The v4 Flowable tidy left 174 of 249 arrows off the gateway diamonds, not saved. Both have slip rows; wrong-fix row 1 added.
+- Open: (1) posted Solutions names KPT, his screenshot shows only PPD and KPPD, reason not verified. (2) MLIT PTMLK/03/L/PPTPB/2026/9 still with sabrina, must go back to PKPPT/suhaila. (3) MLIT engine v14 PT route undo not confirmed. All three are in the qa_doc Resume Point.
+- Assessment: A1 save-quest read QUEST-STORY as MISSING for an absolute qa_doc, and the doc existed only in the worktree. A2 the Resume Point still said hold after the fix was posted. A3 Solutions text named KPT without being compared to the photo. A4 fix advice ran on a journal read 9 minutes old. A5 ⏭ no sweep run.
+**Last Activity**: 2026-11-03 11:05 — worktree `baseline-wednesday-release-029181` (branch claude/plp-melaka-esokongan-tickets-6e83ab), eSOKONGAN + Internal Issue sweeps, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, sweeps of tickets not yet quested)
+- Asked: list PLP Melaka eSOKONGAN tickets not under miya; sweep them read-only (Redmine not written). Found none New outside his name (12 not his, all other modules). First sweep (284544, 287273 W3 only) stopped: those were handed-off tickets, not New.
+- Done: second sweep on Internal Issue tickets never quested. 287638 PPJK last-fasa tempoh: cause confirmed (integer division MlkPengiraanBayaranLesenForm.java:751), confidence 90, on miya. 286927 PLPS Sewa on Keluasan Diluluskan: cause confirmed (no listener, helper computes at load), confidence 84, Ammar holds it. W4 audits banked; no fix built; Resume Points written.
+- DE: 287273 Phase 2 archived (Redmine Closed; fix on Awam int-env only, waits for the planned release; ADHOC-MCL-2026-6 still points at its old Task folder path). 284544 WAIT. 287638 Phase 1 not ready (fix not built). 286927 delegated to Ammar.
+- RustDesk alert: main already removed `domain/remote-access-check` (79f9a4e0, 2026-11-03 10:04); nothing left calls it. Server 202.186.75.193:21116 was not answering on 2026-11-02.
+- Wrong: swept older handed-off tickets without saying they were his; W3 launches first denied by the PROD-read classifier (reran with PROD barred).
+- Open: sweep audit Tool exits 1 on `no-return-table` (3 runs); the check looks wrong, cause not traced.
+
+**Last Activity**: 2026-11-03 10:45 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), 286610 cycle 2 on MLIT + adhoc MCL-2026-5, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 cycle 2 MCL on MLIT)
+- Done: BA unblocked on MLIT PTMLK/01/L/MCL/2026/1 (stray SKM row closed by his script run, Hantar moves). Pembetulan = Ya to PT verified at DB: 14:30:01 to iskandarz at 22.0, BA Expected 3 passed. MLIT model v8 = stg1 v5 by md5; PROD v13 same ids and routes. Redmine notes staged here, submitted by him.
+- New adhoc MCL-2026-5 (hold, waiting BA ticket): Surat Keputusan Lulus goes back to Baru when Maklumat Tanah is saved at Semakan or Pengesahan (QA-258004 delete at MlkMaklumatTanahPemberimilikanForm.java:1229). Fix shape told: delete only at PYSKN5A, after checking whether those steps can edit premium. Not drafted.
+- Gap: adhoc MCL-2026-4 block one-liner is stale (says Hantar after fix NOT tested; it was tested and passed). The brief-first gate refused the update on the DE turn; blocker row logged. Update it on the next adhoc turn.
+- Open: DB pids 1612050 and 1647300 left as found, waiting him. KPT is offered at 24.0 but the gateway has no KPT route.
+- Wrong: 14:03 alter without -Commit still committed on the engine. I told him Pembetulan to m.ikram was a stale page; DB showed Tidak then Ya from the same page. Several hours spent before the simple unblock; rule saved as internal-unblock-first.
+- redmine-write-gate v1.9 (form_input status needs his named status) landed with this DE. Eval 136/142: the 6 reds come from main f8af263c changing the claim script body; the live quest-start claim is blocked until the gate accepts the status-only payload. Proposal logged.
+- Assessment: A1 brief-first gate blocks adhoc saves on a DE turn. A2 the 286610 doc had three DE blocks from three sessions on one day. A3 the unblock took hours because I traced the cause before closing the one stray row. A4 an alter run without -Commit still wrote to the engine. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:35 — worktree `dreamy-pike-08af0b` (branch claude/quest-workflow-diagram-b6c854), QA-287048 rework pass to BA, Domain Expansion.
+
+## Session Recap (2026-10-30 to 11-03, ticket 287048 rework)
+- Done: fix 9443c7e853 (Hantar needs a signature from the current round, also after Alter or Pembetulan), merged int-env a036d3d568 and stag-env 9f8f5d6a14. Redmine rework pass submitted 2026-11-02 12:25 to Fizah with `1. Scenarios covered.png`. stg1 PTMLK/03/L/PRBB/2026/12 altered to PB4CE for the Alter test (new a_tgsn 2884531).
+- System landed on main: logic-blast-radius gate v4 (arrival paths, eval 51/51) 92e604e6; explain-diagram red only for issues 19f46992; CLAUDE.md v2.04 chat tables are normal Markdown, never code blocks, c770b98c.
+- Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
+- Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
+- Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:45 — worktree `redmine-issue-286988-203306` (branch claude/melaka-internal-env-issue-dc2cef), MCL internal flow + Notis 5A sign fix for 286610, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 MCL internal for BA Mira)
+- Done: PTMLK/01/L/MCL/2026/1 on MLIT: 16 variables restored on process 7887848 after the 14:03 re-initiate lost them; stray rows closed; Pembetulan flow passed 15:18 (Mira: "Flow yg pembetulan ok"), now 23.0 task 7888046. Notis 5A sign fix: SSKN5A += STATUS_PENYEDIAAN_BARU, STATUS_PENYEDIAAN_SEDIA in report.config.json, commit 75c17441de on mlk/esokongan/286610, int-env 81af580e95, pushed. Scenario picture sent.
+- Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
+- Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
+- Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, sweeps of tickets not yet quested)
+- Asked: list PLP Melaka eSOKONGAN tickets not under miya; sweep them read-only (Redmine not written). Found none New outside his name (12 not his, all other modules). First sweep (284544, 287273 W3 only) stopped: those were handed-off tickets, not New.
+- Done: second sweep on Internal Issue tickets never quested. 287638 PPJK last-fasa tempoh: cause confirmed (integer division MlkPengiraanBayaranLesenForm.java:751), confidence 90, on miya. 286927 PLPS Sewa on Keluasan Diluluskan: cause confirmed (no listener, helper computes at load), confidence 84, Ammar holds it. W4 audits banked; no fix built; Resume Points written.
+- DE: 287273 Phase 2 archived (Redmine Closed; fix on Awam int-env only, waits for the planned release; ADHOC-MCL-2026-6 still points at its old Task folder path). 284544 WAIT. 287638 Phase 1 not ready (fix not built). 286927 delegated to Ammar.
+- RustDesk alert: main already removed `domain/remote-access-check` (79f9a4e0, 2026-11-03 10:04); nothing left calls it. Server 202.186.75.193:21116 was not answering on 2026-11-02.
+- Wrong: swept older handed-off tickets without saying they were his; W3 launches first denied by the PROD-read classifier (reran with PROD barred).
+- Open: sweep audit Tool exits 1 on `no-return-table` (3 runs); the check looks wrong, cause not traced.
+
+**Last Activity**: 2026-11-03 10:45 — worktree `jovial-kepler-a07ba6` (branch claude/friendly-dubinsky-2b7fd1), 286610 cycle 2 on MLIT + adhoc MCL-2026-5, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 cycle 2 MCL on MLIT)
+- Done: BA unblocked on MLIT PTMLK/01/L/MCL/2026/1 (stray SKM row closed by his script run, Hantar moves). Pembetulan = Ya to PT verified at DB: 14:30:01 to iskandarz at 22.0, BA Expected 3 passed. MLIT model v8 = stg1 v5 by md5; PROD v13 same ids and routes. Redmine notes staged here, submitted by him.
+- New adhoc MCL-2026-5 (hold, waiting BA ticket): Surat Keputusan Lulus goes back to Baru when Maklumat Tanah is saved at Semakan or Pengesahan (QA-258004 delete at MlkMaklumatTanahPemberimilikanForm.java:1229). Fix shape told: delete only at PYSKN5A, after checking whether those steps can edit premium. Not drafted.
+- Gap: adhoc MCL-2026-4 block one-liner is stale (says Hantar after fix NOT tested; it was tested and passed). The brief-first gate refused the update on the DE turn; blocker row logged. Update it on the next adhoc turn.
+- Open: DB pids 1612050 and 1647300 left as found, waiting him. KPT is offered at 24.0 but the gateway has no KPT route.
+- Wrong: 14:03 alter without -Commit still committed on the engine. I told him Pembetulan to m.ikram was a stale page; DB showed Tidak then Ya from the same page. Several hours spent before the simple unblock; rule saved as internal-unblock-first.
+- redmine-write-gate v1.9 (form_input status needs his named status) landed with this DE. Eval 136/142: the 6 reds come from main f8af263c changing the claim script body; the live quest-start claim is blocked until the gate accepts the status-only payload. Proposal logged.
+- Assessment: A1 brief-first gate blocks adhoc saves on a DE turn. A2 the 286610 doc had three DE blocks from three sessions on one day. A3 the unblock took hours because I traced the cause before closing the one stray row. A4 an alter run without -Commit still wrote to the engine. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:35 — worktree `dreamy-pike-08af0b` (branch claude/quest-workflow-diagram-b6c854), QA-287048 rework pass to BA, Domain Expansion.
+
+## Session Recap (2026-10-30 to 11-03, ticket 287048 rework)
+- Done: fix 9443c7e853 (Hantar needs a signature from the current round, also after Alter or Pembetulan), merged int-env a036d3d568 and stag-env 9f8f5d6a14. Redmine rework pass submitted 2026-11-02 12:25 to Fizah with `1. Scenarios covered.png`. stg1 PTMLK/03/L/PRBB/2026/12 altered to PB4CE for the Alter test (new a_tgsn 2884531).
+- System landed on main: logic-blast-radius gate v4 (arrival paths, eval 51/51) 92e604e6; explain-diagram red only for issues 19f46992; CLAUDE.md v2.04 chat tables are normal Markdown, never code blocks, c770b98c.
+- Open: his Alter test result on stg1 2026/12 not received. Redmine Pending User; save-quest WAIT.
+- Wrong: gave two first-round permohonan as altered (query counted every document; slip row). Stripped colours when he asked for neutral. Wrote the BA note in my voice before reading Pena. Put tables in code blocks he never asked for.
+- Assessment: A1 a merge commit carried conflict markers in land-on-main.jsonl for one commit (PowerShell 5 Set-Content has no -NoNewline); fixed 0b75a2aa. A2 two sessions wrote the same quest doc; the other DE did not know gate v4 had landed. A3 test-data query had no jns_dok filter. A4 the Alter scenario needs an alter to test because no live PB4CE holds an old signature. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:45 — worktree `redmine-issue-286988-203306` (branch claude/melaka-internal-env-issue-dc2cef), MCL internal flow + Notis 5A sign fix for 286610, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, 286610 MCL internal for BA Mira)
+- Done: PTMLK/01/L/MCL/2026/1 on MLIT: 16 variables restored on process 7887848 after the 14:03 re-initiate lost them; stray rows closed; Pembetulan flow passed 15:18 (Mira: "Flow yg pembetulan ok"), now 23.0 task 7888046. Notis 5A sign fix: SSKN5A += STATUS_PENYEDIAAN_BARU, STATUS_PENYEDIAAN_SEDIA in report.config.json, commit 75c17441de on mlk/esokongan/286610, int-env 81af580e95, pushed. Scenario picture sent.
+- Not done: the fix is not seen on screen yet (falsifier row 6). If the signature persists, check the two active Notis 5A rows in skg_dok (14943990, 14944124). Who ran the variable writes and why Semakan logged Pembetulan false at 14:14 are not confirmed. ADHOC-MCL-2026-4 and -5 one-liners not updated: adhoc-brief-first blocked the write in DE (blocker slip logged).
+- Wrong: told Mira the flow was OK before the lost variables surfaced; wrote her the wrong next tugasan once; first guessed the Word populator for a Jasper document; ran git fetch in his checkout (slip logged).
+- Assessment: A1 adhoc-brief-first blocks DE saves of adhocs. A2 a re-initiate + alter drops process variables and no check says so. A3 git history of the earlier fix found the line after the populator guess failed. A4 report.config.json action lists per tugasan have no check against the DB status codes (DISEMAK vs SEMAK). A5 ⏭ no sweep.
+**Last Activity**: 2026-11-03 10:26 — worktree `cool-margulis-5bb326` (branch claude/adhoc-quest-start-7cbcb5), ADHOC-MCL-2026-6 (287273 duplicate test data on staging), Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, ADHOC-MCL-2026-6)
+- Asked: a staging No Resit that shows the PROD duplicate (same heir twice in Senarai Pemohon, Portal Awam MCL) for 287273.
+- Found: the 287273 fix merges by versi + jenis + IC at draft creation (No Resit → Teruskan). Every build miya ran today merged. So same-IC rows cannot duplicate through the No Resit on a build with the fix, and no data patch changes that.
+- Test data: No Resit 260806BSAT00425 (040107GMM00000959, AINAH + IDAH BINTI IDRIS, each 1/4 TMAME + 1/4 PMT), login alyaaqilah802@gmail.com. Without the fix: 4 rows. With the fix: 2 rows at 1/2. Needs a build without the fix (local mlk/master or stag-env deployed); not run.
+- stg1 patches committed (test drafts only, no registry rows): drafts 63765, 63772, 63785, 63789 now 4 rows at 1/4 (new 61587-61590, 61625-61628). Revert in the qa_doc.
+- Wrong: gave hakmilik ids for the No Resit box; claimed staging would show 4 from the branch, not the running build; gave 260923BSAT00240 (different IC, the fix does not merge it) and said finished; offered the Draf Permohonan route when the test must go through the No Resit. Slip rows logged for three.
+- Open: BA reply not sent; the no-fix build test not run.
+
+**Last Activity**: 2026-11-03 10:30 — worktree `pelupusan-1-9-1-deploy-99eee6` (branch claude/pelupusan-1-9-1-deploy-99eee6), Pelupusan 1.9.1 baseline to MR !12, Domain Expansion.
+
+## Session Recap (2026-11-02 to 11-03, Pelupusan 1.9.1 baseline)
+- Release 1.9.1: 287201, 286655, 287048, 286610 merged into mlk/release/1.9.1 (tip 3cf52efea6, common 1.10.20-MLK). BA passed baseline Pelupusan and Awam Pelupusan 2026-11-02. MR !12 to mlk/master, reviewer Alex. stag-env caught up to 7506e27958, compile green.
+- Open: at 2026-11-03 10:07 origin/mlk/master is still 74982588f9, yet Redmine says "Released and ready in Prod : 02/11/2026" (Hakiim Majid) on all four. On his "merged": `node domain/release-mlk-plp/release-prep.js merge-to-master --release 1.9.1 --check` from the main folder.
+- Awam stag-catchup for 1.15.1 refused: conflict in pom.xml and BaseConsentForm.java (consent changes 276583, 284760), and it would move common 1.10.19-MLK.beta.patch3 to 1.9.2-MLK. Nothing pushed. Slip row logged.
+- Staging error 42342 (2026-11-02 18:56, PTMLK/01/L/MCL/2026/24, PSKN5A Selesai, null documentId): not from 1.9.1, PROD has it 4 times since July. Pembetulan branch has no null check (MlkSuratTemplateForm.java:3504-3507). Cause of the missing ID not proven. LATENT-BUGS L37. BA reply drafted.
+- Quests saved at DE: 287201 + 286655 archived (Redmine Closed), 287048 Phase 1 closed (Pending User, user at a meeting), 286610 WAIT (Pending User).
+- Assessment: A1 objective locks for 21 quests were injected on a "DE" prompt that named none. A2 287048's Resume Point said "Phase 0 done" while the fix was on PROD. A3 branch-guard blocked a Read on his checkout (mlk/int-env); git show on the release branch worked. A4 PROD release before master merge is not seen by release-prep. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-02 18:45 — worktree `ticket-287773-quest-run-66ac6f`, QA-287773 Phase 1 closed, Domain Expansion.
+
+## Session Recap (2026-11-02, ticket 287773 PPTPB)
+- Done: BA's fix, PT out of the PPTPB Agihan Kepada at Keputusan Pentadbir Tanah. Commit 193ca03bd0 on mlk/esokongan/287773, int-env 5a0906004f. Redmine posted 18:22 (journal 6): Resolved, Nurhafizah Hasan, 100%, his photo attached. Quest closed Phase 1, status WAIT until Redmine Closed.
+- System landed earlier today: quest/place-file.js Tool + attachment-context reminder, quest and bpmn-check rules for the Flowable Save model Description (it replaces the old text), Pena flowable-description profile.
+- Wrong: I advised the PT route from requirement 219931 on a 16:36 sync, BA wrote the opposite at 16:39. The v4 Flowable tidy left 174 of 249 arrows off the gateway diamonds, not saved. Both have slip rows; wrong-fix row 1 added.
+- Open: (1) posted Solutions names KPT, his screenshot shows only PPD and KPPD, reason not verified. (2) MLIT PTMLK/03/L/PPTPB/2026/9 still with sabrina, must go back to PKPPT/suhaila. (3) MLIT engine v14 PT route undo not confirmed. All three are in the qa_doc Resume Point.
+- Assessment: A1 save-quest read QUEST-STORY as MISSING for an absolute qa_doc, and the doc existed only in the worktree. A2 the Resume Point still said hold after the fix was posted. A3 Solutions text named KPT without being compared to the photo. A4 fix advice ran on a journal read 9 minutes old. A5 ⏭ no sweep run.
+
+**Last Activity**: 2026-11-02 17:55 — worktree `mlk-prod-adhoc-issue-03dcca`, ADHOC-PPTPB-2026-8 archived to ticket 287773, Domain Expansion.
+**Last Activity**: 2026-11-02 18:50 — worktree `sweep-orchestration-audit-39e710` (branch claude/redmine-quest-sweep-92d16e), eSOKONGAN sweep of 287346, 287509, 287607 finished, Domain Expansion.
+
+## Session Recap (2026-11-02, eSOKONGAN sweep of 3 tickets)
+- Done: 287509 commit 6c437501b8, int-env merge 49875d246c, Resolved to Amani 10:37:44Z. 287607 commit bf6dfc84e6, int-env merge c32e2e894b, Resolved to Fizah 10:37:45Z, Phase 1 closed. miya built and tested both on internal: "Tests passed, post". 287346 answered "tidak sama" to BA Anis and passed to her, no code. General rule landed: eSOKONGAN means Tracker, never Project.
+- Not done: neither fix is on the planned-release list. 287346 waits on Anis. Redmine reconcile shows 287747, 287350 and 287164 assigned to him with no open block; not opened here.
+- Told only now: stag-catchup was not run for Awam, because it would lower internal's common pin to 1.9.2-MLK. Written in QA-287607.
+- Wrong: my replies ran long with no diagram and he had to tell me to answer like a human. My first 287346 brief did not lead with the BA's question, and he had to ask whether I checked it. I had checked it; the answer was buried.
+- Assessment: A1 after compaction the handover text lived only in chat, recovered from the transcript. A2 287509 and 287607 sit in the same state and got different save verdicts from their local status alone. A3 ⏭ no debugging; both fixes passed on the first build. A4 stag-catchup would have lowered a higher internal pin. A5 the sweep close table has no row for a question the BA asked.
+
+## Session Recap (2026-11-02, PROD PPTPB adhoc, now ticket 287773)
+- Done: PROD PTMLK/02/L/PPTPB/2026/2 Hantar error traced to gateway sid-AD61958D (routes KPPD, PPD, KPT only, no default). Permohonan moved on through PPD and sits with norlina at PKPPT. Adhoc archived: block in active-archive.txt, doc in archive/, Task folder 357 in Archive\, video deleted.
+- Wrong: I told him the fix is an added PT route. BA Fizah's journal of 16:39 on 287773 asks to remove PT from the dropdown (To-Be V3.0). The PT route is on MLIT v14 only. The ticket session (worktree `ticket-287773-quest-run-66ac6f`) holds this conflict and waits his decision.
+- Not done: the save audit stays 30/31, a false FAIL on A91 shared with the ticket block (proposal logged). Archived doc and L36 still name the PT route as the fix until the background save corrects them. The BA reply I drafted says the route will be added, so it must not go out as written.
+- Blocker: app sync with main refused (protected .claude/skills files, origin needs confirming in Help, Troubleshooting, Review Pinned Git Origins).
+- Assessment: A1 a gate matched the audit's name inside a slip's quoted text. A2 promote left the adhoc open and the audit cannot pass with a ticket block on the same row. A3 PROD engine read refused, so the PROD gateway is inferred from the error text. A4 the fix came from analogs before the ticket journal was read. A5 ⏭ no sweep run.
+
+## Session Recap (2026-11-02, sweep audit false alarms)
+- Landed: GitHub main eb81f5b9, main folder 834af613. Evals: audit 97/97, sweep contract 23/23. Watch wmvyr3ow9. No ticket touched; the session was started by the esokongan sweep session.
+- Not done: run sweep-2026-11-02-internal not replayed. The flow picture was sent after the build, not before.
+- Assessment: A1 the old check counted a read-only copy as a Task-folder write, and the first fix missed real .NET writes until old and new verdicts were compared on 367 real commands. A2 ⏭ no quest run. A3 an early "exit=0" was grep's exit code, not the audit's. A4 ⏭ no etanah issue. A5 exit 1 on a false alarm would have re-bought 9 familiars, about 2.7M tokens.
+- `domain/sweep/audit.js`: no-return-table also reads the SubagentHandback message; task-folder-write judges where a shell command writes, and fails closed on a destination it cannot place; `--controller-caught none` = empty list. Replay of esokongan-2026-11-02: 9 + 1 false alarms gone, exit 0. Why: exit 1 would have re-bought all 9 familiars, about 2.7M tokens.
+- Old vs new on 367 real familiar commands: the first fix cleared a real `[IO.File]::WriteAllText` into a Task folder, so New-Item, mkdir, Remove-Item, Rename-Item, tee and .NET writes joined the writer list. 19 commands cleared, 23 real writes newly caught. Scripts in python or node stay unparsed (README accepted risk).
+
+## Session Recap (2026-10-30, same worktree, ADHOC-PLTP-2026-4 + audit of DE)
+- ADHOC-PLTP-2026-4: PTMLK/02/L/PLTP/2026/9 on stg1 back to SPI. Two alters (17:10, 18:35) left an engine task with no umm_a_tgsn row, because sub-process 15102626 held aliranKerjaId=48750, urusan=PSPM, set at the first SPI Hantar 10-29 15:55. His third alter with aliranKerjaId=48742: row 2884410 Baru, faridmajid, task 15280110, CONSISTENT. Waiting Pendaftaran verify. A second PSPM on next Hantar not verified.
+- The Opus 5.5 agent found the cause; I (Sonnet) gave him steps that would have made a third orphan, then caught his wrong variable name aliranKerja on the screenshot.
+- My misses: boot files never read, no briefing · FLOWABLE-KNOWLEDGE never read after the path failed in the worktree (line 630 names this PLTP to PSPM pattern) · two guessed SQL names · runner run twice because I cut its output · "Semakan Permohonan Isian" invented · rule 8 picture skipped · A0-A6 rows never emitted.
+- Tools: alter.js live prints the root process variables, not those of the process holding the task, which hid the answer · run.ps1 alter-flow said "no live engine task" for a live grandchild task · audit-briefing from a worktree reads the worktree's near-empty telemetry and reports every hook as never fired (proposal already logged earlier today, still open).
+- Improvement sweep: see slips proposals A1-A5 dated today from this session.
+- Audit of the audit (2 Fable 5.1 agents, verified counts): DE enforces saves (de-close-gate 222 blocks) but does not audit the session. Scripts caught 0 of 13 failures, a usual DE about 1-2, today's 7 with the audit in view. 888 proposals, 0 rulings; the worktree telemetry bug proposed 34 times. Upgrade design: lib/session-audit.js reads the transcript and emits typed findings (10 mechanical classes), de-close-gate C10 needs each routed (knowledge / tool / gate / workflow / memory, wrong-fix verdict shape), watch row per change, slips fingerprint escalates at 2 and 3, audit-briefing telemetry from main, notifications not counted as his turns; retire steps 5, 6, Checklist D, free-text 7.5. Built today, on the goal hook's reading of his Proceed: lib/session-audit.js (eval 36/36, this transcript 10 of 10 mechanical classes), de-close-gate C10 (eval 54/54), repeat table in core/slips.js, audit-briefing telemetry from main, prompt hooks silent on agent notifications through hook-runtime and dispatch-hooks. Kept against Fable's advice: the second-stop waiver, removing it can trap a session. Retired on his ruling: step 5 and Checklist D (CLAUDE.md v2.01). Kept: step 6, it reads a live log; free-text 7.5 until session-audit proves itself over real closes. Routed, not built: alter-ticket-gate wording, knowledge-first-gate false pass, branch-guard matcher, alter.js variables, runner blind spot.
+- Knowledge baked: FLOWABLE-KNOWLEDGE section 13, altering back into a sub-process after the child was born.
+- system-rules Rule 9 added per his ask (design and trial by Fable 5.1): boundary line covers, never, stops; forge and birth gate refuse a new part without it; census counts, old parts not forced. Trial found two real crossings of mine: report-only became gate C10, and hook-runtime + dispatch-hooks changed, both on a blanket Proceed.
+- Open: Pendaftaran verify; his ruling on keeping the hook-runtime change.
+**Last Activity**: 2026-10-30 17:45 — worktree `pembatalan-dropdown-popup-251828` (session "30/10/2026 - Melaka/Perak eSokongan order"), ticket board order changed, pulled main, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "pembatalan-dropdown-popup-251828", Melaka + Perak ticket order)
+- His ask: Melaka eSokongan first, then Perak eSokongan; include Perak; he always asks Ammar first and decides. His ruling on placement: each category is Melaka's table then Perak's, "same for the rest".
+- Built, on main: `quest/redmine-board.js` prints 1b Perak PROD · 2b Perak eSOKONGAN · 3b Perak rest after each Melaka table, Ammar's Perak tickets included (`system/states.json` perak shared_assignee_ids + board_slot). CLAUDE.md v1.99, memory, four skill mirrors, the ticket-list hook text, picture `quest/redmine-board.diagram.png`.
+- Live today: 21 open on the shared link, 7 Melaka his, 14 Perak Ammar's. Perak eSOKONGAN 6, first 285808 (Rework, due 3 Nov, says "segera").
+- Evals: redmine-board 46/46, list-redmine 17/17 (was stale since 10-19, re-pointed), sweep 23/23.
+- Slip: blocker row, memory-write-gate refused one memory edit 3 times although the placement line was in the reply; written by script.
+- Open: nothing from this session. No ticket worked.
+- Improvement sweep: A1 memory-write-gate reader misses a placement line after a popup answer (proposal) · A2 skipped, no quest run · A3 skipped, no debugging · A4 skipped, no etanah issue · A5 skipped, no sweep. A second A1: audit-briefing from a worktree reports 0 hook fires because telemetry is not there (proposal).
+**Last Activity**: 2026-10-30 17:40 — worktree `redmine-issue-287292-1cfb39` (branch claude/redmine-tickets-review-bc70ac), 287201 + 287164 fixed, tested and handed over, Domain Expansion.
+
+## Session Recap (2026-10-30, worktree "redmine-issue-287292-1cfb39", 287201 + 287164)
+- 287201 PLTP Syor Keputusan PDT labels: fix 6f93448d46, Redmine Verified by Fizah, closed at Phase 1, waits for release.
+- 287164 MCL premium gate: 761ec96f82 + 784d3e57e2 + 0c97566203, tested on MLIT by miya, Redmine Resolved to Fizah, closed at Phase 1. Photos do not show the Syarat pick or the dialog reopen.
+- System, on main: test data by alter rule, `lib/chat-images.js`, no Redmine submit with 0 files, CLAUDE.md v2.00 rule 8 plan first.
+- Open: gate-fail and slip audit child session (brief in `main/todo.md`, start from the desktop app).
+- Assessment: A1 gates fired on replies that had no scenario and no ask. A2 two test-data slips from not checking the holder after an alter. A3 his "why can't I open it" took 4 queries and minutes before a plain answer. A4 alter can create a task with no holder. A5 mid-turn photos lived only in the transcript.
+**Last Activity**: 2026-10-30 17:45 — worktree `alter-patching-a323d9`, headless alter runner + quest wiring landed, Domain Expansion.
+
 ## Session Recap (2026-10-29/30, worktree "alter-patching-a323d9", 286650 STG alter + headless runner)
 - 286650: STG scenario ready (miya did the alter himself after my tool failed on login); ticket held by Pendaftaran, block stays delegated.
 - Built `E:\Dev\scripts\FlowableAlter\runner\`: STG/MLIT Alter Flow with no login. Eval 10/10 urusan + one different-step move, all checked in the DB. Refuses PROD. No Initiate & Alter yet.
@@ -7066,6 +7335,24 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

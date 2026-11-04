@@ -44,7 +44,7 @@ const tp = path.join(os.tmpdir(), 'dbcp-eval-transcript.jsonl');
 fs.writeFileSync(tp, [prompt('x'), toolUse(PG), toolRes(), say('It is DMMLMS.')].join('\n'));
 const env = { ...process.env, DBCP_LOG: path.join(os.tmpdir(), 'dbcp-eval.jsonl') };
 r = spawnSync(process.execPath, [HOOK], { input: J({ transcript_path: tp }), encoding: 'utf8', timeout: 30000, env });
-check('F17 binary: exit 2 + reason on stderr', r.status === 2 && /db-claim-proof/.test(r.stderr) && /DELTA ONLY/.test(r.stderr), 'exit=' + r.status);
+check('F17 binary: exit 2 + reason on stderr', r.status === 2 && /db-claim-proof/.test(r.stderr) && /DELTA ONLY/.test(r.stderr) && /what it means and the next step/.test(r.stderr), 'exit=' + r.status);
 r = spawnSync(process.execPath, [HOOK], { input: J({ transcript_path: tp, stop_hook_active: true }), encoding: 'utf8', timeout: 30000, env });
 check('F18 stop_hook_active → exit 0 (no loop)', r.status === 0, 'exit=' + r.status);
 r = spawnSync(process.execPath, [HOOK], { input: J({ transcript_path: 'Z:\\missing.jsonl' }), encoding: 'utf8', timeout: 30000, env });

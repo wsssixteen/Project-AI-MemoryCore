@@ -717,6 +717,7 @@ SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
 | `skg_dok` | `a_dok_keluaran_id` / `a_dok_kmskn_id` | direct FKs to the output / input doc row — either may be NULL |
 | `skg_dok` | `id_dok` | the `LAIN-nnnnnnnn` string · UNIQUE (`uk_sd_doc_id`) · **the join key into DMS** |
 | `skg_dok` | `versi_dok`, `flag_aktif`, `flag_draf` | version + active/draft flags (see the `versi_dok=0` duplicate trap, quest MIGRATOR-DUP-V0) |
+| `skg_dok` | `created_by` = `'SYSTEM'` | **a signed copy** (Tandatangan writes it). "Signed" for one borang = SYSTEM row whose `medan_pk_id` is that borang's `umm_a_dok_keluaran` row, filtered by its `jns_dok_id` (PRBB: 326 Borang 4Ce, 943 Borang P1e). Never count all SYSTEM rows of the permohonan: Pelan and other documents have them too (287048, 2026-11-02: two first-round permohonan were wrongly called signed). Signed this round = SYSTEM `created_date` >= the active `umm_a_tgsn.created_date` |
 | `dokumen` | `id_dokumen` | matches `skg_dok.id_dok` · UNIQUE (`uk_dok_id_dokumen`) |
 | `dokumen` | `versi_terkini` | current version number — pair with `dokumen_revision.versi` to pick the live row |
 | `dokumen_revision` | **`lokasi_fail`** | **the server file path** |
@@ -1708,3 +1709,24 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - Stored in `plp_a_pelupusan.mklmt_tmbhn`, JSON key `maklumatRisalatList`, one entry per `jenisDokumen` (`NO_DOC` at tugasan with no document, for example SKM), field `tajukRisalat`.
 - Written by `onSaveMaklumatRisalatPanel()` in the Maklumat Tanah forms, normally at Semakan Kemasukan Maklumat. Teknikal says its Laporan Tanah Perkara comes from this store; their code is not read here.
 - At Penyediaan Laporan Tanah on PROD: PT, PLPS, PRBB, PLTP, PRZ all have it, MCL 0 of 37 (QA-287509, LATENT-BUGS L31).
+
+
+## §27 Kadar cukai tables (added 2026-11-03, #287892)
+| Table | Key columns | Note |
+|---|---|---|
+| `ind_kadar_premium_cukai` | `kadar_premium_cukai_id`, `jns_tnh_id`, `kegunaan_tnh_id`, `btrn_kegunaan_tnh_id`, `flag_kadar_awal` (char Y/N, not boolean) | the rate header; stores NO Desa class |
+| `ind_kadar_cukai_bpm` | `kadar_cukai_bpm_id`, `kadar_premium_cukai_id`, `bandar_pekan_mukim_id`, `kadar_cukai`, `kadar_cukai_sebelum` | one row per mukim per rate |
+| `ind_bandar_pekan_mukim` | `bandar_pekan_mukim_id` (not `bpm_id`), `nama`, `jns_kwsn_id`, `jns_kwsn_ptbrn` ("38584\|38585") | the Desa class lives HERE; 38583 DESA_1, 38584 DESA_2, 38585 DESA_3, 38582 PEKAN |
+| `umm_a_permohonan_tnh` | `a_permohonan_tnh_id`, `bandar_pekan_mukim_id`, `mklmt_tmbhn` JSON (`pengkelasanTnh`, `kadarCukaiString`) | the plot's chosen class is in the JSON |
+- Code lookups go through `rjk_senarai_ahli_kumpulan` (`senarai_ahli_kumpulan_id`, `kod`); there is no `sak_ahli_kumpulan` table.
+- `pcp_pengguna` has `nama_pengguna` (the login e-mail); there is no `emel` column.
+- A rate's class = the intersection of its mukim's class sets. MLIT rates 88 and 287 mix Desa I, II and III (no single class); PROD and stg1 are clean.
+- The calculator floors the result for Melaka: non-MCL RM 50, MCL RM 25 (etanah-common CukaiCalculationService.java on origin/mlk/beta :509-529); the screen then shows "Cukai Minimum untuk selain MCL".
+
+## Column-name traps seen on PROD (verified 2026-11-03, ADHOC-PPTPB-2026-9)
+| Wrong guess | Real name |
+|---|---|
+| `umm_aplikasi.pjbt_id` | `umm_aplikasi.pejabat_id` → `ind_pejabat.pejabat_id` (kod 00 = PTG Melaka, 02 = Jasin) |
+| `ind_mklmt_hkmlk.id_hakmilik` | hakmilik id lives in `umm_a_hkmlk.id_hkmlk` (and `ind_hkmlk.id_hkmlk`) |
+| `ind_jns_hkmlk` | no such table; the type is the 7th-8th characters of `id_hkmlk` (PN, PM, HS, GRN …) |
+- Perserahan made from a PLP permohonan: `umm_aplikasi.hubungan_aplikasi_id` = the parent `aplikasi_id`; `flag_integrasi` = Y.

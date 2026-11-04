@@ -12,6 +12,8 @@
 // v4 BLOCK: EVERY quest reply (names an active quest's ticket number), with or without a Next steps table, needs an image sent
 //           this turn or a "Diagram: none (<reason>)" line — 2026-10-30 miya on 287273: "Please ensure our current quest
 //           workflow will always stop with showing the issue using diagram skill."
+// v5 BLOCK: a "Your reply" cell holds an approval code (C1F5-62FF) or "approve" / "post it" / "submit it" — 2026-11-03 miya
+//           on 287925: "do not put in quotation marks like that, put it like the easy way to copy and paste"
 // BYPASS: [skip-next-steps-shape: <reason>] · FAIL-OPEN on any error
 // Runs inside the stop-reply-shape bundle (lib/dispatch-hooks.js), not a standalone registration (system-rules Rule 7)
 // Log: domain/next-steps-shape/log.jsonl
@@ -23,6 +25,9 @@ const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..
 const BYPASS = /\[skip-next-steps-shape:/i;
 const HEADING = /^\s*(#{1,6}\s*|\*\*)\s*Next steps\b/i;
 const MEANING_COL = /what it means|what this is|why/i;
+// a code like C1F5-62FF stands alone (not inside ADHOC-MLPS-2026-4) and is upper case, so "long-term" is not one
+const APPROVAL_CODE = /(?<![\w-])[A-Z0-9]{4}-[A-Z0-9]{4}(?![\w-])/;
+const APPROVAL_WORD = /\b(?:approve|post it|submit it)\b/i;
 
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
@@ -66,6 +71,17 @@ function evaluate(text) {
     if (words < 5) short.push(c[0] || '?');
   }
   if (short.length) return { verdict: 'block', reason: 'meaning-too-short', rows: short };
+  // v5 (2026-11-03 miya on 287925: "do not put in quotation marks like that, put it like the easy way to copy"): approval
+  // text he types back sits in its own ```text block under the row's heading; the reply cell says "the block above".
+  const rep = header.findIndex(c => /your reply/i.test(c));
+  if (rep >= 0) {
+    const inCell = [];
+    for (const row of table.slice(2)) {
+      const c = cells(row);
+      if (APPROVAL_CODE.test(c[rep] || '') || APPROVAL_WORD.test(c[rep] || '')) inCell.push((c[0] || '?') + ' "' + c[rep] + '"');
+    }
+    if (inCell.length) return { verdict: 'block', reason: 'approval-in-cell', rows: inCell };
+  }
   // v2 (2026-10-14 miya: "when I see the next steps, I read 'end the old download goal' then I scroll back up you didn't
   // mention anything"): every row's subject must have its own place in the reply above, a heading or a table row, in the same
   // words, so scrolling back from a row lands on what explains it. A mention inside the opening paragraph does not count: that
@@ -144,6 +160,16 @@ if (require.main === module) {
         process.exit(2);
       }
       log({ action: 'blocked', reason: r.reason, detail: r.rows || r.header });
+      if (r.reason === 'approval-in-cell') {
+        process.stderr.write([
+          '⛔ next-steps-shape: approval text he must type back sits inside the "Your reply" cell: ' + r.rows.join(' · '),
+          '   Put the exact text (the code, or "approve …" / "post it" / "submit it") in its own ```text block under the row\'s heading,',
+          '   so he copies it in one click. The cell then says: the block above. A popup (AskUserQuestion) is better where the gate takes it.',
+          '   ⚡ DELTA ONLY: re-send just the text block and the corrected Next steps table.',
+          '   Bypass: [skip-next-steps-shape: <reason>]',
+        ].join('\n') + '\n');
+        process.exit(2);
+      }
       process.stderr.write([
         r.reason === 'row-not-explained-above'
           ? '⛔ next-steps-shape: a Next steps row has no section above that explains it. He scrolls back from the row and finds nothing.'

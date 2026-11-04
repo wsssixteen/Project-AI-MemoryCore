@@ -20,15 +20,17 @@
     <h1>A Redmine write runs only on miya's own go-word</h1>
     <svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="g-title g-desc">
       <title id="g-title">Redmine write gate flow</title>
-      <desc id="g-desc">A shell write or a browser submit to Redmine is caught; the gate finds miya's last own message, skipping harness lines; it judges approve or deny; it allows or blocks and writes a log row. API writes stay blocked during the stage-only window.</desc>
+      <desc id="g-desc">A shell write, a browser submit or a Status fill on the Redmine form is caught; the gate finds miya's own words; it judges approve or deny; with no order and no hold, a Status = Resolved fill is decided by his standing rule (status-rule.json) from the ticket's live status and assignee; it allows or blocks and writes a log row. API writes stay blocked during the stage-only window.</desc>
       <defs>
         <marker id="a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
         <marker id="aa" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
       </defs>
       <rect width="100%" height="100%" fill="#f5f5f5"/>
       <line x1="180" y1="100" x2="216" y2="100" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
-      <line x1="400" y1="100" x2="436" y2="100" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
-      <line x1="620" y1="100" x2="656" y2="100" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <line x1="400" y1="100" x2="436" y2="100" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="620" y1="100" x2="656" y2="100" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="530" y1="132" x2="530" y2="216" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <line x1="820" y1="252" x2="750" y2="136" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
       <line x1="840" y1="100" x2="876" y2="100" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
       <line x1="100" y1="132" x2="100" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
 
@@ -36,15 +38,15 @@
       <text x="100" y="96" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">Write is about to run</text>
       <text x="100" y="114" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">shell API call · form Submit</text>
 
-      <rect x="220" y="68" width="180" height="64" rx="6" fill="#fff" stroke="#bf4520" stroke-width="1.6"/>
+      <rect x="220" y="68" width="180" height="64" rx="6" fill="#fff" stroke="#2d3142"/>
       <text x="310" y="92" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">Find his words</text>
-      <text x="310" y="108" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">lib/his-words.js, the one reader</text>
-      <text x="310" y="121" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">his order up to 8 messages back</text>
+      <text x="310" y="108" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">lib/his-words.js, the one reader</text>
+      <text x="310" y="121" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">his order up to 8 messages back</text>
 
-      <rect x="440" y="68" width="180" height="64" rx="6" fill="#fff" stroke="#bf4520" stroke-width="1.6"/>
+      <rect x="440" y="68" width="180" height="64" rx="6" fill="#fff" stroke="#2d3142"/>
       <text x="530" y="92" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">Approve or deny</text>
-      <text x="530" y="108" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">"no" counts only beside the verb · a later hold wins</text>
-      <text x="530" y="121" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">"why not submitting" = go · a 2nd block = a slip row</text>
+      <text x="530" y="108" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">"no" counts only beside the verb · a later hold wins</text>
+      <text x="530" y="121" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">"why not submitting" = go · a 2nd block = a slip row</text>
 
       <rect x="660" y="68" width="180" height="64" rx="6" fill="#fff" stroke="#2d3142"/>
       <text x="750" y="96" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">Allow or block</text>
@@ -57,7 +59,12 @@
       <text x="220" y="248" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">Shell API write in the stage-only window</text>
       <text x="220" y="266" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">always blocked: stage the form in the browser instead</text>
 
-      <text x="530" y="180" font-size="10" text-anchor="middle" fill="#bf4520">orange = changed 2026-10-29 (v1.7 + v1.8, system-rules Rule 8)</text>
+      <rect x="440" y="220" width="540" height="64" rx="6" fill="#fff" stroke="#bf4520" stroke-width="1.6"/>
+      <text x="710" y="240" font-size="12" font-weight="600" text-anchor="middle" fill="#2d3142">No order, no hold, Status = Resolved: his standing rule decides</text>
+      <text x="710" y="256" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">status-rule.json: under him + lower than Resolved · New under someone else + BA assignee → allow</text>
+      <text x="710" y="269" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#bf4520">Resolved · Verified · Closed · Ready in PROD · Cancelled → never set back · else block, naming the row</text>
+      <text x="710" y="281" font-size="9" font-family="Consolas, monospace" text-anchor="middle" fill="#4f5d75">ticket = last navigate /issues/N · state = one read-only GET (quest/redmine-status-check.js)</text>
+      <text x="710" y="310" font-size="10" text-anchor="middle" fill="#bf4520">orange = changed 2026-11-03 (v1.11, 287747/287638: "No more asking this part")</text>
     </svg>
   </div>
 </body>

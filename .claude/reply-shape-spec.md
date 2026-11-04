@@ -112,7 +112,7 @@ fourth strike lands.
 | 7 | Wins visible: state what now works, concretely | — |
 | 8 | Errors matter-of-fact: cause + fix, no "uh oh" | — |
 | 9 | No preamble / recap / closing pleasantries | First line answers; last line is the next action |
-| 10 | **Stop-hook correction = DELTA ONLY** — token + missing line, never a re-emit | みや never reads the same content twice |
+| 10 | **Stop-hook correction = DELTA ONLY** — token + missing line, never a re-emit; it still ends on what it means and the next step | みや never reads the same content twice; a bare fact leaves him asking "so what?" (2026-11-03, 287350) |
 
 **Precedence**: a constrained-format ask from みや ("only a table", "one sentence") outranks every row above — the injector detects it and suppresses the contract for that turn.
 
@@ -189,6 +189,8 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **A Next steps row never arrives unexplained (2026-10-14, his words: "when I see the next steps, I read 'end the old download goal' then I scroll back up you didn't mention anything").** Every row's subject has its own heading or table row above, in the row's own words. A mention in the opening paragraph does not count. Enforced: `domain/next-steps-shape` v2 blocks the reply.
 
+**Text he types back is a copy block, never a quoted cell (2026-11-03, 287925, his words: "do not put in quotation marks like that, put it like the easy way to copy and pastse").** An approval code (`C1F5-62FF`) or an "approve …" / "post it" / "submit it" phrase goes in its own ```text block under the row's heading, so one click copies it. The "Your reply" cell says "the block above". An AskUserQuestion popup is better wherever the gate accepts it (`domain/prod-alter-gate` does; `lib/his-words.js` reads popup answers). Banned: `"approve C1F5-62FF and A293-188D"` in a table cell. Enforced: `domain/next-steps-shape` v5 blocks the reply (`approval-in-cell`).
+
 **Background work is named (2026-10-14, his words: "I see you're still running so many commands, why do you keep doing that even after finishing reply?").** A reply names every run still going in the background and when its result comes. Nothing new starts after a reply unless that reply said it would; a run that fails after a reply is reported in the next reply before it is retried.
 
 **What this rule does NOT cut (his worry, answered inside the rule).** It limits what is SHOWN to him. It never limits what is thought, checked or done: the reading, the tests, the second readers and the sources stay as deep as the task needs. A shorter reply is never a reason to do less work. "Keep it short" is never a reason to leave out the one line that says where we are going.
@@ -236,7 +238,9 @@ The app turns `#<digits>` into a link to an issue that does not exist, so a clic
 
 ## 3i. 🏷️ A system change names its kind in the title (2026-10-27, per みや)
 
-**Mandatory after every system change.** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. **One heading per KIND** (`system/INDEX.md`: Rule · Workflow · Feature · Tool · Memory · Kernel · Project), and under it **ONE table, one row per changed part**: Name · Parent (if any) · New or changed · one line on what changed. A kind with one part still gets the table (one row). After the table at most one short sentence. No bullet lists. (2026-10-28 per みや: "if it is under memory, just put it in a single table, separate them by the name of the memory, same like the other layers".)
+**The report is a picture (2026-11-03, per みや: "always show a diagram drawn always … use the boxes I've shown to you before"; "please use colours … what has been added, where it has been added").** After every system change I send ONE change-map picture: `node lib/change-map.js <spec.json>` (system/INDEX.md change route step 8) draws the system map's boxes in their own colours, each changed part in its kind's box with a NEW / CHANGED / REMOVED tag, its folder and one line; untouched kinds are faded. Read it, then `SendUserFile`. The tables below are the **fallback only**, given when the render fails, beside the quoted `CHANGE-MAP: FAIL` line.
+
+**Fallback shape (render failed).** Once he has agreed and I have changed any part of the system, the reply that reports it is his last confirmation: an overview of what changed, with no bloat. **One heading per KIND** (`system/INDEX.md`: Rule · Workflow · Feature · Tool · Memory · Kernel · Project), and under it **ONE table, one row per changed part**: Name · Parent (if any) · New or changed · one line on what changed. A kind with one part still gets the table (one row). After the table at most one short sentence. No bullet lists. (2026-10-28 per みや: "if it is under memory, just put it in a single table, separate them by the name of the memory, same like the other layers".)
 
 | Kind | Where it lives | Heading, then the table |
 |---|---|---|
@@ -258,7 +262,7 @@ Example, the Memory kind with two parts:
 | 2026-10-28.md | daily-diary/current/ | changed | this session's entry added |
 ```
 
-**Banned**: a system change reported with no `System › <kind>` heading · the same kind headed twice in one reply (one heading per part was the 2026-10-27 shape; retired 2026-10-28) · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` v3 (Stop, inside the `stop-reply-shape` bundle): it blocks whenever an Edit or Write touched a system file this turn, even if the reply never mentions it, and blocks a kind headed twice. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was. 2026-10-28: the DE delta carried four `System › Memory` headings for four files; he reads a kind as one table, like the Workflows / Features / Tools layers.
+**Banned**: a system change reported with no `System › <kind>` heading · the same kind headed twice in one reply (one heading per part was the 2026-10-27 shape; retired 2026-10-28) · a kind that is not one of the seven · bullet lists under the heading. **Enforced** by `domain/system-change-title` v4 (Stop, inside the `stop-reply-shape` bundle): after an Edit or Write to a system file this turn it passes only when a `change-map*.png` was sent this turn, or the tables stand beside a `CHANGE-MAP: FAIL` line; it blocks a kind headed twice. **Why**: 2026-10-27, 286462: the hand-over audit reply listed a script, a gate, a skill line and a people row together, and he could not tell what kind of thing each one was. 2026-10-28: the DE delta carried four `System › Memory` headings for four files; he reads a kind as one table, like the Workflows / Features / Tools layers.
 
 ## 3j. 🧱 Full folder path, and tables with full border lines (2026-11-01, per みや)
 
@@ -270,9 +274,9 @@ C:\Users\vice4\OneDrive - Pymsoft Sdn Bhd\<the whole folder path>
 
 The file name follows on its own line. A fenced block gives him the copy button. Banned: part of a path, a path from a project or repo root, a folder list of every changed file.
 
-**Full border lines.** The horizontal-rules-only table is banned. In chat a table is a fenced `text` block drawn with `+---+` and `|`, cells wrapped by hand to about 90 characters. In a picture, page or document, every cell has a line on all four sides. Every table this spec or a skill asks for keeps its columns and is drawn this way. Files read by agents (`.md` data, ledgers) keep pipe tables.
+**Tables.** In chat a table is a normal Markdown table, never a code block: a code-block table wraps on his screen and nothing is readable (2026-11-02 per みや). The app draws its lines and a reply cannot add vertical lines; when he needs them, say so plainly or send a picture. In a picture, page or document, every cell has a line on all four sides.
 
-**Enforced**: `domain/full-address-trace-gate` v3 blocks a part path and a pipe table in chat. Bypass `[skip-full-address: <reason>]`.
+**Enforced**: `domain/full-address-trace-gate` v4 blocks a part path and a `+---+` table in a code block. Bypass `[skip-full-address: <reason>]`.
 
 ## 4. Precedence Note
 
