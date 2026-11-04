@@ -1,32 +1,31 @@
-**Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
+**Last Activity**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
 
-## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
-- Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
-- Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
-- Apps shown live on his office laptop PJNBRidhwan (codemap :7717 and the Atlas file), opened by the "4/11/2026 - tickets today" session there.
-- Closing: asked the "2/11/2026 - appraisal flow" session (Remote Control, office laptop) to save and then archive itself; this route gives no reply, not verified.
-- Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
-- Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
-- Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
+## Session Recap (2026-11-04, 288095 PRBB Rencana huruf kecil, .00, 6.3)
+- Asked: run /quest on 288095; apply all 3 fixes; test on server; stage the Redmine handover; patch the missing mlit data and screenshot the fix; todo for a test-data step; ProTime check of today's 4 tickets.
+- Done: f9c4c1a321 on mlk/esokongan/288095 (PelupusanUtil upperCaseReferenceWords + formatRinggitInText, 2 Word CC populators, helper 2-decimal formatter, 6.3 "kelulusan" in 2 e-Doket templates); int-env 8f20499ba4 (conflict kept PRBB or PLBP + uppercase, his "resolve 288095"); stag-env 24c1bf853a (merged on a misread of "staging", not deployed); mlit plp_a_pelupusan 2089 Permohonan Dahulu patched with real numbers; 2 fix screenshots in 2. Fix; Redmine 288095 Resolved to Nurhafizah 22:56 (entry 14); ProTime 39360 (287346) resolved.
+- Found: mlit Permohonan Dahulu held only the template placeholder, so 2.1.2 could not show the fix; eTanah 1.0 IDs (0401DIS..., C99/25) all hold digits, so the same fix covers them (PROD: 135 tokens uppercased, 389 no-digit words untouched).
+- Open: BA test on internal; Q1 Timbangan pertama line, Q2 6.3/6.4 same heading, Q3 meeting name lowercase, Q4 2.2.1 address; stag-env merge waits his word (keep or revert); todo test-data step waits a blind Fable 5.1 audit (his yes on 1 agent); his stash fc6d255101 left to him.
+- Mistakes: read "stage the redmine" as the stag-env branch; test-prep tool switched his local env to mlit (put back to stg1); handover tool cannot see his waiver 3 messages back (blocker slip); audit of the test-data gap ran on Opus, not blind Fable.
+- Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
 
-## Session Recap (2026-11-04, Baseline Pelupusan 1.9.2, Redmine version 12166)
-- Asked: prepare Pelupusan 1.9.2 from the BAQA list (287773, 287747, 287509, 287638, 262027 via mlk/qa/262027v2); later add 287892 on top of the pushed branch; after "Baseline Pelupusan - Passed", the master merge.
-- Done: mlk/release/1.9.2 cut off master 09037833bf, 6 tickets merged, verify 0 missing, mvn compile exit 0, version 1.9.2, common 1.10.20-MLK kept, pushed (tip 15a8e36cfa). MR 15 to mlk/master, reviewer Alex, read back 9 of 9 ✓ (http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/15). stag-env caught up 248b053e8a (was 4 behind: 287509 287638 287773), compiled, pushed, read back. KPI P-287892-C2 confirmed.
-- Also: local mlk/master divergence fixed; SourceTree green vs blue labels explained; ghost docx files deleted; his 5 uncommitted files on mlk/release/1.9.1 stashed as `wip-5-files-on-release-1.9.1-20261104` (fc6d255101), checkout now on mlk/release/1.9.2. Only PelupusanWordCCMethodConstant.java in that stash is on no origin branch.
-- Open: Alex merges MR 15, then `merge-to-master --release 1.9.2 --check`. miya rebuilds staging from mlk/stag-env. KPI P-262027-B4 waits a check of BA journals for the salutation. Awam Pelupusan 287607 baseline not passed yet (list only).
-- Blocker: `release-prep.js add-ticket` refuses at phase pushed; phase hand-set to bumped (slip `blocker` logged).
-- Assessment: A1 add-ticket gap at pushed. A2 ⏭ no quest phase moved. A3 ⏭ no debugging. A4 adding a ticket after push re-runs verify and push cleanly. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
+## Session Recap (2026-11-04, today's board + 248290 coverage per urusan)
+- Asked: today's tickets; 275608 missing from the ranked board; BA reply on 287892; Zarul's nextUrusan=PSPM PROD patch for 286650; Fizah's OPLPS/2026/2 infra paths; peer appraisal request; Mira's question whether 248290 covers all 7 urusan; "save adhoc".
+- Done: redmine-board counts "e-Tanah Melaka" as a Melaka project (07455cc9); 287892 BA reply posted; 286650 patch script + Redmine handover note drafted; ADHOC-PLP-2026-6 saved and archived (Task folder 374, register A98, audit 31/31 PASS).
+- Found: 248290 covers PLPS, MLPS, PRBB, PRU, PPJK, PPTPB; PLBP's AWAM Status Permohonan dialog (paparanBorang4BeL2eDialog, StatusPermohonanForm.xhtml:993) is commented out; the print-once lock is only for 4Ae/L1e.
+- Open: miya sends the corrected reply to Mira; 286650 handover note waits "post it"; ADHOC-PLP-2026-6 owes a quest-bounty harvest.
+- Mistakes: said "PLBP not on PROD" from an assumption; he corrected it, re-answered from the code. Stop corrections: unqualified proving SELECTs, terse gate, next-steps row wording.
+- Assessment: A1 adhoc-brief-first blocks the main-thread audit re-run after the agent reports (skill step 4 asks for it). A2 ⏭ no quest phase moved. A3 coverage question answered from code per urusan, not from a test. A4 an AWAM dialog commented out silently drops one urusan from a shared Requirement. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
 
-## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
-- Asked: BA Fizah: alter MLPS/2026/1, /2, /5, /6, /10 and OMLPS/2026/1 to Penyediaan Borang 4Ae dan L1e (wrong Jadual dates); patch MLPS/1 and /2 back to Sedang Diproses.
-- Done: Alter Flow cannot reach PYB4AE from the Cetakan sub-flow; Initiate & Alter reset No ran on PROD (codes C1F5-62FF, A293-188D), 6 of 6 verified by DB (new a_tgsn 2919960-2919964, 2919967). Patch 287925.sql rewritten (alter had already set status_awam), run by infra, MLPS/1 and /2 now Awalan / Sedang Diproses, dates empty. Redmine submitted: Resolved to Fizah, journal #4. Quest archived (patch ticket, ahead of Redmine).
-- Side session: next-steps-shape v5 (approval text in its own copy block), main 71ae8698.
-- Knowledge: ALTER-TICKET-PLAYBOOK §3 (ended flow: Init & Alter resets status_awam only; tool AFTER check denied on PROD for rjk_parameter_sistem).
-- Open: OMLPS/1 is Tamat / Sedang Diproses from before this ticket, not in BA scope. Routing PYB4AE to PB4AE not yet exercised (user's Hantar).
-- Mistakes: approval codes quoted in a table cell; status patch written before the alter, would have matched 0 rows; two guessed column names (id_pengguna, trkh_kemaskini).
-- Assessment: A1 prod-alter-gate refused codes found inside his quoted complaint; the popup path worked. A2 write data patches after the alter's AFTER read. A3 the AFTER engine check fails on PROD, DB rows were the proof. A4 Alter Flow cannot cross from a sub-flow to a parent node; Initiate & Alter can. A5 ⏭ no sweep.
+## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
+- Asked: run 2 Redmine data patches; then "replace" not "upload" for an overwrite; then hand both back to the BA.
+- Done: 288169.sql (6 umm_a_jabatan_teknikal rows agensi 8 → 6) and 288261.sql (3 UPDATEs) + renamed pelan PDF; infra ran them; PROD re-checked; both tickets Resolved to Fizah 22:33 with his note "have patched the data in PROD. Can proceed to verify."; patch-mlk-doc infra box says "replace" (8ebb3381); redmine-phase1-prefill Step 4 carries the PROD note (main 66cfedae).
+- Found: BA named agensi 6002 but the bad rows sit on agensi 8 (named MPAG 21/07 to 13/08); a PROD patch is checked by the user through the TSO, never by the BA.
+- Open: QA-288169.md and QA-288261.md are not in the main folder (worktree guard); drafts in this session's scratchpad. Quests stay Phase 1 until Redmine shows Closed.
+- Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
+- Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
 
 **Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
 

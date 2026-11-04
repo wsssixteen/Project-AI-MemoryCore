@@ -619,3 +619,4 @@
 {"ts":"2026-11-04T14:11:15.321Z","id":"ADHOC-PLTP-2026-5","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":37}
 {"ts":"2026-11-04T14:11:22.693Z","id":"ADHOC-PLTP-2026-5","outcome":"pass","fails":[],"dur_ms":43}
 {"ts":"2026-11-04T14:11:41.421Z","id":"ADHOC-PLTP-2026-5","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-11-04T09:57:24.544Z","id":"ADHOC-UPS-2026-2","outcome":"pass","fails":[],"dur_ms":31}
