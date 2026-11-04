@@ -95,6 +95,8 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
+**PROD patch (data or document) = example 16, never the internal-deploy note** (2026-11-04 per みや, #288169/#288261): "Salam Fizah, have patched the data in PROD. Can proceed to verify." The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned** on a PROD patch: "Please help to verify" · telling the BA how to route it.
+
 ```
 Hi <Assignee firstname>, please find the fix at mlk/qa/<NNN>.
 
