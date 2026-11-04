@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
+- Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
+- Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
+- Apps shown live on his office laptop PJNBRidhwan (codemap :7717 and the Atlas file), opened by the "4/11/2026 - tickets today" session there.
+- Closing: asked the "2/11/2026 - appraisal flow" session (Remote Control, office laptop) to save and then archive itself; this route gives no reply, not verified.
+- Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
+- Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
+- Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
+
 ## Session Recap (2026-11-04, Baseline Pelupusan 1.9.2, Redmine version 12166)
 - Asked: prepare Pelupusan 1.9.2 from the BAQA list (287773, 287747, 287509, 287638, 262027 via mlk/qa/262027v2); later add 287892 on top of the pushed branch; after "Baseline Pelupusan - Passed", the master merge.
 - Done: mlk/release/1.9.2 cut off master 09037833bf, 6 tickets merged, verify 0 missing, mvn compile exit 0, version 1.9.2, common 1.10.20-MLK kept, pushed (tip 15a8e36cfa). MR 15 to mlk/master, reviewer Alex, read back 9 of 9 ✓ (http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/15). stag-env caught up 248b053e8a (was 4 behind: 287509 287638 287773), compiled, pushed, read back. KPI P-287892-C2 confirmed.
@@ -7376,6 +7386,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

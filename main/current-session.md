@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
+
+## Session Recap (2026-11-04, Penang UPS_PLP Jana null pejabat)
+- Asked: Penang common screen CommonUtilitiPenyediaanSuratForm (menuId=934): Jana after search fails with null pejabat; compare Melaka, data or code.
+- Done: form + PenyediaanSuratService identical Melaka vs Penang common (Penang pelupusan uses common 0.0.172-KDH.beta.patch2, clone on kdh/beta); cause = ind_pejabat_ursn has 0 rows for UPS_PLP in Penang (Melaka 5, MLK_SEDIA_SRT; Penang UPS_BGN 7, PNG_SEDIA_SRT). UPS_PLP.sql (7 inserts via seq_pejabat_ursn) + Fix.txt in 1. Tasks\Penang\7. AH - Internal - UPS_PLP - Penyediaan Surat Jana null pejabat\2. Fix; WhatsApp message (Short + Full, Pena clean) drafted for the Penang team.
+- Found: each failed Jana click still saved a UPS_PLP aplikasi first: 16 rows with no tugasan (2026-11-02 to 11-04, noraini.haron, pejabat 01). Local JBoss not running, so no stack trace read.
+- Open: miya sends the message + script; Penang team runs it on Penang IT; retest Jana. The 16 orphan rows untouched.
+- Mistakes: two Stop corrections for missing proving SELECTs (db-claim-proof) and one for no git-history probe; the branch-guard blocked a Read on kdh/beta (read-only).
+- Assessment: A1 branch-guard blocks reads, not only edits. A2 adhoc-save gate refused the save in the DE turn although the brief was given earlier. A3 DB-first found the cause in 4 queries once code was proven equal. A4 a new Penang urusan needs ind_pejabat_ursn rows per pejabat; the UPS_BGN rows were added the same morning. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:15 — worktree `appraisal-ratings-review-02cd68` (branch claude/appraisal-ratings-review-02cd68), session "2/11/2026 - appraisal flow", Appraisal-2026 talk flow kept in step with rows 54 to 58, appraisal finished, Domain Expansion.
 
 ## Session Recap (2026-11-04, Appraisal-2026 talk flow, page map and ticket cards aligned to his last rulings)
@@ -17,13 +26,3 @@
 - Mistakes: one Next steps row without a heading above (gate caught); guessed column name unit_luas_dipohon (real: unit_luas_dipohon_id).
 - Assessment: A1 next-steps-shape caught a headless row. A2 quest flow fit a mapping-only requirement with no Rubric. A3 reading the service before the data answered the BA's real failure. A4 PPTPB dates live in mklmt_tmbhn JSON, not trkh_mula. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
-
-## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
-- Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
-- Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
-- Apps shown live on his office laptop PJNBRidhwan (codemap :7717 and the Atlas file), opened by the "4/11/2026 - tickets today" session there.
-- Closing: asked the "2/11/2026 - appraisal flow" session (Remote Control, office laptop) to save and then archive itself; this route gives no reply, not verified.
-- Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
-- Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
-- Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
