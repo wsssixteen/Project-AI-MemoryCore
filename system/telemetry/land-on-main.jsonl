@@ -194,3 +194,5 @@
 {"ts":"2026-11-04T14:43:37.938Z","commit":"2d518914","outcome":"REFUSED","exit":2,"dur_ms":832}
 {"ts":"2026-11-04T15:12:25.564Z","commit":"07455cc9","outcome":"REFUSED","exit":2,"dur_ms":949}
 {"ts":"2026-11-04T15:12:26.348Z","commit":"98da0729","outcome":"nothing","exit":1,"dur_ms":676}
+{"ts":"2026-11-04T16:45:21.264Z","commit":"230e548b","outcome":"REFUSED","exit":2,"dur_ms":727}
+{"ts":"2026-11-04T16:45:51.182Z","commit":"230e548b","outcome":"LANDED","exit":1,"dur_ms":19724}
