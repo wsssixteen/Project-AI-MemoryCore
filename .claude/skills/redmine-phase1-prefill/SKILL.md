@@ -167,6 +167,6 @@ When みや says he submitted ("sent", "submitted", "done", "have sent"): read t
 
 ## History
 
-2026-11-04 — Step 4 gains the PROD patch note shape per みや (#288169/#288261: he rewrote my "Please help to verify" to "Can proceed to verify"; the BA passes a PROD patch to the TSO, who asks the user). Spec-preservation: every step and ban unchanged; additive.
+Updated 2026-11-04 — Step 4 gains the PROD patch note shape per みや (#288169/#288261: he rewrote my "Please help to verify" to "Can proceed to verify"; the BA passes a PROD patch to the TSO, who asks the user). Spec-preservation: every step and ban unchanged; additive.
 
 Created 2026-06-01 by みや design conversation (S4). Trigger photo: Redmine Edit form for QA-263344 showing the 6 fields to fill + Notes template + files area. Manual-invoke decision per みや: "the best/practical option is browser mcp which is slow"; ready for invoke but not auto-bound to quest closure.
