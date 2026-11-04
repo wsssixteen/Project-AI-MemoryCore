@@ -60,7 +60,8 @@ const FILTERS = [
 // 'eSOKONGAN MELAKA', the Internal Issue / Data Patching tickets under 'MLK_03_Pelupusan'.
 // Both must be recognised as Melaka, or his own tickets get mis-flagged "outside Melaka"
 // and dropped from the board (2026-09-22: 4 real Melaka tickets excluded this way).
-const MELAKA_PROJECTS = new Set(['eSOKONGAN MELAKA', 'MLK_03_Pelupusan']);
+// 'e-Tanah Melaka' holds Requirement / CR tickets (2026-11-04: #275608 sat in the OUTSIDE note).
+const MELAKA_PROJECTS = new Set(['eSOKONGAN MELAKA', 'MLK_03_Pelupusan', 'e-Tanah Melaka']);
 
 // PER-STATE BOARDS — a ticket assigned to him on a project of ANOTHER active state of the
 // registry (system/states.json redmine.project_names, via lib/states.js) gets its own ranked
