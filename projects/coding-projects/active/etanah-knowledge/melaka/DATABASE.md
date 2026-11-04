@@ -660,6 +660,8 @@ WHERE rt.proc_inst_id_ = '<proc_inst_id from above>';
 | `batch_job_instance`      | Spring Batch jobs                    |
 | `batch_step_execution`    | Spring Batch step execution details  |
 
+**Field-level audit**: `et_sistem.pt_audit_entity` (name = entity class, entity_id, db_operation, created_date) + `pt_audit_field` (name, value); values are display strings at that moment (an Agensi rename changes the shown name on every child row). Proven 2026-11-04 on PROD for AppJabatanTeknikal and Agensi (ADHOC-PLTP-2026-5).
+
 ---
 
 ## 9. DMS Tables (et_dms schema)

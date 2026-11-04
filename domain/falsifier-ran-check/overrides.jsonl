@@ -28,3 +28,6 @@
 {"ts":"2026-11-02T08:12:47.479Z","qa":"QA-287509","reason":"plain words: \"Yes, test on internal\"","via":"plain"}
 {"ts":"2026-11-02T08:13:05.997Z","qa":"QA-287607","reason":"plain words: \"Yes, test on internal\"","via":"plain"}
 {"ts":"2026-11-03T07:08:14.879Z","qa":"QA-287892","reason":"<reason>"}
+{"ts":"2026-11-04T03:58:17.179Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}
+{"ts":"2026-11-04T04:00:17.680Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}
+{"ts":"2026-11-04T04:00:30.774Z","qa":"QA-287346","reason":"plain words: \"Skip local testing, test on server.\"","via":"plain"}

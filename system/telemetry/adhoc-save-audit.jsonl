@@ -602,3 +602,9 @@
 {"ts":"2026-11-03T11:24:48.034Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":32}
 {"ts":"2026-11-03T10:22:55.059Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":30}
 {"ts":"2026-11-03T11:23:55.073Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-11-04T02:14:32.102Z","id":"ADHOC-PLTP-2026-5","outcome":"fail","fails":["block: required keys present","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":102}
+{"ts":"2026-11-04T02:14:41.315Z","id":"ADHOC-PLTP-2026-5","outcome":"pass","fails":[],"dur_ms":97}
+{"ts":"2026-11-04T02:24:11.855Z","id":"ADHOC-UPP-2026-3","outcome":"fail","fails":["register: status ↔ block status","qa_doc: OWNED-ELSEWHERE carries an \"Input check:\" line (cross-module-check)"],"dur_ms":66}
+{"ts":"2026-11-04T02:24:20.855Z","id":"ADHOC-UPP-2026-3","outcome":"pass","fails":[],"dur_ms":81}
+{"ts":"2026-11-04T02:29:33.580Z","id":"ADHOC-UPP-2026-3","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-11-04T09:57:24.544Z","id":"ADHOC-UPS-2026-2","outcome":"pass","fails":[],"dur_ms":31}
