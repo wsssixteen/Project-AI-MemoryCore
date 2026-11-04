@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
+
+## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
+- Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
+- Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
+- Apps shown live on his office laptop PJNBRidhwan (codemap :7717 and the Atlas file), opened by the "4/11/2026 - tickets today" session there.
+- Closing: asked the "2/11/2026 - appraisal flow" session (Remote Control, office laptop) to save and then archive itself; this route gives no reply, not verified.
+- Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
+- Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
+- Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
 
 ## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
@@ -21,13 +31,3 @@
 - Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
-
-## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
-- Asked (from the 287925 session, his correction): never put an approval code or "approve ..." phrase in quotes inside the Next steps "Your reply" cell; put it in its own text block so he copies it in one click. "Yes, make it a rule".
-- Done: `domain/next-steps-shape` v5 blocks `approval-in-cell` (code C1F5-62FF standing alone, case-sensitive; approve / post it / submit it any case); eval 54/54 (A1 to A25); pre-reply-contract line, reply-shape-spec 3f, reply-mechanics memory + index line, README, diagram v5, watch wmw0l323a. Commit 8dc4cfb3; main folder and GitHub main 71ae8698. Live fire from the main folder exit 2.
-- Changed from the brief: one `/i` regex split in two, because `/i` on the code part blocked "long-term" and ADHOC-MLPS-2026-4.
-- Blockers: memory-write-gate could not see the RULE-PLACEMENT line written as reply text (only tool calls in the transcript for that message); passed through a Bash heredoc; slip row logged. land-on-main made its own commit c336af9b (same tree), merged origin/main in the main folder to make the SHAs equal.
-- Open: QA-287925 itself stays with the parent session (save-quest PHASE-1 verdict, not ready).
-- Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
