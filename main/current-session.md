@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
+
+## Session Recap (2026-11-04, 288095 PRBB Rencana huruf kecil, .00, 6.3)
+- Asked: run /quest on 288095; apply all 3 fixes; test on server; stage the Redmine handover; patch the missing mlit data and screenshot the fix; todo for a test-data step; ProTime check of today's 4 tickets.
+- Done: f9c4c1a321 on mlk/esokongan/288095 (PelupusanUtil upperCaseReferenceWords + formatRinggitInText, 2 Word CC populators, helper 2-decimal formatter, 6.3 "kelulusan" in 2 e-Doket templates); int-env 8f20499ba4 (conflict kept PRBB or PLBP + uppercase, his "resolve 288095"); stag-env 24c1bf853a (merged on a misread of "staging", not deployed); mlit plp_a_pelupusan 2089 Permohonan Dahulu patched with real numbers; 2 fix screenshots in 2. Fix; Redmine 288095 Resolved to Nurhafizah 22:56 (entry 14); ProTime 39360 (287346) resolved.
+- Found: mlit Permohonan Dahulu held only the template placeholder, so 2.1.2 could not show the fix; eTanah 1.0 IDs (0401DIS..., C99/25) all hold digits, so the same fix covers them (PROD: 135 tokens uppercased, 389 no-digit words untouched).
+- Open: BA test on internal; Q1 Timbangan pertama line, Q2 6.3/6.4 same heading, Q3 meeting name lowercase, Q4 2.2.1 address; stag-env merge waits his word (keep or revert); todo test-data step waits a blind Fable 5.1 audit (his yes on 1 agent); his stash fc6d255101 left to him.
+- Mistakes: read "stage the redmine" as the stag-env branch; test-prep tool switched his local env to mlit (put back to stg1); handover tool cannot see his waiver 3 messages back (blocker slip); audit of the test-data gap ran on Opus, not blind Fable.
+- Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
 
 ## Session Recap (2026-11-04, today's board + 248290 coverage per urusan)
@@ -17,12 +26,3 @@
 - Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
 - Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
-
-## Session Recap (2026-11-04, Penang UPS_PLP Jana null pejabat)
-- Asked: Penang common screen CommonUtilitiPenyediaanSuratForm (menuId=934): Jana after search fails with null pejabat; compare Melaka, data or code.
-- Done: form + PenyediaanSuratService identical Melaka vs Penang common (Penang pelupusan uses common 0.0.172-KDH.beta.patch2, clone on kdh/beta); cause = ind_pejabat_ursn has 0 rows for UPS_PLP in Penang (Melaka 5, MLK_SEDIA_SRT; Penang UPS_BGN 7, PNG_SEDIA_SRT). UPS_PLP.sql (7 inserts via seq_pejabat_ursn) + Fix.txt in 1. Tasks\Penang\7. AH - Internal - UPS_PLP - Penyediaan Surat Jana null pejabat\2. Fix; WhatsApp message (Short + Full, Pena clean) drafted for the Penang team.
-- Found: each failed Jana click still saved a UPS_PLP aplikasi first: 16 rows with no tugasan (2026-11-02 to 11-04, noraini.haron, pejabat 01). Local JBoss not running, so no stack trace read.
-- Open: miya sends the message + script; Penang team runs it on Penang IT; retest Jana. The 16 orphan rows untouched.
-- Mistakes: two Stop corrections for missing proving SELECTs (db-claim-proof) and one for no git-history probe; the branch-guard blocked a Read on kdh/beta (read-only).
-- Assessment: A1 branch-guard blocks reads, not only edits. A2 adhoc-save gate refused the save in the DE turn although the brief was given earlier. A3 DB-first found the cause in 4 queries once code was proven equal. A4 a new Penang urusan needs ind_pejabat_ursn rows per pejabat; the UPS_BGN rows were added the same morning. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:15 — worktree `appraisal-ratings-review-02cd68` (branch claude/appraisal-ratings-review-02cd68), session "2/11/2026 - appraisal flow", Appraisal-2026 talk flow kept in step with rows 54 to 58, appraisal finished, Domain Expansion.
