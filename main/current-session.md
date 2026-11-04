@@ -7,6 +7,16 @@
 - Open: miya to decide whether we add PPTPB to the service or Pendaftaran reads the tables.
 - Mistakes: one Next steps row without a heading above (gate caught); guessed column name unit_luas_dipohon (real: unit_luas_dipohon_id).
 - Assessment: A1 next-steps-shape caught a headless row. A2 quest flow fit a mapping-only requirement with no Rubric. A3 reading the service before the data answered the BA's real failure. A4 PPTPB dates live in mklmt_tmbhn JSON, not trkh_mula. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `arabic-command-b8399a` (branch claude/appraisal-progress-review-1620f3), Appraisal-2026 finished, Domain Expansion.
+
+## Session Recap (2026-11-04, Appraisal-2026 form and visuals finished)
+- Asked: finish the appraisal pack: the form (soft copy for the manager) and the supporting visuals (printed for the manager and CEO).
+- Done: the form carries no inserted visuals (only the original tables filled, 11 pages); the visuals docx/pdf is 5 pages; B1 first table keeps only 284544; B4 adds the Task folder screenshots and a tools table (Etanah Atlas, etanah codemap) with screenshots; PymTime left out of B4. DECISIONS.md rows 60-62.
+- Apps shown live on his office laptop PJNBRidhwan (codemap :7717 and the Atlas file), opened by the "4/11/2026 - tickets today" session there.
+- Closing: asked the "2/11/2026 - appraisal flow" session (Remote Control, office laptop) to save and then archive itself; this route gives no reply, not verified.
+- Mistakes: opened the apps on this machine (miyazaki) while he sat at the office laptop; the memory note reference_rustdesk_server says "sessions here run ON the work laptop", which is wrong for this machine (edit blocked by the worktree hook, slip logged).
+- Open: fix that memory line (check `hostname` first: PJNBRidhwan = work laptop, miyazaki = the other machine).
+- Assessment: A1 a worktree hook blocks memory edits, so a wrong memory fact stays until a main-folder session. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
 
 ## Session Recap (2026-11-04, Baseline Pelupusan 1.9.2, Redmine version 12166)
