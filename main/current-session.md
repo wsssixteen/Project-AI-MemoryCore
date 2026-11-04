@@ -1,3 +1,12 @@
+**Last Activity**: 2026-11-04 17:00 — worktree `cool-margulis-5bb326`, Baseline Melaka Pelupusan 1.9.2 from BAQA list to merge request, Domain Expansion.
+
+## Session Recap (2026-11-04, Baseline Pelupusan 1.9.2, Redmine version 12166)
+- Asked: prepare Pelupusan 1.9.2 from the BAQA list (287773, 287747, 287509, 287638, 262027 via mlk/qa/262027v2); later add 287892 on top of the pushed branch; after "Baseline Pelupusan - Passed", the master merge.
+- Done: mlk/release/1.9.2 cut off master 09037833bf, 6 tickets merged, verify 0 missing, mvn compile exit 0, version 1.9.2, common 1.10.20-MLK kept, pushed (tip 15a8e36cfa). MR 15 to mlk/master, reviewer Alex, read back 9 of 9 ✓ (http://10.16.63.27/gitlab/etanah/etanah-pelupusan/-/merge_requests/15). stag-env caught up 248b053e8a (was 4 behind: 287509 287638 287773), compiled, pushed, read back. KPI P-287892-C2 confirmed.
+- Also: local mlk/master divergence fixed; SourceTree green vs blue labels explained; ghost docx files deleted; his 5 uncommitted files on mlk/release/1.9.1 stashed as `wip-5-files-on-release-1.9.1-20261104` (fc6d255101), checkout now on mlk/release/1.9.2. Only PelupusanWordCCMethodConstant.java in that stash is on no origin branch.
+- Open: Alex merges MR 15, then `merge-to-master --release 1.9.2 --check`. miya rebuilds staging from mlk/stag-env. KPI P-262027-B4 waits a check of BA journals for the salutation. Awam Pelupusan 287607 baseline not passed yet (list only).
+- Blocker: `release-prep.js add-ticket` refuses at phase pushed; phase hand-set to bumped (slip `blocker` logged).
+- Assessment: A1 add-ticket gap at pushed. A2 ⏭ no quest phase moved. A3 ⏭ no debugging. A4 adding a ticket after push re-runs verify and push cleanly. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
 
 ## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
@@ -21,13 +30,3 @@
 - Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
-
-## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
-- Asked (from the 287925 session, his correction): never put an approval code or "approve ..." phrase in quotes inside the Next steps "Your reply" cell; put it in its own text block so he copies it in one click. "Yes, make it a rule".
-- Done: `domain/next-steps-shape` v5 blocks `approval-in-cell` (code C1F5-62FF standing alone, case-sensitive; approve / post it / submit it any case); eval 54/54 (A1 to A25); pre-reply-contract line, reply-shape-spec 3f, reply-mechanics memory + index line, README, diagram v5, watch wmw0l323a. Commit 8dc4cfb3; main folder and GitHub main 71ae8698. Live fire from the main folder exit 2.
-- Changed from the brief: one `/i` regex split in two, because `/i` on the code part blocked "long-term" and ADHOC-MLPS-2026-4.
-- Blockers: memory-write-gate could not see the RULE-PLACEMENT line written as reply text (only tool calls in the transcript for that message); passed through a Bash heredoc; slip row logged. land-on-main made its own commit c336af9b (same tree), merged origin/main in the main folder to make the SHAs equal.
-- Open: QA-287925 itself stays with the parent session (save-quest PHASE-1 verdict, not ready).
-- Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
