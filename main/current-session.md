@@ -1,33 +1,28 @@
-**Last Activity**: 2026-11-03 22:45 — worktree `suspicious-nash-ce350d`, QA-287925 PROD alter + status patch, Redmine Resolved, quest archived, Domain Expansion.
+**Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
 
-## Session Recap (2026-11-03, QA-287925 MLPS + OMLPS back to Penyediaan Borang 4Ae dan L1e)
-- Asked: BA Fizah: alter MLPS/2026/1, /2, /5, /6, /10 and OMLPS/2026/1 to Penyediaan Borang 4Ae dan L1e (wrong Jadual dates); patch MLPS/1 and /2 back to Sedang Diproses.
-- Done: Alter Flow cannot reach PYB4AE from the Cetakan sub-flow; Initiate & Alter reset No ran on PROD (codes C1F5-62FF, A293-188D), 6 of 6 verified by DB (new a_tgsn 2919960-2919964, 2919967). Patch 287925.sql rewritten (alter had already set status_awam), run by infra, MLPS/1 and /2 now Awalan / Sedang Diproses, dates empty. Redmine submitted: Resolved to Fizah, journal #4. Quest archived (patch ticket, ahead of Redmine).
-- Side session: next-steps-shape v5 (approval text in its own copy block), main 71ae8698.
-- Knowledge: ALTER-TICKET-PLAYBOOK §3 (ended flow: Init & Alter resets status_awam only; tool AFTER check denied on PROD for rjk_parameter_sistem).
-- Open: OMLPS/1 is Tamat / Sedang Diproses from before this ticket, not in BA scope. Routing PYB4AE to PB4AE not yet exercised (user's Hantar).
-- Mistakes: approval codes quoted in a table cell; status patch written before the alter, would have matched 0 rows; two guessed column names (id_pengguna, trkh_kemaskini).
-- Assessment: A1 prod-alter-gate refused codes found inside his quoted complaint; the popup path worked. A2 write data patches after the alter's AFTER read. A3 the AFTER engine check fails on PROD, DB rows were the proof. A4 Alter Flow cannot cross from a sub-flow to a parent node; Initiate & Alter can. A5 ⏭ no sweep.
+## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
+- Asked: run 2 Redmine data patches; then "replace" not "upload" for an overwrite; then hand both back to the BA.
+- Done: 288169.sql (6 umm_a_jabatan_teknikal rows agensi 8 → 6) and 288261.sql (3 UPDATEs) + renamed pelan PDF; infra ran them; PROD re-checked; both tickets Resolved to Fizah 22:33 with his note "have patched the data in PROD. Can proceed to verify."; patch-mlk-doc infra box says "replace" (8ebb3381); redmine-phase1-prefill Step 4 carries the PROD note (main 66cfedae).
+- Found: BA named agensi 6002 but the bad rows sit on agensi 8 (named MPAG 21/07 to 13/08); a PROD patch is checked by the user through the TSO, never by the BA.
+- Open: QA-288169.md and QA-288261.md are not in the main folder (worktree guard); drafts in this session's scratchpad. Quests stay Phase 1 until Redmine shows Closed.
+- Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
+- Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
 
-**Last Activity**: 2026-11-03 19:30 — worktree `jovial-kepler-a07ba6`, ADHOC-PPTPB-2026-9 rounds 2-3 (unlink plan agreed), Domain Expansion.
+## Session Recap (2026-11-04, Penang UPS_PLP Jana null pejabat)
+- Asked: Penang common screen CommonUtilitiPenyediaanSuratForm (menuId=934): Jana after search fails with null pejabat; compare Melaka, data or code.
+- Done: form + PenyediaanSuratService identical Melaka vs Penang common (Penang pelupusan uses common 0.0.172-KDH.beta.patch2, clone on kdh/beta); cause = ind_pejabat_ursn has 0 rows for UPS_PLP in Penang (Melaka 5, MLK_SEDIA_SRT; Penang UPS_BGN 7, PNG_SEDIA_SRT). UPS_PLP.sql (7 inserts via seq_pejabat_ursn) + Fix.txt in 1. Tasks\Penang\7. AH - Internal - UPS_PLP - Penyediaan Surat Jana null pejabat\2. Fix; WhatsApp message (Short + Full, Pena clean) drafted for the Penang team.
+- Found: each failed Jana click still saved a UPS_PLP aplikasi first: 16 rows with no tugasan (2026-11-02 to 11-04, noraini.haron, pejabat 01). Local JBoss not running, so no stack trace read.
+- Open: miya sends the message + script; Penang team runs it on Penang IT; retest Jana. The 16 orphan rows untouched.
+- Mistakes: two Stop corrections for missing proving SELECTs (db-claim-proof) and one for no git-history probe; the branch-guard blocked a Read on kdh/beta (read-only).
+- Assessment: A1 branch-guard blocks reads, not only edits. A2 adhoc-save gate refused the save in the DE turn although the brief was given earlier. A3 DB-first found the cause in 4 queries once code was proven equal. A4 a new Penang urusan needs ind_pejabat_ursn rows per pejabat; the UPS_BGN rows were added the same morning. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:15 — worktree `appraisal-ratings-review-02cd68` (branch claude/appraisal-ratings-review-02cd68), session "2/11/2026 - appraisal flow", Appraisal-2026 talk flow kept in step with rows 54 to 58, appraisal finished, Domain Expansion.
 
-## Session Recap (2026-11-03, ADHOC-PPTPB-2026-9 rounds 2-3: unlink the Pendaftaran branch)
-- Asked: BA (Fizah) wants PPTPB unlinked from Pendaftaran (CR 256335, Pendaftaran side not released) for PTMLK/02/L/PPTPB/2026/5 and No Serahan 02MH1579/2026; one ticket incl. removing 41.0.
-- Found: our side reached Tamat Aplikasi on 2/10 (no SPOC); only the Endosan branch waits at SPIL; only PPTPB at SPIL in PROD. All staging PPTPB versions v1-v10 contain Endosan (no old version to revert to). Fable 5.1: Alter Flow cannot reach 40.0 from SPIL, Initiate & Alter can (latest model); join bug: "Ada spoc?" False bypasses the join, Endosan can never pass it (proven stg 7980291 since 17/8). 02MH1579/2026 = HKBM, 2 rows, Pendaftaran data.
-- Agreed (miya): one ticket: Initiate & Alter 2026/5 to 40.0 and hold until Pendaftaran release; Pendaftaran deletes 02MH1579/2026; remove 41.0 now, re-add with the join fix. Concise reply to Fizah prepared (miya sends).
-- CR check: 256335 is not Li Wen's 256334 (PDBB to Hasil); not our issue except the latent join bug.
-- Mistakes: said "cannot alter back to 40.0" as fact; miya's one question and the Fable review proved it wrong. Long replies after he asked for short ones; hashtags on ticket numbers.
-- Open: ticket from Fizah; staging rehearsal of Initiate & Alter on 7980291 before any PROD step; whether Initiate ends the child processes (not proven); PROD jar migrate behaviour (not proven).
-- Assessment: A1 the brief-first gate blocked saves three times in a closing round. A2 an alter answer was given without running the alter playbook's A4 decision row. A3 a second reader (Fable) on a PROD flow decision caught a wrong verdict and a latent model bug. A4 check every deployed model version before "revert to the old flow". A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 19:16 — worktree `dreamy-pike-08af0b` (branch claude/gifted-dhawan-b4334a), side session of the 287925 session: next-steps-shape v5 rule (approval text in its own copy block), Domain Expansion.
-
-## Session Recap (2026-11-03, next-steps-shape v5: approval text in a copy block)
-- Asked (from the 287925 session, his correction): never put an approval code or "approve ..." phrase in quotes inside the Next steps "Your reply" cell; put it in its own text block so he copies it in one click. "Yes, make it a rule".
-- Done: `domain/next-steps-shape` v5 blocks `approval-in-cell` (code C1F5-62FF standing alone, case-sensitive; approve / post it / submit it any case); eval 54/54 (A1 to A25); pre-reply-contract line, reply-shape-spec 3f, reply-mechanics memory + index line, README, diagram v5, watch wmw0l323a. Commit 8dc4cfb3; main folder and GitHub main 71ae8698. Live fire from the main folder exit 2.
-- Changed from the brief: one `/i` regex split in two, because `/i` on the code part blocked "long-term" and ADHOC-MLPS-2026-4.
-- Blockers: memory-write-gate could not see the RULE-PLACEMENT line written as reply text (only tool calls in the transcript for that message); passed through a Bash heredoc; slip row logged. land-on-main made its own commit c336af9b (same tree), merged origin/main in the main folder to make the SHAs equal.
-- Open: QA-287925 itself stays with the parent session (save-quest PHASE-1 verdict, not ready).
-- Assessment: A1 a gate that reads "reply text" fails when the transcript holds no text block; the shell-command path saved it. A2 ⏭ no quest work here. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-03 18:08 — worktree `dreamy-pike-08af0b` (branch claude/pelan-papar-overflow-cde7f5), ADHOC-OPLPS-2026-1 closed as no issue and archived, Domain Expansion.
+## Session Recap (2026-11-04, Appraisal-2026 talk flow, page map and ticket cards aligned to his last rulings)
+- Asked: keep chat-pack 13-presentation-plan.md, 12-who-does-what.md, 14-ticket-cards.md, 00-MASTER.md, START.md and infographics\appraisal-talk-flow.png in step with the rulings the home-laptop session relayed (DECISIONS rows 54 to 58); then one table per filled Part of the form; then two Redmine lookups (Lau Li Wen: Dev Hasil since June 2021, first ticket 98753).
+- Done: steps 5 to 7 of the talk flow follow the five Part D rows by stage and the settled ranking; 286650 card added (165 cards); page map at 14 pages; picture redrawn and sent 4 times; every change confirmed to the peer by message. Per-Part tables delivered from the Word file of 02:14. START.md Phase marked FINISHED 2026-11-04 on the peer's save order; nothing to commit (project folder gitignored).
+- Found: rows 59 to 62 (visuals pack 5 pages, form back to 11 pages, B4 screenshots) were written by the peer after my last sync, so 12-who-does-what.md still says 14 pages and a 4-page visuals pack; the peer owns the Word files and the final page map.
+- Open: his picks never arrived here: Part A on page 2 (write or say), Department IT or ID, C1 at 5 or 4, which Development or CR tickets to name. Self-archive refused (a background watcher still live); he archives from the sidebar.
+- Mistakes: terse-gate at 21 lines once (delta reply); three picture renders for text overflow before the lines fit.
+- Assessment: A1 OneDrive sync lag (4 to 10 min) between the two laptops made every relay a wait loop; a shared ledger read from one side would have been cheaper. A2 ⏭ no quest work. A3 ⏭ no debugging. A4 ⏭ no etanah fix. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 17:00 — worktree `ticket-275608-reply-7d6b89`, REQUIREMENT 275608 PPTPB mapping reply posted to Anis, Domain Expansion.
