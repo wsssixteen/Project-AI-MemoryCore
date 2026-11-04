@@ -1895,3 +1895,5 @@
 {"ts":"2026-11-04T16:06:19.985Z","category":"A2"}
 {"ts":"2026-11-04T16:06:20.791Z","category":"A3"}
 {"ts":"2026-11-04T16:54:04.959Z","category":"blocker"}
+{"ts":"2026-11-04T16:55:18.867Z","category":"gate/repeat-block"}
+{"ts":"2026-11-04T16:56:33.621Z","category":"blocker"}
