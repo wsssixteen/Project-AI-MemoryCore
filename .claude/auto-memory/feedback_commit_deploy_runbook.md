@@ -22,8 +22,8 @@ metadata:
 2. Show miya staged diff + verbatim commit message → he approves.
 3. Write `.claude/state/commit-approved-<QA>.flag` in its OWN call (Write tool) — a flag written in the same Bash call as the commit is invisible (PreToolUse fires before the command runs).
 4. `git add <files>` alone → then `git commit -m ...` alone (combined add&&commit = blocked).
-5. Env branch: surface merge-vs-cherry-pick (`git log --oneline <env>..<branch>` count + what a merge drags) → put `[deploy-merge-decision: cherrypick - <count shown>]` INSIDE the cherry-pick command as a trailing `#` comment (hook v2 accepts it in-command).
-6. Cherry-pick onto env branch (master-based branch merge into int-env drags the release train — cherry-pick is the norm, ref #276504 twice). Needs a fresh (<3h) green compile marker — `node domain/compile-gate/compile-check.js run <module>` — enforced by deploy-merge-surface v3.
+5. 🚨 Env branch = MERGE THE TICKET BRANCH, NEVER CHERRY-PICK (miya 2026-11-05, furious: "create each ticket in their own branch and then merge into internal"). `git merge --no-ff origin/mlk/<tracker>/<num>` with message `Merge remote-tracking branch 'remotes/origin/mlk/<tracker>/<num>' into mlk/int-env`, one merge per ticket. Conflict → STOP and show him, never `-X ours` (deploy skill §4, deploy-guard). The old "cherry-pick is the norm" line here was WRONG and caused 2026-11-05: 3 ticket commits cherry-picked straight onto int-env, force-pushed off again.
+6. No local compile before the env merge unless he asks (2026-11-05: "no compiles, don't waste my time").
 7. The deploy card ALWAYS carries the Test Scenario table (| Login | Screen | Do | Expect |, real login) directly under the steps — enforced by test-scenario-login-gate v2 (miya 2026-08-21: "prepare a test scenario right after the deploy steps").
 
 **Why:** QA-276504 2026-08-21 — 6 blocked calls, miya furious ("every single time without fail"). Two hook bugs fixed same day: commit-gate v3 consumes the approval flag only after ALL checks pass; deploy-merge-surface v2 accepts the token in-command + scans last 5 messages.
