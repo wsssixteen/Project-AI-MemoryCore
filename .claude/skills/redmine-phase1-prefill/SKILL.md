@@ -95,6 +95,8 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
+**Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]`. It prints the `ALTER-TICKET-PLAYBOOK.md` §5.1 shape (greeting · `<pre>` one field per line · script line · Thank you); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
+
 **PROD patch (data or document) = example 16, never the internal-deploy note** (2026-11-04 per みや, #288169/#288261): "Salam Fizah, have patched the data in PROD. Can proceed to verify." The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned** on a PROD patch: "Please help to verify" · telling the BA how to route it.
 
 ```

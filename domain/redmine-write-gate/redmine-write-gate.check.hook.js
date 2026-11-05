@@ -113,6 +113,9 @@ const statusOrder = v => {
   return new RegExp('(?<!\\b(?:don\'?t|do not|jangan|not|never)\\s)(?:\\b(?:set|change|update|tukar|kemaskini|mark|put|make|move)\\b[^.\\n]{0,40}\\b' + name + '\\b|\\b' + name + '\\b[^.\\n]{0,12}\\b(?:status|it|the ticket)\\b|\\bstatus\\b[^.\\n]{0,20}\\b' + name + '\\b|\\[redmine-status-ok(?::\\s*' + name + ')?\\])', 'i');
 };
 const hisStatusWords = (tp, value) => decide(tp, { approve: statusOrder(value), action: STATUS_ACTION, hold: REDMINE_HOLD, bypass: BYPASS });
+// v1.12 (2026-11-05, 288533, miya: "remove this step ... It already knows"): a hold made ONLY of staging words
+// ("stage it") holds the SUBMIT, not the status, so the standing rule still decides the Status fill.
+const stageOnlyHold = (st, text) => st.verdict === 'deny' && st.via === 'hold' && VIEW_FIRST.test(text) && !HOLD.test(text.replace(new RegExp(VIEW_FIRST.source, 'gi'), ' '));
 // v1.11 (2026-11-03, 287747/287638, miya: "No more asking this part"): his standing rule for a hand-back decides a
 // Status = Resolved fill with no words from him. The rule and the BA list live in status-rule.json, the decision in
 // status-rule.js (one function, used here and by the prefill skill). The gate learns the ticket from the last
@@ -246,7 +249,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
       }
       // v1.11: no order and no hold → his standing rule decides a hand-back (status-rule.json).
       let ruled = null;
-      if (st.verdict !== 'deny' && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
+      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS)) && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
         const num = data.transcript_path ? ticketFromTranscript(String(data.transcript_path), ti.tabId) : null;
         const state = num ? SR.liveStateSync(num) : null;
         ruled = { num, state, v: state ? SR.verdict(Object.assign({ to: value, stagedAssignee: stagedAssignee(num) }, state)) : null };
