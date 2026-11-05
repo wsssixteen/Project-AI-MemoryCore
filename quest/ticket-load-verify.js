@@ -41,6 +41,12 @@
  *      quest/pdf-annotations.py. An unreadable PDF is an integrity problem (exit 2). --json adds
  *      pdfAnnotations. Preserved: A/B/B2/D/D2/E/F text, exit codes, every other --json key.
  *
+ * v1.6 (2026-11-05, #288261, miya: "Build it" after the rework audit): new section B3 PATCH SCOPE —
+ *      one row per (permohonan, ask) from the report side (a non-BA Description + TSO / role-unknown
+ *      journal notes) against the BA side (BA journal notes). A report row the BA list leaves out,
+ *      while the BA list names other asks for that permohonan, prints ⚠. Developer notes are ignored.
+ *      --json adds patchScope. Preserved: A/B/B2/C/D/D2/E/F text, exit codes, every other --json key.
+ *
  * Exit 0 = manifest printed. Exit 1 = ticket folder not found / sync missing.
  * Exit 2 = integrity problem (journal names an attachment absent from disk,
  *          or History.txt is older than the Redmine `Last updated` it records).
@@ -300,11 +306,71 @@ const qaDocCandidates = [
 ];
 const qaDoc = qaDocCandidates.find(p => fs.existsSync(p)) || null;
 
+// ── B3 PATCH SCOPE (v1.6, #288261) ─────────────────────────────────────────
+// The report side (TSO Description + TSO / role-unknown journal notes) against the BA side
+// (BA journal notes): one row per (permohonan, ask). Topic words below name the ask.
+const PERMOHONAN_RX = /\bPT[A-Z]{2,6}(?:\/[A-Z0-9]+){2,5}\/\d{4}\/\d+\b/g;
+const ASK_TOPICS = [
+    ['tempat', /tempat|lokasi|wilayah/i], ['pelan', /pelan/i], ['tujuan', /tujuan|maksud pendudukan/i],
+    ['tarikh', /tarikh/i], ['luas', /\bluas\b/i], ['nama', /\bnama\b/i], ['syarat', /syarat|sekatan/i],
+    ['bayaran', /bayaran|cukai|\bfi\b|resit/i],
+];
+function noteOf(entry) {
+    const idx = entry.body.findIndex(l => /^\s*notes:\s*$/.test(l));
+    return idx === -1 ? '' : entry.body.slice(idx + 1).join('\n');
+}
+// A run of lines naming permohonan is one group; the text after it, up to the next id, is that group's ask.
+function scopeOf(text) {
+    const out = new Map(); // id -> Set(topic)
+    let group = [], closed = false;
+    for (const line of String(text || '').split(/\r?\n/)) {
+        const ids = line.match(PERMOHONAN_RX) || [];
+        const rest = line.replace(PERMOHONAN_RX, ' ');
+        if (ids.length) { if (closed) { group = []; closed = false; } group.push(...ids); }
+        else if (line.trim() && group.length) closed = true;
+        for (const id of group) if (!out.has(id)) out.set(id, new Set());
+        for (const [topic, rx] of ASK_TOPICS) if (rx.test(rest)) group.forEach(id => out.get(id).add(topic));
+    }
+    return out;
+}
+function mergeScope(into, from) { for (const [id, t] of from) { if (!into.has(id)) into.set(id, new Set()); t.forEach(x => into.get(id).add(x)); } }
+const journalCls = j => {
+    const tagged = (j.body.join('\n').match(/^\s*\[role\]\s+(\S+)/m) || [])[1];
+    if (tagged) return tagged;
+    return ROLE ? ROLE.roleOf(j.author, { state: ticketState }).cls : 'unknown';
+};
+const descCls = (descRole && descRole.cls !== 'unknown' ? descRole.cls : null)
+    || (headerText.match(/^Description by:.*?\[(\w+)\]/m) || [])[1]
+    || (descText.match(/^Author:.*?\[(\w+)\]/m) || [])[1] || 'unknown';
+const reportScope = new Map(), baScope = new Map();
+if (descText) mergeScope(descCls === 'BA' ? baScope : reportScope, scopeOf(descText));
+for (const j of journals) {
+    const cls = journalCls(j);
+    if (/^Dev/i.test(cls)) continue;
+    const note = noteOf(j);
+    if (note) mergeScope(cls === 'BA' ? baScope : reportScope, scopeOf(note));
+}
+const scopeRows = [];
+for (const id of [...new Set([...reportScope.keys(), ...baScope.keys()])].sort()) {
+    const rep = reportScope.get(id) || new Set(), ba = baScope.get(id) || new Set();
+    const topics = [...new Set([...rep, ...ba])].sort();
+    const baNamesId = baScope.has(id);
+    if (!topics.length) { scopeRows.push({ id, ask: '(any)', report: reportScope.has(id), ba: baNamesId, warn: baScope.size > 0 && !baNamesId }); continue; }
+    for (const t of topics) {
+        const inRep = rep.has(t), inBa = ba.has(t);
+        // dropped: the report asks it and the BA list either skips the permohonan or names other asks for it
+        const warn = baScope.size > 0 && inRep && !inBa && (!baNamesId || ba.size > 0);
+        scopeRows.push({ id, ask: t, report: inRep, ba: inBa || (baNamesId && !ba.size), warn });
+    }
+}
+const scopeWarn = scopeRows.filter(r => r.warn).length;
+const scopeLine = `PATCH-SCOPE: ${scopeRows.length} row(s) · ${scopeWarn} ⚠${!reportScope.size ? ' · no permohonan in the report' : !baScope.size ? ' · no BA list naming a permohonan yet' : ''}`;
+
 if (asJson) {
     console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
         descriptionBy: { author: descAuthor, role: descRole ? descRole.cls : 'unknown' }, specSource: [specJson('issue'), specJson('expected')],
         cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine, reworkAudit: reworkAuditLine },
-        pdfAnnotations: Object.fromEntries(pdfNotes) }, null, 2));
+        pdfAnnotations: Object.fromEntries(pdfNotes), patchScope: { rows: scopeRows, warn: scopeWarn, line: scopeLine } }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
 
@@ -336,6 +402,10 @@ for (const kind of ['issue', 'expected']) {
     if (newer) L.push(`             ↳ ${newer}`);
 }
 L.push('   Only a BA-written list is the spec. A TSO, Developer or role-unknown list is a report.');
+L.push('');
+L.push('B3. PATCH SCOPE — every permohonan + ask the report names, against the BA list. Echo the PATCH-SCOPE line and every ⚠ row.');
+L.push(`   ${scopeLine}`);
+scopeRows.forEach(r => L.push(`   ${r.id.padEnd(28)} ${r.ask.padEnd(8)} report ${r.report ? '✓' : '—'}  BA ${r.ba ? '✓' : '—'}  ${r.warn ? '⚠ BA list drops it: ask BA, or name it as dropped, before the infra message' : 'ok'}`));
 L.push('');
 L.push(`C. ATTACHMENTS / BRIEF FILES \u2014 ${briefFiles.length}. Echo content per file (image = what is visible, pdf = annotation count).`);
 briefFiles.forEach((f, i) => {
@@ -390,7 +460,7 @@ if (problems.length) {
     problems.forEach(p => L.push(`   \u2022 ${p}`));
 }
 L.push('');
-L.push(`ECHO CONTRACT: ${journals.length} conversation line(s) + ${briefFiles.length} attachment line(s) + Description + the CYCLE line + reconcile table.`);
+L.push(`ECHO CONTRACT: ${journals.length} conversation line(s) + ${briefFiles.length} attachment line(s) + Description + the PATCH-SCOPE line and its ⚠ rows + the CYCLE line + reconcile table.`);
 L.push('A missing echo is a skipped read, not a shortened reply.');
 console.log(L.join('\n'));
 process.exit(problems.length ? 2 : 0);

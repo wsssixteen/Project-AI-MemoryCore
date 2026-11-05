@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-10-29T15:01:16.236Z",
         "reason": "repo diagram convention: 9px Consolas sub-labels in an SVG rendered to PNG at 2x, same as quest/requirement-index.diagram.html; not interactive UI"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "quest/requirement-index.diagram.html"
+        ],
+        "createdAt": "2026-11-05T11:34:17.126Z",
+        "reason": "Ruri: SVG viewBox 1000 wide rendered to a 2328 px PNG, so font-size 9 renders about 21 px; the file is only ever seen as that PNG"
       }
     ]
   }

@@ -199,3 +199,5 @@
 {"ts":"2026-11-05T00:58:56.279Z","commit":"--help","outcome":"land-on-main:","exit":2,"dur_ms":6}
 {"ts":"2026-11-05T00:59:12.212Z","commit":"61e28a87","outcome":"LANDED","exit":0,"dur_ms":8007}
 {"ts":"2026-11-05T06:49:45.455Z","commit":"a6565a54","outcome":"LANDED","exit":0,"dur_ms":5543}
+{"ts":"2026-11-05T09:57:00.962Z","commit":"8e1090ee","outcome":"REFUSED","exit":2,"dur_ms":1754}
+{"ts":"2026-11-05T09:57:59.522Z","commit":"8e1090ee","outcome":"LANDED","exit":0,"dur_ms":27643}

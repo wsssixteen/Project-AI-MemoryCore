@@ -86,6 +86,7 @@ Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <n
    git add <cited-fix-file…>                      # stage ONLY the cited files
    ```
    - **Banned**: branching before pulling · `git add -A` / `git add .` (stages other WIP) · staging any file not part of this quest's fix · silently deviating from this order (if a deviation is genuinely needed, SURFACE it and get a nod first).
+2b. **Requirement rules carried into the close (2026-11-05 per みや, ADHOC-PPTPB-2026-9).** Before the review gate, copy the quest doc's `REQUIREMENT-RULES:` rows (written at Phase 0 step 2b) into the close summary, one status each: `kept` · `implemented` · `contradicted (CR, miya nod: <date>)`. A `contradicted` row with no nod date STOPS the commit: no step 3 until he gives the nod. `R0 none` passes. Emit `Requirement rules: <n> rows · kept <a> · implemented <b> · contradicted <c> (nod <c>/<c>)` (or `R0 none`).
 3. **🛑 STOP — review gate (mandatory).** Emit three things and WAIT for みや's explicit approval before committing:
    - the staged file list (confirm ONLY the cited files),
    - the full `git diff --cached`,
@@ -185,5 +186,7 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 *2026-10-23 — per みや ("can we actually do this during every single time a quest saves?"): Save-quest step 1c runs the KPI check at every save; Phase 2 Step 2 reuses that line. Spec kept: the step is never silent (the KPI line is pasted). Changed and named: the check moved from Phase 2 to every save.*
 
 *2026-10-30 — per みや ("audit if saving quest is enough"): the resolver now reads `ticket_type` so a patch ticket gets its Phase 1 + 2 verdict, where it used to print "Do not archive" against the 2026-10-29 rule; `archive-quest.js` Step -1.5 refuses an archive the verdict does not allow (`--ahead-of-redmine` carries his words). Spec-preservation: the verdict table and both phases are unchanged in order. Changed and named: the override is now a flag on the tool. Fire check: `node lib/save-quest.eval.js` 69/69 · `node quest/archive-quest-redmine.eval.js` 16/16.*
+
+*2026-11-05 — Phase 1 step 2b (requirement rules carried into the close: `REQUIREMENT-RULES:` rows with a status each; `contradicted` with no CR nod stops the commit; `R0 none` passes) per みや, ADHOC-PPTPB-2026-9. Spec-preservation: steps 0-7 kept in order and word for word, the review gate and commit steps untouched; additive, numbered 2b so no step is renumbered.*
 
 *2026-11-05 — Phase 1 step 0 gains the rework floor (rows >= BA rework issues minus new-ask) and the after-handover proposal display, per みや (287346). Spec-preservation: the add command, the emit line and the backstop sentence are kept word for word; additive.*

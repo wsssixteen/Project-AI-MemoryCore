@@ -228,11 +228,64 @@ function lastConfidence(t) {
   return last;
 }
 
+// v6 (2026-11-05, #287811): a rework owes the WRITERS TABLE whatever the confidence.
+// Four 287811 fixes each stated 80 to 90 and each closed one writer of three; the confidence
+// waiver below let every one of them ship without a list of the writers. Rework = the ticket's
+// block in quest/active.txt carries a closed*= stamp, or its qa_doc "## Wrong fixes" has a row
+// dated today. The ticket = the last QA-NNNNNN / #NNNNNN the session named.
+const ACTIVE_FILE = process.env.PREDICATE_BOX_ACTIVE_FILE || path.join(ROOT, 'quest', 'active.txt');
+const QADOC_ROOT = process.env.PREDICATE_BOX_QADOC_ROOT || path.join(ROOT, 'projects', 'coding-projects');
+function sessionTicket(t) {
+  let last = null; const re = /(?:QA-|#)(\d{5,7})\b/g; let m;
+  for (const src of [t.lastUserText, t.assistantText]) while ((m = re.exec(String(src || ''))) !== null) last = m[1];
+  return last;
+}
+function reworkOwed(t) {
+  try {
+    const n = sessionTicket(t); if (!n) return null;
+    const blk = fs.readFileSync(ACTIVE_FILE, 'utf8').split(/^(?=qa=)/m).find(b => new RegExp('^qa=(?:QA-)?' + n + '\\b').test(b)) || '';
+    if (/^closed(_cycle\d+)?=/m.test(blk)) return 'QA-' + n + ' has a closed*= stamp (rework cycle)';
+    const today = new Date().toISOString().slice(0, 10);
+    for (const sub of ['active', 'archive']) {
+      let doc = ''; try { doc = fs.readFileSync(path.join(QADOC_ROOT, sub, 'QA-' + n, 'QA-' + n + '.md'), 'utf8'); } catch (e) { continue; }
+      if (new RegExp('^\\|\\s*\\d+\\s*\\|\\s*' + today + '\\s*\\|', 'm').test(doc.split(/^## Wrong fixes/m)[1] || '')) return 'QA-' + n + ' has a wrong-fix row dated today';
+    }
+  } catch (e) { /* fail open */ }
+  return null;
+}
+// WRITERS TABLE = header with a "Writer" cell and a "Closer" cell; every data row names a writer, a runtime proof and a closer.
+function writersTable(text) {
+  const L = String(text || '').split(/\r?\n/);
+  let best = null;
+  for (let i = 0; i < L.length - 2; i++) {
+    if (!/\|/.test(L[i]) || !/\bwriter\b/i.test(L[i]) || !/\bcloser\b/i.test(L[i])) continue;
+    if (!/^\s*\|?\s*:?-{2,}/.test(L[i + 1])) continue;
+    let rows = 0, bad = 0;
+    for (let j = i + 2; j < L.length && /\|/.test(L[j]); j++) {
+      const cells = L[j].split('|').map(s => s.trim()).filter(Boolean);
+      if (cells.length < 4) { bad++; continue; }
+      if (cells.slice(1, 4).some(c => !/[A-Za-z0-9]{3,}/.test(c) || /^(tbd|todo|\?)$/i.test(c))) { bad++; continue; }
+      rows++;
+    }
+    if (!best || rows > best.rows) best = { rows, bad };
+  }
+  return best;
+}
+function writersComplete(w) { return !!w && w.rows >= 1 && w.bad === 0; }
+
 // Requirement 2 verdict.
 function probeVerdict(t) {
   if (!t.javaEdits) return { v: 'no-java-edit' };
   if (t.cleanupEdits === t.javaEdits) return { v: 'passed', how: 'probe-cleanup' };
   const conf = lastConfidence(t);
+  const rework = reworkOwed(t);
+  if (rework) {
+    for (const src of [t.assistantText].concat(t.mdWritten)) {
+      const w = writersTable(src);
+      if (writersComplete(w)) return { v: 'passed', how: 'writers table ' + w.rows + ' rows (' + rework + ')' };
+    }
+    return { v: 'blocked', refused: 'rework: ' + rework + '. A WRITERS TABLE is owed before any fix (| # | Writer (full address) | Runtime proof | Closer |), whatever the confidence; the probe matrix does not stand in for it.', rework: true };
+  }
   if (conf !== null && conf >= CONFIDENCE_FLOOR) return { v: 'passed', how: 'confidence ' + conf + '%' };
   let matrix = null;
   for (const src of [t.assistantText].concat(t.mdWritten)) {

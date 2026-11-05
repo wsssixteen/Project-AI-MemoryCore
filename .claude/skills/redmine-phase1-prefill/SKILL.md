@@ -95,6 +95,8 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
+**Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]`. It prints the note (its one home; `ALTER-TICKET-PLAYBOOK.md` §5.1 points to it); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
+
 **PROD patch (data or document) = example 16, never the internal-deploy note** (2026-11-04 per みや, #288169/#288261): "Salam Fizah, have patched the data in PROD. Can proceed to verify." The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned** on a PROD patch: "Please help to verify" · telling the BA how to route it.
 
 ```
@@ -166,6 +168,8 @@ When みや says he submitted ("sent", "submitted", "done", "have sent"): read t
 - File upload silently fails (size limit / network) → never claim success without verifying via subsequent get_page_text
 
 ## History
+
+Updated 2026-11-05 — Step 4 alter note: the parenthetical restating the note's shape is dropped; the generator `ticket-close-block --alter` is its one home (per みや, Fable 5.1 audit: the shape sat in 8 places). Spec-preservation: the generate-never-type rule and its ban unchanged; only the restated shape removed.
 
 Updated 2026-11-04 — Step 4 gains the PROD patch note shape per みや (#288169/#288261: he rewrote my "Please help to verify" to "Can proceed to verify"; the BA passes a PROD patch to the TSO, who asks the user). Spec-preservation: every step and ban unchanged; additive.
 
