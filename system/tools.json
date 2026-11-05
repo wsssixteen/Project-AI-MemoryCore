@@ -20,6 +20,21 @@
   },
   "tools": [
     {
+      "id": "origin-rewrite",
+      "answers": "Move an origin branch backwards (a squash or a reset) so origin and miya's clone hold the same tip in one step, and he is told to refresh SourceTree",
+      "call": "node lib/origin-rewrite.js --repo <work clone> --branch mlk/... --lease <old origin sha> [--his-clone <dir>] [--no-his]",
+      "home": "lib/origin-rewrite.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "keyed by his clone root: default E:\\Projects\\Melaka\\<repo> (HIS_CLONE_ROOT for another state)",
+      "footprint": "on-demand: one git push and one fetch + reset; log lib/origin-rewrite.log.jsonl",
+      "eval": "node lib/origin-rewrite.eval.js",
+      "born": "2026-11-05 (#287811: two origin rewrites, his clone never reset, his pull merged the failed commits back). deploy-guard allows a force push only through this Tool.",
+      "usage": { "sessions": 0, "last": "" },
+      "status": "unused"
+    },
+    {
       "id": "sla-hours",
       "answers": "How many SLA hours a developer has left on a ticket",
       "call": "node lib/sla-hours.js <Priority> <assignedISO> [state]",
@@ -745,7 +760,7 @@
       "id": "flowable-alter-js",
       "answers": "Run a Flowable alter on the Alter page (PROD with an approval code, STG/MLIT with a saved session)",
       "call": "node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <...> --id <ID> --target <KOD> --dry-run",
-      "home": "FlowableAlter alter.js (E:DevscriptsFlowableAlter, outside git)",
+      "home": "FlowableAlter alter.js (E:\\Dev\\scripts\\FlowableAlter, its own git repo at that path since 2026-11-05, outside MemoryCore git)",
       "groups": [
         "flow"
       ],
@@ -761,7 +776,7 @@
       "id": "flowable-alter-runner",
       "answers": "Alter Flow on STG/MLIT with no login, verified from the DB",
       "call": "E:\\Dev\\scripts\\FlowableAlter\\runner\\run.ps1 alter-flow --env <stg|mlit> --id <ID> --target <KOD> [--run]",
-      "home": "FlowableAlter runner (E:DevscriptsFlowableAlter\runner, outside git)",
+      "home": "FlowableAlter runner (E:\\Dev\\scripts\\FlowableAlter\\runner, in the FlowableAlter git repo since 2026-11-05, outside MemoryCore git)",
       "groups": [
         "flow"
       ],

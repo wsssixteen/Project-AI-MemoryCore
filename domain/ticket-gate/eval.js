@@ -68,6 +68,28 @@ r = run('lets start with 90004');
 check('F7 PRZ does NOT inject the No-Resit row', /QUEST GATE/.test(r.stdout) && !/No-Resit urusan detected/.test(r.stdout), (r.stdout || '').slice(0, 120));
 check('F7 PRZ closing line stays rows 0-6', /rows 0-6[^+]*are/.test(r.stdout), '');
 
+// F7b (2026-11-05, #287811): a CLOSED block whose live Redmine status is Rework re-opens itself.
+const FIXTURE_RW = path.join(TMP, 'active-rework.txt');   // own file: the main FIXTURE's block order is asserted by F9
+fs.writeFileSync(FIXTURE_RW, 'active:\n\nqa=QA-90005\nstatus=closed\nphase=Rubric\nticket_type=bug\nlocal_test_confirmed=true\nclosed=2026-11-03\n\nqa=QA-90006\nstatus=closed\nphase=Rubric\nticket_type=bug\nlocal_test_confirmed=true\n');
+const STATUS_SCRIPT = path.join(TMP, 'status-stub.js');
+const runStatus = (prompt, statusLine) => {
+  fs.writeFileSync(STATUS_SCRIPT, 'console.log(' + JSON.stringify(statusLine) + ')');
+  return spawnSync(process.execPath, [HOOK], {
+    input: JSON.stringify({ prompt }), encoding: 'utf8', timeout: 30000,
+    env: { ...process.env, TICKET_GATE_ACTIVE_TXT: FIXTURE_RW, CLAUDE_PROJECT_DIR: ROOT, KNOWLEDGE_ROOT: path.join(TMP, 'K'), ETANAH_STATE: '', TICKET_GATE_STATUS_CMD: '"' + process.execPath + '" "' + STATUS_SCRIPT + '" {n}' },
+  });
+};
+r = runStatus('QA 90005 rework please', '#90005: Rework (Requirement Update) · Ahmad Ridhwan Anuar');
+check('F7b closed block + live Rework status → REWORK re-opened line', /REWORK re-opened/.test(r.stdout) && /WRITERS TABLE/.test(r.stdout), (r.stdout || r.stderr || '').slice(0, 160));
+{
+  const blk = fs.readFileSync(FIXTURE_RW, 'utf8').split(/^(?=qa=)/m).find(b => /^qa=QA-90005/.test(b)) || '';
+  check('F7b block now status=active', /^status=active$/m.test(blk), blk.slice(0, 120));
+  check('F7b block now local_test_confirmed=false', /^local_test_confirmed=false$/m.test(blk), '');
+  check('F7b block phase says rework', /^phase=rework/m.test(blk), '');
+}
+r = runStatus('QA 90006 please', '#90006: Closed · Nurul Amirah Nadiah');
+check('F7c closed block + live Closed status stays silent (no re-open)', r.status === 0 && !(r.stdout || '').trim() && /^qa=QA-90006\nstatus=closed/m.test(fs.readFileSync(FIXTURE_RW, 'utf8')), (r.stdout || '').slice(0, 80));
+
 // F8 word-boundary: PRZ must not match inside PRBB and vice versa
 r = run('QA 90001 please');
 check('F8 urusan-less block injects nothing', !/No-Resit urusan detected/.test(r.stdout), '');

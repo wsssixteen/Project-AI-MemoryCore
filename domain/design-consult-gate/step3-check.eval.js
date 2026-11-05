@@ -33,8 +33,21 @@ function block(o) {
     'who pays': 'on-demand: when he runs it', 'goal without the part': 'he is never sent to the office for a dead connection',
     model: 'claude-fable-5-1', shown: PNG,
   }, o || {});
-  return 'STEP-3: test\n' + Object.entries(f).filter(([, v]) => v !== null).map(([k, v]) => k + ': ' + v).join('\n') + '\n';
+  const card = (o && 'card' in o) ? o.card : CARD;
+  delete f.card;
+  return 'STEP-3: test\n' + Object.entries(f).filter(([, v]) => v !== null).map(([k, v]) => k + ': ' + v).join('\n') + '\n' + (card ? '\n' + card + '\n' : '');
 }
+const CARD = [
+  'CHANGE-CARD (before): test',
+  '- What: A test part checks one thing for him.',
+  '- Why: On 2026-11-05 he asked for it.',
+  '- How: It reads one file and prints a verdict.',
+  '  ![flow](flow.png)',
+  '- When: It runs on ask.',
+  '- Where: It lives in `domain/test/`.',
+  '  ![where](map.png)',
+  'Where picture = the change map (lib/change-map.js).',
+].join('\n');
 function run(filePath, entries, sessionText, opts) {
   const o = opts || {};
   const sf = path.join(TMP, 's-' + Math.random().toString(36).slice(2) + '.md');
@@ -114,6 +127,21 @@ check('S19 fix or report not fix|report -> deny', r.deny && /fix or report:/.tes
 
 r = run(HIGH, [HIS, ...CONSULT, FABLE_CALL], block({ session: 'old' }) + '\n' + block());
 check('S20 two blocks, this session second -> allow', !r.deny, r.reason.slice(0, 160));
+
+r = run(NEWPART, [HIS], block({ card: null }));
+check('S21 block with no change card -> deny', r.deny && /no CHANGE-CARD \(before\)/.test(r.reason), r.reason.slice(0, 160));
+
+r = run(NEWPART, [HIS], block({ card: CARD.replace('- When: It runs on ask.\n', '') }));
+check('S22 change card missing a line -> deny', r.deny && /CHANGE-CARD \(before\) fails: When: missing/.test(r.reason), r.reason.slice(0, 160));
+
+r = run(NEWPART, [HIS], block({ card: CARD.replace('checks one thing for him.', 'checks things. It is good.') }));
+check('S23 change card line of two sentences -> deny', r.deny && /What: not one sentence/.test(r.reason), r.reason.slice(0, 160));
+
+r = run(NEWPART, [HIS], block({ session: 'old', card: null }) + '\n' + block());
+check('S24 an older block without a card does not matter; this session card passes -> allow', !r.deny, r.reason.slice(0, 160));
+
+r = run(NEWPART, [HIS], block() + '\n' + block({ session: 'other', card: null }));
+check('S25 card under this session block, next block another session -> allow', !r.deny, r.reason.slice(0, 160));
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
