@@ -40,6 +40,8 @@
  *   ═══ SCOUT ═══ · ═══ RECON ═══ · ═══ RUBRIC ═══
  * (see quest/quest-protocol.md FORCED PHASE-EMIT GATES). Legacy strong markers
  * (Recon Context Re-load / Logic Blast Radius) are also accepted during transition.
+ *
+ * Version: v4 (2026-11-05) — v3 requirement read + a REQUIREMENT-RULES row (or R0 none) per read.
  */
 const fs = require('fs');
 const path = require('path');
@@ -60,6 +62,38 @@ function requirementRead(transcript) {
     if (quoted && new RegExp('REQUIREMENT-READ #' + req + '\\b').test(transcript)) return true;
   }
   return false;
+}
+
+// v4 (2026-11-05, per miya, handoff 2026-11-05 item 7): every REQUIREMENT-READ #<req> this session
+// needs a ledger row in a REQUIREMENT-RULES: block — `R<n> · #<req> · "<quote>"` — or one `R0 none`
+// line (covers every read). Same raw transcript as v3, no other reader. Self-disarm guards: the row
+// needs digits for n and req and a quote that does not open with "<" (template text never passes);
+// R0 none counts only right after the marker or at a line start (the deny text writes it after a backtick).
+const RULES_MARK = 'REQUIREMENT-RULES:';
+const READ_RE = /REQUIREMENT-READ #(\d{5,7})\b/g;
+const SEP = '[ \\t]*(?:·|\\\\u00b7)[ \\t]*';
+const ROW_RE = new RegExp('(?:(?<![A-Za-z0-9])|(?<=\\\\n))R[1-9]\\d{0,2}' + SEP + '#(\\d{5,7})' + SEP + '(?:\\\\?["“]|\\\\u201c)(?![ \\t]*<)(?=[ \\t]*[^\\s"\\\\])', 'g');
+const R0_RE = /(?:^|\r?\n|\\n|REQUIREMENT-RULES:)[ \t]*(?:[-*•|>][ \t]*)*R0(?:[ \t]*(?:·|\\u00b7))?[ \t]*none\b/;
+const BLOCK_END_RE = /\r?\n[ \t]*\r?\n|\\n[ \t]*\\n|(?<!\\)"\s*[,}\]]/; // blank line, or the end of a JSONL string
+function rulesMissing(transcript) {
+  const reads = new Set();
+  let m;
+  READ_RE.lastIndex = 0;
+  while ((m = READ_RE.exec(transcript))) reads.add(m[1]);
+  if (reads.size === 0) return []; // no read this session: v3 alone decides
+  const covered = new Set();
+  let i = transcript.indexOf(RULES_MARK);
+  while (i !== -1) {
+    const body = transcript.slice(i + RULES_MARK.length, i + RULES_MARK.length + 4000);
+    const lead = body.match(/^(?:\s|\\[nrt])*/)[0].length;
+    const end = BLOCK_END_RE.exec(body.slice(lead));
+    const block = RULES_MARK + body.slice(0, end ? lead + end.index : body.length);
+    if (R0_RE.test(block)) return [];
+    ROW_RE.lastIndex = 0;
+    while ((m = ROW_RE.exec(block))) covered.add(m[1]);
+    i = transcript.indexOf(RULES_MARK, i + RULES_MARK.length);
+  }
+  return [...reads].filter(r => !covered.has(r));
 }
 
 let input = '';
@@ -114,6 +148,8 @@ process.stdin.on('end', () => {
     // quotes the deciding rule. none found / not needed pass as they are. Template lines ("<req>",
     // "aligned | extends") never match: the req must be digits or none, the verdict one word.
     phases.push({ name: 'Requirement read', test: requirementRead });
+    const noRow = rulesMissing(transcript);
+    phases.push({ name: 'Requirement rules', test: () => noRow.length === 0 });
     const missing = phases.filter(p => !(p.test ? p.test(transcript) : p.re.test(transcript))).map(p => p.name);
     if (missing.length === 0) {
       logFire('allowed', filePath);
@@ -139,11 +175,13 @@ process.stdin.on('end', () => {
       `   Edit blocked: ${filePath}`,
       '   An active quest is running and you are about to edit etanah code without the full loop.',
       '   Emit the missing phase(s) FIRST — Scout → Recon → Rubric — each with its banner:',
-      ...missing.filter(m => m !== 'Requirement read').map(m => `     ═══ ${m.toUpperCase()} ═══`),
+      ...missing.filter(m => !/^Requirement /.test(m)).map(m => `     ═══ ${m.toUpperCase()} ═══`),
       ...(missing.includes('Requirement read') ? [
         '   Requirement read: run node quest/requirement-index.js --read <req> --for <ticket> (description, journals,',
         '   spec attachments), then write REQUIREMENT-MATCH: <ticket> → #<req> "<subject>" — <verdict> — read: "<the rule, quoted>"',
         '   (or — none found / — not needed). A subject match is never a verdict (287811).'] : []),
+      ...(noRow.length ? [
+        `   Requirement rules: no REQUIREMENT-RULES row for read ${noRow.map(r => '#' + r).join(', ')} — write \`REQUIREMENT-RULES:\` with \`R<n> · #<req> · "<quote>"\` or \`R0 none\``] : []),
       '',
       '   This gate checks the phases EXIST (anti-skip). It does NOT verify they are correct —',
       "   tracing data-flow honestly (OBSERVED, not ASSUMED) is still your job + みや's glance",

@@ -662,7 +662,7 @@ async function main(argv, log) {
     const head = `${urusan}/${tugasan.join(',') || '-'}`;
     Object.assign(log, { mode: 'load', query: `${head} ${called || ''} ${words}`.trim(), outcome: res.placed.length ? 'hits' : 'none', top: res.placed[0] ? res.placed[0].row.id : null, rows: res.placed.length });
     if (json) {
-      console.log(JSON.stringify({ urusan, tugasan, called, calledFile: cf.file, calledKods: cf.kods, words, module: res.module, notes: res.notes,
+      console.log(JSON.stringify({ urusan, tugasan, called, calledFile: cf.file, calledKods: cf.kods, words, module: res.module, remarks: res.notes, // named remarks on purpose: redmine-write-gate reads a key named after the Redmine note field as a post (2026-11-05)
         rows: res.placed.map(p => ({ tiers: p.tiers, id: p.row.id, status: p.row.status, module: p.row.module, subject: p.row.subject, label: p.label })),
         tree: has('tree') && res.master ? res.children.map(r => ({ id: r.id, status: r.status, subject: r.subject })) : undefined, next }, null, 1));
       return 0;
