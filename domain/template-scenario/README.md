@@ -1,12 +1,12 @@
 # template-scenario
 
 symptom: 2026-11-04 miya: 287346 template shipped twice with requirement gaps my own audit listed; 288095 test data held a placeholder; he asked for a complete template test scenario step
-goal: every template ticket hand-back carries a requirement checklist with every row done, every changed CC tag holding a real value across all config actions, a word diff with 0 defects, and a green-highlighted generated paper
+goal: every template ticket hand-back carries a requirement checklist with every row done, every changed CC tag holding a real value across all config actions, every printed tag with a known source whose PROD-empty case printed a real value on paper, the BA's own test ID run, a word diff with 0 defects, and a green-highlighted generated paper
 goal_signal: TEMPLATE-SCENARIO: lines in tool results before template hand-backs; 0 template hand-backs without one
 goal_signal_regex: TEMPLATE-SCENARIO: PASS
 retention: keep
-footprint: per-turn: 1 node process under 50 ms on Stop, reads the transcript tail; on-demand script runs doc-sim JVM 1-2 GB for 2-3 min, 1 python per helper call
-boundary: covers the Stop reply text and this session's tool results for a TEMPLATE-SCENARIO line, and (script) one ticket's checklist, doc-sim chain, CC values, word diff and green PDF · never edits the template, the qa_doc or any database, never posts to Redmine, never touches non-template hand-backs · stops at one block naming the missing run (bypass [skip-template-scenario: <real reason>]) or at the TEMPLATE-SCENARIO line with each gap named
+footprint: per-turn: 1 node process under 50 ms on Stop, reads the transcript tail; on-demand script runs doc-sim JVM 1-2 GB for 2-3 min, 1 python per helper call, one read-only PROD count per source column and one env read per empty case through the shared db-gateway (no new process)
+boundary: covers the Stop reply text and this session's tool results for a TEMPLATE-SCENARIO line, and (script) one ticket's checklist, doc-sim chain, CC values, tag sources (read-only SELECT counts on the state's PROD and env databases), word diff and green PDF · never edits the template, the qa_doc, tag-sources.json or any database, never posts to Redmine, never touches non-template hand-backs · stops at one block naming the missing run (bypass [skip-template-scenario: <real reason>]) or at the TEMPLATE-SCENARIO line with each gap named
 self_audit: the script ends by reading its own outputs back (the filled docx, the saved PDF's annotation count, every Find phrase located) and exits 1 with the gaps named; each run writes a log.jsonl row
 diagram: domain/template-scenario/diagram.png
 state-scoped: no for the gate; the script takes every path as an argument (requirement, template, config, Task folder), so any state's template runs through it
@@ -28,8 +28,13 @@ node domain/template-scenario/template-scenario.js --qa <num> --req "<requiremen
 | 3 | every CC tag in a paragraph the fix changed holds a real value in the final paper | empty, `-`, `<placeholder>`, signature image under 1 KB; a `FIXED-DATA <tag>` row with `na: <reason>` accepts a staging data gap |
 | 4 | word diff, requirement docx vs final paper (run-split words joined, auto-numbering dropped) | any DEFECT: a requirement word missing, moved or changed that is not CC data; `diff` rows accept requirement typos and placeholders |
 | 5 | green highlight of every Find phrase, drawn into the page | a phrase not found, or any annotation left in the PDF |
+| 6 | **tag sources** (2026-11-06): every text tag the paper prints has a source column (`tag-sources.json` for the state, or a `\| Sx \| SOURCE <tag> \| table.column \| done \|` row; `na: <reason>` when no single column); each column gets one read-only count on PROD for the urusan; a column with empty rows needs `--case "empty\|<permohonan>\|<filled .docx>" --env <mlit\|stg1\|stg2>` whose column is proved empty on that env and whose paper prints a real value; the BA's own test ID runs as `--case "ba\|<id>\|<filled .docx>"` | an unknown source · a PROD-empty column with no empty case (287346: luasDipohon 1718 of 3551 MCL) · the empty-case paper prints `-` · no BA case and no `--no-ba-id "<reason>"` · a PROD count that did not run (never a silent pass) · `EMPTY-OK <tag>` row accepts a blank that is the requirement |
 
-Prints `TEMPLATE-SCENARIO: PASS|FAIL QA-<num> · checklist k/n · chain a/b · CC gaps · word diff defect/data/accepted · highlight <pdf> annots 0`.
+Prints `TEMPLATE-SCENARIO: PASS|FAIL QA-<num> · checklist k/n · chain a/b · CC gaps · sources k/n known, PROD empty …, cases … · word diff defect/data/accepted · highlight <pdf> annots 0`.
+
+Check 6 alone (no chain, no diff, no PDF): `node domain/template-scenario/template-scenario.js sources --qa <num> --filled <generated .docx> --permohonan <id> [--case …] [--env …]` prints `TAG-SOURCES: PASS|FAIL`. Run it from PowerShell, or set `MSYS_NO_PATHCONV=1` in Git Bash: Git Bash rewrites a `--case "empty|PTMLK/..."` argument into a Windows path (found 2026-11-06).
+
+`tag-sources.json`: state-keyed map, tag → `{table, column, seen}` or `{none, seen}`; a tag is added only after reading its populator, with the line named in `seen`. A tag traced on a ticket is copied there in the same save, so the next ticket finds it.
 
 ## The gate
 
@@ -44,6 +49,15 @@ Screenshots use `domain/fix-photo/mark.py`, which now refuses boxes that overlap
 **Trigger moment (Rule 8)**: the Stop of a hand-back only, and only in a session that did template work.
 
 **Observability**: `log.jsonl` one row per script run: ts · qa · status · checklist · chain · touched tags · gaps · defects · pdf · fails. Gate fires go to `system/telemetry/hook-fires.jsonl`.
+
+## Verified: tag sources (2026-11-06)
+
+| Run | Result |
+|---|---|
+| eval | 58/58 (F34-F58: urusan parse, printed tags, SOURCE rows beat the map, SQL-looking entry refused, count SQL shape, 287346 replay, empty case prints "-", empty case with the column filled does not count, PROD count error fails, BA case, map file shape) |
+| live replay: cycle-1 paper PTMLK/01/L/MCL/2026/1 (luas 164), no cases | FAIL: luasDipohon 1718 of 3551 PROD MCL empty, empty case never ran, BA ID never ran |
+| + `--case empty` PTMLK/01/L/MCL/2026/25 on stg1 (luas_dipohon empty, prints 1109 meter persegi) | PASS |
+| + `--case empty` with /1 itself (luas filled) | FAIL: the case does not count |
 
 ## Verified on QA-287346 (2026-11-05)
 

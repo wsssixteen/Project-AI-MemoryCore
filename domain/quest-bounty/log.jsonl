@@ -274,3 +274,6 @@
 {"ts":"2026-11-04T10:26:35.480Z","qa":"ADHOC-PLP-2026-6","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"answer-only adhoc, finding banked in register row A98"}
 {"ts":"2026-11-04T14:11:15.081Z","qa":"ADHOC-PLTP-2026-5","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-11-04T14:11:22.545Z","qa":"ADHOC-PLTP-2026-5","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc promoted to ticket 288169; findings already in qa_doc and ADHOC-REGISTER A96, no separate harvest"}
+{"ts":"2026-11-05T09:21:35.493Z","qa":"QA-287346","kind":"wrong-fix","n":2,"amended":true,"why":"Phase 0 audit 2026-11-05: urusan was right (MCL loaded, qa_doc line 41). The test permohonan was not: stg1 PTMLK/01/L/MCL/2026/1 had luas_dipohon 164, PROD has 1718 of 3551 MCL rows empty, and no source-column count ran. Only tags in changed paragraphs were checked."}
+{"ts":"2026-11-05T16:25:53.766Z","qa":"QA-287346","kind":"wrong-fix","n":2,"verdict":"feature:template-scenario check 6 tag sources (2026-11-06)"}
+{"ts":"2026-11-05T16:25:54.028Z","qa":"QA-287346","kind":"wrong-fix","n":1,"verdict":"phrase:.claude/skills/quest/SKILL.md TEMPLATE-SCENARIO row, layout by eye against the requirement docx"}
