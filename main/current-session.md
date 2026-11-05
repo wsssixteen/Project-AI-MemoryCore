@@ -26,6 +26,15 @@ shown: scratchpad patch-path-6c.png
 - Open: Anis's answer; Amirul NPE note not sent; rework audit + 12-row audit owed; MLIT test of the 5 pages on a PLP permohonan.
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
+## Session Recap (2026-11-05, 287346 hotfix prep, parked)
+- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
+- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
+- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
+- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
+- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
+- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
 
 ## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)
@@ -47,3 +56,42 @@ shown: scratchpad patch-path-6c.png
 - Assessment: A1 a /goal whose last condition is an external human step loops the evaluator with no exit but /goal clear. A2 TEMPLATE-SCENARIO now gates every template hand-back on requirement diff + CC values. A3 doc-sim + green paper proved the template offline with no server. A4 a template versi older than its Requirement passes every code test; only a word diff against the requirement docx catches it. A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
+
+## Session Recap (2026-11-04, 288095 PRBB Rencana huruf kecil, .00, 6.3)
+- Asked: run /quest on 288095; apply all 3 fixes; test on server; stage the Redmine handover; patch the missing mlit data and screenshot the fix; todo for a test-data step; ProTime check of today's 4 tickets.
+- Done: f9c4c1a321 on mlk/esokongan/288095 (PelupusanUtil upperCaseReferenceWords + formatRinggitInText, 2 Word CC populators, helper 2-decimal formatter, 6.3 "kelulusan" in 2 e-Doket templates); int-env 8f20499ba4 (conflict kept PRBB or PLBP + uppercase, his "resolve 288095"); stag-env 24c1bf853a (merged on a misread of "staging", not deployed); mlit plp_a_pelupusan 2089 Permohonan Dahulu patched with real numbers; 2 fix screenshots in 2. Fix; Redmine 288095 Resolved to Nurhafizah 22:56 (entry 14); ProTime 39360 (287346) resolved.
+- Found: mlit Permohonan Dahulu held only the template placeholder, so 2.1.2 could not show the fix; eTanah 1.0 IDs (0401DIS..., C99/25) all hold digits, so the same fix covers them (PROD: 135 tokens uppercased, 389 no-digit words untouched).
+- Open: BA test on internal; Q1 Timbangan pertama line, Q2 6.3/6.4 same heading, Q3 meeting name lowercase, Q4 2.2.1 address; stag-env merge waits his word (keep or revert); todo test-data step waits a blind Fable 5.1 audit (his yes on 1 agent); his stash fc6d255101 left to him.
+- Mistakes: read "stage the redmine" as the stag-env branch; test-prep tool switched his local env to mlit (put back to stg1); handover tool cannot see his waiver 3 messages back (blocker slip); audit of the test-data gap ran on Opus, not blind Fable.
+- Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
+
+STEP-3: rework audit (quest Workflow step 1c + close-phase Phase 1 step 0)
+session: 2026-11-05 cool-margulis-5bb326 (287346 rework 1)
+his words: "please audit this round to add an ever continuing improvement or self-improvement particularly on receiving rework tickets. To straight away summon Fable 5.1 to audit I believe AFTER you've finished phase 0 ... to then log it straight away to propose the improvement into our quest workflow at the end during DE perhaps or before DE AFTER redmine handover, ticket close. The improvement after the audit of course uses Fable/highest model as well as usual." (order)
+fix or report: fix
+who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k tokens on 287346); the manifest line is in-process, no new process
+goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
+model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
+shown: rework-audit-flow.png (scratchpad, sent to miya)
+
+STEP-3: change-card skill (What / Why / How / When / Where, before and after every system change)
+session: edb789a0-eefa-41ce-855b-53a0705b84a6
+his words: "build a skill that will always be invoked installed into system-upgrade and or BEFORE we do system-upgrade" (order)
+fix or report: fix
+who pays: on-demand: no process; one checker call per card, two cards per system change (step 3, step 8)
+goal without the part: he reviews a change from the STEP-3 block and the step 8 map alone, with no five-line card to compare before and after
+model: claude-fable-5-1
+shown: domain/change-card/diagram.png
+note: "system-upgrade" read as the change route (/system-change); Fable 5.1 A/S/C verdict "build with changes" (9 items), built by claude-opus-5-5
+
+CHANGE-CARD (before): change-card
+- What: A new skill, change-card, shows every system change as five one-sentence lines with a flow picture and the change map.
+- Why: On 2026-11-05 he asked for a What, Why, How, When and Where card that is easy to review before and after a change.
+- How: The card is written here, checked by `domain/change-card/change-card.js`, then shown before his nod and again after landing.
+  ![flow](domain/change-card/diagram.png)
+- When: It runs at change route step 3 before his nod and at step 8 after the change lands on main.
+- Where: It lives in `domain/change-card/` and `.claude/skills/change-card/`, wired into rows 3 and 8 of `system/INDEX.md`.
+  ![where](change-map-20261105-094246.png)
+Where picture = the change map (lib/change-map.js).
+
