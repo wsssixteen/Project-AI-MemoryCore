@@ -164,8 +164,15 @@ who pays: on-demand: read when a ticket or adhoc patch ask loads the quest skill
 goal without the part: a patch ask with stored documents gets a data-patch-only plan, as on ADHOC-MCL-2026-7
 model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
 shown: scratchpad patch-path-6c.png
+state: landed on main e45673e0 2026-11-05 (route complete)
 
-**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
+**Last Activity**: 2026-11-06 00:20 — worktree `sweep-orchestration-audit-39e710`, 288442 MCL /9 PROD patch archived (Phase 2 + bounty), Domain Expansion.
+
+## Session Recap (2026-11-05, 288442 MCL /9 reports without Perkara)
+- Asked: audit the missed patch path on ADHOC-MCL-2026-7 and apply fixes A B C; find the matching ticket; edit the 3 report PDFs; stage and submit Redmine; archive and run Phase 2, then DE.
+- Done: quest 6c fixes landed e45673e0; 288442 = the ticket; 3 PDFs edited + verified; PROD perkara read correct 2026-11-06; Redmine Resolved to Nurhafizah; quest archived (Archive\378, archive/QA-288442).
+- Found: a Jasper report needs no PDF reset; deliverable-check does not know that shape (proposal tracked); archive prune removes .main and .zip deliverables (the zip stays on Redmine).
+- Open: none for 288442. Adhoc 377 folder (brief.txt only) is superseded by 288442 and left in place.
 
 ## Session Recap (2026-11-05, 239386 MPT which pages to show)
 - Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
@@ -175,12 +182,3 @@ shown: scratchpad patch-path-6c.png
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
-
-## Session Recap (2026-11-05, 287346 hotfix prep, parked)
-- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
-- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
-- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
-- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
-- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
-- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.

@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-05, 287346 hotfix prep, parked)
+- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
+- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
+- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
+- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
+- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
+- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
+
 ## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)
 - Asked: orchestrate the other sessions for wrap-up; patch tickets settled; 287346 + 288095 only need deploy, so give the test scenarios only; then "Add the 2 tickets to protime if it got removed"; DE.
 - Done: reached the 4 work-laptop sessions by SendMessage (287346 MCL Kertas, eSOKONGAN 288095, PLTP JKR duplicate MPAG, UPP tandatangan); confirmed int-env tip 8f20499ba4 holds both fixes, so one internal deploy covers both; sent two test scenario tables (287346 on MLIT PTMLK/02/L/MCL/2026/4 login norzaida; 288095 on stg1 data); ProTime check-and-add sent to the 288095 session.
@@ -7549,6 +7558,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
