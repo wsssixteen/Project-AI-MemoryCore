@@ -142,6 +142,25 @@ try {
 ```
 Fixture +2 in `design-consult-gate.eval.js`.
 
+STEP-3: 287811 audit round 2 (P5 ticket-close-block · P6 login-gate v6 · P7 next-steps-shape v6 · P8 design-consult-gate quest-turn rider · P9 memory)
+session: 5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc
+his words: "do not stop until the end. Until all the goals are met and we can safely DE." (order)
+fix or report: fix
+who pays: on-demand: P5 one git call pair at each BA note; P6/P7 inside the Stop bundle (one file read); P8 one his-words read per Edit|Write on a system path
+goal without the part: failed commits reach a shared branch, a BA-named tugasan goes untested, a fix choice goes to him between gates, a hook is edited in a ticket turn
+model: claude-fable-5-1
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\quest-turn-rider.png
+
+CHANGE-CARD (before): 287811 audit round 2
+- What: Four existing gates gain one check each and one memory line, so a rework ticket cannot repeat the 287811 mistakes.
+- Why: On 2026-11-05 five failed commits reached the shared int-env branch, a BA-named tugasan was untested, I asked him to pick a fix the requirement had decided, and I edited system files in a ticket turn he never asked about.
+- How: The BA note script counts commits per cycle, the login gate counts test rows per ISSUE row, the Next steps gate wants a stop gate on any pick row, and the design gate denies a system edit in a quest turn.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\quest-turn-rider.png)
+- When: Each fires at its own moment of a ticket: the BA pass note, the test hand-back, the Next steps table, and an Edit or Write on a system path.
+- Where: The checks live in `domain/ticket-close-block/`, `domain/test-scenario-login-gate/`, `domain/next-steps-shape/` and `domain/design-consult-gate/`, the line in `.claude/auto-memory/feedback_etanah_git_separate_clone.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\change-map-20261105-161553.png)
+Where picture = the change map (lib/change-map.js).
+
 ### P9 — memory `.claude/auto-memory/feedback_etanah_git_separate_clone.md`
 One line: "His clone E:\Projects\Melaka\<repo> is read only, except the fetch + reset that `lib/origin-rewrite.js` runs after an origin rewrite (P4). One non-merge commit per cycle on a ticket branch; a revert only on his order (`domain/deploy-guard` v2)." RULE-PLACEMENT: workflow deploy · step 4 · enforced-by deploy-guard v2 + origin-rewrite.js.
 STEP-3: B3 Patch scope in quest/ticket-load-verify.js + quest Pre-emit gate row (288261 rework audit)

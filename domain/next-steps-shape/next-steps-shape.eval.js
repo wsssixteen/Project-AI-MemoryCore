@@ -155,6 +155,26 @@ check('A24 code in curly quotes → block', blocks(r), 'exit=' + r.status);
 r = run(ns('"resubmit it later"'));
 check('A25 "resubmit it" (submit inside a longer word) → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
 
+// ── v6: a row that asks him to pick a fix or an option names its stop gate (2026-11-05, #287811) ──
+const DH = '## 1. Which fix for the Notis 5A name\nTwo fixes are possible.\n\n';
+const dq = (action, mean, head) => (head || DH) + '**Next steps**\n\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | ' + action + ' | ' + mean + ' | A / B |\n';
+r = run(dq('Which fix for the Notis 5A name', 'Fix A keeps the name at Semakan, fix B rebuilds it every time.'));
+check('D1 REPLAY 287811: "Which fix" row, no stop gate in the meaning → block naming row 1 + DELTA ONLY', r.status === 2 && /no stop gate/.test(r.stderr) && /1 "Which fix/.test(r.stderr) && /DELTA ONLY/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr);
+r = run(dq('Which fix for the Notis 5A name', 'STOP gate: Rubric pick. Fix A keeps the name at Semakan, fix B rebuilds it.'));
+check('D2 same row with "STOP gate: Rubric pick" in the meaning → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(dq('Pick the Notis 5A fix', 'The requirement decides nothing here, so you choose between them.', '## 1. Pick the Notis 5A fix\nTwo fixes are possible.\n\n'));
+check('D3 "Pick the ... fix" with no gate → block', r.status === 2 && /no stop gate/.test(r.stderr), 'exit=' + r.status);
+r = run(dq('Option A or B for the Notis 5A name', 'Both are built; you say which one goes to internal.'));
+check('D4 "Option A or B" with no gate → block', r.status === 2 && /no stop gate/.test(r.stderr), 'exit=' + r.status);
+r = run(dq('Redeploy int-env for the Notis 5A fix', 'The server still runs the old build until you redeploy it.', '## 1. Redeploy int-env for the Notis 5A fix\nThe build on the server is old.\n\n'));
+check('D5 an action row with no choice words → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+r = run(dq('Which fix for the Notis 5A name', 'STOP gate:'));
+check('D6 "STOP gate:" with nothing after it → block (meaning too short first)', r.status === 2, 'exit=' + r.status);
+r = run(dq('Which fix for the Notis 5A name', 'Fix A keeps the name.') + '\n[skip-next-steps-shape: he asked for the choice]');
+check('D7 bypass → pass', r.status === 0, 'exit=' + r.status);
+r = run('## 1. The chosen fix\nI picked fix B: the requirement says Semakan keeps the Penyediaan name.\n\n**Next steps**\n\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | The chosen fix | I picked fix B from the requirement; nothing for you to choose. | ok |\n');
+check('D8 "picked" (past, a decision made) in the meaning, action without choice words → pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
+
 // P6 — broken stdin → fail-open
 r = spawnSync(process.execPath, [HOOK], { input: 'not json {{', encoding: 'utf8', timeout: 30000 });
 check('P6 broken stdin → fail-open exit 0', r.status === 0, 'exit=' + r.status);

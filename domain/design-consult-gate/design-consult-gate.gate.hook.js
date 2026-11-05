@@ -157,6 +157,27 @@ function ownReaderProblem(filePath, ti) {
   return line.trim().slice(0, 100);
 }
 
+// Quest-turn rider (2026-11-05, #287811): the ticket his last message names when that ticket is status=active in
+// quest/active.txt and his message asks for no system change; null otherwise. His words come through lib/his-words.js only.
+const SYSTEM_ASK = /\b(?:update|refine|ban|rule|rules|skill|hook|gate|system|memory|todo|audit|workflow|feature|tool)\b/i;
+function questTurnTicket(transcriptPath) {
+  try {
+    if (!HW || !transcriptPath) return null;
+    const last = HW.lastHis(transcriptPath) || '';
+    if (!last || SYSTEM_ASK.test(last)) return null;
+    const nums = last.match(/(?<![\d\/])\d{5,7}(?![\d\/])/g) || [];
+    if (!nums.length) return null;
+    const activeFile = process.env.DESIGN_CONSULT_ACTIVE_TXT || path.join(process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..'), 'quest', 'active.txt');
+    const raw = fs.readFileSync(activeFile, 'utf8');
+    const active = new Set();
+    for (const block of raw.split(/\r?\n\s*\r?\n/)) {
+      const qa = block.match(/^qa=(?:QA-)?(\d{5,7})\s*$/m);
+      if (qa && /^status=active\s*$/m.test(block)) active.add(qa[1]);
+    }
+    return nums.find(n => active.has(n)) || null;
+  } catch (_) { return null; }
+}
+
 // Bypass tokens are only valid when *I deliberately write them* — an ASSISTANT text
 // block in the CURRENT turn. Shared primitive (2026-08-21 self-disarm fix, 8 gates).
 let bypassInCurrentTurn; try { bypassInCurrentTurn = require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { bypassInCurrentTurn = function () { return false; }; } // env-first + fail-CLOSED (bypass ignored if lib unreachable) — 2026-08-21 self-disarm fix
@@ -220,6 +241,22 @@ process.stdin.on('end', () => {
 
     // ====== HARD-BLOCK path branch ======
     if (isGuarded) {
+      // Quest-turn rider (2026-11-05, #287811 "who asks you to do all that"): his last message is about an ACTIVE ticket
+      // and asks for no system change → no edit to a system-shape file this turn; the refinement goes to main/todo.md.
+      if (!bypassConsult) {
+        const quest = questTurnTicket(data.transcript_path);
+        if (quest) {
+          logFire(filePath, 'blocked-quest-turn', quest);
+          const reason = [
+            '⛔ design-consult-gate (quest-turn rider): his last message is about ticket ' + quest + ' and does not ask for a system change.',
+            '   No system-shape edit in a quest turn he did not ask for (287811: "who asks you to do all that").',
+            '   → Write the refinement as one row in main/todo.md and carry on with the ticket.',
+            '   → He did ask for it in other words? Add [skip-design-consult: <his words>] to your message.',
+          ].join('\n');
+          process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason } }));
+          process.exit(0);
+        }
+      }
       if (bypassConsult) { logFire(filePath, 'bypassed', 'skip-design-consult'); }
       else if (!consultOk) {
         const missing = [!hasSD && 'system-design', !hasSR && 'system-rules'].filter(Boolean).join(' + ');

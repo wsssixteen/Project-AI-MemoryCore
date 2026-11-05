@@ -96,8 +96,19 @@ function evaluate(text) {
     if (words.length && hits < Math.min(2, words.length)) orphans.push((c[0] || '?') + ' "' + (c[act >= 0 ? act : 1] || '') + '"');
   }
   if (orphans.length) return { verdict: 'block', reason: 'row-not-explained-above', rows: orphans, headings: heads.length };
+  // v6 (2026-11-05, #287811: I asked him to pick between fixes A and B that the requirement and the sibling had already
+  // decided): a row that asks him to choose a fix or an option names the stop gate it belongs to in its meaning cell
+  // ("STOP gate: Rubric pick" / "Phase 0 hand-back" / "deploy env"), so a design question never goes out between gates.
+  const design = [];
+  for (const row of table.slice(2)) {
+    const c = cells(row), action = c[act >= 0 ? act : 1] || '', meaning = c[col] || '';
+    if (DESIGN_Q.test(action) && !STOP_GATE.test(meaning)) design.push((c[0] || '?') + ' "' + action + '"');
+  }
+  if (design.length) return { verdict: 'block', reason: 'design-question-no-gate', rows: design };
   return { verdict: 'pass', reason: 'shape-ok' };
 }
+const DESIGN_Q = /\b(?:pick|choose)\b|\bwhich (?:fix|option|design|approach)\b|\boption [A-D]\b|\b[A-D] or [A-D]\b/i;
+const STOP_GATE = /\bSTOP gate:\s*\S/i;
 
 // v3: a quest reply that asks him to decide carries a picture (explain-diagram skill, rendered by lib/diagram-render.js)
 // sent this turn. Quest = the reply names the number of a status=active block in quest/active.txt.
@@ -160,6 +171,16 @@ if (require.main === module) {
         process.exit(2);
       }
       log({ action: 'blocked', reason: r.reason, detail: r.rows || r.header });
+      if (r.reason === 'design-question-no-gate') {
+        process.stderr.write([
+          '⛔ next-steps-shape v6: a Next steps row asks him to pick a fix or an option with no stop gate named: ' + r.rows.join(' · '),
+          '   A choice of fix is mine when the requirement, the sibling and the git history decide it (287811: they did, and I still asked).',
+          '   Decide it yourself, or name the gate in the meaning cell: "STOP gate: <Rubric pick | Phase 0 hand-back | deploy env | ...>".',
+          '   ⚡ DELTA ONLY: re-send just the corrected Next steps table.',
+          '   Bypass: [skip-next-steps-shape: <reason>]',
+        ].join('\n') + '\n');
+        process.exit(2);
+      }
       if (r.reason === 'approval-in-cell') {
         process.stderr.write([
           '⛔ next-steps-shape: approval text he must type back sits inside the "Your reply" cell: ' + r.rows.join(' · '),
