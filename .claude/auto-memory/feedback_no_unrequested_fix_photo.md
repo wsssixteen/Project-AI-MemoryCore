@@ -9,4 +9,6 @@ Do not create a fix photo, marked screenshot or any other image for a ticket unl
 
 **Why:** 2026-10-04, #282924. I drew a red box on BA's before-screenshot (3 hakmilik ticked, Teruskan active), named it "1. PRBB - Tanda lebih satu hakmilik papar ralat.png" and listed it as an attachment. miya: a fake and misleading screenshot, he planned to use only the video. A stop check (fix-photo) had demanded it; the check now fires only on his ask (v2).
 
+**Marked paper or image he DID ask for: only the marks he named.** 2026-11-05, #287346: he asked "highlight all the cc tags, red box the ones BA requested"; I added a legend box and text labels ("BA 2: luas", "BA 1: ...") on the paper. He: remove these, never add what is not requested. Yellow highlight + red box, nothing else: no legend, no label, no caption, no note text on the page.
+
 **How to apply:** no image in `2. Fix\` unless he asked or supplied it. A file name there follows his short style, see [[feedback_ticket_writing_style]] (file names). Related [[feedback_my_files_minimal]] · [[simple-fix-no-probe-no-local-test]].
