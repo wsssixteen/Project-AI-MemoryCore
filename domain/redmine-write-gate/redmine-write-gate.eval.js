@@ -448,6 +448,21 @@ check('F164 status-rule.js CLI prints the state and the verdict as JSON', /"allo
 const SRM = require(path.join(__dirname, 'status-rule.js'));
 check('F165 guard: status-rule.json keeps the owner id 1311, Resolved as the hand-back and the five frozen statuses', SRM.rule().owner.id === 1311 && SRM.rule().handback_status === 'Resolved' && ['Resolved', 'Verified', 'Closed', 'Ready in PROD', 'Cancelled'].every(x => SRM.rule().frozen.includes(x)), JSON.stringify(SRM.rule().frozen));
 
+// v1.12 (2026-11-05): running this gate's own eval from a shell tool is not a Redmine write (it blocked itself before).
+const OWN_EVAL_REL = 'node domain/redmine-write-gate/redmine-write-gate.eval.js';
+const noWords = () => transcript([user('run the eval')]);
+r = run({ tool_name: 'PowerShell', tool_input: { command: OWN_EVAL_REL }, transcript_path: noWords() });
+check('F167 run own eval (relative path), no post words → silent', r.status === 0 && !/redmine-write-gate/.test(r.out), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${path.join(__dirname, 'redmine-write-gate.eval.js')}"` }, transcript_path: noWords() });
+check('F168 run own eval (absolute quoted path) → silent', r.status === 0 && !/redmine-write-gate/.test(r.out), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${OWN_EVAL_REL}; node "${postScript}"` }, transcript_path: noWords() });
+check('F169 own eval chained with a writer script → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `${OWN_EVAL_REL} && ${INLINE_WRITE}` }, transcript_path: noWords() });
+check('F170 own eval chained with an inline curl PUT → BLOCK', blocked(r), r.out.slice(0, 160));
+const evalCopy = path.join(sb, 'redmine-write-gate.eval.js'); fs.copyFileSync(path.join(__dirname, 'redmine-write-gate.eval.js'), evalCopy);
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${evalCopy}"` }, transcript_path: noWords() });
+check('F171 a same-named eval at another path → still scanned → BLOCK', blocked(r), r.out.slice(0, 160));
+
 let failed = 0; for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nredmine-write-gate.eval: ' + (results.length - failed) + '/' + results.length + (failed ? ' RED' : ' green'));
 fs.rmSync(sb, { recursive: true, force: true });

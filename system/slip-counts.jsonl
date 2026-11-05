@@ -1914,6 +1914,8 @@
 {"ts":"2026-11-05T02:18:57.326Z","category":"A2"}
 {"ts":"2026-11-05T02:19:32.033Z","category":"blocker"}
 {"ts":"2026-11-05T02:19:33.695Z","category":"A1"}
+{"ts":"2026-11-05T09:29:47.951Z","category":"handover-format"}
+{"ts":"2026-11-05T11:12:00.784Z","category":"blocker"}
 {"ts":"2026-11-05T03:16:29.676Z","category":"reask/rephrase-check"}
 {"ts":"2026-11-05T03:25:47.698Z","category":"patch-path"}
 {"ts":"2026-11-05T09:05:05.104Z","category":"blocker"}
