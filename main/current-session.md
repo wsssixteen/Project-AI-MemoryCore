@@ -1,3 +1,13 @@
+STEP-3: B3 Patch scope in quest/ticket-load-verify.js + quest Pre-emit gate row (288261 rework audit)
+session: redmine-288261-quest-d586ef
+his words: "Build it" (order) · after "Please audit how next time we can avoid this, even though it is not our part. This is part of our effort on releasing something rework free."
+fix or report: fix
+who pays: on-demand: a few ms inside ticket-load-verify.js at each quest start or resume; no process, no network
+goal without the part: a BA list that drops a permohonan the TSO report named ships a partial patch, as on 288261 (/1 tujuan), and the ticket comes back
+model: claude-opus-5-5 (highest is claude-fable-5-1, which wrote the audit verdict feature:patch-scope-B3; neither part is highest-order nor runs every prompt)
+shown: scratchpad b3-how.png + b3-where.png (sent to miya)
+state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. OPEN: eval cases (18)-(22) in ticket-load-verify.eval.js not run: redmine-write-gate blocks node on that eval (status_id: fixture key); needs miya [skip-redmine-write-gate: local eval] or the gate exemption.
+
 STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
 session: sweep-orchestration-audit-39e710
 his words: "Yes, apply all three" (order) · after "please audit why you failed, what is still missing in our patching quest path & steps"
@@ -7,6 +17,24 @@ goal without the part: a patch ask with stored documents gets a data-patch-only 
 model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
 shown: scratchpad patch-path-6c.png
 
+**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
+
+## Session Recap (2026-11-05, 239386 MPT which pages to show)
+- Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
+- Done: Redmine 239386 note to Anis 17:27 (2 errors, clash table, yes/no question) + picture 6 at 17:45, both posted by him; deep research (code, DB census, tickets) folded into QA-239386.md; quest status delegated to Anis, cold-resume 7/7, branches table PASS.
+- Found: MPT pages = every ind_langkah row of the urusan's MPT tugasan, no user, peranan, modul or flag_aktif filter (etanah-common LuceneForm.java:1820-1828); STG2 PLP MPT carries only the shared UT/BGN set; Teknikal beans have Pelupusan branches, Pembangunan forms likely NPE on plain PLP (not tested).
+- Open: Anis's answer; Amirul NPE note not sent; rework audit + 12-row audit owed; MLIT test of the 5 pages on a PLP permohonan.
+- Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
+- Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
+## Session Recap (2026-11-05, 287346 hotfix prep, parked)
+- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
+- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
+- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
+- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
+- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
+- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
 
 ## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)
@@ -46,3 +74,24 @@ who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k
 goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
 model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
 shown: rework-audit-flow.png (scratchpad, sent to miya)
+
+STEP-3: change-card skill (What / Why / How / When / Where, before and after every system change)
+session: edb789a0-eefa-41ce-855b-53a0705b84a6
+his words: "build a skill that will always be invoked installed into system-upgrade and or BEFORE we do system-upgrade" (order)
+fix or report: fix
+who pays: on-demand: no process; one checker call per card, two cards per system change (step 3, step 8)
+goal without the part: he reviews a change from the STEP-3 block and the step 8 map alone, with no five-line card to compare before and after
+model: claude-fable-5-1
+shown: domain/change-card/diagram.png
+note: "system-upgrade" read as the change route (/system-change); Fable 5.1 A/S/C verdict "build with changes" (9 items), built by claude-opus-5-5
+
+CHANGE-CARD (before): change-card
+- What: A new skill, change-card, shows every system change as five one-sentence lines with a flow picture and the change map.
+- Why: On 2026-11-05 he asked for a What, Why, How, When and Where card that is easy to review before and after a change.
+- How: The card is written here, checked by `domain/change-card/change-card.js`, then shown before his nod and again after landing.
+  ![flow](domain/change-card/diagram.png)
+- When: It runs at change route step 3 before his nod and at step 8 after the change lands on main.
+- Where: It lives in `domain/change-card/` and `.claude/skills/change-card/`, wired into rows 3 and 8 of `system/INDEX.md`.
+  ![where](change-map-20261105-094246.png)
+Where picture = the change map (lib/change-map.js).
+
