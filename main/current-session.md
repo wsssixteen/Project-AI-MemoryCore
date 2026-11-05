@@ -6,7 +6,7 @@ who pays: on-demand: a few ms inside ticket-load-verify.js at each quest start o
 goal without the part: a BA list that drops a permohonan the TSO report named ships a partial patch, as on 288261 (/1 tujuan), and the ticket comes back
 model: claude-opus-5-5 (highest is claude-fable-5-1, which wrote the audit verdict feature:patch-scope-B3; neither part is highest-order nor runs every prompt)
 shown: scratchpad b3-how.png + b3-where.png (sent to miya)
-state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. OPEN: eval cases (18)-(22) in ticket-load-verify.eval.js not run: redmine-write-gate blocks node on that eval (status_id: fixture key); needs miya [skip-redmine-write-gate: local eval] or the gate exemption.
+state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. Eval 28/28 green 2026-11-05 (run via node -e require, on miya's "Yes, run them"; the gate still blocks a direct `node <eval>` because of the status_id: fixture key).
 
 STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
 session: sweep-orchestration-audit-39e710
