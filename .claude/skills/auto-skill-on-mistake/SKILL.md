@@ -39,6 +39,20 @@ Before proposing skill/hook shape, the new behaviour MUST declare:
 
 If goal-alignment is unclear → STOP. Surface to みや with the gap before continuing.
 
+### Step 2.0 — Name the producing step (MANDATORY, before Step 2)
+
+Find the workflow step that PRODUCED the output he corrected, and emit one line:
+
+```
+PRODUCER: workflow=<name> · step=<n> · output=<what he corrected> · generator-or-check=<existing script path | none>
+```
+
+- The fix lands IN that step. A rule written anywhere else (a memory, CLAUDE.md, another skill) is not the fix.
+- When a generator or check exists, the step CALLS it; the step never restates what the generator prints.
+- A second copy of a shape (a note format, a message template) in any other file is the slip: replace it with a pointer to the producing step or the generator.
+
+**Banned**: a fix with no `PRODUCER:` line · a fix that lands in a file the producing step never reads · restating a generator's output shape beside the call.
+
 ### Step 2 — Skill inventory check
 
 Run two greps:
@@ -284,6 +298,8 @@ Format: appended-only entries + running-count table at top (per Step 5 refined 2
 *Version: 2 | Last updated: 2026-05-25 — Step 3.6 promoted from `Comparative-systems check` (architectural-only content audit) to `Best-Practices Consult` (dual audit: 3.6a content + 3.6b wording-shape, latter mandatory for ALL skill/rule changes with no scope exemption). Refine triggered by 99%-compliance-lift slip 2026-05-25 — bypass via "small refine" scope was the structural gap. Modeled Authority-loaded forcing-functions (Iron Law + Red Flags + Excuse table) inside the refine itself to demonstrate the wording-shape the new step requires.*
 
 *Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `system/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*
+
+*Version: 4 | Last updated: 2026-11-05 — Step 2.0 added per みや ("others I agree", Fable 5.1 audit): name the producing step with a `PRODUCER:` line; the fix lands in that step and calls its generator or check; a second copy of a shape is the slip. Root cause: his rule "a correction lands in the step that produces the output" was enforced only on feedback_ memory writes (`domain/memory-write-gate`), never when a correction was answered by editing a skill; the Redmine handover note shape sat in 8 places. Spec-preservation: Steps 1 to 6 untouched; additive. Paired: `auto-skill-trigger.js` += `unacceptable`, `I thought I('ve| have)? asked you`, `why (is|are) … not loaded`.*
 
 *Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
 
