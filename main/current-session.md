@@ -2,6 +2,15 @@
 
 **Last Activity (288261 session)**: 2026-11-06 00:07 — worktree `redmine-288261-quest-d586ef`. 288261 rework patched, handed over, archived; rework audit (Fable 5.1) → B3 Patch scope built via /system-change (ticket-load-verify.js v1.6 + quest Pre-emit gate row, commit 8e1090ee, landed: GitHub main 921ff221, main folder 0bf3d0ad); eval 28/28 green. Open: redmine-write-gate blocks a direct `node quest/ticket-load-verify.eval.js` (fixture key `status_id:`); the READ_ONLY_SCRIPT exemption for `.eval.js` was denied by the auto-mode classifier, needs miya's nod as its own /system-change.
 
+**Last Activity (UPP adhoc session)**: 2026-11-06 00:20 — worktree `dreamy-pike-08af0b`. ADHOC-UPP-2026-3: PROD UPP 18/19/20 signed 03/11 after 1.9.1, letters made 26-27/10 with the old template, sign step fills the stored letter; BA's "so data patching?" answered: yes for 19 and 20 only. Open: BA ticket number → patch-mlk-doc for 19/20; Jana Semula on staging untested.
+
+## Session Recap (2026-11-04 to 06, ADHOC-UPP-2026-3 UPP signature)
+- Asked: were UPP 18/19/20 signed before or after the release; then "ada perubahan template, so data patching?".
+- Done: real IDs found (/L/, not /B/); all three signed 03/11 after the 1.9.1 PROD release 02/11 22:16; cause traced (CommonMaklumanPembatalanForm.java:542 and :1229 fill the stored letter, :566-614 Jana Semula reloads the template); 36 open SMPPP letters swept; adhoc save-set 31/31 PASS.
+- Open: BA ticket for the 19/20 PROD document patch; Jana Semula test on staging at SMPPP.
+- Mistakes: first cause said PROD lacked the 285768 fix; his PROD footer proved common 1.10.20-MLK was there.
+- Assessment: A1 ⏭ no system part changed. A2 adhoc save-set and audit held the state across a compaction. A3 the PROD footer settles "is the fix deployed" in one read; it should be read before any "not on PROD" claim. A4 a template fix covers only documents made after the release when a later step fills the stored document. A5 ⏭ no sweep.
+
 **Last Activity (earlier)**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
 
 ## System-change queue 2026-11-05 (287811 audit) — nine routes paused at step 3, each with its build code
@@ -175,12 +184,3 @@ shown: scratchpad patch-path-6c.png
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
-
-## Session Recap (2026-11-05, 287346 hotfix prep, parked)
-- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
-- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
-- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
-- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
-- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
-- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
