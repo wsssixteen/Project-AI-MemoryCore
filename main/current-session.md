@@ -55,7 +55,6 @@ who pays: on-demand: no process; one checker call per card, two cards per system
 goal without the part: he reviews a change from the STEP-3 block and the step 8 map alone, with no five-line card to compare before and after
 model: claude-fable-5-1
 shown: domain/change-card/diagram.png
-shown: C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\.claude\worktrees\ruri-adhoc-env-investigation-d96984\domain\change-card\diagram.png
 note: "system-upgrade" read as the change route (/system-change); Fable 5.1 A/S/C verdict "build with changes" (9 items), built by claude-opus-5-5
 
 CHANGE-CARD (before): change-card
