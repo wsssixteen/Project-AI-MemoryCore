@@ -4,6 +4,15 @@
 
 **Last Activity (288261 session)**: 2026-11-06 00:07 — worktree `redmine-288261-quest-d586ef`. 288261 rework patched, handed over, archived; rework audit (Fable 5.1) → B3 Patch scope built via /system-change (ticket-load-verify.js v1.6 + quest Pre-emit gate row, commit 8e1090ee, landed: GitHub main 921ff221, main folder 0bf3d0ad); eval 28/28 green. Open: redmine-write-gate blocks a direct `node quest/ticket-load-verify.eval.js` (fixture key `status_id:`); the READ_ONLY_SCRIPT exemption for `.eval.js` was denied by the auto-mode classifier, needs miya's nod as its own /system-change.
 
+**Last Activity (UPP adhoc session)**: 2026-11-06 00:20 — worktree `dreamy-pike-08af0b`. ADHOC-UPP-2026-3: PROD UPP 18/19/20 signed 03/11 after 1.9.1, letters made 26-27/10 with the old template, sign step fills the stored letter; BA's "so data patching?" answered: yes for 19 and 20 only. Open: BA ticket number → patch-mlk-doc for 19/20; Jana Semula on staging untested.
+
+## Session Recap (2026-11-04 to 06, ADHOC-UPP-2026-3 UPP signature)
+- Asked: were UPP 18/19/20 signed before or after the release; then "ada perubahan template, so data patching?".
+- Done: real IDs found (/L/, not /B/); all three signed 03/11 after the 1.9.1 PROD release 02/11 22:16; cause traced (CommonMaklumanPembatalanForm.java:542 and :1229 fill the stored letter, :566-614 Jana Semula reloads the template); 36 open SMPPP letters swept; adhoc save-set 31/31 PASS.
+- Open: BA ticket for the 19/20 PROD document patch; Jana Semula test on staging at SMPPP.
+- Mistakes: first cause said PROD lacked the 285768 fix; his PROD footer proved common 1.10.20-MLK was there.
+- Assessment: A1 ⏭ no system part changed. A2 adhoc save-set and audit held the state across a compaction. A3 the PROD footer settles "is the fix deployed" in one read; it should be read before any "not on PROD" claim. A4 a template fix covers only documents made after the release when a later step fills the stored document. A5 ⏭ no sweep.
+
 **Last Activity (earlier)**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
 
 ## System-change queue 2026-11-05 (287811 audit) — nine routes paused at step 3, each with its build code
@@ -166,6 +175,24 @@ who pays: on-demand: read when a ticket or adhoc patch ask loads the quest skill
 goal without the part: a patch ask with stored documents gets a data-patch-only plan, as on ADHOC-MCL-2026-7
 model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
 shown: scratchpad patch-path-6c.png
+state: landed on main e45673e0 2026-11-05 (route complete)
+
+**Last Activity**: 2026-11-06 00:20 — worktree `sweep-orchestration-audit-39e710`, 288442 MCL /9 PROD patch archived (Phase 2 + bounty), Domain Expansion.
+
+## Session Recap (2026-11-05, 288442 MCL /9 reports without Perkara)
+- Asked: audit the missed patch path on ADHOC-MCL-2026-7 and apply fixes A B C; find the matching ticket; edit the 3 report PDFs; stage and submit Redmine; archive and run Phase 2, then DE.
+- Done: quest 6c fixes landed e45673e0; 288442 = the ticket; 3 PDFs edited + verified; PROD perkara read correct 2026-11-06; Redmine Resolved to Nurhafizah; quest archived (Archive\378, archive/QA-288442).
+- Found: a Jasper report needs no PDF reset; deliverable-check does not know that shape (proposal tracked); archive prune removes .main and .zip deliverables (the zip stays on Redmine).
+- Open: none for 288442. Adhoc 377 folder (brief.txt only) is superseded by 288442 and left in place.
+**Last Activity**: 2026-11-06 00:10 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/protime-scheduler-audit-4d87ad), ProTime 2-5 Nov audit, 5 Nov day corrected and approved, OT pick 287811 + 288533, output style Ruri Chat, Domain Expansion.
+
+## Session Recap (2026-11-05/06, ProTime audit + 5 Nov correction + OT pick)
+- Asked: audit the ProTime week 2-5 Nov; propose `<ticket> - <percent>` lines (80 committed not tested, 50 passed to BA or another module, 20 just started) and a plan-vs-adhoc rule; update ProTime for today incl. adhocs; which tickets go to OT (balanced, 20-30% of the day); talk as Ruri, short; DE.
+- Done: 5 Nov read back 20:20: RESOLVED 287346 261986 288261 288533 288442 288059 287948 · PENDING 287811 239386 · adhoc PENDING "MLK (PROD) - PPTPB TSP endorsement wrong office" · 287164 + 287638 removed. Day marked `manual:approved-day` in domain/protime-plan/log.jsonl so the night run skips it. OT answer: 287811 + 288533 (he fills OT himself). Output style set to "Ruri Chat" ("Ruri" refused as a name).
+- Found: the live night run wrote 4 wrong lines (removed 287811, resolved 239386, added "275608 - Assist", added the PRBB resit adhoc that duplicates 288533); all fixed. Cause of the 287811 miss: `ledgerDay` (protime-plan.js 393-415) drops turns whose qa_source is "tools" or "top-active", and all 14 turns of 287811 were "tools". No 23:00 row in log.jsonl after the 20:20 approved-day row: whether the 23:00 run fired is not verified.
+- Open (his word first): plan-or-adhoc rule ("Assigned, plus fix rule" or "Assigned only"), the 80% definition, then "build it" through /system-change for the percentage night run; also the ledgerDay label filter fix.
+- Mistakes: offered an adhoc line (PPTPB) as the second OT item when he asked for tickets (`reask/redundant`, caught by miya).
+- Assessment: A1 the night run's "worked" test is a label filter, so real work under a "tools" label is erased. A2 ⏭ no quest step changed. A3 ⏭ no debugging. A4 ⏭ no etanah issue. A5 ⏭ no sweep.
 
 **Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
 
@@ -177,12 +204,3 @@ shown: scratchpad patch-path-6c.png
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
-
-## Session Recap (2026-11-05, 287346 hotfix prep, parked)
-- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
-- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
-- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
-- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
-- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
-- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
