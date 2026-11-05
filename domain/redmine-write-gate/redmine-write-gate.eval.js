@@ -429,6 +429,8 @@ r = statusFill('Resolved', [nav(300003), user('set status to Resolved')]);
 check('F156 Verified + his named order → allowed on his order (the rule never overrides his words)', !blocked(r) && /set on miya's order/.test(r.out), r.out.slice(0, 200));
 r = statusFill('Resolved', [nav(287747), user("no, don't change the status")]);
 check('F157 his ticket, In Progress, but "don\'t change the status" → BLOCK (a hold wins over the rule)', blocked(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300011), user('stage it 300011')]);
+check('F166 his New ticket + "stage it" → Resolved allowed by the rule (stage holds the Submit only, 288533)', ruled(r), r.out.slice(0, 200));
 r = statusFill('Resolved', [nav(300008), ...staging]);
 check('F158 New and already under a BA (Anis) → allowed (row 3)', ruled(r) && /row 3/.test(r.out), r.out.slice(0, 200));
 r = statusFill('Resolved', staging);
