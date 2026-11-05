@@ -23,6 +23,39 @@ function logRow(row) {
   try { fs.appendFileSync(LOG, JSON.stringify(row) + '\n'); } catch (_) {}
 }
 
+// --alter (2026-11-05 per miya, 288533: "Does quest not load the format?"): the done-alter / patch+alter note in
+// ALTER-TICKET-PLAYBOOK §5.1 shape, generated here so no step writes it by hand. No repo needed.
+// node ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check>
+//      [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]
+if (arg('alter') === true) {
+  const need = ['ticket', 'ba', 'id', 'tugasan', 'user'].filter(k => !arg(k) || arg(k) === true);
+  if (need.length) { console.error('--alter needs: ' + need.map(k => '--' + k).join(' ')); process.exit(1); }
+  let names = {};
+  try { names = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'ba-names.json'), 'utf8')); } catch (_) {}
+  const baArg = String(arg('ba'));
+  const key = Object.keys(names).find(k => k.toLowerCase() === baArg.toLowerCase());
+  if (!key) console.error(`warn: no short name for "${baArg}" in ba-names.json — check how miya greets this BA`);
+  const patched = arg('patched') === true;
+  const resit = arg('resit');
+  const script = arg('prod-script');
+  const out = [
+    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. ${patched ? 'Can proceed to verify.' : 'Please help to verify.'}`,
+    '',
+    '<pre>',
+    `ID Permohonan: ${arg('id')}`,
+    ...(resit && resit !== true ? [`No. Resit: ${resit}`] : []),
+    `Tugasan: ${arg('tugasan')}`,
+    `User ID: ${arg('user')}`,
+    '</pre>',
+    '',
+    ...(script && script !== true ? [`Attached is the script for PROD (${path.basename(String(script))}).`, ''] : []),
+    'Thank you.',
+  ];
+  console.log(out.join('\n'));
+  logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'alter', patched, outcome: 'printed' });
+  process.exit(0);
+}
+
 const repo = arg('repo');
 const ticket = arg('ticket');
 const module_ = String(arg('module') || '').toLowerCase();
