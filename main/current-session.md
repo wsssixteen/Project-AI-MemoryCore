@@ -1,3 +1,13 @@
+STEP-3: B3 Patch scope in quest/ticket-load-verify.js + quest Pre-emit gate row (288261 rework audit)
+session: redmine-288261-quest-d586ef
+his words: "Build it" (order) · after "Please audit how next time we can avoid this, even though it is not our part. This is part of our effort on releasing something rework free."
+fix or report: fix
+who pays: on-demand: a few ms inside ticket-load-verify.js at each quest start or resume; no process, no network
+goal without the part: a BA list that drops a permohonan the TSO report named ships a partial patch, as on 288261 (/1 tujuan), and the ticket comes back
+model: claude-opus-5-5 (highest is claude-fable-5-1, which wrote the audit verdict feature:patch-scope-B3; neither part is highest-order nor runs every prompt)
+shown: scratchpad b3-how.png + b3-where.png (sent to miya)
+state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. OPEN: eval cases (18)-(22) in ticket-load-verify.eval.js not run: redmine-write-gate blocks node on that eval (status_id: fixture key); needs miya [skip-redmine-write-gate: local eval] or the gate exemption.
+
 STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
 session: sweep-orchestration-audit-39e710
 his words: "Yes, apply all three" (order) · after "please audit why you failed, what is still missing in our patching quest path & steps"
