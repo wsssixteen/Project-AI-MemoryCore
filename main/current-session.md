@@ -173,6 +173,17 @@ state: landed on main e45673e0 2026-11-05 (route complete)
 - Done: quest 6c fixes landed e45673e0; 288442 = the ticket; 3 PDFs edited + verified; PROD perkara read correct 2026-11-06; Redmine Resolved to Nurhafizah; quest archived (Archive\378, archive/QA-288442).
 - Found: a Jasper report needs no PDF reset; deliverable-check does not know that shape (proposal tracked); archive prune removes .main and .zip deliverables (the zip stays on Redmine).
 - Open: none for 288442. Adhoc 377 folder (brief.txt only) is superseded by 288442 and left in place.
+**Last Activity**: 2026-11-06 00:10 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/protime-scheduler-audit-4d87ad), ProTime 2-5 Nov audit, 5 Nov day corrected and approved, OT pick 287811 + 288533, output style Ruri Chat, Domain Expansion.
+
+## Session Recap (2026-11-05/06, ProTime audit + 5 Nov correction + OT pick)
+- Asked: audit the ProTime week 2-5 Nov; propose `<ticket> - <percent>` lines (80 committed not tested, 50 passed to BA or another module, 20 just started) and a plan-vs-adhoc rule; update ProTime for today incl. adhocs; which tickets go to OT (balanced, 20-30% of the day); talk as Ruri, short; DE.
+- Done: 5 Nov read back 20:20: RESOLVED 287346 261986 288261 288533 288442 288059 287948 · PENDING 287811 239386 · adhoc PENDING "MLK (PROD) - PPTPB TSP endorsement wrong office" · 287164 + 287638 removed. Day marked `manual:approved-day` in domain/protime-plan/log.jsonl so the night run skips it. OT answer: 287811 + 288533 (he fills OT himself). Output style set to "Ruri Chat" ("Ruri" refused as a name).
+- Found: the live night run wrote 4 wrong lines (removed 287811, resolved 239386, added "275608 - Assist", added the PRBB resit adhoc that duplicates 288533); all fixed. Cause of the 287811 miss: `ledgerDay` (protime-plan.js 393-415) drops turns whose qa_source is "tools" or "top-active", and all 14 turns of 287811 were "tools". No 23:00 row in log.jsonl after the 20:20 approved-day row: whether the 23:00 run fired is not verified.
+- Open (his word first): plan-or-adhoc rule ("Assigned, plus fix rule" or "Assigned only"), the 80% definition, then "build it" through /system-change for the percentage night run; also the ledgerDay label filter fix.
+- Mistakes: offered an adhoc line (PPTPB) as the second OT item when he asked for tickets (`reask/redundant`, caught by miya).
+- Assessment: A1 the night run's "worked" test is a label filter, so real work under a "tools" label is erased. A2 ⏭ no quest step changed. A3 ⏭ no debugging. A4 ⏭ no etanah issue. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
 
 ## Session Recap (2026-11-05, 239386 MPT which pages to show)
 - Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
