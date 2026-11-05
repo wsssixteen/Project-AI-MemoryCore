@@ -208,3 +208,5 @@
 {"ts":"2026-11-05T16:27:46.508Z","commit":"78901224","outcome":"REFUSED","exit":2,"dur_ms":3717}
 {"ts":"2026-11-05T16:27:57.098Z","commit":"4672a9a8","outcome":"REFUSED","exit":2,"dur_ms":4120}
 {"ts":"2026-11-05T16:27:40.977Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":658}
+{"ts":"2026-11-05T16:32:16.119Z","commit":"49d59176","outcome":"REFUSED","exit":2,"dur_ms":5064}
+{"ts":"2026-11-05T16:32:59.637Z","commit":"98273670","outcome":"LANDED","exit":0,"dur_ms":16880}

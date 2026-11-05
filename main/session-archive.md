@@ -4,6 +4,32 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-05, 288442 MCL /9 reports without Perkara)
+- Asked: audit the missed patch path on ADHOC-MCL-2026-7 and apply fixes A B C; find the matching ticket; edit the 3 report PDFs; stage and submit Redmine; archive and run Phase 2, then DE.
+- Done: quest 6c fixes landed e45673e0; 288442 = the ticket; 3 PDFs edited + verified; PROD perkara read correct 2026-11-06; Redmine Resolved to Nurhafizah; quest archived (Archive\378, archive/QA-288442).
+- Found: a Jasper report needs no PDF reset; deliverable-check does not know that shape (proposal tracked); archive prune removes .main and .zip deliverables (the zip stays on Redmine).
+- Open: none for 288442. Adhoc 377 folder (brief.txt only) is superseded by 288442 and left in place.
+**Last Activity**: 2026-11-06 00:10 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/protime-scheduler-audit-4d87ad), ProTime 2-5 Nov audit, 5 Nov day corrected and approved, OT pick 287811 + 288533, output style Ruri Chat, Domain Expansion.
+
+## Session Recap (2026-11-05/06, ProTime audit + 5 Nov correction + OT pick)
+- Asked: audit the ProTime week 2-5 Nov; propose `<ticket> - <percent>` lines (80 committed not tested, 50 passed to BA or another module, 20 just started) and a plan-vs-adhoc rule; update ProTime for today incl. adhocs; which tickets go to OT (balanced, 20-30% of the day); talk as Ruri, short; DE.
+- Done: 5 Nov read back 20:20: RESOLVED 287346 261986 288261 288533 288442 288059 287948 · PENDING 287811 239386 · adhoc PENDING "MLK (PROD) - PPTPB TSP endorsement wrong office" · 287164 + 287638 removed. Day marked `manual:approved-day` in domain/protime-plan/log.jsonl so the night run skips it. OT answer: 287811 + 288533 (he fills OT himself). Output style set to "Ruri Chat" ("Ruri" refused as a name).
+- Found: the live night run wrote 4 wrong lines (removed 287811, resolved 239386, added "275608 - Assist", added the PRBB resit adhoc that duplicates 288533); all fixed. Cause of the 287811 miss: `ledgerDay` (protime-plan.js 393-415) drops turns whose qa_source is "tools" or "top-active", and all 14 turns of 287811 were "tools". No 23:00 row in log.jsonl after the 20:20 approved-day row: whether the 23:00 run fired is not verified.
+- Open (his word first): plan-or-adhoc rule ("Assigned, plus fix rule" or "Assigned only"), the 80% definition, then "build it" through /system-change for the percentage night run; also the ledgerDay label filter fix.
+- Mistakes: offered an adhoc line (PPTPB) as the second OT item when he asked for tickets (`reask/redundant`, caught by miya).
+- Assessment: A1 the night run's "worked" test is a label filter, so real work under a "tools" label is erased. A2 ⏭ no quest step changed. A3 ⏭ no debugging. A4 ⏭ no etanah issue. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
+
+## Session Recap (2026-11-05, 239386 MPT which pages to show)
+- Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
+- Done: Redmine 239386 note to Anis 17:27 (2 errors, clash table, yes/no question) + picture 6 at 17:45, both posted by him; deep research (code, DB census, tickets) folded into QA-239386.md; quest status delegated to Anis, cold-resume 7/7, branches table PASS.
+- Found: MPT pages = every ind_langkah row of the urusan's MPT tugasan, no user, peranan, modul or flag_aktif filter (etanah-common LuceneForm.java:1820-1828); STG2 PLP MPT carries only the shared UT/BGN set; Teknikal beans have Pelupusan branches, Pembangunan forms likely NPE on plain PLP (not tested).
+- Open: Anis's answer; Amirul NPE note not sent; rework audit + 12-row audit owed; MLIT test of the 5 pages on a PLP permohonan.
+- Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
+- Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 ## Session Recap (2026-11-05, 287346 hotfix prep, parked)
 - Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
 - Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
@@ -7558,6 +7584,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
