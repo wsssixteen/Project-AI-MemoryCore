@@ -95,6 +95,8 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
+**Alter ticket (alter alone, or patch + alter) = READ `etanah-knowledge/ALTER-TICKET-PLAYBOOK.md` §5.1 in full and copy its shape: greeting line, then a `<pre>` block one field per line (ID Permohonan · No. Resit when receipts were linked · Tugasan · User ID from the AFTER check), then the script line, then Thank you** (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: drafting an alter note from memory or from grep lines.
+
 **PROD patch (data or document) = example 16, never the internal-deploy note** (2026-11-04 per みや, #288169/#288261): "Salam Fizah, have patched the data in PROD. Can proceed to verify." The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned** on a PROD patch: "Please help to verify" · telling the BA how to route it.
 
 ```
