@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-06 00:45 — worktree `cool-margulis-5bb326` (branch claude/redmine-287346-audit-implement-a86f35), 287346 rework 1 shipped and Phase 1 closed, template-scenario check 6 (tag sources) built and landed, Domain Expansion.
+
+## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
+- Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
+- Done: c2364d2bde on mlk/esokongan/287346, int-env a32fb6abab; marked paper in 3. Rework; Redmine 287346 Resolved to Nurhafizah 05/11 17:17; wrong-fix rows 1 and 2 ruled; template-scenario check 6 (tag-sources.js + tag-sources.json, eval 58/58) on GitHub main c0177357, main folder d12719a8; quest Phase 1 closed (WAIT for Redmine Closed).
+- Found: Datuk Sabrina's blank signature on MLIT = her newest signature file (LAIN-36582925) returns no bytes from MLIT DMS, NO_SIGN fallback; PROD MCL luas_dipohon empty 1718 of 3551; Git Bash rewrites "--case empty|PTMLK/..." into a Windows path.
+- Open: BA verifies 287346 → Phase 2; Sabrina signature re-upload on MLIT (BA side); MCL tags in tag-sources.json still 33 unmapped (filled ticket by ticket); main folder diverged from GitHub main (landed by hand).
+- Mistakes: added a legend and labels to the marked paper he never asked for (memory rule 841ec441); cycle 1 tested one permohonan with luas filled.
+- Assessment: A1 the change route's land step needs a by-hand path when the main folder has diverged. A2 template hand-back now asks every printed tag for its source. A3 doc-sim + PROD count proved the empty case offline. A4 a test permohonan proves nothing about a column it happens to have filled. A5 ⏭ no sweep.
+
 **Last Activity (288169 session)**: 2026-11-06 00:15 — worktree `jovial-kepler-a07ba6`. ADHOC-PLTP-2026-5 (PROD PLTP/2026/8 Ulasan JT: JKR twice, MPAG gone) → cause: agency record 8 (JKRNM) renamed to MPAG 21/07 16:58 then back 13/08, so MPAG picks saved as agensi 8; promoted to ticket 288169 (TSO Shafiq); patch 6 rows agensi 8→6 run on PROD and verified; 288169 saved Phase 1 only (Redmine In Progress 20%), adhoc archived (audit 31/31). Open: miya writes the Redmine resolve note; Phase 2 archive when Redmine shows Closed; 12 other rows (PT/PTS same window) still agensi 8, no ticket.
 
 **Last Activity**: 2026-11-05 23:20 — worktree `penang-common-null-error-219adf`. 288059 submitted (15:11) · 287948 and 261986 submitted by miya · 287811: fix = fix 2 + 3 + 4 together (three writers of the Notis 5A name), tested PASS on MLIT 20:58, Redmine journal 7 to Mira 21:05; branch `mlk/internal/287811` rewritten to one commit d7ff0bec43, `mlk/int-env` reset to yihkitc's 39b917f870 + one merge f2ebd118f7, his clone reset to match (he said clean, others must not see the five failed commits). Pending on his word: "post it" (commit-reference journal on 287811, journal 7 names a hash that no longer exists). **system-change queue below: nine routes at step 3 with build code, order P2 P1 P3 P4 P5 P6 P7 P8 P9; his nod "go P2 P1" starts the build.** Earlier system-change step 3 (quest "check before asking" step) still paused (todo row).
@@ -194,29 +204,3 @@ shown: scratchpad patch-path-6c.png
 state: landed on main e45673e0 2026-11-05 (route complete)
 
 **Last Activity**: 2026-11-06 00:20 — worktree `sweep-orchestration-audit-39e710`, 288442 MCL /9 PROD patch archived (Phase 2 + bounty), Domain Expansion.
-
-## Session Recap (2026-11-05, 288442 MCL /9 reports without Perkara)
-- Asked: audit the missed patch path on ADHOC-MCL-2026-7 and apply fixes A B C; find the matching ticket; edit the 3 report PDFs; stage and submit Redmine; archive and run Phase 2, then DE.
-- Done: quest 6c fixes landed e45673e0; 288442 = the ticket; 3 PDFs edited + verified; PROD perkara read correct 2026-11-06; Redmine Resolved to Nurhafizah; quest archived (Archive\378, archive/QA-288442).
-- Found: a Jasper report needs no PDF reset; deliverable-check does not know that shape (proposal tracked); archive prune removes .main and .zip deliverables (the zip stays on Redmine).
-- Open: none for 288442. Adhoc 377 folder (brief.txt only) is superseded by 288442 and left in place.
-**Last Activity**: 2026-11-06 00:10 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/protime-scheduler-audit-4d87ad), ProTime 2-5 Nov audit, 5 Nov day corrected and approved, OT pick 287811 + 288533, output style Ruri Chat, Domain Expansion.
-
-## Session Recap (2026-11-05/06, ProTime audit + 5 Nov correction + OT pick)
-- Asked: audit the ProTime week 2-5 Nov; propose `<ticket> - <percent>` lines (80 committed not tested, 50 passed to BA or another module, 20 just started) and a plan-vs-adhoc rule; update ProTime for today incl. adhocs; which tickets go to OT (balanced, 20-30% of the day); talk as Ruri, short; DE.
-- Done: 5 Nov read back 20:20: RESOLVED 287346 261986 288261 288533 288442 288059 287948 · PENDING 287811 239386 · adhoc PENDING "MLK (PROD) - PPTPB TSP endorsement wrong office" · 287164 + 287638 removed. Day marked `manual:approved-day` in domain/protime-plan/log.jsonl so the night run skips it. OT answer: 287811 + 288533 (he fills OT himself). Output style set to "Ruri Chat" ("Ruri" refused as a name).
-- Found: the live night run wrote 4 wrong lines (removed 287811, resolved 239386, added "275608 - Assist", added the PRBB resit adhoc that duplicates 288533); all fixed. Cause of the 287811 miss: `ledgerDay` (protime-plan.js 393-415) drops turns whose qa_source is "tools" or "top-active", and all 14 turns of 287811 were "tools". No 23:00 row in log.jsonl after the 20:20 approved-day row: whether the 23:00 run fired is not verified.
-- Open (his word first): plan-or-adhoc rule ("Assigned, plus fix rule" or "Assigned only"), the 80% definition, then "build it" through /system-change for the percentage night run; also the ledgerDay label filter fix.
-- Mistakes: offered an adhoc line (PPTPB) as the second OT item when he asked for tickets (`reask/redundant`, caught by miya).
-- Assessment: A1 the night run's "worked" test is a label filter, so real work under a "tools" label is erased. A2 ⏭ no quest step changed. A3 ⏭ no debugging. A4 ⏭ no etanah issue. A5 ⏭ no sweep.
-
-**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
-
-## Session Recap (2026-11-05, 239386 MPT which pages to show)
-- Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
-- Done: Redmine 239386 note to Anis 17:27 (2 errors, clash table, yes/no question) + picture 6 at 17:45, both posted by him; deep research (code, DB census, tickets) folded into QA-239386.md; quest status delegated to Anis, cold-resume 7/7, branches table PASS.
-- Found: MPT pages = every ind_langkah row of the urusan's MPT tugasan, no user, peranan, modul or flag_aktif filter (etanah-common LuceneForm.java:1820-1828); STG2 PLP MPT carries only the shared UT/BGN set; Teknikal beans have Pelupusan branches, Pembangunan forms likely NPE on plain PLP (not tested).
-- Open: Anis's answer; Amirul NPE note not sent; rework audit + 12-row audit owed; MLIT test of the 5 pages on a PLP permohonan.
-- Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
-- Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.

@@ -204,3 +204,4 @@
 {"ts":"2026-11-05T09:57:00.962Z","commit":"8e1090ee","outcome":"REFUSED","exit":2,"dur_ms":1754}
 {"ts":"2026-11-05T09:57:59.522Z","commit":"8e1090ee","outcome":"LANDED","exit":0,"dur_ms":27643}
 {"ts":"2026-11-05T16:27:40.977Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":658}
+{"ts":"2026-11-05T16:29:27.597Z","commit":"df394b74","outcome":"REFUSED","exit":2,"dur_ms":1151}
