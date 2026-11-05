@@ -23,7 +23,7 @@ A review card for any system change, shown twice: at change route step 3 (BEFORE
 |---|---|
 | `.claude/skills/change-card/SKILL.md` | the card rules and the two moments |
 | `domain/change-card/change-card.js` | checker: `node domain/change-card/change-card.js <file> [--stage before\|after]` → `CHANGE-CARD: PASS` or `FAIL <reasons>`; on a session file it checks the last block of that stage |
-| `domain/change-card/eval.js` | 17 fixtures: good card, table form, session file, Windows line ends, bold labels, decimals, each failure kind |
+| `domain/change-card/eval.js` | 19 fixtures (incl. AFTER copies BEFORE): good card, table form, session file, Windows line ends, bold labels, decimals, each failure kind |
 | `diagram.html` / `.png` | the change route with the two card moments marked |
 | `log.jsonl` | one row per check |
 
