@@ -75,5 +75,20 @@ ok('E11 session file: the LAST before block is checked', r.pass, r.reasons.join(
 r = check(SESSION, 'after');
 ok('E12 session file with no after block fails on stage', !r.pass);
 
+r = check(GOOD.replace(/\n/g, '\r\n'), 'before');
+ok('E13 Windows line ends pass', r.pass, r.reasons.join(' · '));
+
+r = check('', null);
+ok('E14 empty input fails on every line', !r.pass && r.reasons.length >= 5);
+
+r = check(GOOD.replace('- What:', '- **What**:').replace('- Why:', '**Why:**'), 'before');
+ok('E15 bold labels pass', r.pass, r.reasons.join(' · '));
+
+r = check(GOOD.replace('one sentence.', 'one sentence in 0.1 s.'), 'before');
+ok('E16 a decimal number is not a sentence end', r.pass, r.reasons.join(' · '));
+
+r = check(GOOD.replace('Where picture = the change map (lib/change-map.js).', 'The change map is the Where picture.'), 'before');
+ok('E17 a reworded closing line fails (exact name line required)', !r.pass);
+
 console.log(`change-card eval: ${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);
