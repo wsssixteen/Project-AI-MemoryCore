@@ -84,5 +84,47 @@ check('F32 --merge draws one union box (exit 0)', merged.status === 0 && /FIX-PH
 const apart = run(['10,10,100,100', '200,200,300,280']);
 check('F33 separate boxes saved', apart.status === 0, apart.stdout);
 
+// ---- tag source check (2026-11-06, QA-287346 rework 1)
+const S = require('./tag-sources.js');
+check('F34 urusan from permohonan id', S.urusanOf('PTMLK/03/L/MCL/2026/9') === 'MCL');
+check('F35 bad id gives no urusan', S.urusanOf('MCL-9') === null && S.urusanOf('') === null);
+const pt = S.printedTags([{ tag: 'luasDipohon', text: '164', images: [] }, { tag: 'luasDipohon', text: '164', images: [] }, { tag: 'signPPD', text: '', images: [3000] }]);
+check('F36 printed tags: images out, duplicates once', pt.join(',') === 'luasDipohon', pt.join(','));
+const map = { luasDipohon: { table: 'umm_a_permohonan_tnh', column: 'luas_dipohon' }, namaPPD: { none: 'chain' }, evil: { table: 'x; drop table y', column: 'z' } };
+const srcRows = T.parseChecklist('## Template checklist\n| R | Source | Text | Status | Find |\n|---|---|---|---|---|\n| S1 | SOURCE noKP | umm_p_pemohon.no_pengenalan | done | |\n| S2 | SOURCE premium | - | na: computed from two columns | |\n| S3 | SOURCE cukai | the cukai column | done | |\n| S4 | SOURCE luasDipohon | umm_a_hakmilik.luas | done | |\n');
+const rs = S.resolveSources(['luasDipohon', 'namaPPD', 'noKP', 'premium', 'cukai', 'lotUtara', 'evil'], map, srcRows);
+check('F37 SOURCE row beats the map (luasDipohon -> umm_a_hakmilik.luas)', rs.mapped.some(m => m.tag === 'luasDipohon' && m.table === 'umm_a_hakmilik'), JSON.stringify(rs));
+check('F38 SOURCE done row maps noKP', rs.mapped.some(m => m.tag === 'noKP' && m.column === 'no_pengenalan'));
+check('F39 na row and map none -> none', rs.none.map(n => n.tag).sort().join(',') === 'namaPPD,premium', JSON.stringify(rs.none));
+check('F40 SOURCE text not table.column -> bad', rs.bad.some(b => b.startsWith('cukai')));
+check('F41 unmapped tag -> unknown', rs.unknown.join(',') === 'lotUtara', rs.unknown.join(','));
+check('F42 SQL-looking map entry refused (injection)', rs.bad.some(b => b.startsWith('evil')));
+const cs = S.countSql('et_main', 'umm_a_permohonan_tnh', 'luas_dipohon', 'MCL');
+check('F43 count SQL: schema-qualified, kod subquery, no JOIN, empty = null/blank/dash', /et_main\.umm_a_permohonan_tnh/.test(cs) && /kod = 'MCL'/.test(cs) && !/\bjoin\b/i.test(cs) && /IN \('', '-'\)/.test(cs), cs);
+check('F44 case SQL escapes a quote in the permohonan id', /'PT''X'/.test(S.caseSql('s', 't', 'c', "PT'X")));
+const src1 = { mapped: [{ tag: 'luasDipohon', table: 't', column: 'c' }], none: [], unknown: [], bad: [] };
+const prodEmpty = { luasDipohon: { total: 3551, empty: 1718 } };
+const j1 = S.judge({ src: src1, counts: prodEmpty, cases: [], emptyOk: {}, noBa: false });
+check('F45 287346 replay: PROD empty 1718/3551 and no empty case = FAIL naming luasDipohon', !j1.ok && j1.fails.some(f => /empty case never ran for luasDipohon \(PROD empty 1718\/3551\)/.test(f)), JSON.stringify(j1.fails));
+check('F46 no BA case and no reason = FAIL', j1.fails.some(f => /BA test ID never ran/.test(f)));
+const goodEmpty = { kind: 'empty', permohonan: 'P/25', gaps: [], emptyCols: new Set(['luasDipohon']) };
+check('F47 empty case prints a value + reasoned no-BA = PASS', S.judge({ src: src1, counts: prodEmpty, cases: [goodEmpty], emptyOk: {}, noBa: true }).ok);
+const dashEmpty = { kind: 'empty', permohonan: 'P/25', gaps: ['luasDipohon=dash'], emptyCols: new Set(['luasDipohon']) };
+check('F48 empty case prints "-" = FAIL (the BA symptom)', S.judge({ src: src1, counts: prodEmpty, cases: [dashEmpty], emptyOk: {}, noBa: true }).fails.some(f => /prints luasDipohon=dash/.test(f)));
+const filledCase = { kind: 'empty', permohonan: 'P/1', gaps: [], emptyCols: new Set() };
+check('F49 "empty" case whose column is filled does not count', !S.judge({ src: src1, counts: prodEmpty, cases: [filledCase], emptyOk: {}, noBa: true }).ok);
+check('F50 EMPTY-OK row accepts a blank by design', S.judge({ src: src1, counts: prodEmpty, cases: [], emptyOk: { luasDipohon: 'na: blank is the requirement' }, noBa: true }).ok);
+check('F51 PROD count error = FAIL, never a silent pass', !S.judge({ src: src1, counts: { luasDipohon: { error: 'gateway down' } }, cases: [], emptyOk: {}, noBa: true }).ok);
+check('F52 column never empty on PROD = no empty case needed', S.judge({ src: src1, counts: { luasDipohon: { total: 10, empty: 0 } }, cases: [], emptyOk: {}, noBa: true }).ok);
+check('F53 BA paper with a gap = FAIL', !S.judge({ src: src1, counts: { luasDipohon: { total: 10, empty: 0 } }, cases: [{ kind: 'ba', permohonan: 'B/9', gaps: ['luasDipohon=dash'], emptyCols: new Set() }], emptyOk: {}, noBa: false }).ok);
+check('F54 unknown source = FAIL', !S.judge({ src: { ...src1, unknown: ['lotUtara'] }, counts: {}, cases: [], emptyOk: {}, noBa: true }).ok);
+const pc = S.parseCases(['node', 'x', '--case', 'empty|P/25|a.docx', '--case', 'BA|B/9|b.docx', '--case']);
+check('F55 --case repeatable, kind lower-cased, dangling flag ignored', pc.length === 2 && pc[1].kind === 'ba' && pc[0].docx === 'a.docx', JSON.stringify(pc));
+check('F56 --no-ba-id refuses <reason>, one word, empty', !S.noBaOk('<reason>') && !S.noBaOk('none') && !S.noBaOk('') && S.noBaOk('BA gave no ID on the ticket'));
+const tsMap = JSON.parse(fs.readFileSync(S.MAP, 'utf8'));
+const bad = Object.entries(tsMap).filter(([k]) => k !== '_about').flatMap(([st, m]) => Object.entries(m).filter(([, v]) => !(v.none || (/^[a-z_][a-z0-9_]*$/.test(v.table || '') && /^[a-z_][a-z0-9_]*$/.test(v.column || ''))) || !v.seen).map(([t]) => st + '.' + t));
+check('F57 tag-sources.json: every entry has table.column or none, and a seen line', bad.length === 0, bad.join(','));
+check('F58 tag-sources.json is keyed by a registered state', Object.keys(tsMap).filter(k => k !== '_about').every(k => require('../../lib/states.js').get(k)));
+
 console.log('\ntemplate-scenario.eval: ' + pass + '/' + (pass + fail) + (fail ? ' FAIL' : ' green'));
 process.exit(fail ? 1 : 0);

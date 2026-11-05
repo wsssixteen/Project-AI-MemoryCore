@@ -5,6 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const TS = require('./tag-sources.js');
 
 const HERE = __dirname;
 const ROOT = path.resolve(HERE, '..', '..');
@@ -161,7 +162,7 @@ function runChain(o) {
   return { filled: m[1].trim(), docsim: (out.match(/DOC-SIM:.*/) || [''])[0] };
 }
 
-function main() {
+async function main() {
   const qa = String(arg('qa', '')).replace(/^QA-/i, '');
   const req = arg('req');
   const template = arg('template');
@@ -169,7 +170,7 @@ function main() {
   const steps = arg('steps', '');
   const out = arg('out');
   if (!qa || !req || !template || !base || !out) {
-    console.error('usage: template-scenario.js --qa <num> --req <requirement.docx> --template <edited .docx> --base <template before the fix .docx> --out <2. Fix folder> (--filled <generated .docx> | --permohonan <id> --steps a:CREATE,b:SEMAK,c:PERAKU --dokumen <kod> [--template-dir <dir>] [--classes-dir <dir>]) [--config <template.config.json>] [--qa-doc <md>] [--accept "<text>|<text>"]');
+    console.error('usage: template-scenario.js --qa <num> --req <requirement.docx> --template <edited .docx> --base <template before the fix .docx> --out <2. Fix folder> (--filled <generated .docx> | --permohonan <id> --steps a:CREATE,b:SEMAK,c:PERAKU --dokumen <kod> [--template-dir <dir>] [--classes-dir <dir>]) [--config <template.config.json>] [--qa-doc <md>] [--accept "<text>|<text>"] [--case "empty|<permohonan>|<filled .docx>" --env <mlit|stg1|stg2>] [--case "ba|<BA permohonan>|<filled .docx>" | --no-ba-id "<reason>"] [--urusan <kod>] [--state <key>]');
     process.exit(2);
   }
   const qaDoc = arg('qa-doc', path.join(mainRoot(), 'projects', 'coding-projects', 'active', 'QA-' + qa, 'QA-' + qa + '.md'));
@@ -206,6 +207,10 @@ function main() {
   const gaps = ccGaps(touched, py('cc', filled), accepted);
   if (gaps.length) fails.push('CC gaps: ' + gaps.join(', '));
 
+  // Tag source check: every printed text tag has a source; a source empty on PROD for this urusan needs an empty-case paper; the BA's own ID always runs.
+  const src = await sourceCheck({ filled, rows, accepted });
+  fails.push(...src.fails);
+
   const accepts = String(arg('accept', '')).split('|').map(s => s.trim()).filter(Boolean)
     .concat((rows || []).filter(r => /^diff/i.test(r.source) && /^(done|na)/i.test(r.status)).map(r => r.text.replace(/^`|`$/g, '')));
   const reqTok = flatTokens(py('paras', req)).map(t => t[0]);
@@ -226,7 +231,7 @@ function main() {
   if (hl.missing.length) fails.push('highlight phrase not found: ' + hl.missing.slice(0, 3).join(' | '));
 
   const status = fails.length ? 'FAIL' : 'PASS';
-  const line = `TEMPLATE-SCENARIO: ${status} QA-${qa} · checklist ${cl.done}/${cl.total} · chain ${chain.have}/${chain.need} actions · CC ${touched.length} touched, gaps ${gaps.length ? gaps.join(', ') : 'none'} · word diff defect ${defects.length}, data ${diff.filter(d => d.cls === 'DATA').length}, accepted ${diff.filter(d => d.cls === 'ACCEPTED').length} · highlight ${pdfOut} annots ${hl.annots}`;
+  const line = `TEMPLATE-SCENARIO: ${status} QA-${qa} · checklist ${cl.done}/${cl.total} · chain ${chain.have}/${chain.need} actions · CC ${touched.length} touched, gaps ${gaps.length ? gaps.join(', ') : 'none'} · sources ${src.summary} · word diff defect ${defects.length}, data ${diff.filter(d => d.cls === 'DATA').length}, accepted ${diff.filter(d => d.cls === 'ACCEPTED').length} · highlight ${pdfOut} annots ${hl.annots}`;
   if (defects.length) console.log('DEFECTS (requirement → paper):\n' + defects.map(d => `  "${d.req}" → "${d.ours}"`).join('\n'));
   if (fails.length) console.log('FAILS:\n  ' + fails.join('\n  '));
   console.log(line);
@@ -234,5 +239,73 @@ function main() {
   process.exit(fails.length ? 1 : 0);
 }
 
+async function sourceCheck({ filled, rows, accepted }) {
+  const states = require(path.join(ROOT, 'lib', 'states.js'));
+  const permohonan = arg('permohonan', '');
+  const state = arg('state') || (permohonan && states.stateForPrefix(permohonan)) || states.reference();
+  const st = states.get(state);
+  const urusan = arg('urusan') || TS.urusanOf(permohonan) || TS.urusanOf((TS.parseCases(process.argv)[0] || {}).permohonan);
+  const fails = [];
+  const tags = TS.printedTags(py('cc', filled));
+  const src = TS.resolveSources(tags, TS.loadMap(state), rows);
+  const counts = {};
+  const prodMcp = st && st.db && st.db.mcp && st.db.mcp.prod;
+  const prodSchema = st && st.db && st.db.schemas && st.db.schemas.prod;
+  if (!urusan) fails.push('sources: no urusan (pass --urusan <kod> or a --permohonan id)');
+  else if (!prodMcp || !prodSchema) fails.push('sources: state ' + state + ' has no prod DB in the registry');
+  else {
+    const byCol = {};
+    for (const m of src.mapped) (byCol[m.table + '.' + m.column] = byCol[m.table + '.' + m.column] || []).push(m);
+    for (const [col, ms] of Object.entries(byCol)) {
+      let c;
+      try { const r = await TS.dbSelect(prodMcp, TS.countSql(prodSchema, ms[0].table, ms[0].column, urusan)); c = r[0] ? { total: Number(r[0].total), empty: Number(r[0].empty) } : { error: 'no row' }; }
+      catch (e) { c = { error: String(e.message || e).slice(0, 120) }; }
+      ms.forEach(m => { counts[m.tag] = c; });
+    }
+  }
+  const emptyOk = {};
+  for (const r of rows || []) { const m = /^EMPTY-OK\s+(\S+)/i.exec(r.source); if (m && /^(done|na\s*:\s*\S)/i.test(r.status)) emptyOk[m[1]] = r.status; }
+  const mappedTags = src.mapped.map(m => m.tag);
+  const envKey = arg('env');
+  const envMcp = envKey && st && st.db.mcp[envKey === 'stg2' ? 'stg' : envKey];
+  const envSchema = envKey && st && st.db.schemas[envKey];
+  const cases = [];
+  for (const k of TS.parseCases(process.argv)) {
+    if (!['empty', 'ba'].includes(k.kind) || !k.permohonan || !k.docx || !fs.existsSync(k.docx)) { fails.push('bad --case ' + [k.kind, k.permohonan, k.docx].join('|') + ' (kind empty|ba, permohonan, an existing .docx)'); continue; }
+    const one = { kind: k.kind, permohonan: k.permohonan, gaps: ccGaps(mappedTags, py('cc', k.docx), accepted), emptyCols: new Set() };
+    if (k.kind === 'empty') {
+      if (!envMcp || !envSchema) fails.push('empty case ' + k.permohonan + ' needs --env <mlit|stg1|stg2> to prove its columns are empty');
+      else for (const m of src.mapped) {
+        if (!counts[m.tag] || !(counts[m.tag].empty > 0)) continue;
+        try { const r = await TS.dbSelect(envMcp, TS.caseSql(envSchema, m.table, m.column, k.permohonan)); if (r[0] && Number(r[0].empty) > 0) one.emptyCols.add(m.tag); }
+        catch (e) { fails.push('empty case read ' + m.tag + ' failed: ' + String(e.message || e).slice(0, 80)); }
+      }
+    }
+    cases.push(one);
+  }
+  const j = TS.judge({ src, counts, cases, emptyOk, noBa: TS.noBaOk(arg('no-ba-id')) });
+  fails.push(...j.fails.map(f => 'sources: ' + f));
+  const emptyOnProd = Object.entries(counts).filter(([, c]) => c.empty > 0).map(([t, c]) => t + ' ' + c.empty + '/' + c.total);
+  const summary = `${src.mapped.length + src.none.length}/${tags.length} known, PROD empty ${emptyOnProd.length ? emptyOnProd.join(', ') : 'none'}, cases ${cases.map(k => k.kind + ' ' + k.permohonan).join(', ') || 'none'}`;
+  if (emptyOnProd.length) console.log('PROD EMPTY (urusan ' + urusan + ', ' + prodMcp + '):\n' + Object.entries(counts).filter(([, c]) => c.empty > 0).map(([t, c]) => '  ' + t + ' ' + c.empty + ' of ' + c.total).join('\n'));
+  return { fails, summary, log: { state, urusan, tags: tags.length, unknown: src.unknown, counts, cases: cases.map(k => ({ kind: k.kind, permohonan: k.permohonan, gaps: k.gaps, emptyCols: [...k.emptyCols] })) } };
+}
+
 module.exports = { parseChecklist, checklistState, requiredActions, chainCoverage, touchedTags, ccGaps, wordDiff };
-if (require.main === module) main();
+// Sources only (no chain, no diff, no PDF): node template-scenario.js sources --qa <num> --filled <docx> --permohonan <id> [--case ...] [--env ...]
+async function sourcesOnly() {
+  const qa = String(arg('qa', '')).replace(/^QA-/i, '');
+  const filled = arg('filled');
+  if (!filled || !fs.existsSync(filled)) { console.error('usage: template-scenario.js sources --qa <num> --filled <generated .docx> --permohonan <id> [--case "empty|<id>|<docx>" --env <env>] [--case "ba|<id>|<docx>" | --no-ba-id "<reason>"]'); process.exit(2); }
+  const qaDoc = arg('qa-doc', path.join(mainRoot(), 'projects', 'coding-projects', 'active', 'QA-' + qa, 'QA-' + qa + '.md'));
+  const rows = parseChecklist(fs.existsSync(qaDoc) ? fs.readFileSync(qaDoc, 'utf8') : '') || [];
+  const accepted = {};
+  for (const r of rows) { const m = /^FIXED-DATA\s+(\S+)/i.exec(r.source); if (m && /^(done|na)/i.test(r.status)) accepted[m[1]] = r.status; }
+  const src = await sourceCheck({ filled, rows, accepted });
+  if (src.fails.length) console.log('FAILS:\n  ' + src.fails.join('\n  '));
+  console.log('TAG-SOURCES: ' + (src.fails.length ? 'FAIL' : 'PASS') + ' QA-' + qa + ' · ' + src.summary);
+  fs.appendFileSync(LOG, JSON.stringify({ qa, ts: new Date().toISOString(), mode: 'sources', status: src.fails.length ? 'FAIL' : 'PASS', sources: src.log, fails: src.fails }) + '\n');
+  process.exit(src.fails.length ? 1 : 0);
+}
+
+if (require.main === module) (process.argv[2] === 'sources' ? sourcesOnly() : main()).catch(e => { console.error('TEMPLATE-SCENARIO: FAIL ' + (e.message || e)); process.exit(1); });

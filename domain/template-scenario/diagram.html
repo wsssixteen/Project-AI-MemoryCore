@@ -15,19 +15,20 @@ svg { width: 100%; min-width: 900px; display: block; }
 </head>
 <body>
 <div class="frame">
-<p class="eyebrow">Feature · domain/template-scenario · v1 · quest step TEMPLATE-SCENARIO</p>
-<h1>A template ticket is handed back only after five checks pass</h1>
+<p class="eyebrow">Feature · domain/template-scenario · v2 · quest step TEMPLATE-SCENARIO</p>
+<h1>A template ticket is handed back only after six checks pass</h1>
 <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ts-t ts-d">
 <title id="ts-t">template-scenario flow</title>
-<desc id="ts-d">The fix changes a Word template. One script checks the requirement checklist, renders every config action with doc-sim, checks every changed CC tag holds a real value, word-diffs the paper against the requirement docx, and writes a green highlighted PDF. The Stop gate blocks the hand-back until the script printed PASS.</desc>
+<desc id="ts-d">The fix changes a Word template. One script checks the requirement checklist, renders every config action with doc-sim, checks every changed CC tag holds a real value, checks every printed tag has a source and that a source empty on PROD was run on an empty permohonan and the BA test ID, word-diffs the paper against the requirement docx, and writes a green highlighted PDF. The Stop gate blocks the hand-back until the script printed PASS.</desc>
 <defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker></defs>
 <rect width="100%" height="100%" fill="#f5f5f5"/>
 <line x1="170" y1="70" x2="198" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
 <line x1="390" y1="70" x2="418" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
 <line x1="610" y1="70" x2="638" y2="70" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
 <line x1="830" y1="104" x2="830" y2="172" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-<line x1="736" y1="210" x2="642" y2="210" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-<line x1="450" y1="210" x2="422" y2="210" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="668" y1="216" x2="644" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="440" y1="216" x2="416" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="228" y1="216" x2="204" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
 
 <rect x="20" y="36" width="150" height="68" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <text x="95" y="64" font-size="13" font-weight="600" text-anchor="middle">Template fixed</text>
@@ -48,22 +49,28 @@ svg { width: 100%; min-width: 900px; display: block; }
 <text x="807" y="76" fill="#2f7d4f" font-size="11" text-anchor="middle">no empty, "-", &lt;placeholder&gt;, blank signature;</text>
 <text x="807" y="92" fill="#2f7d4f" font-size="11" text-anchor="middle">a staging gap = FIXED-DATA row with reason</text>
 
-<rect x="740" y="176" width="232" height="80" rx="6" fill="rgba(47,125,79,0.10)" stroke="#2f7d4f" stroke-width="1.4"/>
-<text x="856" y="202" font-size="13" font-weight="600" text-anchor="middle">4 Word diff vs requirement</text>
-<text x="856" y="222" fill="#2f7d4f" font-size="11" text-anchor="middle">0 defects; CC data and accepted</text>
-<text x="856" y="238" fill="#2f7d4f" font-size="11" text-anchor="middle">typos / placeholders listed</text>
+<rect x="672" y="170" width="300" height="92" rx="6" fill="rgba(47,125,79,0.10)" stroke="#c00000" stroke-width="2.2"/>
+<text x="822" y="192" font-size="13" font-weight="600" text-anchor="middle">6 Tag sources (new 2026-11-06)</text>
+<text x="822" y="210" fill="#2f7d4f" font-size="11" text-anchor="middle">every printed tag has a source column;</text>
+<text x="822" y="226" fill="#2f7d4f" font-size="11" text-anchor="middle">empty on PROD for the urusan = paper on</text>
+<text x="822" y="242" fill="#2f7d4f" font-size="11" text-anchor="middle">an empty permohonan + the BA test ID</text>
 
-<rect x="454" y="176" width="188" height="80" rx="6" fill="rgba(47,125,79,0.10)" stroke="#2f7d4f" stroke-width="1.4"/>
-<text x="548" y="202" font-size="13" font-weight="600" text-anchor="middle">5 Green paper</text>
-<text x="548" y="222" fill="#2f7d4f" font-size="11" text-anchor="middle">changes highlighted green,</text>
-<text x="548" y="238" fill="#2f7d4f" font-size="11" text-anchor="middle">drawn in, 0 annotations</text>
+<rect x="444" y="176" width="200" height="80" rx="6" fill="rgba(47,125,79,0.10)" stroke="#2f7d4f" stroke-width="1.4"/>
+<text x="544" y="202" font-size="13" font-weight="600" text-anchor="middle">4 Word diff vs requirement</text>
+<text x="544" y="222" fill="#2f7d4f" font-size="11" text-anchor="middle">0 defects; CC data and accepted</text>
+<text x="544" y="238" fill="#2f7d4f" font-size="11" text-anchor="middle">typos / placeholders listed</text>
 
-<rect x="202" y="176" width="220" height="80" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
-<text x="312" y="202" font-size="13" font-weight="600" text-anchor="middle">Stop gate</text>
-<text x="312" y="222" fill="#bf4520" font-size="11" text-anchor="middle">hand-back blocked until</text>
-<text x="312" y="238" fill="#bf4520" font-size="11" text-anchor="middle">TEMPLATE-SCENARIO: PASS</text>
+<rect x="232" y="176" width="184" height="80" rx="6" fill="rgba(47,125,79,0.10)" stroke="#2f7d4f" stroke-width="1.4"/>
+<text x="324" y="202" font-size="13" font-weight="600" text-anchor="middle">5 Green paper</text>
+<text x="324" y="222" fill="#2f7d4f" font-size="11" text-anchor="middle">changes highlighted green,</text>
+<text x="324" y="238" fill="#2f7d4f" font-size="11" text-anchor="middle">drawn in, 0 annotations</text>
 
-<text x="500" y="300" fill="#4f5d75" font-size="11" text-anchor="middle">Screenshots: mark.py refuses nested or overlapping red boxes (--merge draws one union box)</text>
+<rect x="20" y="176" width="184" height="80" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+<text x="112" y="202" font-size="13" font-weight="600" text-anchor="middle">Stop gate</text>
+<text x="112" y="222" fill="#bf4520" font-size="11" text-anchor="middle">hand-back blocked until</text>
+<text x="112" y="238" fill="#bf4520" font-size="11" text-anchor="middle">TEMPLATE-SCENARIO: PASS</text>
+
+<text x="500" y="300" fill="#4f5d75" font-size="11" text-anchor="middle">Screenshots: mark.py refuses nested or overlapping red boxes (--merge draws one union box) · red border = the check added 2026-11-06</text>
 </svg>
 </div>
 </body>
