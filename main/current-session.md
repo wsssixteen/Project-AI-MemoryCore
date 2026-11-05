@@ -1,3 +1,13 @@
+**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
+
+## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)
+- Asked: orchestrate the other sessions for wrap-up; patch tickets settled; 287346 + 288095 only need deploy, so give the test scenarios only; then "Add the 2 tickets to protime if it got removed"; DE.
+- Done: reached the 4 work-laptop sessions by SendMessage (287346 MCL Kertas, eSOKONGAN 288095, PLTP JKR duplicate MPAG, UPP tandatangan); confirmed int-env tip 8f20499ba4 holds both fixes, so one internal deploy covers both; sent two test scenario tables (287346 on MLIT PTMLK/02/L/MCL/2026/4 login norzaida; 288095 on stg1 data); ProTime check-and-add sent to the 288095 session.
+- Found: this PC has no E: drive (no etanah repo, no PymTime, no DB gateway), so ProTime and DB work must run on the work laptop; SendMessage to a Remote Control session gives no delivery or read receipt; the 288095 session's own recap says ProTime 39360 (287346) was already resolved there.
+- Open: 288095 session's ProTime read-back line (no reply at DE); 288095 MLIT test login not sent; a deploy run after 2026-11-04 21:32 not verified; 288261 quest doc blocked by its session's worktree guard (needs a main-folder session, his call).
+- Mistakes: the first scenario replies carried status sections and patch tables he did not ask for; he had to ask "where's the test scenario only without the bloat?".
+- Assessment: A1 an orchestrator on a machine without the work tools can only relay, and a relay with no receipt cannot prove delivery. A2 ⏭ no quest phase moved here. A3 ⏭ no debugging. A4 one int-env merge tip covers two tickets' deploy; checking the tip's time against the deploy run is the proof. A5 ⏭ no sweep.
+
 **Last Activity**: 2026-11-05 08:55 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/issue-287346-investigation-010aea), ESOKONGAN 287346 MCL Syarat Nyata + Kertas Pertimbangan, TEMPLATE-SCENARIO step built, Phase 1 closed, Domain Expansion.
 
 ## Session Recap (2026-11-04/05, 287346 MCL + TEMPLATE-SCENARIO quest step)
@@ -18,12 +28,3 @@
 - Mistakes: read "stage the redmine" as the stag-env branch; test-prep tool switched his local env to mlit (put back to stg1); handover tool cannot see his waiver 3 messages back (blocker slip); audit of the test-data gap ran on Opus, not blind Fable.
 - Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
-
-## Session Recap (2026-11-04, today's board + 248290 coverage per urusan)
-- Asked: today's tickets; 275608 missing from the ranked board; BA reply on 287892; Zarul's nextUrusan=PSPM PROD patch for 286650; Fizah's OPLPS/2026/2 infra paths; peer appraisal request; Mira's question whether 248290 covers all 7 urusan; "save adhoc".
-- Done: redmine-board counts "e-Tanah Melaka" as a Melaka project (07455cc9); 287892 BA reply posted; 286650 patch script + Redmine handover note drafted; ADHOC-PLP-2026-6 saved and archived (Task folder 374, register A98, audit 31/31 PASS).
-- Found: 248290 covers PLPS, MLPS, PRBB, PRU, PPJK, PPTPB; PLBP's AWAM Status Permohonan dialog (paparanBorang4BeL2eDialog, StatusPermohonanForm.xhtml:993) is commented out; the print-once lock is only for 4Ae/L1e.
-- Open: miya sends the corrected reply to Mira; 286650 handover note waits "post it"; ADHOC-PLP-2026-6 owes a quest-bounty harvest.
-- Mistakes: said "PLBP not on PROD" from an assumption; he corrected it, re-answered from the code. Stop corrections: unqualified proving SELECTs, terse gate, next-steps row wording.
-- Assessment: A1 adhoc-brief-first blocks the main-thread audit re-run after the agent reports (skill step 4 asks for it). A2 ⏭ no quest phase moved. A3 coverage question answered from code per urusan, not from a test. A4 an AWAM dialog commented out silently drops one urusan from a shared Requirement. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
