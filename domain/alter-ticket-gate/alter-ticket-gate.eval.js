@@ -117,6 +117,8 @@ check('F14 effect — A0..A6 rows + playbook + state file + bypass rendered', ['
 check('F21 A5 says assignee = agihan default, never nextUser', /ASSIGNEE = agihan default/.test(r.out) && /NEVER add nextUser/.test(r.out), r.out.slice(0, 120));
 // F22 (2026-09-30, #282555) A6 points to miya's voice memory + fill-if-exists field rule, no Perak 5-line block
 check('F22 A6 = miya voice memory + fill-if-exists', /feedback_ticket_writing_style/.test(r.out) && /fill every field that exists/.test(r.out) && !/done-alter 5-line block/.test(r.out), r.out.slice(0, 120));
+// F22b (2026-11-05, 288533) A6 names the note generator: the done-alter note is generated, never typed
+check('F22b A6 names ticket-close-block --alter as the note generator', /A6 ⬜[^\n]*ticket-close-block\.js --alter, never typed/.test(r.out), r.out.slice(0, 120));
 // F23 (2026-10-21, /goal) Perak keeps the runbook-for-miya A5; Melaka A5 = run it yourself with alter.js + approval code
 check('F23a Perak A5 = runbook for miya, no alter.js run line', /A5 ⬜ RUNBOOK for みや/.test(r.out) && !/RUN IT YOURSELF/.test(r.out), r.out.slice(0, 160));
 r = run({ prompt: 'tolong alter tugasan PTMLK/02/L/PT/2026/343' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });

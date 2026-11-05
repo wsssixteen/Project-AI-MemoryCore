@@ -3,6 +3,7 @@ symptom: Familiar-built batch (commit `2750811`). Migration to `domain/` per tri
 goal: quest-phase-gate.gate.hook.js — PreToolUse hook (Edit | Write) RELOCATED 2026-07-07 from .claude/hooks/quest-phase-gate.js into the domain/quest-phase-gate/ Feature folder. Behavior unchanged; the ONLY code
 goal_signal: a fire on: its trigger
 retention: rotate monthly
+version: v4 (2026-11-05) — v3 requirement read + one REQUIREMENT-RULES row (or R0 none) per REQUIREMENT-READ
 # quest-phase-gate — Feature folder
 
 > Relocated 2026-07-07 from `.claude/hooks/quest-phase-gate.js` (flat hook) into this Feature folder.
@@ -63,7 +64,7 @@ resolution is unchanged by the relocation. If this folder ever nests deeper, thi
 | File | Role |
 |---|---|
 | `quest-phase-gate.gate.hook.js` | the hook (register PreToolUse `Edit\|Write`) |
-| `eval.js` | 5-fixture eval (sandbox-copies the hook into a temp depth-2 tree with a controlled `quest/active.txt`); exit 0 only at 5/5 |
+| `eval.js` | 30-fixture eval (sandbox-copies the hook into a temp depth-2 tree with a controlled `quest/active.txt`); exit 0 only at 30/30 |
 | `log.jsonl` | fire log (`blocked` / `allowed` / `bypassed`), created on first fire — NEW in migration |
 
 ## Version history (carried from source)
@@ -78,3 +79,16 @@ symptom: 287811 Phase 0 wrote REQUIREMENT-MATCH #223236 aligned from the subject
 A fifth required item, **Requirement read**: an etanah code edit in an active quest is denied until this session holds `REQUIREMENT-READ #<req>` (printed by `node quest/requirement-index.js --read <req> --for <ticket>`) and a line `REQUIREMENT-MATCH: <ticket> → #<req> "<subject>" — <aligned|extends|contradicts> — read: "<quoted rule>"` for that same req, or a `— none found` / `— not needed` line. Template and tool hint lines never pass (req must be digits or none, the verdict one word, not followed by `|`). Eval fixtures 6-16.
 
 boundary: covers etanah code edits during an active quest and this session's transcript · never edits a file, never checks the verdict is right (only that the requirement was read and quoted) · stops at a deny naming the missing item and the command that clears it.
+
+## v4 — requirement rules ledger (2026-11-05, per みや, handoff 2026-11-05 item 7)
+
+A sixth required item, **Requirement rules**: for EVERY `REQUIREMENT-READ #<req>` in this session's transcript there must be a `REQUIREMENT-RULES:` block holding a row `R<n> · #<req> · "<quote>"` (`· applies to … · our value …` optional), or one `R0 none` line, which covers every read. Order is free (the ledger may come before the read). A session with no `REQUIREMENT-READ` keeps v3's behaviour. Same raw transcript, same scope, same bypass, same fail-open.
+
+| Rule | Detail |
+|---|---|
+| Block | starts at `REQUIREMENT-RULES:`, ends at the first blank line (real or JSON-escaped), the end of the JSON string, or 4000 characters |
+| Row | `R` + digits, `·`, `#` + 5-7 digits, `·`, a quote that does not open with `<` (template text such as `R<n> · #<req> · "<quote>"` never passes) |
+| `R0 none` | counts only right after the marker or at a line start; prose "R0 none" and the deny text's backticked `R0 none` never pass |
+| Deny line | `Requirement rules: no REQUIREMENT-RULES row for read #<req>, … — write \`REQUIREMENT-RULES:\` with \`R<n> · #<req> · "<quote>"\` or \`R0 none\`` |
+
+Tool hints and docs must never print the marker followed directly by R0 none in one string (reading it would pass the gate). Eval fixtures 17-30; v3 allow fixtures 2, 9, 15 now carry a ledger row.

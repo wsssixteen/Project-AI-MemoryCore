@@ -11,7 +11,7 @@
  "skip-ba-table": "ba-understanding-table",
  "skip-branch-check": "branch-guard",
  "skip-canonical-doc": "pre-action-check-gate",
- "skip-cc-preflight": "template-cc-preflight",
+ "skip-template-scenario": "template-scenario",
  "skip-codegraph": "codemap-recon-consult",
  "skip-commit-subject": "commit-subject-gate",
  "skip-compile-gate": "compile-gate",

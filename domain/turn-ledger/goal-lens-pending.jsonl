@@ -1147,3 +1147,45 @@
 {"ts":"2026-11-04T06:19:18.391Z","turn_id":"0eb3a8e8-12","feature":"prod-alter-gate","goal":"a PROD alter runs only on a plan miya approved in chat, bound to the exact plan code"}
 {"ts":"2026-11-04T09:02:00.429Z","turn_id":"9863bff7-1","feature":"codemap-recon-consult","goal":"codemap-recon-consult.discipline.hook.js — Stop hook (back-gate) Power: domain/codemap-recon-consult/ — back-gate paired with the front-gate trigger.hook.js reminder."}
 {"ts":"2026-11-04T09:02:00.447Z","turn_id":"9863bff7-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T09:08:07.141Z","turn_id":"f41a0340-15","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T09:08:45.959Z","turn_id":"b5ab1ebc-4","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T09:20:46.250Z","turn_id":"7f4ed3cb-29","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T09:21:43.128Z","turn_id":"0eb3a8e8-19","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T09:55:30.492Z","turn_id":"9863bff7-5","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-04T10:00:06.081Z","turn_id":"9863bff7-5","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-04T10:00:06.088Z","turn_id":"9863bff7-5","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T10:25:12.084Z","turn_id":"d866c7f1-5","feature":"design-consult-gate","goal":"design-consult-gate.gate.hook.js — PreToolUse hook (matcher: Edit|Write) Feature: domain/design-consult-gate/ PURPOSE: creating/editing a system-shape file MUST be preceded by consulting BOTH"}
+{"ts":"2026-11-04T10:25:18.540Z","turn_id":"a0f861c1-4","feature":"awam-no-resit-gate","goal":"BLOCK the stop and require the No Resit to be derived from the DB and written into the Task notes file"}
+{"ts":"2026-11-04T10:26:52.776Z","turn_id":"0eb3a8e8-21","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-04T14:10:08.141Z","turn_id":"6aa08b46-20","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-04T14:10:12.161Z","turn_id":"e3d9d871-4","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T14:24:49.500Z","turn_id":"e3d9d871-5","feature":"awam-no-resit-gate","goal":"BLOCK the stop and require the No Resit to be derived from the DB and written into the Task notes file"}
+{"ts":"2026-11-04T14:24:49.506Z","turn_id":"e3d9d871-5","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T14:25:26.370Z","turn_id":"a0f861c1-7","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T14:35:16.420Z","turn_id":"d866c7f1-12","feature":"memory-write-gate","goal":"no feedback memory is written before the rule has a named enforcing home in its workflow"}
+{"ts":"2026-11-04T14:35:55.207Z","turn_id":"e3d9d871-10","feature":"terse-gate","goal":"terse-gate.discipline.hook.js — Stop hook Power: domain/terse-gate/ PURPOSE (みや 2026-06-24, \"you're still blabbering stupidly\"): block a reply that is"}
+{"ts":"2026-11-04T14:45:05.311Z","turn_id":"d866c7f1-13","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T14:45:52.687Z","turn_id":"a0f861c1-11","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T14:48:59.036Z","turn_id":"e3d9d871-13","feature":"predicate-box","goal":"no etanah code edit ends a turn without its Predicate Diagram, and no etanah .java fix build reaches a test hand-back without an extensive probe plan: a PROBE COVERAGE MATRIX of at least 3 candidate paths plus a fallback probe, a stated fix confidence of 80% or more, or a reasoned skip."}
+{"ts":"2026-11-04T14:51:59.414Z","turn_id":"a0f861c1-13","feature":"awam-no-resit-gate","goal":"BLOCK the stop and require the No Resit to be derived from the DB and written into the Task notes file"}
+{"ts":"2026-11-04T14:56:13.439Z","turn_id":"a0f861c1-14","feature":"awam-no-resit-gate","goal":"BLOCK the stop and require the No Resit to be derived from the DB and written into the Task notes file"}
+{"ts":"2026-11-04T14:56:13.526Z","turn_id":"a0f861c1-14","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T14:56:58.687Z","turn_id":"a0f861c1-15","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T15:03:10.014Z","turn_id":"e3d9d871-20","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T15:13:29.527Z","turn_id":"0eb3a8e8-22","feature":"adhoc-brief-first","goal":"miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent"}
+{"ts":"2026-11-04T15:13:29.989Z","turn_id":"0eb3a8e8-22","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T15:29:09.370Z","turn_id":"e3d9d871-29","feature":"codemap-recon-consult","goal":"codemap-recon-consult.discipline.hook.js — Stop hook (back-gate) Power: domain/codemap-recon-consult/ — back-gate paired with the front-gate trigger.hook.js reminder."}
+{"ts":"2026-11-04T15:34:46.672Z","turn_id":"e3d9d871-33","feature":"rootcause-format","goal":"block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences"}
+{"ts":"2026-11-04T15:50:58.145Z","turn_id":"668955fb-6","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-04T15:57:40.341Z","turn_id":"e3d9d871-36","feature":"render-verify","goal":"BLOCK until the RENDERED output is proven from an actual generated .docx (unzip word/document.xml, check the target run sz/font/text); compile-green is not proof"}
+{"ts":"2026-11-04T16:07:23.626Z","turn_id":"a0f861c1-20","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
+{"ts":"2026-11-04T16:17:26.551Z","turn_id":"5f32e9fd-1","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-04T16:20:55.818Z","turn_id":"5f32e9fd-1","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-04T16:23:53.084Z","turn_id":"5f32e9fd-1","feature":"next-steps-shape","goal":"every Next steps row tells miya in plain words what the item is and why it needs him"}
+{"ts":"2026-11-04T16:25:15.348Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:27:16.363Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:27:58.167Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:29:22.426Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:32:08.006Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:35:55.069Z","turn_id":"5f32e9fd-1","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
+{"ts":"2026-11-04T16:49:12.709Z","turn_id":"5f32e9fd-1","feature":"ticket-criteria-gate","goal":"ticket-criteria-gate.discipline.hook.js — Stop hook Power: domain/ticket-criteria-gate/ PURPOSE (per みや 2026-06-20, QA-261986 close — \"much more critical than the"}

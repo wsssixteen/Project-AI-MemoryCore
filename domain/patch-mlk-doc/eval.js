@@ -46,5 +46,23 @@ for (const [needle, label] of MUST_CONTAIN) {
 // frontmatter trigger sanity
 if (!/description:.*patch/i.test(body)) { console.error('FAIL: description lost the patch trigger'); fail++; }
 
+// quest 6c is the entry to this skill (ADHOC-MCL-2026-7, 2026-11-05): an adhoc patch ask enters 6c,
+// related tickets are read, and the stored-document check routes a data patch to this skill.
+const QUEST = path.join(__dirname, '..', '..', '.claude', 'skills', 'quest', 'SKILL.md');
+const QUEST_MUST = [
+  ['An adhoc whose ask is a patch takes this path too', 'A: adhoc patch ask enters 6c'],
+  ['## Fastest Path` and `## Post-mortem`', 'C: related ticket route read'],
+  ['quest/active-archive.txt` by urusan and by the document', 'C: archive grep by urusan + document'],
+  ['FROM umm_a_dok_keluaran WHERE aplikasi_id', 'B: stored-document SELECT'],
+  ['`document replace + data patch` and `patch-mlk-doc` loads', 'B: stored document routes here'],
+  ['Stored documents: <n>', 'B: visible Stored documents line'],
+];
+const quest = fs.existsSync(QUEST) ? fs.readFileSync(QUEST, 'utf8') : '';
+if (!quest) { console.error('FAIL: quest SKILL.md not found at ' + QUEST); fail++; }
+const sixC = quest.slice(quest.indexOf('6c. '), quest.indexOf('6d. '));
+for (const [needle, label] of QUEST_MUST) {
+  if (!sixC.includes(needle)) { console.error(`FAIL: quest 6c missing ${label} ("${needle}")`); fail++; }
+}
+
 if (fail) { console.error(`\n${fail} assertion(s) failed — skill has degraded.`); process.exit(1); }
-console.log(`PASS: patch-mlk-doc skill intact (${MUST_CONTAIN.length} anchors present).`);
+console.log(`PASS: patch-mlk-doc skill intact (${MUST_CONTAIN.length} anchors present) + quest 6c entry (${QUEST_MUST.length} anchors).`);

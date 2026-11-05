@@ -270,3 +270,7 @@
 {"ts":"2026-11-03T10:07:45.354Z","qa":"ADHOC-OPLPS-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"closed no issue by miya 2026-11-03; no fix, no new knowledge beyond the register row A93"}
 {"ts":"2026-11-03T14:40:47.544Z","qa":"QA-287925","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-11-03T14:41:40.887Z","qa":"QA-287925","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-04T10:26:26.294Z","qa":"ADHOC-PLP-2026-6","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-04T10:26:35.480Z","qa":"ADHOC-PLP-2026-6","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"answer-only adhoc, finding banked in register row A98"}
+{"ts":"2026-11-04T14:11:15.081Z","qa":"ADHOC-PLTP-2026-5","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-04T14:11:22.545Z","qa":"ADHOC-PLTP-2026-5","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc promoted to ticket 288169; findings already in qa_doc and ADHOC-REGISTER A96, no separate harvest"}

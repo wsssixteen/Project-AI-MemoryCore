@@ -1732,3 +1732,5 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 | `ind_mklmt_hkmlk.id_hakmilik` | hakmilik id lives in `umm_a_hkmlk.id_hkmlk` (and `ind_hkmlk.id_hkmlk`) |
 | `ind_jns_hkmlk` | no such table; the type is the 7th-8th characters of `id_hkmlk` (PN, PM, HS, GRN …) |
 - Perserahan made from a PLP permohonan: `umm_aplikasi.hubungan_aplikasi_id` = the parent `aplikasi_id`; `flag_integrasi` = Y.
+
+- Task-holder lookup by permohonan (verified 2026-11-04, 288095, 5 query misses first): the permohonan number is `umm_aplikasi.id_pengenalan` (not id_permohonan / no_rujukan / no_fail); the holder is `umm_a_tgsn.pengguna_semasa_id` -> `pcp_pengguna.pengguna_id`, login column `pcp_pengguna.nama_pengguna`. `SELECT a_tgsn_id, tgsn_id, status_tugasan, pengguna_semasa_id FROM umm_a_tgsn WHERE aplikasi_id = (SELECT aplikasi_id FROM umm_aplikasi WHERE id_pengenalan = '<id>') ORDER BY a_tgsn_id DESC;`

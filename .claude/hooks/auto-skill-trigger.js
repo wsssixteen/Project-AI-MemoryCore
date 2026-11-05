@@ -45,6 +45,11 @@ const TRIGGERS = [
   /\bfor wasting my time as well\b/i,
   /\btiring\b.{0,30}(this|skill|rule|over)/i,
   /\bjust keeps failing\b/i,
+
+  // His phrases of 2026-11-05 (handover-note correction, Fable 5.1 audit)
+  /\bunacceptable\b/i,
+  /\bI thought I(?:'ve| have)? asked you\b/i,
+  /\bwhy (?:is|are) .{0,40} not loaded\b/i,
 ];
 
 let input = '';

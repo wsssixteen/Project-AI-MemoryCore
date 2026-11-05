@@ -144,6 +144,64 @@ Fixture +2 in `design-consult-gate.eval.js`.
 
 ### P9 — memory `.claude/auto-memory/feedback_etanah_git_separate_clone.md`
 One line: "His clone E:\Projects\Melaka\<repo> is read only, except the fetch + reset that `lib/origin-rewrite.js` runs after an origin rewrite (P4). One non-merge commit per cycle on a ticket branch; a revert only on his order (`domain/deploy-guard` v2)." RULE-PLACEMENT: workflow deploy · step 4 · enforced-by deploy-guard v2 + origin-rewrite.js.
+STEP-3: B3 Patch scope in quest/ticket-load-verify.js + quest Pre-emit gate row (288261 rework audit)
+session: redmine-288261-quest-d586ef
+his words: "Build it" (order) · after "Please audit how next time we can avoid this, even though it is not our part. This is part of our effort on releasing something rework free."
+fix or report: fix
+who pays: on-demand: a few ms inside ticket-load-verify.js at each quest start or resume; no process, no network
+goal without the part: a BA list that drops a permohonan the TSO report named ships a partial patch, as on 288261 (/1 tujuan), and the ticket comes back
+model: claude-opus-5-5 (highest is claude-fable-5-1, which wrote the audit verdict feature:patch-scope-B3; neither part is highest-order nor runs every prompt)
+shown: scratchpad b3-how.png + b3-where.png (sent to miya)
+state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. OPEN: eval cases (18)-(22) in ticket-load-verify.eval.js not run: redmine-write-gate blocks node on that eval (status_id: fixture key); needs miya [skip-redmine-write-gate: local eval] or the gate exemption.
+
+STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
+session: sweep-orchestration-audit-39e710
+his words: "Yes, apply all three" (order) · after "please audit why you failed, what is still missing in our patching quest path & steps"
+fix or report: fix
+who pays: on-demand: read when a ticket or adhoc patch ask loads the quest skill; no process
+goal without the part: a patch ask with stored documents gets a data-patch-only plan, as on ADHOC-MCL-2026-7
+model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
+shown: scratchpad patch-path-6c.png
+
+**Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
+
+## Session Recap (2026-11-05, 239386 MPT which pages to show)
+- Asked: reload 239386 with /quest resume and prepare the BA confirmation again (older session not archived); stage it in the browser; simpler picture; clash table inside the note; /deep-research whether the 5 other-module pages should show and whether it depends on the user; save the quest.
+- Done: Redmine 239386 note to Anis 17:27 (2 errors, clash table, yes/no question) + picture 6 at 17:45, both posted by him; deep research (code, DB census, tickets) folded into QA-239386.md; quest status delegated to Anis, cold-resume 7/7, branches table PASS.
+- Found: MPT pages = every ind_langkah row of the urusan's MPT tugasan, no user, peranan, modul or flag_aktif filter (etanah-common LuceneForm.java:1820-1828); STG2 PLP MPT carries only the shared UT/BGN set; Teknikal beans have Pelupusan branches, Pembangunan forms likely NPE on plain PLP (not tested).
+- Open: Anis's answer; Amirul NPE note not sent; rework audit + 12-row audit owed; MLIT test of the 5 pages on a PLP permohonan.
+- Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
+- Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
+## Session Recap (2026-11-05, 287346 hotfix prep, parked)
+- Asked: is the hotfix skill installed; load it and prepare 287346; then "we didn't get any orders to hotfix so save for now DE".
+- Done: hotfix skill loaded (route H1-H4, ticket already fixed); local branch mlk/hotfix/287346 off origin/mlk/master 3ca04772db (1.9.2) in worktree E:\Dev\etanah-work\etanah-pelupusan-hotfix-287346; merged origin/mlk/esokongan/287346 as 07a77bf833 (4 commits, 3 files, no common change); compile green; infra message drafted from the team template. NOT pushed.
+- Found: at DE the hotfix branch is stale: it lacks rework 1 commit c2364d2bde (made 15:02 by the 287346 rework session), so it must not be pushed as is.
+- Open: no hotfix order. If one comes (after BA verify): fetch, merge origin/mlk/esokongan/287346 again into mlk/hotfix/287346 (or drop and rebuild off fresh master), check HEAD..origin/mlk/esokongan/287346 = 0, compile, push, give him the infra message. Branch and worktree are local only.
+- Mistakes: built the hotfix branch before checking a hotfix was ordered and the BA had verified; the plan picture asked that question only after the build.
+- Assessment: A1 ⏭ no system part changed. A2 hotfix route H1 assumes "verified" with no check that an order and a BA pass exist, and nothing re-checks the ticket branch tip at push time. A3 ⏭ no debugging. A4 a hotfix built from a ticket branch goes stale the moment a rework commit lands. A5 ⏭ no sweep.
+**Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
+
+## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)
+- Asked: orchestrate the other sessions for wrap-up; patch tickets settled; 287346 + 288095 only need deploy, so give the test scenarios only; then "Add the 2 tickets to protime if it got removed"; DE.
+- Done: reached the 4 work-laptop sessions by SendMessage (287346 MCL Kertas, eSOKONGAN 288095, PLTP JKR duplicate MPAG, UPP tandatangan); confirmed int-env tip 8f20499ba4 holds both fixes, so one internal deploy covers both; sent two test scenario tables (287346 on MLIT PTMLK/02/L/MCL/2026/4 login norzaida; 288095 on stg1 data); ProTime check-and-add sent to the 288095 session.
+- Found: this PC has no E: drive (no etanah repo, no PymTime, no DB gateway), so ProTime and DB work must run on the work laptop; SendMessage to a Remote Control session gives no delivery or read receipt; the 288095 session's own recap says ProTime 39360 (287346) was already resolved there.
+- Open: 288095 session's ProTime read-back line (no reply at DE); 288095 MLIT test login not sent; a deploy run after 2026-11-04 21:32 not verified; 288261 quest doc blocked by its session's worktree guard (needs a main-folder session, his call).
+- Mistakes: the first scenario replies carried status sections and patch tables he did not ask for; he had to ask "where's the test scenario only without the bloat?".
+- Assessment: A1 an orchestrator on a machine without the work tools can only relay, and a relay with no receipt cannot prove delivery. A2 ⏭ no quest phase moved here. A3 ⏭ no debugging. A4 one int-env merge tip covers two tickets' deploy; checking the tip's time against the deploy run is the proof. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-05 08:55 — worktree `common-version-1-10-20-mlk-c5ee8f` (branch claude/issue-287346-investigation-010aea), ESOKONGAN 287346 MCL Syarat Nyata + Kertas Pertimbangan, TEMPLATE-SCENARIO step built, Phase 1 closed, Domain Expansion.
+
+## Session Recap (2026-11-04/05, 287346 MCL + TEMPLATE-SCENARIO quest step)
+- Asked: solve, commit and deploy 287346; Redmine handover to Anis following Requirement #223230 100%; one green-highlighted paper, no comments or numbers; then /goal: Fable 5.1 plans a complete template test-scenario step (requirement check, CC tags filled, every ticket request), pull 288095's work from main first, green paper with screenshots, red boxes never nested or overlapping.
+- Done: fix 93db632627 on mlk/esokongan/287346, int-env 013616117b; Redmine 287346 Resolved to Anis (journal 11, Root cause + Solution); domain/template-scenario (checklist, chain 3/3, CC values, word diff vs requirement, green paper, Stop gate; eval 33/33; commit 230e548b); fix-photo mark.py refuses nested/overlapping boxes (--merge draws the union); requirement-index.js --read prints docx comments; template-cc-preflight retired; Phase 1 close 8965fa93 (status closed, KPI row, branches table).
+- Found: Hakmilik Sementara and Kekal values were swapped in the template; the MCL screen called a Pemberimilikan-only method on Syarat Nyata; the main folder had diverged from GitHub main (synced with row-level union, 0 rows lost).
+- Open: Anis verifies 287346 and closes it on Redmine, then Phase 2 archive (save-quest says WAIT); atlas-ship-gate reads its own message text (slip row, not built); stg1 patch for PTMLK/01/L/MCL/2026/24 (both signatures) only if he wants it.
+- Mistakes: two hand-backs of 287346 had requirement gaps my own audit listed (the reason the step was built); `git add -A` in the main folder was refused (untracked = confidential), used `git add -u` + named paths; a /goal loop on an external BA step ran ~20 turns.
+- Assessment: A1 a /goal whose last condition is an external human step loops the evaluator with no exit but /goal clear. A2 TEMPLATE-SCENARIO now gates every template hand-back on requirement diff + CC values. A3 doc-sim + green paper proved the template offline with no server. A4 a template versi older than its Requirement passes every code test; only a word diff against the requirement docx catches it. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
 
 ## Session Recap (2026-11-04, 288095 PRBB Rencana huruf kecil, .00, 6.3)
 - Asked: run /quest on 288095; apply all 3 fixes; test on server; stage the Redmine handover; patch the missing mlit data and screenshot the fix; todo for a test-data step; ProTime check of today's 4 tickets.
@@ -154,20 +212,32 @@ One line: "His clone E:\Projects\Melaka\<repo> is read only, except the fetch + 
 - Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
 
-## Session Recap (2026-11-04, today's board + 248290 coverage per urusan)
-- Asked: today's tickets; 275608 missing from the ranked board; BA reply on 287892; Zarul's nextUrusan=PSPM PROD patch for 286650; Fizah's OPLPS/2026/2 infra paths; peer appraisal request; Mira's question whether 248290 covers all 7 urusan; "save adhoc".
-- Done: redmine-board counts "e-Tanah Melaka" as a Melaka project (07455cc9); 287892 BA reply posted; 286650 patch script + Redmine handover note drafted; ADHOC-PLP-2026-6 saved and archived (Task folder 374, register A98, audit 31/31 PASS).
-- Found: 248290 covers PLPS, MLPS, PRBB, PRU, PPJK, PPTPB; PLBP's AWAM Status Permohonan dialog (paparanBorang4BeL2eDialog, StatusPermohonanForm.xhtml:993) is commented out; the print-once lock is only for 4Ae/L1e.
-- Open: miya sends the corrected reply to Mira; 286650 handover note waits "post it"; ADHOC-PLP-2026-6 owes a quest-bounty harvest.
-- Mistakes: said "PLBP not on PROD" from an assumption; he corrected it, re-answered from the code. Stop corrections: unqualified proving SELECTs, terse gate, next-steps row wording.
-- Assessment: A1 adhoc-brief-first blocks the main-thread audit re-run after the agent reports (skill step 4 asks for it). A2 ⏭ no quest phase moved. A3 coverage question answered from code per urusan, not from a test. A4 an AWAM dialog commented out silently drops one urusan from a shared Requirement. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 22:40 — worktree `ticket-275608-reply-7d6b89` (branch claude/redmine-data-patches-583794), PROD data patches 288169 + 288261 Resolved to Fizah, Domain Expansion.
+STEP-3: rework audit (quest Workflow step 1c + close-phase Phase 1 step 0)
+session: 2026-11-05 cool-margulis-5bb326 (287346 rework 1)
+his words: "please audit this round to add an ever continuing improvement or self-improvement particularly on receiving rework tickets. To straight away summon Fable 5.1 to audit I believe AFTER you've finished phase 0 ... to then log it straight away to propose the improvement into our quest workflow at the end during DE perhaps or before DE AFTER redmine handover, ticket close. The improvement after the audit of course uses Fable/highest model as well as usual." (order)
+fix or report: fix
+who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k tokens on 287346); the manifest line is in-process, no new process
+goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
+model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
+shown: rework-audit-flow.png (scratchpad, sent to miya)
 
-## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
-- Asked: run 2 Redmine data patches; then "replace" not "upload" for an overwrite; then hand both back to the BA.
-- Done: 288169.sql (6 umm_a_jabatan_teknikal rows agensi 8 → 6) and 288261.sql (3 UPDATEs) + renamed pelan PDF; infra ran them; PROD re-checked; both tickets Resolved to Fizah 22:33 with his note "have patched the data in PROD. Can proceed to verify."; patch-mlk-doc infra box says "replace" (8ebb3381); redmine-phase1-prefill Step 4 carries the PROD note (main 66cfedae).
-- Found: BA named agensi 6002 but the bad rows sit on agensi 8 (named MPAG 21/07 to 13/08); a PROD patch is checked by the user through the TSO, never by the BA.
-- Open: QA-288169.md and QA-288261.md are not in the main folder (worktree guard); drafts in this session's scratchpad. Quests stay Phase 1 until Redmine shows Closed.
-- Mistakes: wrote the internal-deploy note ("Please help to verify") on a PROD patch; Stop corrections for a part path, a missing proving SELECT, and the change map; memory-write-gate refused the speech example 3 times (rule went into the skill instead).
-- Assessment: A1 memory-write-gate cannot see a RULE-PLACEMENT line written in the same message as the edit. A2 the prefill skill had no PROD-patch note shape. A3 ⏭ no debugging. A4 an agensi renamed for a window leaves rows pointing at the wrong agency. A5 ⏭ no sweep.
-**Last Activity**: 2026-11-04 17:55 — worktree `penang-common-null-error-219adf`, Penang Utiliti Penyediaan Surat Jana error (ADHOC-UPS-2026-2), Domain Expansion.
+STEP-3: change-card skill (What / Why / How / When / Where, before and after every system change)
+session: edb789a0-eefa-41ce-855b-53a0705b84a6
+his words: "build a skill that will always be invoked installed into system-upgrade and or BEFORE we do system-upgrade" (order)
+fix or report: fix
+who pays: on-demand: no process; one checker call per card, two cards per system change (step 3, step 8)
+goal without the part: he reviews a change from the STEP-3 block and the step 8 map alone, with no five-line card to compare before and after
+model: claude-fable-5-1
+shown: domain/change-card/diagram.png
+note: "system-upgrade" read as the change route (/system-change); Fable 5.1 A/S/C verdict "build with changes" (9 items), built by claude-opus-5-5
+
+CHANGE-CARD (before): change-card
+- What: A new skill, change-card, shows every system change as five one-sentence lines with a flow picture and the change map.
+- Why: On 2026-11-05 he asked for a What, Why, How, When and Where card that is easy to review before and after a change.
+- How: The card is written here, checked by `domain/change-card/change-card.js`, then shown before his nod and again after landing.
+  ![flow](domain/change-card/diagram.png)
+- When: It runs at change route step 3 before his nod and at step 8 after the change lands on main.
+- Where: It lives in `domain/change-card/` and `.claude/skills/change-card/`, wired into rows 3 and 8 of `system/INDEX.md`.
+  ![where](change-map-20261105-094246.png)
+Where picture = the change map (lib/change-map.js).
+

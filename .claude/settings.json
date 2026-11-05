@@ -572,7 +572,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-cc-preflight\\\\template-cc-preflight.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-scenario\\\\template-scenario.check.hook.js\""
           },
           {
             "type": "command",

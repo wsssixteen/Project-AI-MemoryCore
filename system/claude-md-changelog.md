@@ -10,6 +10,11 @@
 
 ---
 
+## v2.05 (2026-11-05)
+
+- §Vocabulary "awareness" gains one sentence per みや on 288533 ("I thought I've asked you to add into CLAUDE.md if you add anything into feedback_ to properly find the right location/step in the related workflow/feature/tool/skill to add it"): a correction or feedback_ rule goes into the step that makes that output, and that step calls the one tool that makes it; never a second copy. Root cause (Fable 5.1 audit): the rule lived only in the MEMORY.md header, system-rules Rule 1 and memory-write-gate (fires on a feedback_ file write only); a correction answered by a skill edit met none of them, and the 288533 handover-note shape ended up written in 8 places. Wording shown to and approved by him ("Yes, add it").
+- Spec preservation: additive; the awareness definition and its banned list are unchanged. Paired: auto-skill-on-mistake Step 2.0 PRODUCER line (same day).
+
 ## v2.04 (2026-11-02)
 
 - Rule 10 replaced per みや: "I didn't fucking say anything about using code blocks. I just said your current tables do not have lines." Dropped and named: the v2.02 code-block table and the block on pipe tables. Kept: pictures, pages and documents have lines on all four sides. A reply cannot add vertical lines to a chat table; the app draws them.

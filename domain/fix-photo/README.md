@@ -86,3 +86,5 @@ Per miya: "if I share with you screenshots that is related to the test scenario,
 | 7 | "test scenario" in a question about a test plan, with a design image | accepted-risk: blocks once; one save or one skip line clears it |
 | 8 | mid-turn entry shape changes in a future app version | accepted-risk: falls back to v3 behaviour, no crash (walk is defensive) |
 
+
+*v5 2026-11-05 (per みや: 'the red boxes need to be chill, just big red box or specific red box, DO NOT have smaller red boxes inside bigger red box and overlapping red boxes'): mark.py refuses boxes that overlap or sit inside each other (exit 2 naming the union), --merge draws the union; label backgrounds lose their red frame. Specific boxes, one per change. Fixtures F30-F33 in domain/template-scenario/template-scenario.eval.js. Spec-preservation: every v4 rule kept; additive.*
