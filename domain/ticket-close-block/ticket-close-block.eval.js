@@ -72,6 +72,31 @@ check('F5 --user with no value -> exit 1', r.status === 1 && /--user/.test(r.err
 const rows = fs.readFileSync(path.join(sb, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
 check('F6 log rows: one per printed note, mode alter, patched flag kept', rows.length === 3 && rows.every(x => x.mode === 'alter' && x.outcome === 'printed') && rows[1].patched === true && rows[0].patched === false, JSON.stringify(rows));
 
+// ── one non-merge commit per cycle (2026-11-05, #287811: five failed commits reached origin before the note) ──
+const { execFileSync } = require('child_process');
+const g = (cwd, args) => execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+const repo = path.join(sb, 'repo'); fs.mkdirSync(repo);
+g(repo, ['init', '-q']); g(repo, ['config', 'user.email', 'ridhwan@x']); g(repo, ['config', 'user.name', 'Ridhwan']);
+fs.writeFileSync(path.join(repo, 'a.txt'), '1\n'); g(repo, ['add', '-A']); g(repo, ['commit', '-q', '-m', 'base']);
+g(repo, ['branch', '-m', 'mlk/master']);
+g(repo, ['checkout', '-q', '-b', 'mlk/internal/287811']);
+fs.writeFileSync(path.join(repo, 'a.txt'), '2\n'); g(repo, ['commit', '-q', '-am', 'Ref #287811 - fix 1']);
+fs.writeFileSync(path.join(repo, 'a.txt'), '3\n'); g(repo, ['commit', '-q', '-am', 'Ref #287811 - fix 2']);
+const note = extra => run(['--repo', repo, '--ticket', '287811', '--module', 'pelupusan', '--branch', 'mlk/internal/287811', '--ba', 'mira', ...(extra || [])]);
+r = note();
+check('F7 two non-merge commits in cycle 1 -> refused exit 3, names the count and origin-rewrite', r.status === 3 && /2 non-merge commits/.test(r.err) && /origin-rewrite/.test(r.err) && !/Salam/.test(r.out), r.status + ' ' + r.err.slice(0, 200));
+r = note(['--multi-ok', 'miya 2026-11-05: keep both, he said so']);
+check('F8 --multi-ok "<his words>" -> note printed, exit 0', r.status === 0 && /Salam Mira/.test(r.out), r.status + ' ' + r.err.slice(0, 120));
+g(repo, ['reset', '-q', '--soft', 'mlk/master']); g(repo, ['commit', '-q', '-m', 'Ref #287811 - one commit']);
+r = note();
+check('F9 squashed to one commit -> note printed, exit 0', r.status === 0 && /Salam Mira/.test(r.out) && /one commit/.test(r.out), r.status + ' ' + r.err.slice(0, 120));
+g(repo, ['checkout', '-q', 'mlk/master']); fs.writeFileSync(path.join(repo, 'b.txt'), 'm\n'); g(repo, ['add', '-A']); g(repo, ['commit', '-q', '-m', 'master moves']);
+g(repo, ['checkout', '-q', 'mlk/internal/287811']); g(repo, ['merge', '-q', '--no-edit', 'mlk/master']);
+r = note();
+check('F10 a master merge on the branch is not counted -> exit 0', r.status === 0 && /Salam Mira/.test(r.out), r.status + ' ' + r.err.slice(0, 120));
+const rows2 = fs.readFileSync(path.join(sb, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+check('F11 log carries refused-multi-commit (n=2, cycles=1) and multi-ok rows', rows2.some(x => x.outcome === 'refused-multi-commit' && x.n === 2 && x.cycles === 1) && rows2.some(x => x.outcome === 'multi-ok'), JSON.stringify(rows2.slice(-5)));
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);
