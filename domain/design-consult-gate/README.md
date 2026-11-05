@@ -36,6 +36,7 @@ state-scoped: no, state-agnostic.
 symptom (step-3 rider): 2026-11-03 — a RustDesk session-start alert was built for a connection he asked to have fixed, ran in every session, and passed the route because its goal line restated its output; miya ordered it nuked and asked for justify > scrutinize > assess on the highest model before any change.
 goal (step-3 rider): no new part or highest-order change is built before its ask, fix-or-report, cost and goal are written, checked on the right model and shown to him as a picture.
 goal_signal (step-3 rider): blocked-step3 rows are followed by an allowed write in the same session; no report-only part for a named failure lands without an alert nod.
+change card (step-3 rider, 2026-11-05, per みや "Add it now"): the STEP-3 block of this session must carry a `CHANGE-CARD (before)` block under it that `domain/change-card/change-card.js` passes (What · Why · How · When · Where, one sentence each); fixtures S21-S25 in `step3-check.eval.js`. Absent change-card module = not required.
 diagram: domain/design-consult-gate/diagram.png
 self_audit: every fire writes a log.jsonl row (file · action · detail); the eval replays each rider shape and the 2026-08-21 self-disarm shape.
 
