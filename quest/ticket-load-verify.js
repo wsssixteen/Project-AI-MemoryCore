@@ -248,6 +248,18 @@ const cycleWarn = reopens.length && !cycleDirs.length && !/rework/i.test(redmine
     ? `⚠ ticket was sent back ${reopens.length}× (latest ${reopens[reopens.length - 1]}) — if WE shipped a change before, this is our next cycle: node quest/active-cli.js update QA-${num} status=active creates the Rework folder (needs closed= in the block)`
     : null;
 const cycleLine = `CYCLE: status=${redmineStatus} · folders=${cycleDirs.length ? cycleDirs.map(d => d.name).join(' · ') : 'none'} · reopens-in-journal=${reopens.length}${reopens.length ? ` (latest ${reopens[reopens.length - 1]})` : ''} · verdict=${cycleVerdict}`;
+// 2026-11-05 (miya, 287346): a ticket sent back to us gets a highest-model audit of WHY the
+// earlier cycle failed, right after Phase 0, logged at once as wrong-fix rows (quest SKILL.md
+// § Rework audit). The line says owed or done; done = a row written on/after the latest reopen.
+let reworkAuditLine = null;
+if (/^REWORK/.test(cycleVerdict) && reopens.length) {
+    const since = reopens[reopens.length - 1].slice(0, 10);
+    let rows = null;
+    try { rows = require('../lib/wrong-fix').rowsSince('QA-' + num, since); } catch (_) {}
+    reworkAuditLine = rows && rows.length
+        ? `REWORK-AUDIT: done · ${rows.length} wrong-fix row(s) since ${since}`
+        : `REWORK-AUDIT: owed · launch ONE highest-model agent (node lib/models.js highest) on why the cycle before failed, then node lib/wrong-fix.js add QA-${num} per BA issue (quest SKILL.md § Rework audit)`;
+}
 
 // ---- integrity checks (these are the reason this exits non-zero) ----
 // Search the WHOLE task folder, not just 0. Brief/ — an attachment we upload OURSELVES
@@ -291,7 +303,7 @@ const qaDoc = qaDocCandidates.find(p => fs.existsSync(p)) || null;
 if (asJson) {
     console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
         descriptionBy: { author: descAuthor, role: descRole ? descRole.cls : 'unknown' }, specSource: [specJson('issue'), specJson('expected')],
-        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine },
+        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine, reworkAudit: reworkAuditLine },
         pdfAnnotations: Object.fromEntries(pdfNotes) }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
@@ -344,6 +356,7 @@ L.push('');
 L.push('D. CYCLE — derived from Redmine status + cycle folders + journal reopens. Echo the CYCLE line VERBATIM.');
 L.push(`   ${cycleLine}`);
 if (cycleWarn) L.push(`   ${cycleWarn}`);
+if (reworkAuditLine) L.push(`   ${reworkAuditLine}`);
 L.push('');
 L.push('D2. TICKET FIELDS + RELATIONS \u2014 the reporter\u2019s own metadata. Echo the decision-bearing ones.');
 if (!fieldsSynced) {
