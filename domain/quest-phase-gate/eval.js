@@ -195,6 +195,25 @@ rulesCase(29, 'bypass token, reads with no rows', [], 'bypassed', null, null,
   [jl('user', 'walk through'), jl('tool', READ_223236 + '\n' + READ_248531), jl('assistant', 'audit edit. [skip-phase-gate: test] continuing.')].join('\n') + '\n');
 rulesCase(30, 'block ends at a blank line; a row after it does not count', [READ_248531, 'REQUIREMENT-RULES: R1 · #223236 · "Sedia"', '', 'R2 · #248531 · "Hakmilik"'], false, ['248531'], ['223236']);
 
+// ── Fixtures 31-33: v5 branch binding (2026-11-05, #287811) ──
+// The edited repo's branch names the ticket; THAT block must be status=active, whatever other blocks say.
+{
+  const runBranch = (branch, inputObj) => spawnSync(process.execPath, [HOOK], {
+    input: JSON.stringify(inputObj), encoding: 'utf8', timeout: 20000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: path.resolve(__dirname, '..', '..'), QUEST_PHASE_GATE_BRANCH: branch },
+  });
+  const t = writeTranscript('t31.txt', [...PHASES, ...V3_BASE, RULES_223236, ''].join('\n'));
+  setActive('qa=QA-287811\nstatus=closed\nlocal_test_confirmed=true\nclosed=2026-11-03\n\n' + ACTIVE_BLOCK);
+  let r = runBranch('mlk/internal/287811', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '31. v5 branch ticket 287811 is status=closed while another block is active -> deny (the 287811 shape)', pass: r.status === 0 && /"deny"/.test(r.stdout) && /not status=active/.test(r.stdout) && /active-cli\.js update QA-287811/.test(r.stdout) });
+  setActive('qa=QA-287811\nstatus=active\nlocal_test_confirmed=false\nclosed=2026-11-03\n\n' + ACTIVE_BLOCK);
+  r = runBranch('mlk/internal/287811', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '32. v5 branch ticket 287811 re-opened (status=active) + all banners -> allow', pass: r.status === 0 && r.stdout.trim() === '' });
+  setActive(ACTIVE_BLOCK);
+  r = runBranch('mlk/master', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '33. v5 branch without a ticket number falls back to the old predicate (any active block) -> allow', pass: r.status === 0 && r.stdout.trim() === '' });
+}
+
 // ── Report ──
 let failed = 0;
 for (const r of results) {
