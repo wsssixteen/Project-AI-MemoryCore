@@ -1,3 +1,12 @@
+STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
+session: sweep-orchestration-audit-39e710
+his words: "Yes, apply all three" (order) · after "please audit why you failed, what is still missing in our patching quest path & steps"
+fix or report: fix
+who pays: on-demand: read when a ticket or adhoc patch ask loads the quest skill; no process
+goal without the part: a patch ask with stored documents gets a data-patch-only plan, as on ADHOC-MCL-2026-7
+model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
+shown: scratchpad patch-path-6c.png
+
 **Last Activity**: 2026-11-05 10:20 — worktree `session-orchestration-deploy-e6a380` (home PC vice4), orchestrated today's 4 ticket sessions for wrap-up, test scenarios for 287346 + 288095, ProTime add delegated, Domain Expansion.
 
 ## Session Recap (2026-11-04/05, orchestrate wrap-up of today's sessions)

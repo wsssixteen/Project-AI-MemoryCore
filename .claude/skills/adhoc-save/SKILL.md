@@ -88,6 +88,7 @@ Every brief carries ONE line just before `## Reply to BA`: `Adhoc route: <ROUTE>
 | `CR` | The BA reported it as a bug, but the screen does what the requirement says | "Mohon BA buka tiket CR" |
 
 - **Suffix `+ CODE-FIX`** goes after `PATCH` or `ALTER` when the code keeps making new bad records. Show the sweep count. Example: `Adhoc route: PATCH + CODE-FIX — 1 permit patched, 98 PRBB permits share the empty unit`.
+- **`PATCH` or `ALTER` route** = the quest skill step 6c patch path runs (related tickets read, stored-document check, the Path line) before any infra text. Pointer only; the steps live in 6c.
 - **Mid-investigation round**: `Adhoc route: none (<reason>)`.
 - **Ticket asked** (PATCH/ALTER on PROD, CODE-FIX, CR): set block `status=hold` and `issue_one_liner` to say "waiting TSO ticket". Promote it when the number arrives (section "Ticket arrives"). Archive hold only when miya asks for it (step 1c).
 - **Same line in the qa_doc**: `- Route : <ROUTE> — <evidence>` under `## Issue Summary`. The audit checks it for adhocs opened from 2026-10-30 on.
