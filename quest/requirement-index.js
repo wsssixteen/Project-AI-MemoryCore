@@ -27,13 +27,27 @@
  * (2026-11-03 miya, 287811: "Always read, this was supposed to be part of our steps" — 223236 was
  * matched by subject only and its spec, which forbids the 258004 delete, was never opened).
  *
+ * 2026-11-05 (per miya, ADHOC-PPTPB-2026-9, Fable 5.1 items 1-5): --load (five tiers: T2 called-flow kods >
+ * T5 value words > T3 integration > T4 cross-module > T1 urusan tree) · a `kods` field per row from the FULL
+ * description (capital codes + the "Tugasan Terlibat" names), a kod hit weighs like a subject hit · a 1-2 rare
+ * code query that hits is never labelled `none` · query-side synonyms (PTG≈PD, PDT≈PT, endosan≈endorsan ...)
+ * in --find and --load T5 · --read --section (attachment text cut to the matching lines ±30) and lane lines
+ * for a "Proses To-Be" BPMN PDF page. Why: requirement 248531 held the PPTPB endosan office rule and was
+ * never ranked (it says "PD / PT", the snippet held no SPIL kod for most rows, `--find SPIL` said `none`).
+ *
  * CLI:
- *   node quest/requirement-index.js --read <req> --for <ticket>       read the requirement in full (prints REQUIREMENT-READ #<req>)
+ *   node quest/requirement-index.js --read <req> --for <ticket> [--section "<words>"]   read the requirement in full (prints REQUIREMENT-READ #<req>);
+ *                                                                    --section cuts .docx/.pdf text to the lines that hold a word (or its synonym), ±30 lines;
+ *                                                                    the rarest words lead; a common one (PTG in a BRS) is ignored and named
  *   node quest/requirement-index.js --ticket <num> [--state <key>]   Phase 0: requirements that match a ticket
- *   node quest/requirement-index.js --find "<words>" [--module <m>]  search by words (screen, urusan, field)
+ *   node quest/requirement-index.js --find "<words>" [--module <m>]  search by words (screen, urusan, field), synonyms expanded
+ *   node quest/requirement-index.js --load --urusan <code> [--tugasan <kod[,kod]>] [--called <bpmn model key>] [--words "<value words>"]
+ *                                      [--cap N=3] [--cheap] [--tree] [--for <ticket>]
+ *                                                                    the requirements a ticket's urusan / tugasan / called flow load (REQUIREMENT-LOAD block)
  *   node quest/requirement-index.js --build [--state <key>]          rebuild now
  *   node quest/requirement-index.js --status [--state <key>]         row count + age
  *   add --json for machine output · --top <n> (default 8) · --no-refresh (never rebuild)
+ *   env REQ_INDEX_DIR=<dir> reads and writes the index files there instead of the state's knowledge dir (eval sandboxes).
  */
 'use strict';
 const fs = require('fs');
@@ -72,6 +86,30 @@ function codesOf(text) {
   return new Set((String(text || '').match(/\b[A-Z][A-Z0-9]{1,6}\b/g) || []).map(s => s.toLowerCase()));
 }
 
+// The codes a requirement names anywhere in its FULL description (a tugasan kod like SPIL sits past the
+// 400-char snippet), plus the tugasan names listed under "Tugasan Terlibat". Kept per row as `kods`.
+const KOD_RX = /\b[A-Z][A-Z0-9]{1,7}\b/g;
+const KODS_MAX = 80;
+function kodsOf(description) {
+  const raw = String(description || '').replace(/\r/g, '');
+  const out = new Set(raw.replace(/<[^>]+>/g, ' ').match(KOD_RX) || []);
+  const clean = s => String(s || '').replace(/<[^>]+>/g, ' ').replace(/^[\s*#•-]+|[\s*]+$/g, '').replace(/^\d+[.)]\s*/, '').trim();
+  const lines = raw.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].match(/tugasan\s+terlibat\s*:?(.*)$/i);
+    if (!m) continue;
+    const rest = clean(m[1].replace(/^\s*[*:]+/, ''));
+    if (rest) { rest.split(/[,;]/).map(clean).filter(Boolean).forEach(n => out.add(n)); continue; }
+    // A list under the heading: one name per line, ends at a blank line, a "label:" line or a sentence.
+    for (const l of lines.slice(i + 1, i + 16)) {
+      const n = clean(l);
+      if (!n || n.length > 80 || /:/.test(n)) break;
+      out.add(n);
+    }
+  }
+  return [...out].slice(0, KODS_MAX);
+}
+
 function rowFromIssue(i) {
   const mod = (i.custom_fields || []).find(c => c.id === MODULE_CF);
   const desc = String(i.description || '').replace(/\r/g, '').replace(/[ \t]+/g, ' ').replace(/\n{2,}/g, '\n').trim();
@@ -89,7 +127,31 @@ function rowFromIssue(i) {
     updated: String(i.updated_on || '').slice(0, 10),
     closed: i.closed_on ? String(i.closed_on).slice(0, 10) : '',
     snippet: desc.length > SNIPPET ? desc.slice(0, SNIPPET) + ' …' : desc,
+    kods: kodsOf(i.description),
   };
+}
+
+// ---- synonyms (query side only; the index text is never rewritten) ----
+// One group = words BA and code use for the same thing (248531 says "PD / PT", the code says PTG / PDT).
+const SYNONYMS = [
+  ['ptg', 'pd', 'pejabat daftar', 'kp_ptg'],
+  ['pdt', 'pt', 'pejabat tanah', 'daerah', 'ptd'],
+  ['endosan', 'endorsan', 'endos'],
+  ['nota mohon', 'spi'],
+  ['nota lulus', 'spil'],
+  ['keputusan pendaftar', 'kp'],
+  ['hakmilik campur', 'bercampur', 'berlainan pejabat'],
+];
+const norm = s => ' ' + String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+// The groups a text touches: { member it holds, alts = the other members }. Pure.
+function expandSynonyms(text) {
+  const t = norm(text);
+  const groups = [];
+  for (const g of SYNONYMS) {
+    const member = g.find(m => t.includes(norm(m)));
+    if (member) groups.push({ member, alts: g.filter(m => m !== member) });
+  }
+  return { groups, words: groups.flatMap(g => g.alts) };
 }
 
 // ---- search ----
@@ -111,15 +173,17 @@ function prepare(rows) {
     const subj = new Set(tokenize(r.subject));
     const body = new Set(tokenize(r.snippet + ' ' + r.module));
     const codes = codesOf(r.subject);
+    // The kods of the full description (built since 2026-11-05; an older index has none).
+    const kods = new Set(tokenize((r.kods || []).join(' ')));
     // A "Semua Urusan" requirement specifies every urusan, so it earns any urusan's bonus.
     const allUrusan = /semua\s+urusan/i.test(r.subject);
     subjTotal += subj.size;
-    for (const w of new Set([...subj, ...body])) df.set(w, (df.get(w) || 0) + 1);
-    return { r, subj, body, codes, allUrusan };
+    for (const w of new Set([...subj, ...body, ...kods])) df.set(w, (df.get(w) || 0) + 1);
+    return { r, subj, body, codes, kods, allUrusan };
   });
   const n = rows.length || 1;
   const idf = w => Math.log(1 + n / (df.get(w) || 0.5));
-  return { docs, idf, avgSubj: subjTotal / n || 1 };
+  return { docs, idf, df: w => df.get(w) || 0, n, avgSubj: subjTotal / n || 1 };
 }
 
 // A ticket read from its Task folder has no module: the urusan's own requirements tell it ("PT" lives in Pelupusan, 257569).
@@ -135,41 +199,54 @@ function moduleOf(prep, urusan) {
 // query = a string (searched as a subject) or { subject, body }. The subject carries the meaning;
 // the body only breaks ties, so a long journal cannot outvote it.
 // Each hit carries `match`: strong · possible · none, from how much of the query subject it covers and its score.
+// opts: module · top · exclude · prep · synonyms (expand the subject with SYNONYMS, as hint words) · noUrusan (no urusan or guessed-module bonus).
 function search(rows, query, opts) {
   const o = opts || {};
   const prep = o.prep || prepare(rows);
   const q = typeof query === 'string' ? { subject: query, body: '' } : (query || {});
   const qSubj = [...new Set(tokenize(q.subject))];
-  const qHint = [...new Set(tokenize(q.hint))].filter(w => !qSubj.includes(w));
+  const syn = o.synonyms ? expandSynonyms(q.subject).groups.map(g => ({ from: tokenize(g.member).filter(w => qSubj.includes(w)), alts: [...new Set(tokenize(g.alts.join(' ')))].filter(w => !qSubj.includes(w)) })) : [];
+  const qHint = [...new Set([...tokenize(q.hint), ...syn.flatMap(g => g.alts)])].filter(w => !qSubj.includes(w));
   const qBody = [...new Set(tokenize(q.body))].filter(w => !qSubj.includes(w) && !qHint.includes(w));
-  const urusan = urusanOf(q.subject);
-  const qAll = /semua\s+urusan/i.test(String(q.subject || ''));
+  const urusan = o.noUrusan ? null : urusanOf(q.subject);
+  const qAll = !o.noUrusan && /semua\s+urusan/i.test(String(q.subject || ''));
   const wanted = String(o.module || moduleOf(prep, urusan)).toLowerCase();
   // A guessed module counts less than a read one: the spec can sit in another module (265109: a PLPS fee lives in Sokongan).
   const modBonus = o.module ? 1.3 : 1.1;
   const exclude = new Set((o.exclude || []).map(Number));
   if (!qSubj.length && !qBody.length && !qHint.length) return [];
   const qTotal = qSubj.reduce((s, w) => s + prep.idf(w), 0) || 1;
+  // 1-2 rare capital codes ("SPIL"): a hit on one is a pointer, never `none` (248531 was `none 7.6`).
+  const qCodes = new Set((String(q.subject || '').match(KOD_RX) || []).map(s => s.toLowerCase()));
+  const rareCut = Math.max(5, prep.n * 0.02);
+  const codeQuery = qSubj.length > 0 && qSubj.length <= 2 && qSubj.every(w => qCodes.has(w) && prep.df(w) <= rareCut);
   const out = [];
   for (const d of prep.docs) {
     if (exclude.has(d.r.id)) continue;
     // A long subject collects words by chance: weigh a subject hit down by its length (BM25-style).
     const lenNorm = 0.5 + 0.5 * (d.subj.size / prep.avgSubj);
+    // A rare kod the full description names weighs like a subject word (SPIL in 248531); a common one
+    // (PTG, PT, the urusan code in hundreds of descriptions) only like a body word: measured 2026-11-05,
+    // kods at full weight for every code dropped the B2 blind key from 135 to 127 of 155.
+    const strong = w => d.subj.has(w) || (d.kods.has(w) && prep.df(w) <= rareCut);
+    const bodyHit = w => d.body.has(w) || d.kods.has(w);
     let score = 0, covered = 0;
     const hits = [];
     for (const w of qSubj) {
-      if (d.subj.has(w)) { score += 3 * prep.idf(w) / lenNorm; covered += prep.idf(w); hits.push(w); }
-      else if (d.body.has(w)) { score += prep.idf(w); covered += 0.3 * prep.idf(w); hits.push(w); }
+      if (strong(w)) { score += 3 * prep.idf(w) / lenNorm; covered += prep.idf(w); hits.push(w); }
+      else if (bodyHit(w)) { score += prep.idf(w); covered += 0.3 * prep.idf(w); hits.push(w); }
     }
     // The tugasan / menu line of the description names the screen: nearly as strong as the subject, not counted in cover.
     for (const w of qHint) {
-      if (d.subj.has(w)) { score += 2 * prep.idf(w) / lenNorm; hits.push(w); }
-      else if (d.body.has(w)) { score += 0.5 * prep.idf(w); hits.push(w); }
+      if (strong(w)) { score += 2 * prep.idf(w) / lenNorm; hits.push(w); }
+      else if (bodyHit(w)) { score += 0.5 * prep.idf(w); hits.push(w); }
     }
     for (const w of qBody) {
-      if (d.subj.has(w)) { score += 0.6 * prep.idf(w) / lenNorm; hits.push(w); }
-      else if (d.body.has(w)) { score += 0.2 * prep.idf(w); hits.push(w); }
+      if (strong(w)) { score += 0.6 * prep.idf(w) / lenNorm; hits.push(w); }
+      else if (bodyHit(w)) { score += 0.2 * prep.idf(w); hits.push(w); }
     }
+    // A synonym in the subject or kods covers the query word it stands for ("PD" covers "PTG").
+    for (const g of syn) if (g.from.length && !g.from.some(w => hits.includes(w)) && g.alts.some(strong)) covered += 0.7 * Math.max(...g.from.map(prep.idf));
     if (!score) continue;
     if ((urusan && (d.codes.has(urusan) || d.allUrusan)) || (qAll && d.allUrusan)) score *= 1.5;
     if (wanted && d.r.module.toLowerCase() === wanted) score *= modBonus;
@@ -178,7 +255,8 @@ function search(rows, query, opts) {
     const cover = covered / qTotal;
     // Cut points from the 2026-10-27 blind test (30 tickets): every right top-1 scored >= 29; cover alone did not separate right from none.
     // Strong also needs score >= 30: a short generic subject ("klik hantar papar ralat") covers itself cheaply.
-    const match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 && score >= 30 ? 'strong' : 'possible';
+    let match = score < 20 || cover < 0.15 ? 'none' : cover >= 0.4 && score >= 30 ? 'strong' : 'possible';
+    if (match === 'none' && codeQuery && qSubj.some(strong)) match = 'possible';
     out.push({ row: d.r, score: Math.round(score * 10) / 10, cover: Math.round(cover * 100) / 100, match, hits });
   }
   out.sort((a, b) => b.score - a.score || b.row.id - a.row.id);
@@ -187,6 +265,7 @@ function search(rows, query, opts) {
 
 // ---- files ----
 function dirFor(stateKey) {
+  if (process.env.REQ_INDEX_DIR) return process.env.REQ_INDEX_DIR;
   const S = statesLib();
   return S ? S.knowledgeDir(stateKey) : null;
 }
@@ -397,6 +476,136 @@ function fmtHit(h, n, stateKey) {
   return `  ${n}. #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · by ${r.author} [${roleTag(r.author, stateKey)}] · ${h.match || 'match'} ${h.score} · ${REDMINE_BASE}/issues/${r.id}`;
 }
 
+// ---- --load: the requirements a ticket's urusan, tugasan and called flow carry (2026-11-05, ADHOC-PPTPB-2026-9) ----
+// Each urusan master sits under one parent ticket per state ("Pelupusan - Parent Ticket All Urusan").
+const URUSAN_PARENT = { melaka: 215975 };
+const TIER_ORDER = ['T2', 'T5', 'T3', 'T4', 'T1'];
+const TIER_NAME = { T1: 'urusan tree', T2: 'called-flow kods', T3: 'integration', T4: 'cross-module', T5: 'value words' };
+const TIER_CAP = 3;
+const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// The tugasan kods of a called BPMN model: every receiveUserTask("KOD", ...) in <called>.bpmn20.xml.
+function calledFlowKods(stateKey, called) {
+  const S = statesLib();
+  const root = S ? path.join(S.knowledgeDir(stateKey), 'flowables-bpmn') : null;
+  const want = `${String(called).toLowerCase()}.bpmn20.xml`;
+  const find = dir => {
+    let ents; try { ents = fs.readdirSync(dir, { withFileTypes: true }); } catch (_) { return null; }
+    for (const e of ents) if (e.isFile() && e.name.toLowerCase() === want) return path.join(dir, e.name);
+    for (const e of ents) if (e.isDirectory()) { const f = find(path.join(dir, e.name)); if (f) return f; }
+    return null;
+  };
+  const file = root && find(root);
+  if (!file) return { file: null, kods: [] };
+  const xml = fs.readFileSync(file, 'utf8');
+  const kods = [...new Set([...xml.matchAll(/receiveUserTask\((?:&quot;|")([A-Za-z0-9_]+)(?:&quot;|")/g)].map(m => m[1]))];
+  return { file, kods };
+}
+
+// Pure: rows + { urusan, tugasan[], calledKods[], words, parentId, tree } → the tier lists and the placed block.
+function loadTiers(rows, o) {
+  const prep = prepare(rows);
+  const byId = new Map(rows.map(r => [r.id, r]));
+  const u = String(o.urusan || '').trim();
+  const uLow = u.toLowerCase();
+  const tug = (o.tugasan || []).map(s => String(s).trim()).filter(Boolean);
+  const tiers = {};
+  const notes = [];
+  const lbl = h => `${h.match} ${h.score}`;
+  // T1 tree: the urusan master under the state's parent ticket + its children that name the tugasan.
+  const startsU = new RegExp(`^\\s*(\\[[^\\]]*\\]\\s*)?${esc(u)}\\b`, 'i');
+  const master = rows.find(r => r.parent === o.parentId && startsU.test(r.subject)) || null;
+  const children = master ? rows.filter(r => r.parent === master.id).sort((a, b) => a.id - b.id) : [];
+  const names = r => new Set([...tokenize(r.subject), ...tokenize((r.kods || []).join(' '))]);
+  const tugHit = r => tug.some(t => { const w = tokenize(t); return w.length === 1 ? names(r).has(w[0]) : w.every(x => tokenize(r.subject).includes(x)); });
+  tiers.T1 = master ? [{ row: master, label: 'urusan master' }, ...children.filter(tugHit).slice(0, TIER_CAP).map(r => ({ row: r, label: 'tugasan child' }))] : [];
+  if (!master) notes.push(`no urusan master for ${u} under #${o.parentId}`);
+  // T2 called-flow: the tugasan kods weigh as the subject, the rest of the called flow's kods as hints.
+  // T2 and T5 keep labelled hits only: a `none` row is a word collision, not a requirement to read.
+  const tugKods = tug.filter(t => /^[A-Za-z][A-Za-z0-9_]{1,7}$/.test(t));
+  const kods = [...new Set([...tugKods, ...(o.calledKods || [])])];
+  tiers.T2 = kods.length ? search(rows, { subject: (tugKods.length ? tugKods : kods).join(' '), hint: kods.filter(k => !tugKods.includes(k)).join(' ') }, { prep, noUrusan: true, top: TIER_CAP }).filter(h => h.match !== 'none').map(h => ({ row: h.row, label: lbl(h) })) : [];
+  // T3 integration: "Integrasi <urusan>" + requirements with no parent that name the urusan.
+  const namesU = r => codesOf(r.subject).has(uLow) || tokenize((r.kods || []).join(' ')).includes(uLow);
+  const integ = r => /integrasi/i.test(r.subject);
+  const t3 = new Map(search(rows, `Integrasi ${u}`, { prep, top: 30 }).map(h => [h.row.id, { row: h.row, label: lbl(h), score: h.score }]));
+  for (const r of rows) if (!r.parent && codesOf(r.subject).has(uLow) && !t3.has(r.id)) t3.set(r.id, { row: r, label: 'orphan', score: 0 });
+  const rank = x => (integ(x.row) && namesU(x.row) ? 2 : 0) + (!x.row.parent && codesOf(x.row.subject).has(uLow) ? 1 : 0);
+  tiers.T3 = [...t3.values()].filter(x => rank(x) > 0).sort((a, b) => rank(b) - rank(a) || b.score - a.score || b.row.id - a.row.id).slice(0, TIER_CAP);
+  // T4 cross-module: "Integrasi ... <our module>" masters and their parent chain inside the index.
+  const mod = moduleOf(prep, uLow);
+  tiers.T4 = [];
+  if (mod) {
+    const rx = new RegExp(`^Integrasi .*\\b${esc(mod)}\\b`, 'i');
+    const heads = rows.filter(r => rx.test(r.subject)).sort((a, b) => Number(namesU(b)) - Number(namesU(a)) || b.id - a.id);
+    for (const r of heads) {
+      tiers.T4.push({ row: r, label: 'cross-module' });
+      for (let p = r.parent, g = 0; p && byId.has(p) && g < 3; p = byId.get(p).parent, g++) tiers.T4.push({ row: byId.get(p), label: `parent of #${r.id}` });
+    }
+    tiers.T4 = tiers.T4.slice(0, TIER_CAP);
+  } else notes.push(`no module read for ${u}, T4 skipped`);
+  // T5 value words: the words of the ask with synonyms, no urusan bonus (the rule can sit in another urusan).
+  tiers.T5 = o.words ? search(rows, o.words, { prep, synonyms: true, noUrusan: true, top: TIER_CAP }).filter(h => h.match !== 'none').map(h => ({ row: h.row, label: lbl(h) })) : [];
+  // Union in tier order; a row found by several tiers is listed once, with every tier named.
+  const placed = [];
+  const at = new Map();
+  for (const t of TIER_ORDER) for (const x of tiers[t]) {
+    if (at.has(x.row.id)) { at.get(x.row.id).tiers.push(t); continue; }
+    const p = { tiers: [t], row: x.row, label: x.label };
+    at.set(x.row.id, p); placed.push(p);
+  }
+  return { master, children, tiers, placed, module: mod, notes };
+}
+
+function fmtLoad(p) {
+  const r = p.row;
+  return `  ${p.tiers.join('+')} #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · ${p.label}`;
+}
+
+// The reads a load names: the master by --section (its BRS is long), then the first <cap> other rows in full.
+function loadNext(res, o) {
+  const forT = o.for ? ` --for ${o.for}` : '';
+  const sec = [...(o.tugasan || []), ...tokenize(o.words || '')].join(' ').trim();
+  const cmds = [];
+  if (res.master) cmds.push(`node quest/requirement-index.js --read ${res.master.id}${forT}${sec ? ` --section "${sec}"` : ''}`);
+  for (const p of res.placed.filter(x => !res.master || x.row.id !== res.master.id).slice(0, o.cap)) cmds.push(`node quest/requirement-index.js --read ${p.row.id}${forT}`);
+  return cmds;
+}
+
+// ---- --section: keep the lines that hold a word, ±ctx lines (2026-11-05) ----
+const SECTION_CTX = 30;
+function sectionFilter(text, words, ctx) {
+  const c = ctx == null ? SECTION_CTX : ctx;
+  // Each term is a word list that must all sit in one line; synonyms of the words count too.
+  const all = [...tokenize(words).map(w => [w]), ...expandSynonyms(words).words.map(a => tokenize(a)).filter(a => a.length)];
+  const lines = String(text || '').split(/\r?\n/);
+  const toks = lines.map(l => new Set(tokenize(l)));
+  const hitsOf = t => toks.filter(s => t.every(w => s.has(w))).length;
+  // The rarest terms locate the section: the rarest term with a hit is always kept, the next ones only while
+  // their hits together stay within 0.5% of the lines (min 10). 2026-11-05: on the 7,287-line PPTPB BRS,
+  // PTG (141 lines), hakmilik (129) and PT (80) kept 455 match lines, i.e. the whole document.
+  const budget = Math.max(10, lines.length * 0.005);
+  const ranked = all.map(t => ({ t, n: hitsOf(t) })).filter(x => x.n > 0).sort((a, b) => a.n - b.n);
+  const terms = [];
+  let sum = 0;
+  for (const x of ranked) { if (terms.length && sum + x.n > budget) continue; terms.push(x.t); sum += x.n; }
+  const dropped = ranked.filter(x => !terms.includes(x.t)).map(x => x.t.join(' '));
+  const keep = new Array(lines.length).fill(false);
+  let matched = 0;
+  lines.forEach((l, i) => {
+    if (/^(LANE |LANES:|## )/.test(l)) keep[i] = true;
+    const tok = toks[i];
+    if (terms.some(t => t.every(w => tok.has(w)))) {
+      matched++;
+      for (let k = Math.max(0, i - c); k <= Math.min(lines.length - 1, i + c); k++) keep[k] = true;
+    }
+  });
+  if (!matched) return { matched: 0, dropped, text: String(text || '') };
+  const out = [];
+  lines.forEach((l, i) => { if (keep[i]) out.push(l); else if (out[out.length - 1] !== '…') out.push('…'); });
+  return { matched, dropped, text: out.join('\n') };
+}
+
 function idxLine(idx) {
   const age = idx.missing ? 'missing' : `built ${String(idx.built).slice(0, 10)}${idx.rebuilt ? ' (rebuilt now)' : idx.refreshing ? ' (older than a week, refreshing in the background)' : ''}`;
   return `index ${idx.rows.length} rows, ${age}${idx.rebuildError ? ` ⚠ rebuild failed: ${idx.rebuildError} (using the old index)` : ''}`;
@@ -428,18 +637,51 @@ async function main(argv, log) {
     console.log(`requirement-index ${stateKey}: ${idxLine(idx)}${idx.ageDays > STALE_DAYS ? ' · stale, rebuilds on the next search' : ''}`);
     return idx.missing ? 1 : 0;
   }
-  if (flag('read')) return readRequirement(flag('read'), flag('for'), log);
+  if (flag('read')) return readRequirement(flag('read'), flag('for'), log, flag('section'));
   const findQ = flag('find');
   const ticket = flag('ticket');
-  if (findQ == null && !ticket) {
-    console.log('usage: node quest/requirement-index.js --read <req> --for <ticket> | --ticket <num> | --find "<words>" [--module <m>] | --build | --status  [--state <key>] [--json] [--top <n>] [--no-refresh]');
+  const loadMode = has('load');
+  if (findQ == null && !ticket && !loadMode) {
+    console.log('usage: node quest/requirement-index.js --read <req> --for <ticket> [--section "<words>"] | --ticket <num> | --find "<words>" [--module <m>] | --load --urusan <code> [--tugasan <kod[,kod]>] [--called <bpmn model key>] [--words "<value words>"] [--cap N] [--cheap] [--tree] | --build | --status  [--state <key>] [--json] [--top <n>] [--no-refresh]');
     return 2;
   }
+  if (loadMode && !flag('urusan')) { console.log('REQUIREMENT-LOAD: --urusan <code> is required (e.g. --urusan PPTPB)'); return 2; }
   const idx = await ensure(stateKey, { refresh });
   if (idx.missing) { console.log(`REQUIREMENT-MATCH: unavailable — ${idxLine(idx)}. Run: node quest/requirement-index.js --build`); return 1; }
 
+  if (loadMode) {
+    const urusan = flag('urusan').trim();
+    const tugasan = (flag('tugasan') || '').split(',').map(s => s.trim()).filter(Boolean);
+    const called = flag('called');
+    const cf = called ? calledFlowKods(stateKey, called) : { file: null, kods: [] };
+    const cap = Number(flag('cap')) || 3;
+    const words = flag('words') || '';
+    const res = loadTiers(idx.rows, { urusan, tugasan, calledKods: cf.kods, words, parentId: URUSAN_PARENT[stateKey] });
+    if (called && !cf.file) res.notes.push(`called flow ${called}.bpmn20.xml not found under flowables-bpmn, T2 holds the tugasan kods only`);
+    const next = has('cheap') ? [] : loadNext(res, { tugasan, words, cap, for: flag('for') });
+    const head = `${urusan}/${tugasan.join(',') || '-'}`;
+    Object.assign(log, { mode: 'load', query: `${head} ${called || ''} ${words}`.trim(), outcome: res.placed.length ? 'hits' : 'none', top: res.placed[0] ? res.placed[0].row.id : null, rows: res.placed.length });
+    if (json) {
+      console.log(JSON.stringify({ urusan, tugasan, called, calledFile: cf.file, calledKods: cf.kods, words, module: res.module, notes: res.notes,
+        rows: res.placed.map(p => ({ tiers: p.tiers, id: p.row.id, status: p.row.status, module: p.row.module, subject: p.row.subject, label: p.label })),
+        tree: has('tree') && res.master ? res.children.map(r => ({ id: r.id, status: r.status, subject: r.subject })) : undefined, next }, null, 1));
+      return 0;
+    }
+    console.log(`REQUIREMENT-LOAD ${head}: ${res.placed.length} rows · module ${res.module || 'not read'}${called ? ` · called ${called} (${cf.kods.length} kods${cf.kods.length ? ': ' + cf.kods.join(' ') : ''})` : ''} · ${idxLine(idx)}`);
+    res.placed.forEach(p => console.log(fmtLoad(p)));
+    if (!res.placed.length) console.log('  none found — say "no requirement loaded" in the hand-back, then try --find with the screen or tab name');
+    res.notes.forEach(n => console.log(`  ⓘ ${n}`));
+    console.log(`  tiers: ${TIER_ORDER.map(t => `${t} ${TIER_NAME[t]}`).join(' > ')}`);
+    if (has('tree') && res.master) {
+      console.log(`  TREE #${res.master.id} "${res.master.subject}" — ${res.children.length} children:`);
+      res.children.forEach(r => console.log(`    #${r.id} ${r.status} · "${r.subject}"`));
+    }
+    console.log(has('cheap') ? '  Next: none (--cheap); drop --cheap for the read list.' : `  Next: ${next.join(' ; ')}`);
+    return 0;
+  }
+
   if (findQ != null) {
-    const hits = search(idx.rows, findQ, { module: flag('module'), top });
+    const hits = search(idx.rows, findQ, { module: flag('module'), top, synonyms: true });
     Object.assign(log, { mode: 'find', query: findQ, outcome: hits.length ? 'hits' : 'none', top: hits[0] ? hits[0].row.id : null });
     if (json) { console.log(JSON.stringify({ query: findQ, hits }, null, 1)); return 0; }
     console.log(`REQUIREMENT-FIND "${findQ}" — ${idxLine(idx)}`);
@@ -500,7 +742,8 @@ function download(url, file) {
 }
 // docx paragraphs + tables · pdf pages · xlsx cells, through python (python-docx / PyMuPDF / openpyxl).
 const EXTRACT_PY = [
-  'import sys', 'p = sys.argv[1]; x = p.lower()',
+  // -I ignores PYTHONIOENCODING: without this line a non-ASCII character reaches node as cp1252 (found 2026-11-05).
+  'import sys', 'sys.stdout.reconfigure(encoding="utf-8", errors="replace")', 'p = sys.argv[1]; x = p.lower()',
   'if x.endswith(".docx"):',
   '    import docx; d = docx.Document(p)',
   '    for q in d.paragraphs:',
@@ -514,8 +757,36 @@ const EXTRACT_PY = [
   '        for m in re.finditer(r"<w:comment\\b[^>]*>(.*?)</w:comment>", z.read("word/comments.xml").decode("utf8", "ignore"), re.S):',
   '            print("COMMENT: " + "".join(re.findall(r"<w:t[^>]*>([^<]*)</w:t>", m.group(1))))',
   'elif x.endswith(".pdf"):',
-  '    import fitz',
-  '    for pg in fitz.open(p): print(pg.get_text())',
+  '    try:',
+  '        import fitz',
+  '    except ImportError:',
+  '        fitz = None',
+  '    if fitz is None:',
+  '        print("LANES: skipped, PyMuPDF (fitz) is not importable")',
+  '        from pypdf import PdfReader',
+  '        for pg in PdfReader(p).pages: print(pg.extract_text() or "")',
+  '    else:',
+  '        for pg in fitz.open(p):',
+  '            t = pg.get_text()',
+  '            head = [l.strip() for l in t.splitlines() if l.strip()][:3]',
+  // A "Proses To-Be" BPMN page: lane labels sit in the leftmost ~15% of the page; every other block
+  // belongs to the lane whose band holds its y-centre (bands cut half way between label centres).
+  '            if any(h.lower().startswith("proses to-be") for h in head):',
+  '                W = pg.rect.width',
+  '                yc = lambda b: (b[1] + b[3]) / 2',
+  '                one = lambda s: " ".join(s.split())',
+  '                bl = [b for b in pg.get_text("blocks") if b[6] == 0 and b[4].strip() and not b[4].strip().lower().startswith("proses to-be")]',
+  '                lab = [b for b in bl if (b[0] + b[2]) / 2 <= 0.15 * W]',
+  '                lab = sorted([b for b in lab if sum(1 for o in lab if o is not b and b[1] <= yc(o) <= b[3]) < 2], key=yc)',
+  '                box = sorted([b for b in bl if (b[0] + b[2]) / 2 > 0.15 * W], key=lambda b: (b[0], b[1]))',
+  '                if not lab: print("LANES: none found on this To-Be page (no text in the leftmost 15% of the page)")',
+  '                c = [yc(b) for b in lab]',
+  '                cut = [(c[i] + c[i + 1]) / 2 for i in range(len(c) - 1)]',
+  '                for i, b in enumerate(lab):',
+  '                    lo = cut[i - 1] if i else (c[0] - (cut[0] - c[0]) if cut else -1e9)',
+  '                    hi = cut[i] if i < len(cut) else (c[-1] + (c[-1] - cut[-1]) if cut else 1e9)',
+  '                    print("LANE " + one(b[4]) + ": " + " \\u00b7 ".join(one(k[4]) for k in box if lo <= yc(k) < hi))',
+  '            print(t)',
   'elif x.endswith(".xlsx"):',
   '    import openpyxl; wb = openpyxl.load_workbook(p, data_only=True)',
   '    for ws in wb:',
@@ -524,7 +795,7 @@ const EXTRACT_PY = [
   '            if any(v is not None for v in r): print(" | ".join("" if v is None else str(v) for v in r))',
 ].join('\n');
 const SPEC_EXT = /\.(docx|pdf|xlsx)$/i;
-async function readRequirement(req, forTicket, log) {
+async function readRequirement(req, forTicket, log, section) {
   const i = (await get(`/issues/${encodeURIComponent(req)}.json?include=journals,attachments`)).issue;
   const dir = path.join(require('os').tmpdir(), 'requirement-read', String(i.id));
   fs.mkdirSync(dir, { recursive: true });
@@ -541,7 +812,14 @@ async function readRequirement(req, forTicket, log) {
     try {
       await download(`${REDMINE_BASE}/attachments/download/${a.id}`, file);
       const text = require('child_process').execFileSync('python', ['-I', '-c', EXTRACT_PY, file], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, windowsHide: true, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
-      console.log(`--- ATTACHMENT ${a.filename} (${a.created_on.slice(0, 10)}, ${a.author.name}) ---\n${text.trim()}`);
+      let body = text.trim(), cut = '';
+      if (section && /\.(docx|pdf)$/i.test(a.filename)) {
+        const f = sectionFilter(body, section);
+        const drop = f.dropped.length ? ` (too common to locate a section, ignored: ${f.dropped.join(', ')})` : '';
+        cut = f.matched ? ` · --section "${section}": ${f.matched} matching lines ±${SECTION_CTX}${drop}` : ` · --section "${section}": 0 matches, full text below`;
+        body = f.text;
+      }
+      console.log(`--- ATTACHMENT ${a.filename} (${a.created_on.slice(0, 10)}, ${a.author.name})${cut} ---\n${body}`);
       read++;
     } catch (e) { console.log(`--- ATTACHMENT ${a.filename}: ⚠ NOT READ (${String(e.message).split('\n')[0]}); open ${REDMINE_BASE}/attachments/${a.id} by hand before any verdict`); }
   }
@@ -553,10 +831,11 @@ async function readRequirement(req, forTicket, log) {
   return read < specs ? 1 : 0;
 }
 
-module.exports = { requestKind, screenHint, tokenize, codesOf, rowFromIssue, prepare, search, renderMd, load, localTicket, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
+module.exports = { requestKind, screenHint, tokenize, codesOf, kodsOf, rowFromIssue, prepare, search, renderMd, load, localTicket,
+  expandSynonyms, sectionFilter, loadTiers, loadNext, calledFlowKods, EXTRACT_PY, SYNONYMS, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {
-  const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket|read)$/.test(a)) || 'usage' };
+  const log = { mode: process.argv.slice(2).find(a => /^--(build|status|find|ticket|read|load)$/.test(a)) || 'usage' };
   const t0 = Date.now();
   const done = (code, err) => { log.mode = String(log.mode).replace(/^--/, ''); logRow({ ...log, exit: code, err: err || undefined, dur_ms: Date.now() - t0 }); process.exit(code); };
   main(process.argv.slice(2), log).then(code => done(code), e => { console.error('requirement-index: ' + e.message); done(2, e.message); });

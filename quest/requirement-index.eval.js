@@ -310,6 +310,115 @@ t('W8 ticket-gate checklist renders row 1e with both commands for the ticket', (
   return /1e\. ⬜ .*ticket-load-verify\.js 999991.*requirement-index\.js --ticket 999991/.test(r.stdout) || 'row 1e missing: exit ' + r.status;
 });
 
+// --- 2026-11-05 --load, kods, code-query label, synonyms, --section, BPMN lanes (ADHOC-PPTPB-2026-9)
+// The real description of 248531 (the requirement that held the PPTPB endosan office rule).
+const D248531 = 'Tugasan Terlibat :\nSemakan Permohonan (SPI)\nSemakan Permohonan Lulus (SPIL)\nKeputusan Pendaftar (KP)\n\nSenario menggunakan 2 hakmilik campur, iaitu Hakmilik Pejabat Daftar dan juga hakmilik Pejabat Tanah.\n<pre>\n1. 040205PN00058523 - HM PD\n2. 040216PM00000612 - HM PT\n</pre>\n\nBagi permohonan hakmilik campur, endorsan nota mohon perlu didaftar kan mengikut Hakmilik Pejabat yang terlibat.';
+t('L0 kodsOf: capital codes of the FULL description + the "Tugasan Terlibat" names, never the sentence after them', () => {
+  const k = R.kodsOf(D248531 + '\n' + 'x '.repeat(400) + 'PTBSPIL');
+  return (['SPI', 'SPIL', 'KP', 'PD', 'PT', 'PTBSPIL', 'Semakan Permohonan Lulus (SPIL)', 'Keputusan Pendaftar (KP)'].every(x => k.includes(x)) && !k.some(x => /Senario/.test(x))) || JSON.stringify(k);
+});
+t('L0b kodsOf reads "Tugasan Terlibat: A, B" on one line', () => { const k = R.kodsOf('*Tugasan Terlibat: Semakan Permohonan, Keputusan Pendaftar*'); return (k.includes('Semakan Permohonan') && k.includes('Keputusan Pendaftar')) || JSON.stringify(k); });
+const KROWS = [
+  row(248531, 'PSBB PYT PTS - Tugasan Integrasi Pendaftaran - ID Hakmilik bercampur (berlainan jenis pejabat hakmilik - PD dan PT)', 'Pembangunan', { kods: R.kodsOf(D248531), snippet: D248531.slice(0, 400) }),
+  row(239172, 'SPOC - Carian Rasmi - Blok hakmilik beza pejabat', 'Pendaftaran', { kods: ['PTG', 'PDT'] }),
+  ...Array.from({ length: 60 }, (_, i) => row(1000 + i, `PT - Tugasan Semakan ${i}`, 'Pelupusan', { kods: ['PTG', 'PDT', 'PT'] })),
+];
+t('L2u a rare code query ("SPIL") that hits a row\'s kods ranks it first and is labelled at least possible', () => {
+  const h = R.search(KROWS, 'SPIL')[0];
+  return (h && h.row.id === 248531 && h.match !== 'none') || JSON.stringify(h && { id: h.row.id, match: h.match, score: h.score });
+});
+t('L4 expandSynonyms: PTG↔PD, PDT↔PT, endosan↔endorsan; pure, no index text rewritten', () => {
+  const e = R.expandSynonyms('endosan pejabat hakmilik PTG PDT');
+  const w = e.words;
+  const ok = ['pd', 'pejabat daftar', 'kp_ptg', 'pt', 'pejabat tanah', 'daerah', 'ptd', 'endorsan', 'endos'].every(x => w.includes(x)) && !w.includes('ptg') && !w.includes('spi');
+  const n = R.expandSynonyms('nota lulus').words.includes('spil') && R.expandSynonyms('hakmilik bercampur').words.includes('hakmilik campur') && R.expandSynonyms('Risalat MMKN').groups.length === 0;
+  return (ok && n && KROWS[0].subject.includes('PD dan PT')) || JSON.stringify(e);
+});
+t('L4b synonyms on: "PTG PDT" finds the row that says "PD dan PT"; off: it does not cover it', () => {
+  const on = R.search(KROWS, 'pejabat hakmilik PTG PDT', { synonyms: true }).find(h => h.row.id === 248531);
+  const off = R.search(KROWS, 'pejabat hakmilik PTG PDT').find(h => h.row.id === 248531);
+  return (on && off && on.score > off.score && on.cover > off.cover) || `on ${on && on.score}/${on && on.cover} off ${off && off.score}/${off && off.cover}`;
+});
+t('L5 sectionFilter keeps the matching lines ±ctx, marks the gaps, matches a synonym, and returns the full text on 0 matches', () => {
+  const lines = Array.from({ length: 100 }, (_, i) => `baris ${i} teks biasa`);
+  lines[50] = 'Endorsan nota mohon ikut pejabat hakmilik';
+  lines[0] = 'LANE Unit Pendaftaran PDT/PTG: Semak · Daftar';
+  const txt = lines.join('\n');
+  const f = R.sectionFilter(txt, 'endosan', 5);
+  const out = f.text.split('\n');
+  const z = R.sectionFilter(txt, 'zirafah', 5);
+  return (f.matched === 1 && out.includes(lines[50]) && out.includes('baris 45 teks biasa') && out.includes('baris 55 teks biasa') && !out.includes('baris 44 teks biasa')
+    && out.includes('…') && out[0] === lines[0] && z.matched === 0 && z.text === txt) || JSON.stringify({ m: f.matched, n: out.length, z: z.matched });
+});
+t('L5b sectionFilter default context is ±30 lines', () => {
+  const lines = Array.from({ length: 200 }, (_, i) => `baris ${i}`); lines[100] = 'SPIL keputusan';
+  const out = R.sectionFilter(lines.join('\n'), 'SPIL').text.split('\n');
+  return (out.includes('baris 70') && out.includes('baris 130') && !out.includes('baris 69') && !out.includes('baris 131')) || `kept ${out.length}`;
+});
+t('L5c sectionFilter lets the rarest word lead and ignores a common one (PTG on every line of a BRS)', () => {
+  const lines = Array.from({ length: 300 }, (_, i) => `baris ${i} pejabat PTG`); lines[150] = 'Endosan SPIL ikut pejabat PTG';
+  const f = R.sectionFilter(lines.join('\n'), 'endosan PTG', 3);
+  return (f.matched === 1 && f.dropped.includes('ptg') && f.text.split('\n').length < 12) || JSON.stringify({ m: f.matched, d: f.dropped });
+});
+const PY = spawnSync('python', ['-I', '-c', 'import fitz'], { encoding: 'utf8' }).status === 0;
+t(`L6 a "Proses To-Be" BPMN PDF page prints one LANE line per lane, boxes assigned by y-centre, flat text kept${PY ? '' : ' — skipped, PyMuPDF not importable'}`, () => {
+  if (!PY) return true;
+  const pdf = path.join(SB, 'tobe.pdf');
+  const mk = ['import fitz, sys', 'd = fitz.open(); pg = d.new_page(width=800, height=500)',
+    'pg.insert_text((300, 30), "Proses To-Be PPTPB - TSP", fontsize=12)',
+    'pg.insert_text((10, 150), "Unit Pelupusan PDT", fontsize=9)', 'pg.insert_text((10, 350), "Unit Pendaftaran PTG", fontsize=9)',
+    'pg.insert_text((300, 140), "Keputusan PTG", fontsize=9)', 'pg.insert_text((500, 160), "Endosan TSP", fontsize=9)',
+    'pg.insert_text((300, 340), "Semakan Permohonan SPI", fontsize=9)', 'pg.insert_text((500, 360), "Keputusan Pendaftar KP", fontsize=9)',
+    'p2 = d.new_page(width=800, height=500); p2.insert_text((300, 30), "Lampiran A", fontsize=12); p2.insert_text((10, 150), "Kiri", fontsize=9)',
+    'd.save(sys.argv[1])'].join('\n');
+  const a = spawnSync('python', ['-I', '-c', mk, pdf], { encoding: 'utf8' });
+  if (a.status !== 0) return 'fixture: ' + a.stderr.slice(0, 200);
+  const r = spawnSync('python', ['-I', '-c', R.EXTRACT_PY, pdf], { encoding: 'utf8', env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  const o = r.stdout;
+  return (/^LANE Unit Pelupusan PDT: Keputusan PTG · Endosan TSP$/m.test(o) && /^LANE Unit Pendaftaran PTG: Semakan Permohonan SPI · Keputusan Pendaftar KP$/m.test(o)
+    && (o.match(/^LANE /gm) || []).length === 2 && /Lampiran A/.test(o) && /^Endosan TSP$/m.test(o)) || (o + r.stderr).slice(0, 400);
+});
+t('L7 loadTiers on fixture rows: T1 master under the parent + tugasan child, T3 orphan integration, T4 cross-module + parent chain, order T2 > T5 > T3 > T4 > T1', () => {
+  const rows = [
+    row(215975, 'Pelupusan - Parent Ticket All Urusan', 'Pelupusan'),
+    row(218317, 'PPTPB – Permohonan Permit Khas Pertanian/Bangunan', '', { parent: 215975 }),
+    row(220564, 'PPTPB - Tugasan Penyediaan Permit Khas - Jadual VIII', 'Pelupusan', { parent: 218317 }),
+    row(220566, 'PPTPB - Tugasan Pengesahan Permit Khas - Jadual VIII', 'Pelupusan', { parent: 218317 }),
+    row(275608, 'Integrasi PPTPB - TSP - Tambahan Syarat Penggunaan', 'Pelupusan'),
+    row(223990, 'Integrasi - Pecah SPI Mohon dan Lulus', 'Pendaftaran'),
+    row(229847, 'Integrasi Pendaftaran Pelupusan', 'Pelupusan', { parent: 223990 }),
+    KROWS[0],
+  ];
+  const res = R.loadTiers(rows, { urusan: 'PPTPB', tugasan: ['SPIL', 'Penyediaan Permit Khas'], calledKods: ['SPI', 'SPIL', 'KP'], words: 'endosan pejabat hakmilik PTG PDT', parentId: 215975 });
+  const seq = res.placed.map(p => `${p.tiers[0]}:${p.row.id}`);
+  const firstOf = t2 => seq.findIndex(s => s.startsWith(t2 + ':'));
+  const order = ['T2', 'T3', 'T4', 'T1'].map(firstOf);
+  const ok = res.master && res.master.id === 218317 && seq.includes('T2:248531') && seq.includes('T3:275608') && seq.includes('T4:229847') && seq.includes('T4:223990')
+    && seq.includes('T1:218317') && seq.includes('T1:220564') && !seq.includes('T1:220566') && order.every((v, i) => v >= 0 && (i === 0 || v > order[i - 1]));
+  const next = R.loadNext(res, { tugasan: ['SPIL'], words: 'endosan', cap: 2 });
+  return (ok && next.length === 3 && /--read 218317 --section "SPIL endosan"/.test(next[0]) && /--read 248531$/.test(next[1])) || seq.join(' ') + ' | ' + next.join(' ; ');
+});
+t('L8 --load with no --urusan says so and exits 2 (no index read)', () => { const r = cli(['--load', '--no-refresh']); return (r.status === 2 && /--urusan <code> is required/.test(r.stdout)) || `${r.status} ${r.stdout}`; });
+// Live index cases: need the index rebuilt with `kods` (2026-11-05) and the Melaka flowables-bpmn folder.
+const KODS = REAL && realIdx.rows.some(r => Array.isArray(r.kods));
+const live = KODS ? '' : ' — skipped, real index has no kods yet (run --build)';
+t(`L1 --load PPTPB/SPIL called MLK_DFT_INTEGRASI holds #248531 #218317 #275608 #229847${live}`, () => {
+  if (!KODS) return true;
+  const r = runReal(['--load', '--urusan', 'PPTPB', '--tugasan', 'SPIL', '--called', 'MLK_DFT_INTEGRASI', '--words', 'endosan pejabat hakmilik PTG PDT', '--cheap', '--no-refresh']);
+  const miss = ['#248531', '#218317', '#275608', '#229847'].filter(x => !r.stdout.includes(x + ' '));
+  return (/^REQUIREMENT-LOAD PPTPB\/SPIL:/m.test(r.stdout) && !miss.length) || `missing ${miss.join(' ')}: ${r.stdout.slice(0, 300)}`;
+});
+t(`L2 --find "SPIL" → #248531 rank 1, label not none${live}`, () => {
+  if (!KODS) return true;
+  const j = JSON.parse(runReal(['--find', 'SPIL', '--no-refresh', '--json']).stdout);
+  return (j.hits[0] && j.hits[0].row.id === 248531 && j.hits[0].match !== 'none') || JSON.stringify(j.hits[0] && { id: j.hits[0].row.id, match: j.hits[0].match });
+});
+t(`L3 --find "endosan pejabat hakmilik PTG PDT" → #248531 in the top 3${live}`, () => {
+  if (!KODS) return true;
+  const j = JSON.parse(runReal(['--find', 'endosan pejabat hakmilik PTG PDT', '--no-refresh', '--top', '3', '--json']).stdout);
+  return j.hits.some(h => h.row.id === 248531) || 'top 3 ' + j.hits.map(h => h.row.id).join(',');
+});
+
 let failed = 0;
 for (const r of results) { if (!r.ok) failed++; console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.name}${r.ok ? '' : '  — ' + r.why}`); }
 console.log(`\nrequirement-index.eval: ${results.length - failed}/${results.length} green`);
