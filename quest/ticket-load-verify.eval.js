@@ -9,6 +9,7 @@
  *   (3) no reopens, no folders, status New                 → NEW
  *   (4) newest folder "3. New"                             → ADDITION
  *   (5) --json carries the cycle object
+ *   (18)-(22) v1.6 B3 PATCH SCOPE: the 288261 cycle-1 drop, its fix, a bare BA list, a Developer note, no BA list
  *   (6)-(17) v1.3 any-state Task folder: Terengganu / Perak / Archive / active.txt block /
  *            two-state clash / stale block / override — and Melaka output byte-identical
  *
@@ -265,6 +266,44 @@ const block = (qa, lines) => [`qa=${qa}`, ...lines, ''].join('\n') + '\n';
     const r = runIn(sb);
     check(`(17) ${nullStates} state(s) with no Task folder + missing state roots → skipped`, nullStates > 0 && r.status === 0 && folderLine(r.out) === `folder : ${f}`, 'exit=' + r.status + ' null=' + nullStates);
     fs.rmSync(sb.base, { recursive: true, force: true });
+}
+
+// (18)-(22) v1.6 B3 PATCH SCOPE (#288261): the report side against the BA list
+function scopeFixture(desc, entries) {
+    const root = fixture({ status: 'Open', entries, cycles: [] });
+    fs.writeFileSync(path.join(root, '7. ES #990001 - eval fixture', '0. Brief', 'Description.txt'), desc);
+    return root;
+}
+const scopeOut = out => (out.match(/PATCH-SCOPE:.*/) || [''])[0];
+const rowOf = (out, id, ask) => (out.split(/\r?\n/).find(l => l.includes(id) && new RegExp('\\s' + ask + '\\s').test(l)) || '');
+const P1 = 'PTMLK/02/L/MLPS/2026/1', P2 = 'PTMLK/02/L/MLPS/2026/2';
+const tsoDesc = ['Author: Eval TSO [TSO]', '', 'Actual Issue', '*Issue 1*', `i) ${P1} :`, 'Borang L1e > Di Paparan Tempat > Papar Plot 1',
+    '*Issue 2*', `i) ${P1}`, `ii) ${P2}`, 'Borang 4ae > Maksud Pendudukan Papar > LAIN-LAIN', '*Issue 3*', P1, 'User request untuk Upload Pelan'].join('\n');
+const baList = { ts: '2026-11-04T09:01:34Z', by: 'Eval BA', lines: ['  [role] BA', '  notes:', '    Need help to patch;', `    1. ${P1}`,
+    '    - patch new pelan', '    - patch Tempat/ Lokasi/ Wilayah = -', `    2. ${P2}`, '    -  Patch tujuan kepada LAIN-LAIN'] };
+{
+    const r = run(scopeFixture(tsoDesc, [baList]));
+    check('(18) B3 288261 cycle 1: /1 tujuan dropped by the BA list → 1 ⚠', /PATCH-SCOPE: 4 row\(s\) · 1 ⚠$/.test(scopeOut(r.out)) && /⚠ BA list drops it/.test(rowOf(r.out, P1, 'tujuan')) && /ok$/.test(rowOf(r.out, P2, 'tujuan')) && r.status === 0, scopeOut(r.out));
+}
+{
+    const fixNote = { ts: '2026-11-05T01:00:45Z', by: 'Eval BA', lines: ['  [role] BA', '  notes:', `    Sorry termiss another thing to patch for ID: ${P1}`, '    Need help to patch tujuan'] };
+    const r = run(scopeFixture(tsoDesc, [baList, fixNote]));
+    check('(19) B3 after the BA adds /1 tujuan → 0 ⚠', /PATCH-SCOPE: 4 row\(s\) · 0 ⚠$/.test(scopeOut(r.out)), scopeOut(r.out));
+}
+{
+    const bare = { ts: '2026-11-04T09:01:34Z', by: 'Eval BA', lines: ['  [role] BA', '  notes:', `    Please patch ${P1} and ${P2} as reported`] };
+    const r = run(scopeFixture(tsoDesc, [bare]));
+    check('(20) B3 BA names each permohonan with no ask → no ⚠', /· 0 ⚠$/.test(scopeOut(r.out)), scopeOut(r.out));
+}
+{
+    const dev = { ts: '2026-11-04T14:33:16Z', by: 'Eval Dev', lines: ['  [role] Developer', '  notes:', `    have patched the tujuan for ${P1}`] };
+    const r = run(scopeFixture(tsoDesc, [baList, dev]));
+    check('(21) B3 a Developer note never covers a dropped ask', /· 1 ⚠$/.test(scopeOut(r.out)), scopeOut(r.out));
+}
+{
+    const r = run(scopeFixture(tsoDesc, []));
+    const j = JSON.parse(run(scopeFixture(tsoDesc, []), ['--json']).out);
+    check('(22) B3 no BA list yet → no ⚠, said in the line; --json carries patchScope', /0 ⚠ · no BA list naming a permohonan yet$/.test(scopeOut(r.out)) && j.patchScope && j.patchScope.warn === 0 && j.patchScope.rows.length === 4, scopeOut(r.out));
 }
 
 let failed = 0;
