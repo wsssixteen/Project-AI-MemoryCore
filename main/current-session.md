@@ -46,3 +46,23 @@ who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k
 goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
 model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
 shown: rework-audit-flow.png (scratchpad, sent to miya)
+
+STEP-3: change-card skill (What / Why / How / When / Where, before and after every system change)
+session: edb789a0-eefa-41ce-855b-53a0705b84a6
+his words: "build a skill that will always be invoked installed into system-upgrade and or BEFORE we do system-upgrade" (order)
+fix or report: fix
+who pays: on-demand: no process; one checker call per card, two cards per system change (step 3, step 8)
+goal without the part: he reviews a change from the STEP-3 block and the step 8 map alone, with no five-line card to compare before and after
+model: claude-fable-5-1
+shown: domain/change-card/diagram.png
+note: "system-upgrade" read as the change route (/system-change); Fable 5.1 A/S/C verdict "build with changes" (9 items), built by claude-opus-5-5
+
+CHANGE-CARD (before): change-card
+- What: A new skill, change-card, shows every system change as five one-sentence lines with a flow picture and the change map.
+- Why: On 2026-11-05 he asked for a What, Why, How, When and Where card that is easy to review before and after a change.
+- How: The card is written here, checked by `domain/change-card/change-card.js`, then shown before his nod and again after landing.
+  ![flow](domain/change-card/diagram.png)
+- When: It runs at change route step 3 before his nod and at step 8 after the change lands on main.
+- Where: It lives in `domain/change-card/` and `.claude/skills/change-card/`, wired into rows 3 and 8 of `system/INDEX.md`.
+  ![where](change-map-20261105-094246.png)
+Where picture = the change map (lib/change-map.js).
