@@ -23,7 +23,7 @@ A review card for any system change, shown twice: at change route step 3 (BEFORE
 |---|---|
 | `.claude/skills/change-card/SKILL.md` | the card rules and the two moments |
 | `domain/change-card/change-card.js` | checker: `node domain/change-card/change-card.js <file> [--stage before\|after]` → `CHANGE-CARD: PASS` or `FAIL <reasons>`; on a session file it checks the last block of that stage |
-| `domain/change-card/eval.js` | 17 fixtures: good card, table form, session file, Windows line ends, bold labels, decimals, each failure kind |
+| `domain/change-card/eval.js` | 19 fixtures (incl. AFTER copies BEFORE): good card, table form, session file, Windows line ends, bold labels, decimals, each failure kind |
 | `diagram.html` / `.png` | the change route with the two card moments marked |
 | `log.jsonl` | one row per check |
 
@@ -31,7 +31,7 @@ A review card for any system change, shown twice: at change route step 3 (BEFORE
 
 `system/INDEX.md` §The change route: row 3 (Check + nod) and row 8 (Report) name the card. No hook.
 
-**Enforcement not built (on record)**: the step-3 rider `domain/design-consult-gate/step3-check.js` already reads the STEP-3 block; it could refuse a build that has no `CHANGE-CARD (before)` block. Built only on slip evidence (system-rules: no new gate without a slip).
+**Enforcement (built 2026-11-05, his popup answer "Add it now")**: the step-3 rider `domain/design-consult-gate/step3-check.js` refuses a new part or a highest-order edit until a `CHANGE-CARD (before)` block under this session's STEP-3 block prints PASS (fixtures S21-S25 in `step3-check.eval.js`). The AFTER card at step 8 has no gate.
 
 ## Design check
 

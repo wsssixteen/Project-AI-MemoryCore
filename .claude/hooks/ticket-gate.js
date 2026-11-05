@@ -209,6 +209,33 @@ process.stdin.on('end', () => {
     if (qaMatch || bareMatch) {
       const qaNum = qaMatch ? qaMatch[1] : bareMatch;
       const state = readQAState(qaNum);
+      // 2026-11-05 (#287811): a CLOSED block whose live Redmine status is Rework re-opens itself here, the
+      // first time the ticket is named. 287811 stayed status=closed, local_test_confirmed=true from 3 Nov
+      // through a whole rework day, so falsifier-ran-check and quest-phase-gate held nothing.
+      // Live status: TICKET_GATE_STATUS_CMD (eval override) or domain/redmine-write-gate/status-rule.js.
+      if (state.status === 'closed') {
+        let live = '';
+        try {
+          const cmd = (process.env.TICKET_GATE_STATUS_CMD || 'node domain/redmine-write-gate/status-rule.js {n}').replace('{n}', qaNum);
+          live = require('child_process').execSync(cmd, { cwd: projectRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 8000 });
+        } catch (e) { live = ''; }
+        if (/\bRework\b/i.test(live)) {
+          try {
+            const text = fs.readFileSync(activePath, 'utf8');
+            const blocks = text.split(/^(?=qa=)/m);
+            const head = new RegExp('^qa=(?:QA-)?' + qaNum + '\\b');
+            const old = blocks.find(b => head.test(b));
+            if (old) {
+              let nb = old.replace(/^status=.*$/m, 'status=active').replace(/^local_test_confirmed=.*$/m, 'local_test_confirmed=false');
+              if (!/^local_test_confirmed=/m.test(nb)) nb = nb.replace(/^(qa=.*\n)/, '$1local_test_confirmed=false\n');
+              nb = nb.replace(/^phase=.*$/m, 'phase=rework (re-opened by ticket-gate ' + new Date().toISOString().slice(0, 10) + ')');
+              fs.writeFileSync(activePath, text.replace(old, nb));
+            }
+          } catch (e) { /* never block */ }
+          console.log(JSON.stringify({ additionalContext: `🔁 REWORK re-opened — QA-${qaNum}: Redmine status is Rework; block set status=active, local_test_confirmed=false, phase=rework. A WRITERS TABLE (| # | Writer (full address) | Runtime proof | Closer |) is owed before any fix, whatever the confidence (predicate-box v6). The Rework folder comes from active-cli on the next update.` }));
+          process.exit(0);
+        }
+      }
       // Past Phase 0 already → let through silently
       const pastPhase0 = state.phase && state.phase !== '0' && state.status !== 'idle' && state.status !== 'hold';
       if (pastPhase0) process.exit(0);
@@ -260,7 +287,7 @@ process.stdin.on('end', () => {
         `1b. ⬜ **🚨 LATEST-STATE: journal-timeline table emitted + every issue classified OPEN / ALREADY-SOLVED** — from History.txt, one row per journal entry (date · author · assignee-change · issue raised/solved), oldest→newest; solved issues emitted as a DO-NOT-RESOLVE list (cite the journal date proving each). Fix targets = LATEST open issues ONLY — newest entries supersede the Description. Banned: scouting an issue solved earlier in the thread. (Added 2026-07-27 per みや — stale-conversation slip.)`,
         st && st.row1c ? st.row1c : `1c. ⬜ **URUSAN PRECEDENT — read \`${kdir}urusan/${state.urusan || '<KOD>'}-TICKETS.md\`** (derive the KOD first if active.txt has no \`urusan=\`) and cite matching past tickets ("precedent: #NNNNN same screen/symptom" or "no urusan precedent"). Past tickets ARE the distribution of future tickets — a match turns Phase 0 into diff-against-precedent instead of a fresh trace. Regenerate stale docs: \`node domain/urusan-tickets/urusan-tickets.js${st ? ' --state ' + st.key : ''}\` (office network). (Added 2026-08-23 per みや — precedent-first directive.)`,
         `1d. ⬜ **TEST-DATA LOOKUP FIRST — run \`node lib/test-data-db.js ${state.urusan || '<urusan or keyword>'}${st ? ' --state ' + st.key : ''}\` and paste the result** BEFORE creating fresh test data; on a hit, re-verify the row on the LIVE env (UAT/FAT rows are historical — envs deleted 2026-07-17). Any NEW test data derived this quest is WRITTEN BACK to TEST-PERMOHONAN-INDEX.md (then \`node lib/test-data-db.js build\`). (Added 2026-08-23 per みや — close-the-loop directive.)`,
-        `1e. ⬜ **🚨 WHO WROTE IT + ORIGINAL REQUIREMENT — run \`node quest/ticket-load-verify.js ${qaNum}\` (paste its B / B2 lines as \`Spec source:\`: only a BA list is the spec, a TSO text is a report) and \`node quest/requirement-index.js --ticket ${qaNum}\`, then READ the closest match in full: \`node quest/requirement-index.js --read <req> --for ${qaNum}\` (description, journals, spec attachments). Emit \`REQUIREMENT-MATCH: ${qaNum} → <req> — aligned | extends | contradicts | none found | not needed\` with the deciding rule quoted as \`— read: "<rule>"\`; never a verdict from the subject; not needed = alter / patch / cancel request.** A TSO ask that extends or contradicts the requirement is a change request: say so before any code. (Added 2026-10-27 per みや — quest SKILL Phase 0 steps 2a + 2b.)`,
+        `1e. ⬜ **🚨 WHO WROTE IT + ORIGINAL REQUIREMENT — run \`node quest/ticket-load-verify.js ${qaNum}\` (paste its B / B2 lines as \`Spec source:\`: only a BA list is the spec, a TSO text is a report) and \`node quest/requirement-index.js --ticket ${qaNum}\`, then LOAD the rules: \`node quest/requirement-index.js --load --urusan <code> --tugasan <kod> --called <bpmn key> --words "<value of concern>" --for ${qaNum}\` and READ per its Next line (cap 4): \`node quest/requirement-index.js --read <req> --for ${qaNum}\` (description, journals, spec attachments). Emit \`REQUIREMENT-MATCH: ${qaNum} → <req> — aligned | extends | contradicts | none found | not needed\` (one per read) with the deciding rule quoted as \`— read: "<rule>"\`, then the \`REQUIREMENT-RULES:\` ledger (\`R<n> · #<req> · "<quote>" · applies to <tugasan> · our value <x>\`, or \`R0 none\`); never a verdict from the subject; not needed = alter / patch / cancel request.** A TSO ask that extends or contradicts the requirement is a change request: say so before any code. (Added 2026-10-27 per みや — quest SKILL Phase 0 steps 2a + 2b.)`,
         `2. ⬜ **Issue Checklist created at quest creation** in \`projects/coding-projects/active/QA-${qaNum}/QA-${qaNum}.md\` — from PRIMARY SOURCES (BA Description + History + attachments). NOT copied from Scout. Scout's diagnostic is DIFFED against this. List GROWS through Recon/Apply/Test; out-of-scope findings get explicit OOS rows. **Enumerate ALL** (every BA-numbered item, every gate-writer, every OR-bypass, every data-axis branch) — see \`checklist\` skill "Enumeration completeness".`,
         `3. ⬜ **Existing-utility sweep** — grep for existing helpers/constants/sets/templates BEFORE proposing custom ones. Applies even when みや says "create our own X" — flag the existing util first.`,
         `4. ⬜ **Working-analog compare** — sibling templates / sibling urusan classes / sibling beans. Identify the canonical pattern BEFORE recommending tags/methods.`,

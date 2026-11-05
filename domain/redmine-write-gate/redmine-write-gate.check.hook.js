@@ -185,6 +185,17 @@ function isStandingClaim(scriptPath, cwd) {
   return CLAIM_PAYLOAD.test(body) && !CLAIM_FORBIDDEN.test(body);
 }
 
+// v1.12 (2026-11-05): running THIS gate's own eval is not a Redmine write; its fixtures hold write shapes as test data and
+// the gate blocked its own eval from a shell tool. Exempt only a command whose ONE node target is this gate's eval file
+// (resolved path, this folder in the repo or its worktree) and whose command text carries no mutation.
+const OWN_EVAL = path.join(__dirname, 'redmine-write-gate.eval.js');
+function isOwnEvalOnly(cmd, cwd) {
+  const targets = [...cmd.matchAll(NODE_SCRIPT)].map(x => x[1] || x[2] || x[3]);
+  if (targets.length !== 1 || (cmd.match(/\bnode(?:\.exe)?\b/gi) || []).length !== 1) return false;
+  const norm = p => path.normalize(String(p).replace(WORKTREE_SEG, '')).toLowerCase();
+  return norm(path.resolve(cwd || process.cwd(), targets[0])) === norm(OWN_EVAL);
+}
+
 function transcriptTail(p, want = 400000) {
   try {
     const size = fs.statSync(p).size;
@@ -307,6 +318,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
   let body = cmd;
   const cmdClean = !isMutation(cmd);
   let standing = false;
+  if (cmdClean && isOwnEvalOnly(cmd, data.cwd)) return { fired: false };
   for (const x of cmd.matchAll(NODE_SCRIPT)) {
     const s = x[1] || x[2] || x[3];
     if (cmdClean && READ_ONLY_SCRIPT.test(s)) continue;

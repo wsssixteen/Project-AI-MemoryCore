@@ -7,6 +7,8 @@ const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..
 
 let MODELS = null; try { MODELS = require(path.join(ROOT, 'lib', 'models.js')); } catch (_) { MODELS = null; }
 let HW = null; try { HW = require(path.join(ROOT, 'lib', 'his-words.js')); } catch (_) { HW = null; }
+// The card checker sits beside this Feature; absent (an older checkout) = the card is not required.
+let CARD = null; try { CARD = require(path.join(__dirname, '..', 'change-card', 'change-card.js')); } catch (_) { CARD = null; }
 
 // The highest order: system/INDEX.md §The change route, "Highest order" paragraph.
 const HIGHEST_ORDER = [
@@ -51,7 +53,8 @@ function findBlock(sessionFileText, ids) {
       const m = line.match(/^([a-z][a-z ]+):\s*(.*)$/i);
       if (m) fields[m[1].trim().toLowerCase()] = m[2].trim();
     }
-    if (fields.session && ids.includes(fields.session)) found = fields;
+    // the whole chunk up to the next STEP-3 header: the change card sits here (change-card rider, 2026-11-05)
+    if (fields.session && ids.includes(fields.session)) found = Object.assign(fields, { __raw: raw.slice(start) });
   }
   return found;
 }
@@ -100,6 +103,12 @@ function check(data) {
   if (/^report$/i.test(f['fix or report'] || '') && FAILURE_WORDS.test(f['his words'] || '')) {
     const nod = (f['alert nod'] || '').replace(/^"|"$/g, '').trim();
     if (!nod || !his.includes(nod)) problems.push('he named a failure and this only reports it: fix first, or add alert nod: "<his words asking for an alert>"');
+  }
+  // Change card (2026-11-05, per みや "Add it now"): a passing CHANGE-CARD (before) block under this STEP-3 block.
+  if (CARD) {
+    const raw = f.__raw || '';
+    if (!/^CHANGE-CARD \(before\):/m.test(raw)) problems.push('no CHANGE-CARD (before) block under this STEP-3 block: five one-sentence lines What · Why · How · When · Where (skill change-card)');
+    else { const c = CARD.check(raw, 'before'); if (!c.pass) problems.push('CHANGE-CARD (before) fails: ' + c.reasons.join(' · ')); }
   }
   const needsHighest = sc === 'highest-order' || FREQUENT.test(f['who pays'] || '');
   if (needsHighest) {

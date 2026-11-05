@@ -58,9 +58,27 @@ function pickBlock(text, stage) {
   return end === -1 ? rest : rest.slice(0, end + 1) + (rest.slice(end).match(/^\s*Where picture[^\n]*/m) || [''])[0];
 }
 
+// The five sentences of a card block, for the AFTER-copies-BEFORE check (scenario 18, 2026-11-05).
+function sentencesOf(block) {
+  const c = parse(block);
+  return FIELDS.map(f => (c[f] ? c[f].sentence.replace(/!\[[^\]]*\]\([^)]*\)/g, '').trim().toLowerCase() : ''));
+}
+function cardName(block) { const m = String(block).match(/^CHANGE-CARD \((?:before|after)\):\s*(.+)$/im); return m ? m[1].trim().toLowerCase() : null; }
+
 function check(text, stage) {
+  const full = text;
   text = pickBlock(text, stage);
   const reasons = [];
+  if (stage && stage.toLowerCase() === 'after') {
+    const name = cardName(text);
+    const beforeRe = /^CHANGE-CARD \(before\):.*$/gim;
+    let m, before = null;
+    while ((m = beforeRe.exec(full))) { const b = pickBlock(full.slice(m.index), 'before'); if (!name || cardName(b) === name) before = b; }
+    if (before) {
+      const a = sentencesOf(text), b = sentencesOf(before);
+      if (a.every(Boolean) && a.join('|') === b.join('|')) reasons.push('AFTER card is a word-for-word copy of the BEFORE card: rewrite it from what landed');
+    }
+  }
   const card = parse(text);
   FIELDS.forEach(f => {
     const c = card[f];

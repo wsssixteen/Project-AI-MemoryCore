@@ -45,6 +45,9 @@
 **Ticket type**: <bug | enhancement | cr | requirement>
 **Justification (from Description.txt)**: <quote + reasoning>
 
+**Requirement rules** (`## Requirement rules`, Phase 0 step 2b, from `requirement-index.js --load`): one row per requirement read, `R<n> · #<req> · "<quoted deciding sentence>" · applies to <tugasan> · our value <x>`, or `R0 none` (name the reads)
+- <REQUIREMENT-RULES: rows>
+
 **Issue (BA)**:
 - Env (BA): <the env the BA names, one of the resolved state's envs (Melaka: MLIT / STG / PROD; UAT and FAT were retired 2026-07-17)>
 - Test app (Ruri verified): <id_pengenalan @ urusan + tugasan_kod> · login `<pengguna_semasa>` · role <kod>
