@@ -37,3 +37,15 @@ who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k
 goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
 model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
 shown: rework-audit-flow.png (scratchpad, sent to miya)
+
+- [x] DONE 2026-11-05 (wrong-fix row 2 amended: right urusan, unrepresentative test permohonan): audit 287346 cycle 1 Phase 0: did it load the wrong urusan, or the right urusan with an unrepresentative test permohonan (stg1 PTMLK/01/L/MCL/2026/1 had luas_dipohon filled)? Record the verdict as a wrong-fix row and decide the fix (tag source check / PROD census).
+
+STEP-3: tag source check (domain/template-scenario + quest Workflow TEMPLATE-SCENARIO row)
+session: 2026-11-06 cool-margulis-5bb326 (287346 rework 1 follow-up)
+his words: "1. built it. 2. Eval verify it. 3. make sure it goes through system-upgrade. 4. DE" (order, /goal, after the tsc-plan / tsc-how / tsc-where pictures)
+fix or report: fix
+who pays: on-demand: inside the template-scenario script run only; one PROD count per mapped source column (read-only, db-gateway, under 1 s each) and one env read per empty case; no new hook, no new process class
+goal without the part: a template paper passes on one test permohonan whose columns are filled while PROD rows of that urusan are empty, and the BA sees "-" (287346 cycle 1: luas_dipohon 164 on the test row, 1718 of 3551 PROD MCL rows empty)
+appraise: A = the plan assumed a source column can be found per tag automatically; it cannot (populators are Java), so the source comes from a state-keyed map plus SOURCE checklist rows, unknown = FAIL · S = scope kept to text tags; signatures stay with the chain check · C = Git Bash rewrites "|" arguments (found live), so the README says run from PowerShell or set MSYS_NO_PATHCONV=1
+model: claude-opus-5-5 (not highest-order, on-demand part; highest is claude-fable-5-1)
+shown: tsc-plan.png, tsc-how.png, tsc-where.png (scratchpad, sent 2026-11-05)
