@@ -77,3 +77,23 @@ CHANGE-CARD (before): change-card
   ![where](change-map-20261105-094246.png)
 Where picture = the change map (lib/change-map.js).
 
+
+STEP-3: card gate (step-3 rider requires a passing CHANGE-CARD before block)
+session: edb789a0-eefa-41ce-855b-53a0705b84a6
+his words: "Today nothing stops a system change that skips the card. Add a check ...?" answered "Add it now" (order)
+fix or report: fix
+who pays: per-tool: only Edit/Write on a new part or highest-order path, in the step-3 rider already running; one extra file read
+goal without the part: a system change can be built with no card, and the skip is seen only by the watch afterwards
+model: claude-fable-5-1
+shown: domain/design-consult-gate/diagram.png
+note: enforcement named as "not built" by the Fable 5.1 step-3 check of change-card (2026-11-05); built on his popup answer; built by claude-opus-5-5
+
+CHANGE-CARD (before): card gate
+- What: The step-3 rider now refuses a new part or a highest-order edit until a passing BEFORE card sits under its STEP-3 block.
+- Why: On 2026-11-05 you chose to add the check now so no system change can skip the card.
+- How: The rider finds this session's STEP-3 block, reads the text under it, and runs `domain/change-card/change-card.js` on the BEFORE card.
+  ![flow](domain/design-consult-gate/diagram.png)
+- When: It runs on every Edit or Write of a new part or a highest-order file, the same moment the rider already runs.
+- Where: It lives in `domain/design-consult-gate/step3-check.js` with fixtures in its eval, and the change-card README records it.
+  ![where](change-map-20261105-110349.png)
+Where picture = the change map (lib/change-map.js).
