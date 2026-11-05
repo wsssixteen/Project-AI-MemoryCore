@@ -146,6 +146,25 @@ reqCase(14, 'requirement-index --read Next line + READ banner, no verdict of min
 reqCase(15, 'JSONL-escaped quote in assistant text', [JSON.stringify({ type: 'user', message: { content: [{ type: 'tool_result', content: READ_223236 }] } }), JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: 'REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — contradicts — read: "status Sedia"' }] } })], true);
 reqCase(16, 'READ banner is for a different requirement', ['REQUIREMENT-READ #111111 for 287811', 'REQUIREMENT-MATCH: 287811 → #223236 "MCL - TUGASAN" — aligned — read: "Sedia"'], false);
 
+// ── Fixtures 17-19: v4 branch binding (2026-11-05, #287811) ──
+// The edited repo's branch names the ticket; THAT block must be status=active, whatever other blocks say.
+{
+  const runBranch = (branch, inputObj) => spawnSync(process.execPath, [HOOK], {
+    input: JSON.stringify(inputObj), encoding: 'utf8', timeout: 20000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: path.resolve(__dirname, '..', '..'), QUEST_PHASE_GATE_BRANCH: branch },
+  });
+  const t = writeTranscript('t17.txt', ['Issue Checklist', '═══ SCOUT ═══', '═══ RECON ═══', '═══ RUBRIC ═══', 'git log --oneline -20 -- src/main/java/my/gov/melaka/MlkFooForm.java', 'ENTRY-POINT: someForm.xhtml:42 -> MlkFooForm.onSave()', REQ_OK, ''].join('\n'));
+  setActive('qa=QA-287811\nstatus=closed\nlocal_test_confirmed=true\nclosed=2026-11-03\n\n' + ACTIVE_BLOCK);
+  let r = runBranch('mlk/internal/287811', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '17. v4 branch ticket 287811 is status=closed while another block is active -> deny (the 287811 shape)', pass: r.status === 0 && /"deny"/.test(r.stdout) && /not status=active/.test(r.stdout) && /active-cli\.js update QA-287811/.test(r.stdout) });
+  setActive('qa=QA-287811\nstatus=active\nlocal_test_confirmed=false\nclosed=2026-11-03\n\n' + ACTIVE_BLOCK);
+  r = runBranch('mlk/internal/287811', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '18. v4 branch ticket 287811 re-opened (status=active) + all banners -> allow', pass: r.status === 0 && r.stdout.trim() === '' });
+  setActive(ACTIVE_BLOCK);
+  r = runBranch('mlk/master', { tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
+  results.push({ name: '19. v4 branch without a ticket number falls back to the old predicate (any active block) -> allow', pass: r.status === 0 && r.stdout.trim() === '' });
+}
+
 // ── Report ──
 let failed = 0;
 for (const r of results) {

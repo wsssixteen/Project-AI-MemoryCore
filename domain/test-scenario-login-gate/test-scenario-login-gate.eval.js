@@ -51,6 +51,17 @@ check('V4-7 bypass token → exit 0', r.status === 0, 'exit=' + r.status);
 r = fire('Test scenario: login nurulazura@melaka.gov.my.' + pad);
 check('V4-8 a plain test scenario with no deploy steps is untouched by v4', r.status === 0, 'exit=' + r.status);
 
+// v5 (2026-11-05, #287811): the permohonan ID in a test scenario is the full id_pengenalan, inline in the cell.
+const ROW = (perm) => '\n## Test scenario — internal\n| Login | Permohonan | Screen | Do | Expect |\n|---|---|---|---|---|\n| nazli@melaka.gov.my | ' + perm + ' | Semakan Surat Keputusan | open twice | name kept |\n[skip-local-prep: server test]';
+r = fire(ROW('PT/2026/22 · Semakan') + pad);
+check('V5-1 short form PT/2026/22 in the table → exit 2 naming the short form', r.status === 2 && /Short form/.test(r.stderr || '') && /PT\/2026\/22/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = fire(ROW('`PTMLK/02/L/PT/2026/22`') + pad);
+check('V5-2 full ID inline in the cell → exit 0', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = fire('\n```text\nPTMLK/02/L/PT/2026/22\n```' + ROW('the block above') + pad);
+check('V5-3 full ID only in a separate text block → exit 2 (breaks the table)', r.status === 2 && /inline code/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = fire(ROW('PTMLK/02/L/PT/2026/22') + pad);
+check('V5-4 full ID bare in the cell (no backticks) → exit 2', r.status === 2, 'exit=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\ntest-scenario-login-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

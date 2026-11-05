@@ -1894,3 +1894,12 @@
 {"ts":"2026-11-04T16:06:19.150Z","category":"A1"}
 {"ts":"2026-11-04T16:06:19.985Z","category":"A2"}
 {"ts":"2026-11-04T16:06:20.791Z","category":"A3"}
+{"ts":"2026-11-05T01:27:08.700Z","category":"blocker"}
+{"ts":"2026-11-05T01:27:09.745Z","category":"git-in-his-repo"}
+{"ts":"2026-11-05T01:56:14.583Z","category":"deploy-cherry-pick"}
+{"ts":"2026-11-05T02:01:27.123Z","category":"deploy-guard-hole"}
+{"ts":"2026-11-05T07:06:34.371Z","category":"test-scenario"}
+{"ts":"2026-11-05T07:28:20.034Z","category":"fix-failed-live"}
+{"ts":"2026-11-05T07:53:18.683Z","category":"recon-skipped"}
+{"ts":"2026-11-05T09:42:28.995Z","category":"fix-failed-live"}
+{"ts":"2026-11-05T10:41:31.977Z","category":"fix-failed-live"}

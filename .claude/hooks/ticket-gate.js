@@ -209,6 +209,33 @@ process.stdin.on('end', () => {
     if (qaMatch || bareMatch) {
       const qaNum = qaMatch ? qaMatch[1] : bareMatch;
       const state = readQAState(qaNum);
+      // 2026-11-05 (#287811): a CLOSED block whose live Redmine status is Rework re-opens itself here, the
+      // first time the ticket is named. 287811 stayed status=closed, local_test_confirmed=true from 3 Nov
+      // through a whole rework day, so falsifier-ran-check and quest-phase-gate held nothing.
+      // Live status: TICKET_GATE_STATUS_CMD (eval override) or domain/redmine-write-gate/status-rule.js.
+      if (state.status === 'closed') {
+        let live = '';
+        try {
+          const cmd = (process.env.TICKET_GATE_STATUS_CMD || 'node domain/redmine-write-gate/status-rule.js {n}').replace('{n}', qaNum);
+          live = require('child_process').execSync(cmd, { cwd: projectRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 8000 });
+        } catch (e) { live = ''; }
+        if (/\bRework\b/i.test(live)) {
+          try {
+            const text = fs.readFileSync(activePath, 'utf8');
+            const blocks = text.split(/^(?=qa=)/m);
+            const head = new RegExp('^qa=(?:QA-)?' + qaNum + '\\b');
+            const old = blocks.find(b => head.test(b));
+            if (old) {
+              let nb = old.replace(/^status=.*$/m, 'status=active').replace(/^local_test_confirmed=.*$/m, 'local_test_confirmed=false');
+              if (!/^local_test_confirmed=/m.test(nb)) nb = nb.replace(/^(qa=.*\n)/, '$1local_test_confirmed=false\n');
+              nb = nb.replace(/^phase=.*$/m, 'phase=rework (re-opened by ticket-gate ' + new Date().toISOString().slice(0, 10) + ')');
+              fs.writeFileSync(activePath, text.replace(old, nb));
+            }
+          } catch (e) { /* never block */ }
+          console.log(JSON.stringify({ additionalContext: `🔁 REWORK re-opened — QA-${qaNum}: Redmine status is Rework; block set status=active, local_test_confirmed=false, phase=rework. A WRITERS TABLE (| # | Writer (full address) | Runtime proof | Closer |) is owed before any fix, whatever the confidence (predicate-box v6). The Rework folder comes from active-cli on the next update.` }));
+          process.exit(0);
+        }
+      }
       // Past Phase 0 already → let through silently
       const pastPhase0 = state.phase && state.phase !== '0' && state.status !== 'idle' && state.status !== 'hold';
       if (pastPhase0) process.exit(0);

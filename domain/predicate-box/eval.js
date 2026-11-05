@@ -515,6 +515,69 @@ const fixtures = [
       return expectBlock(runHook(t, false));
     },
   },
+  // v6 (2026-11-05, #287811): a rework owes the WRITERS TABLE whatever the confidence.
+  ...(() => {
+    const RW = path.join(TMP, 'rework'); fs.mkdirSync(path.join(RW, 'active', 'QA-287811'), { recursive: true });
+    const activeRework = path.join(RW, 'active-rework.txt');
+    fs.writeFileSync(activeRework, 'qa=QA-287811\nstatus=active\nticket_type=bug\nclosed=2026-11-03\n', 'utf8');
+    const activeCycle1 = path.join(RW, 'active-cycle1.txt');
+    fs.writeFileSync(activeCycle1, 'qa=QA-287811\nstatus=active\nticket_type=bug\n', 'utf8');
+    const today = new Date().toISOString().slice(0, 10);
+    const docWrong = path.join(RW, 'active', 'QA-287811', 'QA-287811.md');
+    fs.writeFileSync(docWrong, '# QA-287811\n\n## Wrong fixes\n| # | Date | Fix that was wrong | Why it was refuted | Learned | Verdict |\n|---|---|---|---|---|---|\n| 1 | ' + today + ' | fix 1 | failed on MLIT | one writer of three | |\n', 'utf8');
+    const emptyRoot = path.join(RW, 'empty'); fs.mkdirSync(path.join(emptyRoot, 'active'), { recursive: true });
+    const runEnv = (t, env) => {
+      const input = jl({ transcript_path: t, stop_hook_active: false });
+      const r = spawnSync(process.execPath, [HOOK], { input, encoding: 'utf8', cwd: TMP, timeout: 15000, env: Object.assign({}, process.env, { PREDICATE_BOX_LOG: LOG }, env) });
+      return { stdout: (r.stdout || '').trim(), stderr: (r.stderr || '').trim(), status: r.status };
+    };
+    const WRITERS = 'WRITERS TABLE\n| # | Writer (full address) | Runtime proof | Closer |\n|---|---|---|---|\n' +
+      '| 1 | PelupusanReportUtil.processReportListConcurrently save loop | MLIT log 18:56 no build line, new file saved | fix 4 skips a report not in the action map |\n' +
+      '| 2 | MlkSuratTemplateForm.initData onKira | test 2 Semakan open gave Baru + opener | fix 3 limits Kira to Penyediaan |';
+    const CONF85 = DIAGRAM + '\nFix confidence 85% because the server log names the writer.';
+    return [
+      {
+        name: '51. v6 rework (closed= stamp) + confidence 85% + NO writers table -> blocked, reason names WRITERS TABLE',
+        run() {
+          const t = writeTranscript('f51', [userLine('fix #287811 rework'), editLine(JAVA2), asstLine(CONF85)]);
+          const out = runEnv(t, { PREDICATE_BOX_ACTIVE_FILE: activeRework, PREDICATE_BOX_QADOC_ROOT: emptyRoot });
+          if (out.status !== 2) return 'expected exit 2, got ' + out.status + ' ' + out.stdout.slice(0, 80);
+          return /WRITERS TABLE/.test(out.stderr) && /closed\*= stamp/.test(out.stderr) ? null : 'stderr lacks the rework reason: ' + out.stderr.slice(0, 160);
+        },
+      },
+      {
+        name: '52. v6 rework + writers table with 2 full rows -> silent pass',
+        run() {
+          const t = writeTranscript('f52', [userLine('fix #287811 rework'), editLine(JAVA2), asstLine(CONF85 + '\n' + WRITERS)]);
+          return expectSilent(runEnv(t, { PREDICATE_BOX_ACTIVE_FILE: activeRework, PREDICATE_BOX_QADOC_ROOT: emptyRoot }));
+        },
+      },
+      {
+        name: '53. v6 cycle 1 (no stamp, no wrong-fix row) + confidence 85% -> silent pass (waiver kept)',
+        run() {
+          const t = writeTranscript('f53', [userLine('fix #287811'), editLine(JAVA2), asstLine(CONF85)]);
+          return expectSilent(runEnv(t, { PREDICATE_BOX_ACTIVE_FILE: activeCycle1, PREDICATE_BOX_QADOC_ROOT: emptyRoot }));
+        },
+      },
+      {
+        name: '54. v6 cycle 1 but a wrong-fix row dated today in the qa_doc + 85% + no table -> blocked',
+        run() {
+          const t = writeTranscript('f54', [userLine('fix #287811'), editLine(JAVA2), asstLine(CONF85)]);
+          const out = runEnv(t, { PREDICATE_BOX_ACTIVE_FILE: activeCycle1, PREDICATE_BOX_QADOC_ROOT: RW });
+          if (out.status !== 2) return 'expected exit 2, got ' + out.status;
+          return /wrong-fix row dated today/.test(out.stderr) ? null : 'stderr lacks the wrong-fix reason: ' + out.stderr.slice(0, 160);
+        },
+      },
+      {
+        name: '55. v6 rework + writers table with an empty Closer cell -> blocked (row incomplete)',
+        run() {
+          const t = writeTranscript('f55', [userLine('fix #287811 rework'), editLine(JAVA2), asstLine(CONF85 + '\nWRITERS TABLE\n| # | Writer (full address) | Runtime proof | Closer |\n|---|---|---|---|\n| 1 | PelupusanReportUtil save loop | MLIT log 18:56 | tbd |')]);
+          const out = runEnv(t, { PREDICATE_BOX_ACTIVE_FILE: activeRework, PREDICATE_BOX_QADOC_ROOT: emptyRoot });
+          return out.status === 2 ? null : 'expected exit 2, got ' + out.status;
+        },
+      },
+    ];
+  })(),
 ];
 
 let failed = 0;
