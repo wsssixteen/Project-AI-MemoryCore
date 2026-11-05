@@ -17,7 +17,8 @@ const LOG = path.join(__dirname, 'log.jsonl');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));   // missing since birth: every fire threw ReferenceError (found 2026-09-08 audit)
 
 // company-branch / etanah-repo context — MemoryCore (main) never trips this
-const ETANAH_CTX = /etanah-(?:pelupusan|awam|common|spoc-hasil|teknikal)|\bmlk\/(?:master|int-env|stag-env|release|esokongan|training|internal|qa|cr)/i;
+// etanah-work = the work clone and its worktrees (wt-int-env etc.); missed until 2026-11-05, when 3 cherry-picks ran there unblocked
+const ETANAH_CTX = /etanah-(?:pelupusan|awam|common|spoc-hasil|teknikal|work)|\bmlk\/(?:master|int-env|stag-env|release|esokongan|training|internal|qa|cr)/i;
 
 // Pure decision — unit-testable without live git.
 function decide(command, turnText) {
@@ -28,15 +29,17 @@ function decide(command, turnText) {
   }
   if (!ETANAH_CTX.test(cmd)) return { block: false };
 
-  if (/\bgit\s+cherry-pick\b/i.test(cmd)) return { block: true, kind: 'cherry-pick' };
+  // `git -C <folder> <verb>` counts the same as `git <verb>` (2026-11-05: `git -C ... cherry-pick` slipped through)
+  const g = String.raw`\bgit(?:\s+-C\s+(?:"[^"]*"|'[^']*'|\S+))?\s+`;
+  if (new RegExp(g + 'cherry-pick\\b', 'i').test(cmd)) return { block: true, kind: 'cherry-pick' };
 
   if (/-X\s*(?:ours|theirs)\b/i.test(cmd) || /\bcheckout\s+--(?:ours|theirs)\b/i.test(cmd)) {
     return { block: true, kind: 'auto-resolve' };
   }
-  if (/\bgit\s+push\b/i.test(cmd) && /(?:--force\b|--force-with-lease\b|(?:^|\s)-f\b|\s\+[\w./-]*mlk\/)/i.test(cmd)) {
+  if (new RegExp(g + 'push\\b', 'i').test(cmd) && /(?:--force\b|--force-with-lease\b|(?:^|\s)-f\b|\s\+[\w./-]*mlk\/)/i.test(cmd)) {
     return { block: true, kind: 'force-push' };
   }
-  if (/\bgit\s+reset\s+--hard\s+(?:origin\/|mlk\/|[0-9a-f]{7,}\b)/i.test(cmd)) {
+  if (new RegExp(g + 'reset\\s+--hard\\s+(?:origin\\/|mlk\\/|[0-9a-f]{7,}\\b)', 'i').test(cmd)) {
     return { block: true, kind: 'reset-hard' };
   }
   return { block: false };

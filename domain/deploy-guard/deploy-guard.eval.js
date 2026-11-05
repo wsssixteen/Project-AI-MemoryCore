@@ -9,6 +9,9 @@ const cases = [
   // F2 — the QA-274745 replay case (cherry-pick onto a company branch)
   { name: 'F2 replay: BLOCK cherry-pick (etanah path)', cmd: 'cd "E:/Projects/Melaka/etanah-pelupusan" && git cherry-pick 2983a2e2b9', expect: true },
   { name: 'BLOCK cherry-pick (mlk ref ctx)', cmd: 'git cherry-pick 4c3251ac34   # onto mlk/int-env', expect: true },
+  { name: '2026-11-05 replay: BLOCK cherry-pick in the work-clone worktree', cmd: 'git -C E:\\Dev\\etanah-work\\wt-int-env cherry-pick -x 282b57c927', expect: true },
+  { name: 'BLOCK git -C reset --hard to origin', cmd: 'git -C "E:\\Projects\\Melaka\\etanah-pelupusan" reset --hard origin/mlk/int-env', expect: true },
+  { name: 'PASS git -C plain push', cmd: 'git -C E:\\Dev\\etanah-work\\wt-288059 push -u origin mlk/internal/288059', expect: false },
   { name: 'BLOCK merge -X theirs', cmd: 'git merge -X theirs origin/mlk/esokongan/274745', expect: true },
   { name: 'BLOCK checkout --theirs on conflict', cmd: 'git checkout --theirs src/x.docx   # mlk/int-env', expect: true },
   { name: 'BLOCK checkout --ours', cmd: 'git checkout --ours -- pom.xml && echo mlk/int-env', expect: true },
