@@ -135,6 +135,30 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     }
   }
 
+  // v5 (2026-11-05, per みや, #287811): a permohonan in a test scenario is its FULL id_pengenalan
+  // (PTMLK/02/L/PT/2026/22) in its own ```text block. A short form (PT/2026/22) is ambiguous
+  // (three pejabat share it on MLIT) and cannot be copied; one glued to other words cannot either.
+  // "how does someone use that permohonan ID? Copying it is already hard."
+  if (HANDBACK_RE.test(text) || TEST_TABLE_RE.test(text)) {
+    const SHORT_RE = /(?<![A-Z0-9\/])(?:[A-Z]{2,6}\/\d{4}\/\d{1,5})(?![A-Z0-9\/])/g;
+    const FULL_RE = /PT[A-Z]{2,4}\/\d{2}\/[A-Z]\/[A-Z]{2,6}\/\d{4}\/\d{1,5}/g;
+    const shorts = Array.from(new Set((text.match(SHORT_RE) || []).filter(s => !/^PT[A-Z]{2,4}\//.test(s))));
+    const fulls = Array.from(new Set(text.match(FULL_RE) || []));
+    // Copyable = inline code in the table cell (`PTMLK/…`), never a separate block that breaks the table (miya 2026-11-05).
+    const notBlocked = fulls.filter(id => !new RegExp('`' + id.replace(/\//g, '\\/') + '`').test(text));
+    if (shorts.length || notBlocked.length) {
+      return {
+        fired: true,
+        blocked: true,
+        blockReason:
+          '⛔ test-scenario-login-gate v5: a permohonan ID in a test scenario is not copyable.\n' +
+          (shorts.length ? '   Short form (ambiguous, three pejabat can share it): ' + shorts.join(', ') + ' → use the full id_pengenalan from umm_aplikasi.\n' : '') +
+          (notBlocked.length ? '   Full ID not in inline code (backticks) inside its table cell: ' + notBlocked.join(', ') + '\n' : '') +
+          '   Shape: the full ID as `PTMLK/02/L/PT/2026/22` in the Permohonan cell of the test table; never a separate block (it breaks the table). Re-send.\n',
+      };
+    }
+  }
+
   if (!HANDBACK_RE.test(text)) return { fired: false };
   if (LOGIN_RE.test(text)) return { fired: false };
 

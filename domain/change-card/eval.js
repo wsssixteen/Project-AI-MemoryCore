@@ -90,5 +90,14 @@ ok('E16 a decimal number is not a sentence end', r.pass, r.reasons.join(' · '))
 r = check(GOOD.replace('Where picture = the change map (lib/change-map.js).', 'The change map is the Where picture.'), 'before');
 ok('E17 a reworded closing line fails (exact name line required)', !r.pass);
 
+const BEFORE_BLOCK = GOOD.replace('## Change card (before)', 'CHANGE-CARD (before): x');
+const AFTER_COPY = BEFORE_BLOCK.replace('CHANGE-CARD (before): x', 'CHANGE-CARD (after): x');
+r = check(BEFORE_BLOCK + '\n\n' + AFTER_COPY, 'after');
+ok('E18 AFTER card copied word for word from BEFORE fails', !r.pass && r.reasons.some(x => /word-for-word copy/.test(x)), r.reasons.join(' · '));
+
+const AFTER_REAL = AFTER_COPY.replace('- When: It runs at change route step 3 before the nod and again at step 8.', '- When: It ran at step 3 of this change and again at step 8 after landing.');
+r = check(BEFORE_BLOCK + '\n\n' + AFTER_REAL, 'after');
+ok('E19 AFTER card rewritten from what landed passes', r.pass, r.reasons.join(' · '));
+
 console.log(`change-card eval: ${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

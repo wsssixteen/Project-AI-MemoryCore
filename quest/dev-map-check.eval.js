@@ -82,6 +82,13 @@ check('S14 the phrase quoted in prose (no heading) fails D4',
 check('S15 a build map with no "Work package" heading fails D4',
   failed(checkDoc(GOOD.replace(/### Work package/g, '### Part'))).split(',').includes('D4'));
 
+// D1 built from `node quest/requirement-index.js --load --urusan <k> --tree` (2026-11-05, ADHOC-PPTPB-2026-9): rows R1..Rn carry a #<req> id
+const TREE_D1 = GOOD
+  .replace('| R1 | new tugasan | note 1 |', '| R1 | #41022 child of master: new tugasan | `--load --tree` |')
+  .replace('| R2 | no letter | note 2 |', '| R2 | #41023 BRS section 4.1 per tugasan: no letter | `--load --tree` |')
+  .replace('| R10 | portal field removed | description |', '| R10 | #41030 portal field removed | journal 3 |');
+check('S27 a D1 built from --load --tree (rows R<n> with #<req>) passes D1 and D3', checkDoc(TREE_D1).ok, failed(checkDoc(TREE_D1)));
+
 check('S21 no Approaches section fails D3b', failed(checkDoc(drop(/^## Approaches|^\| A\d \||^Chosen:/))).split(',').includes('D3b'));
 check('S22 one approach only fails D3b', failed(checkDoc(drop(/^\| A1 \|/))).split(',').includes('D3b'));
 check('S23 no Chosen line fails D3b', failed(checkDoc(drop(/^Chosen:/))).split(',').includes('D3b'));
