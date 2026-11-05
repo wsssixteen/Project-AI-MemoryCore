@@ -28,3 +28,12 @@
 - Mistakes: read "stage the redmine" as the stag-env branch; test-prep tool switched his local env to mlit (put back to stg1); handover tool cannot see his waiver 3 messages back (blocker slip); audit of the test-data gap ran on Opus, not blind Fable.
 - Assessment: A1 his-words.js 600 KB tail sees only 2 of his messages in a hook-heavy session. A2 no step checks the fixed field holds real data before a hand-back (5 slips in 8 days). A3 doc-sim proved all 3 fixes offline before deploy. A4 a sentence-case formatter lowercases IDs. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-04 23:10 — worktree `sweep-orchestration-audit-39e710` (branch claude/todays-ticket-review-82c546), today's board, 287892, 286650 Zarul patch, 248290 coverage adhoc, Domain Expansion.
+
+STEP-3: rework audit (quest Workflow step 1c + close-phase Phase 1 step 0)
+session: 2026-11-05 cool-margulis-5bb326 (287346 rework 1)
+his words: "please audit this round to add an ever continuing improvement or self-improvement particularly on receiving rework tickets. To straight away summon Fable 5.1 to audit I believe AFTER you've finished phase 0 ... to then log it straight away to propose the improvement into our quest workflow at the end during DE perhaps or before DE AFTER redmine handover, ticket close. The improvement after the audit of course uses Fable/highest model as well as usual." (order)
+fix or report: fix
+who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k tokens on 287346); the manifest line is in-process, no new process
+goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
+model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
+shown: rework-audit-flow.png (scratchpad, sent to miya)
