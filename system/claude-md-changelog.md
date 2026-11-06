@@ -10,6 +10,11 @@
 
 ---
 
+## v2.06 (2026-11-06)
+
+- §Disposition gains rule 11 SIMPLEST FIX, NEVER MORE STEPS per みや on 288533 ("Can you add an awareness to your CLAUDE.md to NEVER MAKE THINGS MORE UNNECESSARILY COMPLICATED? I've always asked you to simplify things" · "You kept on adding steps and building things specific and complex for no reason"). A fault is fixed at its cause step, fewest lines, inside the existing part; one line before any build names the cause step and the smallest change; banned: a gate, bypass, token, flag, step, file, agent or special case built around a fault, a part for one ticket, a fix across several parts. Root cause: `adhoc-lifecycle promote` never creates the ticket's own quest doc, so QA-288533 pointed at the archived ADHOC doc and the brief-first gate blocked it; the proposed fix loosened the gate (two files) instead of adding the missing step to promote.
+- Spec preservation: additive; rules 0 to 10 unchanged. Standing nod: a correction he gave. Model: Fable 5.1.
+
 ## v2.05 (2026-11-05)
 
 - §Vocabulary "awareness" gains one sentence per みや on 288533 ("I thought I've asked you to add into CLAUDE.md if you add anything into feedback_ to properly find the right location/step in the related workflow/feature/tool/skill to add it"): a correction or feedback_ rule goes into the step that makes that output, and that step calls the one tool that makes it; never a second copy. Root cause (Fable 5.1 audit): the rule lived only in the MEMORY.md header, system-rules Rule 1 and memory-write-gate (fires on a feedback_ file write only); a correction answered by a skill edit met none of them, and the 288533 handover-note shape ended up written in 8 places. Wording shown to and approved by him ("Yes, add it").
