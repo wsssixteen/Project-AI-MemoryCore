@@ -1,6 +1,6 @@
 ---
 name: reference_hakmilik_change_map
-description: "Table map for changing hakmilik data on the et_main application side — id_hkmlk → hkmlk_pelbagai_id (shared 1:1 key) → ind_hkmlk / ind_hkmlk_pelbagai / ind_mklmt_hkmlk; LUAS + unit live in ind_mklmt_hkmlk, NOT ind_hkmlk(_pelbagai). Registry-side luas is fatmk.hakmilik.luas + kod_uom."
+description: "Table map for changing hakmilik data on the et_main application side — id_hkmlk → hkmlk_pelbagai_id (shared 1:1 key) → ind_hkmlk / ind_hkmlk_pelbagai / ind_mklmt_hkmlk; LUAS + unit live in ind_mklmt_hkmlk, NOT ind_hkmlk(_pelbagai). Registry-side luas is fatmk.hakmilik.luas + kod_uom. Office: GRN/PN/HSD (Hakmilik Daftar) = PTG 00, every other title = district PTD (isHakmilikProcessByPTG)."
 metadata: 
   node_type: memory
   type: reference
@@ -73,6 +73,18 @@ where mklmt_hkmlk_id in (
 ```
 Set the unit by kod, never by hardcoded number (codes are per-schema):
 `unit_luas_id = (select senarai_ahli_kumpulan_id from rjk_senarai_ahli_kumpulan where kod = 'UNIKELH')`
+
+## Which pejabat processes a hakmilik (verified 2026-11-06, BA rule 2026-11-05)
+The title type decides the office, in every urusan.
+
+| Jenis hakmilik | `rjk_jns_hkmlk` | Processed at |
+|---|---|---|
+| GRN, PN, HSD (Hakmilik Daftar) | kat 832, sptb PD | PTG, office 00 |
+| PM, GM, HSM and every other type | kat 833, sptb PT | the district PTD (the permohonan's office) |
+
+- Code: `PelupusanService.isHakmilikProcessByPTG` (etanah-pelupusan, origin/mlk/master :20182) reads idHakmilik from `umm_a_hkmlk` and `umm_a_permohonan_tnh.maklumat_tambahan`, true when any is PN, HSD or GRN.
+- Flow analog: `MLK_PLP_PRZ.bpmn20.xml:426-447` gateway "Hakmilik diproses oleh PTG?" passes pejabatKod "00", else the permohonan's office.
+- Any call into Pendaftaran (`MLK_DFT_*`) for a Daftar title must pass 00. PPTPB 41.0 Endosan passes the district office: our bug (ADHOC-PPTPB-2026-9, #288625).
 
 ## Patch notes
 - Before any UPDATE to `ind_mklmt_hkmlk`, check its `version` + audit columns (`last_modified_by`/`last_modified_date`) and follow the patch discipline (only update what's required; audit columns mirror a sibling / the app standard, nothing identifiable).

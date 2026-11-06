@@ -87,7 +87,7 @@
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
 
 ## Etanah facts
-- [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk
+- [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk; office by title type: GRN/PN/HSD = PTG 00, others = district PTD
 - [etanah-facts](reference_jasper_field_sources.md) — Jasper $F sources, kadar cukai duplicates, doc reset tool, DMS patch, #246512
 - [multi-ticket-sweep](reference_multi_ticket_sweep.md) — /sweep is built: skill + domain/sweep (audit Tool, run ledger); design history in five places, cite all five
 
