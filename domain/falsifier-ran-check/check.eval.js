@@ -141,6 +141,9 @@ r = plainCase('p6.jsonl', 'let me test locally before we test on server'); ok('P
 r = plainCase('p7.jsonl', 'for 282442 I will test on server'); ok('P7 a message that names only ANOTHER ticket is not a waiver', kinds(r) === 'local-test', kinds(r));
 r = plainCase('p8.jsonl', 'for 244600 I will test on server'); ok('P8 a message that names THIS ticket is a waiver', r.ok, r.fails);
 r = plainCase('p9.jsonl', 'what does [test on server/skip local testing] mean'); ok('P9 the phrase inside a bracketed option list alone is not a waiver', kinds(r) === 'local-test', kinds(r));
+r = plainCase('p12.jsonl', 'start all quests again and straight away commit to their own branches, push and merge to internal if high enough confidence then prepare test scenarios. I\'ll just deploy and test.');
+ok('P12 REPLAY 287164: "I\'ll just deploy and test" clears it', r.ok && r.override && r.override.via === 'plain', r.fails);
+r = plainCase('p13.jsonl', 'don\'t deploy and test yet'); ok('P13 a NEGATED "deploy and test" is not a waiver', kinds(r) === 'local-test', kinds(r));
 fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, ''); doc(HEAD + row(1, 'OPEN')); active('false');
 r = C.check('QA-244600', { ctx: 'commit', transcriptPath: transcript('p10.jsonl', [['user', 'I want to test on server']]) }); ok('P10 plain words NEVER clear an OPEN row', kinds(r) === 'open', kinds(r));
 fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, ''); doc(GOOD); active('false');
