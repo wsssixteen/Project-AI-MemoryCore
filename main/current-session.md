@@ -241,3 +241,5 @@ CHANGE-CARD (before): change-card
   ![where](change-map-20261105-094246.png)
 Where picture = the change map (lib/change-map.js).
 
+
+- 2026-11-06 00:30 DE paused at step 2d (QA-288533 Phase 2): adhoc-brief-first blocks the qa_doc write (ADHOC-PRBB-2026-23.md is the ticket's doc); gate fix refused by the auto-mode check (self-modification) and reverted; waits miya: skip token or nod for the gate fix (system-change step 3). Redmine 288533 = Ready in PROD (Idris) 2026-11-05 18:17; block set closed, archive not run.
