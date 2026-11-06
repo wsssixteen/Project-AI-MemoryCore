@@ -7,7 +7,7 @@
 | Code | Competency | Rows | Latest |
 |---|---|---|---|
 | B1 | Technical & Domain Knowledge | 2 | 2026-10-29 |
-| B2 | Quality of Work | 2 | 2026-11-05 |
+| B2 | Quality of Work | 3 | 2026-11-06 |
 | B3 | Delivery & Planning | 0 | - |
 | B4 | Ownership & Initiative | 4 | 2026-10-29 |
 | B5 | Communication | 0 | - |
@@ -32,6 +32,7 @@
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-11-06 | #287346 | Audited why the first 287346 fix came back and turned the cause, a test permohonan with luas filled while half of PROD MCL rows are empty, into a template check that counts empty PROD columns. | PROD MCL luas_dipohon empty 1718 of 3551 · MemoryCore c0177357 domain/template-scenario check 6, eval 58/58 |
 | 2026-11-05 | #287346 | Rebuilt the MCL Kertas Pertimbangan to Requirement 223230 and generated the full signed paper offline across all three tugasan, changes highlighted green, so the BA needed no Jana Semula. | etanah-pelupusan 93db632627 (mlk/esokongan/287346, int-env 013616117b) · Redmine 287346 journal 11 · TEMPLATE-SCENARIO PASS QA-287346 word diff defect 0 |
 | 2026-10-23 | #262027 | Own rework: the May fix corrected the Lulus letter only, so the Tolak letter came back with the same defects. | commit 54f4b645b4 (Lulus template only) · #262027 journal 2026-10-22 |
 
