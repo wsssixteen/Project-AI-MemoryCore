@@ -80,8 +80,7 @@ const STATE_FOLDERS = [
     { match: /selangor|^SEL_/i,   folder: 'Selangor' },
     { match: /terengganu|^TRG_/i, folder: 'Terengganu' },
     { match: /kedah|^KED_/i,      folder: 'Kedah' },
-    { match: /labuan/i,           folder: 'Labuan' },
-    { match: /putrajaya/i,        folder: 'Putrajaya' },
+    { match: /labuan|putrajaya|^eTanah WP$|^WP(KL|L|Pj)_/i, folder: 'Putrajaya' },   // registry wp task_folder (2026-11-06: no Labuan folder; KL projects fell through to Melaka)
     { match: /pulau pinang|penang|^PNG_/i, folder: 'Penang' },   // registry task_folder (2026-10-14: PNG_03_Pelupusan used to fall through to Melaka)
 ];
 function taskBaseFor(issue) {
