@@ -1,4 +1,37 @@
-**Last Activity**: 2026-11-05 23:20 — worktree `penang-common-null-error-219adf`. 288059 submitted (15:11) · 287948 and 261986 submitted by miya · 287811: fix = fix 2 + 3 + 4 together (three writers of the Notis 5A name), tested PASS on MLIT 20:58, Redmine journal 7 to Mira 21:05; branch `mlk/internal/287811` rewritten to one commit d7ff0bec43, `mlk/int-env` reset to yihkitc's 39b917f870 + one merge f2ebd118f7, his clone reset to match (he said clean, others must not see the five failed commits). Pending on his word: "post it" (commit-reference journal on 287811, journal 7 names a hash that no longer exists). **system-change queue below: nine routes at step 3 with build code, order P2 P1 P3 P4 P5 P6 P7 P8 P9; his nod "go P2 P1" starts the build.** Earlier system-change step 3 (quest "check before asking" step) still paused (todo row).
+**Last Activity**: 2026-11-06 00:45 — worktree `cool-margulis-5bb326` (branch claude/redmine-287346-audit-implement-a86f35), 287346 rework 1 shipped and Phase 1 closed, template-scenario check 6 (tag sources) built and landed, Domain Expansion.
+
+## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
+- Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
+- Done: c2364d2bde on mlk/esokongan/287346, int-env a32fb6abab; marked paper in 3. Rework; Redmine 287346 Resolved to Nurhafizah 05/11 17:17; wrong-fix rows 1 and 2 ruled; template-scenario check 6 (tag-sources.js + tag-sources.json, eval 58/58) on GitHub main c0177357, main folder d12719a8; quest Phase 1 closed (WAIT for Redmine Closed).
+- Found: Datuk Sabrina's blank signature on MLIT = her newest signature file (LAIN-36582925) returns no bytes from MLIT DMS, NO_SIGN fallback; PROD MCL luas_dipohon empty 1718 of 3551; Git Bash rewrites "--case empty|PTMLK/..." into a Windows path.
+- Open: BA verifies 287346 → Phase 2; Sabrina signature re-upload on MLIT (BA side); MCL tags in tag-sources.json still 33 unmapped (filled ticket by ticket); main folder diverged from GitHub main (landed by hand).
+- Mistakes: added a legend and labels to the marked paper he never asked for (memory rule 841ec441); cycle 1 tested one permohonan with luas filled.
+- Assessment: A1 the change route's land step needs a by-hand path when the main folder has diverged. A2 template hand-back now asks every printed tag for its source. A3 doc-sim + PROD count proved the empty case offline. A4 a test permohonan proves nothing about a column it happens to have filled. A5 ⏭ no sweep.
+
+**Last Activity (288169 session)**: 2026-11-06 00:15 — worktree `jovial-kepler-a07ba6`. ADHOC-PLTP-2026-5 (PROD PLTP/2026/8 Ulasan JT: JKR twice, MPAG gone) → cause: agency record 8 (JKRNM) renamed to MPAG 21/07 16:58 then back 13/08, so MPAG picks saved as agensi 8; promoted to ticket 288169 (TSO Shafiq); patch 6 rows agensi 8→6 run on PROD and verified; 288169 saved Phase 1 only (Redmine In Progress 20%), adhoc archived (audit 31/31). Open: miya writes the Redmine resolve note; Phase 2 archive when Redmine shows Closed; 12 other rows (PT/PTS same window) still agensi 8, no ticket.
+
+**Last Activity**: 2026-11-06 00:35 — worktree `penang-common-null-error-219adf` (branch claude/redmine-ticket-sweep-plan-369375). 287811 audit rounds 1 and 2 BUILT and landed: GitHub main 49d59176 · main folder 0df9eb5c (round 1: 803d46f2 / 3d0c9e13). Round 2 = P5 ticket-close-block multi-commit refusal 11/11 · P6 login-gate v6 ISSUE rows 25/25 + deploy eval 56/56 · P7 next-steps-shape v6 62/62 · P8 design-consult-gate quest-turn rider 55/55 · P9 memory line; 287811 wrong-fix verdicts 1-3 written; qa_doc saved (block status=delegated, save-quest KEEP-DELEGATED); the corrected commit-reference note is FILLED in his Chrome Edit form of 287811, NOT submitted (his "post it"). Open: audit items 3, 4, 7, 10; harness fault (reply text with a RULE-PLACEMENT line stored only as request blob, todo row). Domain Expansion run.
+
+## Session Recap (2026-11-06, 287811 audit rounds 1 and 2)
+- Asked: do not stop until every goal is met and we can safely DE (after: pinpoint WHERE/HOW/WHY/WHAT so the 287811 mistakes cannot recur; clean the branch; ban myself).
+- Done: nine routes built in two rounds, ten evals green, landed twice; qa_doc Branches row corrected to f2ebd118f7; wrong-fix verdicts; change maps sent; change-watch rows wmw3mjave and wmw3rl96e; Redmine note staged, not sent.
+- Found: a reply carrying a RULE-PLACEMENT line is stored only as an api-request-blob line (five times, 16:20 to 16:40), so every text-reading gate is blind to it; the line went through a PowerShell here-string, which the gate reads.
+- Open: his "post it" for the note · int-env redeploy and stag-env merge are his · audit items 3 (report-action-scan), 4 (RAN runtime split), 7 (wrong-fix --log-evidence), 10 (one int-env merge per round).
+- Mistakes: first eval fixtures for P7 tripped the heading-above check (fixture, not gate); first STEP-3 goal line over 160 characters; the memory edit was retried five times before the transcript fault was found.
+- Assessment: A1 a text-reading gate needs a second channel when the harness drops the text (proposal logged). A2 the block lied for a day until ticket-gate re-open; sync should write it. A3 code-read fixes failed four times, the server log passed once: runtime RAN split still open. A4 our own 286610 config change was the cause; the scan Tool is still open. A5 W4 replaced tested fixes with a code-read one.
+
+**Last Activity (earlier)**: 2026-11-05 23:20 — worktree `penang-common-null-error-219adf`. 288059 submitted (15:11) · 287948 and 261986 submitted by miya · 287811: fix = fix 2 + 3 + 4 together (three writers of the Notis 5A name), tested PASS on MLIT 20:58, Redmine journal 7 to Mira 21:05; branch `mlk/internal/287811` rewritten to one commit d7ff0bec43, `mlk/int-env` reset to yihkitc's 39b917f870 + one merge f2ebd118f7, his clone reset to match (he said clean, others must not see the five failed commits). Pending on his word: "post it" (commit-reference journal on 287811, journal 7 names a hash that no longer exists). **system-change queue below: nine routes at step 3 with build code, order P2 P1 P3 P4 P5 P6 P7 P8 P9; his nod "go P2 P1" starts the build.** Earlier system-change step 3 (quest "check before asking" step) still paused (todo row).
+
+**Last Activity (288261 session)**: 2026-11-06 00:07 — worktree `redmine-288261-quest-d586ef`. 288261 rework patched, handed over, archived; rework audit (Fable 5.1) → B3 Patch scope built via /system-change (ticket-load-verify.js v1.6 + quest Pre-emit gate row, commit 8e1090ee, landed: GitHub main 921ff221, main folder 0bf3d0ad); eval 28/28 green. Open: redmine-write-gate blocks a direct `node quest/ticket-load-verify.eval.js` (fixture key `status_id:`); the READ_ONLY_SCRIPT exemption for `.eval.js` was denied by the auto-mode classifier, needs miya's nod as its own /system-change.
+
+**Last Activity (UPP adhoc session)**: 2026-11-06 00:20 — worktree `dreamy-pike-08af0b`. ADHOC-UPP-2026-3: PROD UPP 18/19/20 signed 03/11 after 1.9.1, letters made 26-27/10 with the old template, sign step fills the stored letter; BA's "so data patching?" answered: yes for 19 and 20 only. Open: BA ticket number → patch-mlk-doc for 19/20; Jana Semula on staging untested.
+
+## Session Recap (2026-11-04 to 06, ADHOC-UPP-2026-3 UPP signature)
+- Asked: were UPP 18/19/20 signed before or after the release; then "ada perubahan template, so data patching?".
+- Done: real IDs found (/L/, not /B/); all three signed 03/11 after the 1.9.1 PROD release 02/11 22:16; cause traced (CommonMaklumanPembatalanForm.java:542 and :1229 fill the stored letter, :566-614 Jana Semula reloads the template); 36 open SMPPP letters swept; adhoc save-set 31/31 PASS.
+- Open: BA ticket for the 19/20 PROD document patch; Jana Semula test on staging at SMPPP.
+- Mistakes: first cause said PROD lacked the 285768 fix; his PROD footer proved common 1.10.20-MLK was there.
+- Assessment: A1 ⏭ no system part changed. A2 adhoc save-set and audit held the state across a compaction. A3 the PROD footer settles "is the fix deployed" in one read; it should be read before any "not on PROD" claim. A4 a template fix covers only documents made after the release when a later step fills the stored document. A5 ⏭ no sweep.
 
 **Last Activity (earlier)**: 2026-11-05 00:05 — worktree `pptpb-hakmilik-assignment-639100` (branch claude/redmine-esokongan-quest-65a9db), ESOKONGAN 288095 PRBB Rencana JKBB fixed, deployed internal, Resolved to Fizah, ProTime 287346 resolved, Domain Expansion.
 
@@ -142,17 +175,52 @@ try {
 ```
 Fixture +2 in `design-consult-gate.eval.js`.
 
+STEP-3: 287811 audit round 2 (P5 ticket-close-block · P6 login-gate v6 · P7 next-steps-shape v6 · P8 design-consult-gate quest-turn rider · P9 memory)
+session: 5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc
+his words: "do not stop until the end. Until all the goals are met and we can safely DE." (order)
+fix or report: fix
+who pays: on-demand: P5 one git call pair at each BA note; P6/P7 inside the Stop bundle (one file read); P8 one his-words read per Edit|Write on a system path
+goal without the part: failed commits reach a shared branch, a BA-named tugasan goes untested, a fix choice goes to him between gates, a hook is edited in a ticket turn
+model: claude-fable-5-1
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\quest-turn-rider.png
+
+CHANGE-CARD (before): 287811 audit round 2
+- What: Four existing gates gain one check each and one memory line, so a rework ticket cannot repeat the 287811 mistakes.
+- Why: On 2026-11-05 five failed commits reached the shared int-env branch, a BA-named tugasan was untested, I asked him to pick a fix the requirement had decided, and I edited system files in a ticket turn he never asked about.
+- How: The BA note script counts commits per cycle, the login gate counts test rows per ISSUE row, the Next steps gate wants a stop gate on any pick row, and the design gate denies a system edit in a quest turn.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\quest-turn-rider.png)
+- When: Each fires at its own moment of a ticket: the BA pass note, the test hand-back, the Next steps table, and an Edit or Write on a system path.
+- Where: The checks live in `domain/ticket-close-block/`, `domain/test-scenario-login-gate/`, `domain/next-steps-shape/` and `domain/design-consult-gate/`, the line in `.claude/auto-memory/feedback_etanah_git_separate_clone.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\change-map-20261105-161553.png)
+Where picture = the change map (lib/change-map.js).
+
 ### P9 — memory `.claude/auto-memory/feedback_etanah_git_separate_clone.md`
 One line: "His clone E:\Projects\Melaka\<repo> is read only, except the fetch + reset that `lib/origin-rewrite.js` runs after an origin rewrite (P4). One non-merge commit per cycle on a ticket branch; a revert only on his order (`domain/deploy-guard` v2)." RULE-PLACEMENT: workflow deploy · step 4 · enforced-by deploy-guard v2 + origin-rewrite.js.
 STEP-3: B3 Patch scope in quest/ticket-load-verify.js + quest Pre-emit gate row (288261 rework audit)
 session: redmine-288261-quest-d586ef
 his words: "Build it" (order) · after "Please audit how next time we can avoid this, even though it is not our part. This is part of our effort on releasing something rework free."
 fix or report: fix
+who pays: on-demand: one highest-model agent per rework cycle (about 6 min, 200k tokens on 287346); the manifest line is in-process, no new process
+goal without the part: a rework ticket's failure cause is learned only when someone remembers to write a wrong-fix row at close, and the verdict is made by whatever model runs Phase 2 or DE
+model: claude-fable-5-1 (A/S/C check by agent, verdict "build with changes"); built by claude-opus-5-5
+shown: rework-audit-flow.png (scratchpad, sent to miya)
+
+- [x] DONE 2026-11-05 (wrong-fix row 2 amended: right urusan, unrepresentative test permohonan): audit 287346 cycle 1 Phase 0: did it load the wrong urusan, or the right urusan with an unrepresentative test permohonan (stg1 PTMLK/01/L/MCL/2026/1 had luas_dipohon filled)? Record the verdict as a wrong-fix row and decide the fix (tag source check / PROD census).
+
+STEP-3: tag source check (domain/template-scenario + quest Workflow TEMPLATE-SCENARIO row)
+session: 2026-11-06 cool-margulis-5bb326 (287346 rework 1 follow-up)
+his words: "1. built it. 2. Eval verify it. 3. make sure it goes through system-upgrade. 4. DE" (order, /goal, after the tsc-plan / tsc-how / tsc-where pictures)
+fix or report: fix
+who pays: on-demand: inside the template-scenario script run only; one PROD count per mapped source column (read-only, db-gateway, under 1 s each) and one env read per empty case; no new hook, no new process class
+goal without the part: a template paper passes on one test permohonan whose columns are filled while PROD rows of that urusan are empty, and the BA sees "-" (287346 cycle 1: luas_dipohon 164 on the test row, 1718 of 3551 PROD MCL rows empty)
+appraise: A = the plan assumed a source column can be found per tag automatically; it cannot (populators are Java), so the source comes from a state-keyed map plus SOURCE checklist rows, unknown = FAIL · S = scope kept to text tags; signatures stay with the chain check · C = Git Bash rewrites "|" arguments (found live), so the README says run from PowerShell or set MSYS_NO_PATHCONV=1
+model: claude-opus-5-5 (not highest-order, on-demand part; highest is claude-fable-5-1)
+shown: tsc-plan.png, tsc-how.png, tsc-where.png (scratchpad, sent 2026-11-05)
 who pays: on-demand: a few ms inside ticket-load-verify.js at each quest start or resume; no process, no network
 goal without the part: a BA list that drops a permohonan the TSO report named ships a partial patch, as on 288261 (/1 tujuan), and the ticket comes back
 model: claude-opus-5-5 (highest is claude-fable-5-1, which wrote the audit verdict feature:patch-scope-B3; neither part is highest-order nor runs every prompt)
 shown: scratchpad b3-how.png + b3-where.png (sent to miya)
-state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. OPEN: eval cases (18)-(22) in ticket-load-verify.eval.js not run: redmine-write-gate blocks node on that eval (status_id: fixture key); needs miya [skip-redmine-write-gate: local eval] or the gate exemption.
+state: built 2026-11-05: ticket-load-verify.js v1.6 B3 + quest Pre-emit gate row; replay on 288261 cut at the 4 Nov BA list = 1 ⚠. Eval 28/28 green 2026-11-05 (run via node -e require, on miya's "Yes, run them"; the gate still blocks a direct `node <eval>` because of the status_id: fixture key).
 
 STEP-3: quest skill 6c patch path, fixes A B C (ADHOC-MCL-2026-7 audit)
 session: sweep-orchestration-audit-39e710
@@ -162,6 +230,7 @@ who pays: on-demand: read when a ticket or adhoc patch ask loads the quest skill
 goal without the part: a patch ask with stored documents gets a data-patch-only plan, as on ADHOC-MCL-2026-7
 model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-order and does not run every prompt)
 shown: scratchpad patch-path-6c.png
+state: landed on main e45673e0 2026-11-05 (route complete)
 
 **Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
 
@@ -243,3 +312,4 @@ Where picture = the change map (lib/change-map.js).
 
 
 - 2026-11-06 00:30 DE paused at step 2d (QA-288533 Phase 2): adhoc-brief-first blocks the qa_doc write (ADHOC-PRBB-2026-23.md is the ticket's doc); gate fix refused by the auto-mode check (self-modification) and reverted; waits miya: skip token or nod for the gate fix (system-change step 3). Redmine 288533 = Ready in PROD (Idris) 2026-11-05 18:17; block set closed, archive not run.
+**Last Activity**: 2026-11-06 00:20 — worktree `sweep-orchestration-audit-39e710`, 288442 MCL /9 PROD patch archived (Phase 2 + bounty), Domain Expansion.

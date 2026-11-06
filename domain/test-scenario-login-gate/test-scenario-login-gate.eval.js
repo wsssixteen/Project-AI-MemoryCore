@@ -12,7 +12,11 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 let r = spawnSync(process.execPath, [HOOK], { input: '{}', encoding: 'utf8', timeout: 30000, env: process.env });
 check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.status);
 
-const fire = (text) => spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ last_assistant_message: text }), encoding: 'utf8', timeout: 30000, env: process.env });
+// v6 fixtures read qa_docs from a temp root, so no real ticket's ISSUE rows leak into older cases.
+const fs = require('fs'); const os = require('os');
+const QROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'login-gate-qadoc-'));
+const ENV = Object.assign({}, process.env, { LOGIN_GATE_QADOC_ROOT: QROOT });
+const fire = (text) => spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ last_assistant_message: text }), encoding: 'utf8', timeout: 30000, env: ENV });
 const pad = ' Env stg2. File MlkPenyediaanBorang4AeL1eForm.java:421. Step 1 open Utiliti. Step 2 key No LPS and Tahun, click Simpan, then Borang 4Ae.'.repeat(2);
 
 // F2: THE REPLAY — scenario with no login → exit 2 AND the reason reaches stderr
@@ -61,6 +65,30 @@ r = fire('\n```text\nPTMLK/02/L/PT/2026/22\n```' + ROW('the block above') + pad)
 check('V5-3 full ID only in a separate text block → exit 2 (breaks the table)', r.status === 2 && /inline code/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
 r = fire(ROW('PTMLK/02/L/PT/2026/22') + pad);
 check('V5-4 full ID bare in the cell (no backticks) → exit 2', r.status === 2, 'exit=' + r.status);
+
+// v6 (2026-11-05, #288059 "Didn't BA ask for Semakan & Perakuan tugasan also?"): one test row per ISSUE| row of the qa_doc.
+const qadoc = (tk, body) => { fs.mkdirSync(path.join(QROOT, 'QA-' + tk), { recursive: true }); fs.writeFileSync(path.join(QROOT, 'QA-' + tk, 'QA-' + tk + '.md'), body); };
+qadoc('288059', '# QA-288059\nISSUE|1|Papar panel JPPH|tidak papar\nISSUE|2|apply to Semakan & Perakuan|same\n\n## W3\nISSUE|1|Papar panel JPPH (again)|tidak papar\n');
+qadoc('287948', '# QA-287948\nISSUE|1|Tujuan Permohonan list|4 only\n');
+const TROW = (login, perm, screen) => '| ' + login + ' | `' + perm + '` | ' + screen + ' | open | panel hidden |\n';
+const THEAD = '| Login | Permohonan | Screen | Do | Expect |\n|---|---|---|---|---|\n';
+const T1 = '## Test scenario — internal\n### 288059 — 90%\n' + THEAD + TROW('anizah@melaka.gov.my', 'PTMLK/01/L/PSBS/2026/12', 'Penyediaan Risalat MMKN - PTG');
+const NEXT = '\n**Next steps**\n\n| # | Action | What it means | Your reply |\n|---|---|---|---|\n| 1 | Test 288059 | Run the row on internal and tell me the result. | done |\n| 2 | Test later | The second row waits for the first. | later |\n';
+const SKIP = '\n[skip-local-prep: server test]';
+r = fire(T1 + NEXT + SKIP + pad);
+check('V6-1 REPLAY #288059: 2 ISSUE rows (one repeated across waves), 1 test row → exit 2 naming "2 ISSUE rows, 1 test rows"; Next steps rows not counted', r.status === 2 && /v6/.test(r.stderr || '') && /288059: 2 ISSUE rows, 1 test rows/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+r = fire(T1 + TROW('nuradilla@melaka.gov.my', 'PTMLK/01/L/PSBS/2026/12', 'Semakan Risalat MMKN - PTG') + NEXT + SKIP + pad);
+check('V6-2 2 ISSUE rows, 2 test rows → exit 0', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+const T2 = T1 + TROW('nuradilla@melaka.gov.my', 'PTMLK/01/L/PSBS/2026/12', 'Semakan Risalat MMKN - PTG') + '\n### 287948 — 95%\n' + THEAD + TROW('nizalarif@melaka.gov.my', 'PTMLK/01/L/PSBS/2026/9', 'Kemaskini Maklumat Tanah');
+r = fire(T2 + NEXT + SKIP + pad);
+check('V6-3 two tickets, one table each, both complete → exit 0', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+r = fire(T2.replace(TROW('nuradilla@melaka.gov.my', 'PTMLK/01/L/PSBS/2026/12', 'Semakan Risalat MMKN - PTG'), '') + NEXT + SKIP + pad);
+check('V6-4 two tickets, 288059 short by one → exit 2 naming 288059 only', r.status === 2 && /288059: 2 ISSUE rows, 1 test rows/.test(r.stderr || '') && !/287948:/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+r = fire(T1 + NEXT + SKIP + '\n[skip-issue-rows: BA narrowed the ask to tugasan 1 in journal 5]' + pad);
+check('V6-5 bypass token with a reason → exit 0', r.status === 0, 'exit=' + r.status);
+r = fire(T1.replace(/288059/g, '299999') + NEXT + SKIP + pad);
+check('V6-6 ticket with no qa_doc → exit 0', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+fs.rmSync(QROOT, { recursive: true, force: true });
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

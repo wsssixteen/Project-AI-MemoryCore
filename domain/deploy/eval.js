@@ -139,5 +139,12 @@ check('who-said-what table present', /do not quote me as quoting Aaron/i.test(sr
 check('fudge1 app server recorded', /172\.16\.100\.49[\s\S]{0,80}fudge1/.test(src));
 check('ruri has no ssh key', /Permission denied \(publickey\)/.test(src));
 
+// --- 14. test rows (v1.6, 2026-11-05, #288059 + #287811) ------------------
+// Eval case: a 288059 table missed the Semakan and Perakuan tugasan the BA named; two tickets were combined in one table.
+check('test rows come from the ISSUE rows, never the code site', /Test rows come from the ticket.{0,3}s ISSUE rows, never from the code site/i.test(src));
+check('tickets never combined in one table, one heading + table per ticket', /NEVER combine tickets in one table[\s\S]{0,200}own table per ticket/i.test(src));
+check('rows ordered by highest chance of passing first', /highest chance of passing first/i.test(src));
+check('v6 gate named as the enforcer', /test-scenario-login-gate[\s\S]{0,400}v6 \(a ticket.{0,3}s Login table has at least one row per `ISSUE\|` row/i.test(src));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

@@ -1,0 +1,38 @@
+{
+  "_about": "Source column of each Word CC tag, by state. Add a tag only after reading its populator (PelupusanWordCCMethodConstant.java) and naming the line in 'seen'. A tag with no single column gets {\"none\": \"<why>\"}. Read by tag-sources.js; never written by a script.",
+  "melaka": {
+    "luasDipohon": {
+      "table": "umm_a_permohonan_tnh",
+      "column": "luas_dipohon",
+      "seen": "QA-287346 rework 1: getLuasDipohon reads permohonanTanah.luasDipohon; MCL falls back to the hakmilik luas since c2364d2bde"
+    },
+    "signPPD": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "namaPPD": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "daerahDipohon": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "signPTNH": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "namaPTNH": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "tarikhSignPTNH": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    },
+    "tarikhSignPPD": {
+      "none": "officer data filled by a later chain action (template.config.json MCL block: SEMAK fills PPD, PERAKU fills PTNH); the chain check owns it",
+      "seen": "QA-287346 template.config.json MCL block"
+    }
+  }
+}
