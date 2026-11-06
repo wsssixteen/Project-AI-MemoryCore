@@ -135,6 +135,75 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     }
   }
 
+  // v5 (2026-11-05, per みや, #287811): a permohonan in a test scenario is its FULL id_pengenalan
+  // (PTMLK/02/L/PT/2026/22) in its own ```text block. A short form (PT/2026/22) is ambiguous
+  // (three pejabat share it on MLIT) and cannot be copied; one glued to other words cannot either.
+  // "how does someone use that permohonan ID? Copying it is already hard."
+  if (HANDBACK_RE.test(text) || TEST_TABLE_RE.test(text)) {
+    const SHORT_RE = /(?<![A-Z0-9\/])(?:[A-Z]{2,6}\/\d{4}\/\d{1,5})(?![A-Z0-9\/])/g;
+    const FULL_RE = /PT[A-Z]{2,4}\/\d{2}\/[A-Z]\/[A-Z]{2,6}\/\d{4}\/\d{1,5}/g;
+    const shorts = Array.from(new Set((text.match(SHORT_RE) || []).filter(s => !/^PT[A-Z]{2,4}\//.test(s))));
+    const fulls = Array.from(new Set(text.match(FULL_RE) || []));
+    // Copyable = inline code in the table cell (`PTMLK/…`), never a separate block that breaks the table (miya 2026-11-05).
+    const notBlocked = fulls.filter(id => !new RegExp('`' + id.replace(/\//g, '\\/') + '`').test(text));
+    if (shorts.length || notBlocked.length) {
+      return {
+        fired: true,
+        blocked: true,
+        blockReason:
+          '⛔ test-scenario-login-gate v5: a permohonan ID in a test scenario is not copyable.\n' +
+          (shorts.length ? '   Short form (ambiguous, three pejabat can share it): ' + shorts.join(', ') + ' → use the full id_pengenalan from umm_aplikasi.\n' : '') +
+          (notBlocked.length ? '   Full ID not in inline code (backticks) inside its table cell: ' + notBlocked.join(', ') + '\n' : '') +
+          '   Shape: the full ID as `PTMLK/02/L/PT/2026/22` in the Permohonan cell of the test table; never a separate block (it breaks the table). Re-send.\n',
+      };
+    }
+
+    // v6 (2026-11-05, per みや, #288059: "Didn't BA ask for Semakan & Perakuan tugasan also?"): every ISSUE| row of
+    // the ticket's qa_doc gets at least one test row. Rows are counted in the Login tables only (never Next steps).
+    // Several tickets: each ticket's rows are counted from its own heading to the next heading (one table per ticket).
+    const ISSUE_BYPASS_RE = /\[skip-issue-rows:\s*[^\]<]+\]/i;
+    if (!ISSUE_BYPASS_RE.test(text)) {
+      const fs = require('fs');
+      const QADOC_ROOT = process.env.LOGIN_GATE_QADOC_ROOT || path.join(ROOT, 'projects', 'coding-projects', 'active');
+      const plain = text.replace(/```[\s\S]*?```/g, '');
+      const tickets = Array.from(new Set(plain.match(/(?<![\d\/])\d{6}(?![\d\/])/g) || []));
+      const loginRows = seg => {
+        const L = seg.split(/\r?\n/); let n = 0;
+        for (let i = 0; i < L.length; i++) {
+          if (!/\|\s*Login\s*\|/i.test(L[i])) continue;
+          for (let j = i + 2; j < L.length && /^\s*\|/.test(L[j]); j++) n++;
+        }
+        return n;
+      };
+      const short = [];
+      for (const tk of tickets) {
+        let doc = ''; try { doc = fs.readFileSync(path.join(QADOC_ROOT, 'QA-' + tk, 'QA-' + tk + '.md'), 'utf8'); } catch (_) { continue; }
+        const issues = new Set((doc.match(/^ISSUE\|(\d+)\|/mg) || []).map(s => s.split('|')[1])).size;
+        if (!issues) continue;
+        let seg = plain;
+        if (tickets.length > 1) {
+          const m = plain.match(new RegExp('^(#{1,4})[^\\n]*' + tk + '[^\\n]*$', 'm'));
+          if (!m) continue;
+          const rest = plain.slice(m.index + m[0].length);
+          const next = rest.search(new RegExp('^#{1,' + m[1].length + '}\\s', 'm'));
+          seg = next >= 0 ? rest.slice(0, next) : rest;
+        }
+        const rows = loginRows(seg);
+        if (rows && rows < issues) short.push(tk + ': ' + issues + ' ISSUE rows, ' + rows + ' test rows');
+      }
+      if (short.length) {
+        return {
+          fired: true,
+          blocked: true,
+          blockReason:
+            '⛔ test-scenario-login-gate v6: a ticket\'s test table has fewer rows than its ISSUE rows: ' + short.join(' · ') + '\n' +
+            '   One row per ISSUE| row of the qa_doc and per tugasan the BA named (deploy skill §5b), each with its own login.\n' +
+            '   A row that cannot differ before and after the fix is marked "regression only". Bypass: [skip-issue-rows: <reason>]\n',
+        };
+      }
+    }
+  }
+
   if (!HANDBACK_RE.test(text)) return { fired: false };
   if (LOGIN_RE.test(text)) return { fired: false };
 

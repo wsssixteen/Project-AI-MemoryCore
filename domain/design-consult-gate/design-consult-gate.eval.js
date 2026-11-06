@@ -80,6 +80,38 @@ check('T7 no /system-change -> allowed + route advisory rendered', r.deny === fa
 r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change' }]);
 check('T8 /system-change loaded -> allowed, no advisory', r.deny === false && !/system-change/.test(r.out), r.out.slice(0, 80));
 
+// ================= Quest-turn rider (2026-11-05, #287811 "who asks you to do all that") =================
+// His last message names an active ticket and asks for no system change -> a system-shape edit is denied.
+{
+  const act = path.join(os.tmpdir(), 'dcg-active-' + Date.now() + '.txt');
+  fs.writeFileSync(act, 'qa=QA-287811\nstatus=active\nphase=rework\n\nqa=QA-286610\nstatus=closed\n\nqa=QA-111111\nstatus=active\n');
+  const envQ = Object.assign({}, process.env, { DESIGN_CONSULT_ACTIVE_TXT: act });
+  const runQ = (entries) => {
+    const stdin = JSON.stringify({ tool_name: 'Edit', tool_input: { file_path: EXISTING_GUARDED, old_string: 'a', new_string: 'b' }, transcript_path: transcript(entries) });
+    const r = spawnSync(process.execPath, [HOOK], { input: stdin, encoding: 'utf8', timeout: 30000, env: envQ });
+    let deny = false, reason = '';
+    try { const o = JSON.parse(r.stdout || ''); deny = o.hookSpecificOutput && o.hookSpecificOutput.permissionDecision === 'deny'; reason = (o.hookSpecificOutput && o.hookSpecificOutput.permissionDecisionReason) || ''; } catch (_) {}
+    return { deny, reason };
+  };
+  r = runQ([...CONSULTED, { role: 'user', text: 'so which fix is not needed? 287811' }]);
+  check('Q1 REPLAY 287811: his message about the active ticket, no system words -> DENY naming the ticket and todo.md', r.deny && /287811/.test(r.reason) && /todo\.md/.test(r.reason), r.reason.slice(0, 120));
+  r = runQ([...CONSULTED, { role: 'user', text: '287811: update the hook so this never happens again' }]);
+  check('Q2 same ticket, he asks for a system change ("update the hook") -> allowed', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'BAN YOURSELF FROM EVER DOING THIS AGAIN 287811' }]);
+  check('Q3 "ban yourself" counts as his ask -> allowed', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'explain the fix for 286610' }]);
+  check('Q4 a closed ticket named -> allowed (not a quest turn)', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'check the whole system now' }]);
+  check('Q5 no ticket in his message -> allowed', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'so which fix is not needed? 287811' }, { role: 'assistant', text: 'one-line comment fix [skip-design-consult: he ordered the ban two turns ago]' }]);
+  check('Q6 bypass token in my current turn -> allowed', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'PTMLK/03/L/MCL/2026/287811 looks wrong' }]);
+  check('Q7 the number only inside a permohonan id -> allowed', !r.deny, r.reason.slice(0, 80));
+  r = runQ([...CONSULTED, { role: 'user', text: 'so which fix is not needed? 287811' }, { role: 'user', text: 'blocked: his last message is about ticket 287811 ... Add [skip-design-consult: <his words>]' }]);
+  check('Q8 the gate\'s own help text echoed as a hook line does not disarm -> DENY', r.deny, r.reason.slice(0, 80));
+  fs.unlinkSync(act);
+}
+
 // ================= Own-reader rider (2026-10-29, system-rules Rule 8) =================
 // A hook or lib file may not parse transcript user lines itself; it requires lib/his-words.js or carries the marker.
 function runTool(tool, tool_input, entries) {

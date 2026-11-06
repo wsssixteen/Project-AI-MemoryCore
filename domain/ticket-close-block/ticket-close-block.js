@@ -144,6 +144,27 @@ if (foreign && branch) {
 // BA pass note for OUR fix (2026-10-04, #244600): refuse while a written falsifier is unrun or the local
 // test is unconfirmed. No flag skips it — run the row, or miya accepts the risk / writes [risk-ok:].
 if (ba && ba !== true && commit && !foreign) {
+  // 2026-11-05 (#287811): one non-merge commit per cycle on the ticket branch. Five failed commits reached
+  // origin and his SourceTree before the note; the note is the last point where the count is still ours to fix.
+  // --multi-ok "<his order>" (logged) lets a branch he ordered kept as-is through.
+  const multiOk = arg('multi-ok');
+  if (branch && !(multiOk && multiOk !== true)) {
+    try {
+      const baseRef = ['origin/mlk/master', 'mlk/master'].find(r => { try { git(repo, ['rev-parse', '--verify', '-q', r]); return true; } catch (_) { return false; } });
+      if (baseRef) {
+        const base = git(repo, ['merge-base', baseRef, branch]);
+        const n = parseInt(git(repo, ['rev-list', '--no-merges', '--count', `${base}..${branch}`]), 10);
+        let blk = '';
+        try { blk = execFileSync('node', [path.resolve(__dirname, '../../quest/active-cli.js'), 'read', `QA-${ticket}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch (_) {}
+        const cycles = 1 + (blk.match(/^closed(_cycle\d+)?=/mg) || []).length;
+        if (n > cycles) {
+          console.error(`BA pass note refused for QA-${ticket}: ${n} non-merge commits on ${branch} since ${baseRef}, ${cycles} cycle(s). One commit per cycle: git reset --soft <master merge>; git commit; then push through lib/origin-rewrite.js (his clone follows). His order to keep them: --multi-ok "<his words>".`);
+          logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch, commit: commit.hash, outcome: 'refused-multi-commit', n, cycles });
+          process.exit(3);
+        }
+      }
+    } catch (_) {}
+  } else if (multiOk && multiOk !== true) logRow({ ts: new Date().toISOString(), ticket, branch: branch || null, outcome: 'multi-ok', why: String(multiOk).slice(0, 200) });
   let gate = null;
   try { gate = require(path.resolve(__dirname, '../falsifier-ran-check/check.js')); } catch (_) {}
   const r = gate ? gate.check(`QA-${ticket}`, { ctx: 'note', codeFix: true }) : { ok: true };

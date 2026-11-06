@@ -116,11 +116,31 @@ process.stdin.on('end', () => {
     const root = path.resolve(__dirname, '..', '..');
     let activeTxt = '';
     try {
-      activeTxt = fs.readFileSync(path.join(root, 'quest', 'active.txt'), 'utf8');
+      activeTxt = fs.readFileSync(process.env.QUEST_PHASE_GATE_ACTIVE_TXT || path.join(root, 'quest', 'active.txt'), 'utf8');
     } catch (e) {
       process.exit(0); // no active.txt → not in quest context → allow
     }
-    if (!/\bstatus=active\b/.test(activeTxt)) process.exit(0);
+    // v5 (2026-11-05, #287811): bind the edit to the TICKET of the edited repo's branch, not to "any block is active".
+    // 287811 was edited all day with its block status=closed while other quests were active, so this predicate passed.
+    // Branch: QUEST_PHASE_GATE_BRANCH (eval override) or `git branch --show-current` in the edited etanah repo.
+    let branchTicket = null;
+    try {
+      let br = process.env.QUEST_PHASE_GATE_BRANCH;
+      if (br === undefined) {
+        const repo = (filePath.match(/^(.*?[\\/]etanah-(?:pelupusan|awam|common|teknikal))[\\/]/i) || [])[1];
+        br = repo ? require('child_process').execSync('git branch --show-current', { cwd: repo, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 5000 }).trim() : '';
+      }
+      branchTicket = (String(br || '').match(/\/(\d{5,7})(?:v\d+)?$/) || [])[1] || null;
+    } catch (e) { branchTicket = null; }
+    if (branchTicket) {
+      const block = activeTxt.split(/^(?=qa=)/m).find(b => new RegExp('^qa=(?:QA-)?' + branchTicket + '\\b').test(b)) || '';
+      if (block && !/^status=active\b/m.test(block)) {
+        logFire('blocked-ticket-not-active', branchTicket + ' ' + filePath);
+        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny',
+          permissionDecisionReason: `🚫 quest-phase-gate v5: the edited repo is on a branch of ticket ${branchTicket}, and its quest/active.txt block is not status=active (${(block.match(/^status=(.*)$/m) || [])[1] || 'no status'}).\n   A closed ticket being edited again is a REWORK: re-open it first —\n     node quest/active-cli.js update QA-${branchTicket} status=active local_test_confirmed=false phase="rework"\n   (ticket-gate does this by itself when the ticket is named and Redmine says Rework). Then the Writers table (predicate-box v6) and the loop.\n   Legitimate non-quest edit? add [skip-phase-gate: <reason>].` } }));
+        process.exit(0);
+      }
+    } else if (!/\bstatus=active\b/.test(activeTxt)) process.exit(0);
 
     // Read this session's transcript (fail-open if unavailable — never block on our bug)
     let transcript = '';
