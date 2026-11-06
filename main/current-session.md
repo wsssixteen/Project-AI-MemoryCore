@@ -390,3 +390,14 @@ CHANGE-CARD (before): 287811 audit round 2
   ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\change-map-20261105-161553.png)
 Where picture = the change map (lib/change-map.js).
 
+
+## system-change step 4 (2026-11-06 19:55) — Flowable alter tool pre-run check (288637)
+STEP-3:
+- session: 6/11/2026 - 288637
+- his words: "okay now proceed with the pre-alter check. I thought it is common sense to always have a phase 0 for everything, a checking for any process built. Use Fable 5.1 to audit and built this as usual then brief me properly." (order)
+- fix or report: fix
+- who pays: on-demand: one et_main read per dry-run
+- goal without the part: every live-env plan is checked for the UPND penghantaranId carry-over and an undecided assignee before the approval code is sealed
+- model: claude-fable-5-1 (audit + build), orchestrator claude-opus-5-5
+- shown: change map at step 8
+
