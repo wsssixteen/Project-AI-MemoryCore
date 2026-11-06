@@ -260,6 +260,17 @@ CHANGE-CARD (before): hakmilik type decides the pejabat
   ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\change-map-20261106-072310.png)
 Where picture = the change map (lib/change-map.js).
 
+CHANGE-CARD (after): hakmilik type decides the pejabat
+- What: The hakmilik memory now has a "Which pejabat processes a hakmilik" section, and the PPTPB note line 38 is marked superseded.
+- Why: On 2026-11-06 he asked whether I know that a hakmilik is tied to a pejabat, and the rule sat only in the Pendaftaran row that a hakmilik question never loads.
+- How: The etanah-intake hook loads reference_hakmilik_change_map.md on the word hakmilik, and a test prompt about PN 040214PN00037703 loaded it with the new section.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\hakmilik-pejabat-flow.png)
+- When: It is read each time the etanah-intake hook sees the word hakmilik in his message.
+- Where: The section is in `.claude/auto-memory/reference_hakmilik_change_map.md` with its index line in `MEMORY.md`, and the correction is in `etanah-knowledge/melaka/urusan/PPTPB-TICKETS.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\change-map-20261106-073036.png)
+Where picture = the change map (lib/change-map.js).
+state: GitHub main e1a7c6cd · main folder HEAD 0c4b4017 (ff blocked by another session's uncommitted current-session.md and slips files; this change's lines are in its working copy); watch wmw4nigbz
+
 **Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
 
 ## Session Recap (2026-11-05, 239386 MPT which pages to show)
