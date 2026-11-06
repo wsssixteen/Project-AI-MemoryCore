@@ -240,6 +240,37 @@ model: claude-opus-5-5 (highest is claude-fable-5-1; quest skill is not highest-
 shown: scratchpad patch-path-6c.png
 state: landed on main e45673e0 2026-11-05 (route complete)
 
+STEP-3: hakmilik type decides the pejabat (awareness in reference_hakmilik_change_map.md + PPTPB-TICKETS.md:38 correction)
+session: hakmilik-pejabat-awareness-32c5c1 (b8c81f86)
+his words: "make sure to go through system-upgrade properly. before simply adding this." (order) · after "check if you are aware of this ... Hakmilik, will depend/tied to which pejabat"
+fix or report: fix
+who pays: on-demand: text only, read when the etanah-intake hook loads the hakmilik memory on the word hakmilik; no process
+goal without the part: a hakmilik question loads only the table map, so the office rule (GRN/PN/HSD = PTG 00) is missed unless the question is about Pendaftaran, and PPTPB-TICKETS.md:38 still says the rule is not ours
+appraise: A = assumed DOMAIN-GLOSSARY.md was the home; no hook loads it on "hakmilik", so the home is the memory the intake hook already loads · S = no new file, no hook change, glossary dropped (second copy) · C = the stale PPTPB line would contradict the new rule, so it is corrected in the same change
+model: claude-opus-5-5 (highest is claude-fable-5-1; memory text, not highest-order, does not run every prompt)
+shown: scratchpad hakmilik-pejabat-flow.png + change-map-20261106-072310.png
+
+CHANGE-CARD (before): hakmilik type decides the pejabat
+- What: The hakmilik memory gains a short section saying which pejabat processes a title, and the stale PPTPB note is marked superseded.
+- Why: On 2026-11-06 he asked whether I know that a hakmilik is tied to a pejabat, and the rule sat only in the Pendaftaran row that a hakmilik question never loads.
+- How: The etanah-intake hook already loads reference_hakmilik_change_map.md on the word hakmilik, so the new section reaches every hakmilik question with no new step.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\hakmilik-pejabat-flow.png)
+- When: It is read each time the etanah-intake hook sees the word hakmilik in his message.
+- Where: The section goes in `.claude/auto-memory/reference_hakmilik_change_map.md` with its index line in `MEMORY.md`, and the correction in `etanah-knowledge/melaka/urusan/PPTPB-TICKETS.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\change-map-20261106-072310.png)
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): hakmilik type decides the pejabat
+- What: The hakmilik memory now has a "Which pejabat processes a hakmilik" section, and the PPTPB note line 38 is marked superseded.
+- Why: On 2026-11-06 he asked whether I know that a hakmilik is tied to a pejabat, and the rule sat only in the Pendaftaran row that a hakmilik question never loads.
+- How: The etanah-intake hook loads reference_hakmilik_change_map.md on the word hakmilik, and a test prompt about PN 040214PN00037703 loaded it with the new section.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\hakmilik-pejabat-flow.png)
+- When: It is read each time the etanah-intake hook sees the word hakmilik in his message.
+- Where: The section is in `.claude/auto-memory/reference_hakmilik_change_map.md` with its index line in `MEMORY.md`, and the correction is in `etanah-knowledge/melaka/urusan/PPTPB-TICKETS.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\0e67c0b9086c07b7\b8c81f86-2b2d-4fde-97ab-cad8138f5765\scratchpad\change-map-20261106-073036.png)
+Where picture = the change map (lib/change-map.js).
+state: GitHub main e1a7c6cd · main folder HEAD 0c4b4017 (ff blocked by another session's uncommitted current-session.md and slips files; this change's lines are in its working copy); watch wmw4nigbz
+
 **Last Activity**: 2026-11-05 17:58 — worktree `quest-resume-ticket-239386-642586`, RQ 239386 MPT rework: BA question to Anis posted, deep research on MPT page selection, quest saved, Domain Expansion.
 
 ## Session Recap (2026-11-05, 239386 MPT which pages to show)
