@@ -38,7 +38,7 @@
  * v1.1: still REPORT-ONLY — emits to stdout, never blocks.
  *
  * Audit log: appends one JSON line per fire to
- *   domain/quest-objective-anchor/log.jsonl (per /system-rules Rule 5).
+ *   (2026-11-10: the per-prompt audit log domain/quest-objective-anchor/log.jsonl is no longer written: 641 MB of counts; domain/turn-log carries the turn instead.)
  *
  * Pairs with: quest-active-grounding.js (status line) · open-quest-surfacer.js
  *   (SessionStart boot counterpart). Distinct concern: status vs discipline.
@@ -96,14 +96,6 @@ function stateOf(block) {
     return r.state || null;
   } catch { return null; }
 }
-function appendAuditLog(entry) {
-  try {
-    const logDir = path.join(REPO_ROOT, 'domain', 'quest-objective-anchor');
-    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
-    fs.appendFileSync(path.join(logDir, 'log.jsonl'), JSON.stringify(entry) + '\n');
-  } catch { /* silent — logging must never break the hook */ }
-}
-
 function main() {
   try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(undefined, 'quest-objective-anchor')) return; } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: print as before */ }
   const text = safeRead(ACTIVE_TXT);
@@ -152,22 +144,6 @@ function main() {
   lines.push('   4. ANY scope-contraction of a BA-listed numbered issue (defer / out-of-scope / "code-only, separate ticket") MUST first quote that');
   lines.push('      specific issue VERBATIM (from the block above) and ask みや for explicit nod — even if みや himself proposed the contraction.');
   console.log(lines.join('\n'));
-
-  appendAuditLog({
-    ts: new Date().toISOString(),
-    quests: active.map(a => ({
-      qa: a.qa,
-      scope: a.scope,
-      verbatimIssueCount: a.verbatim.issue ? a.verbatim.issue.block.items.length : 0,
-      verbatimExpectedCount: a.verbatim.expected ? a.verbatim.expected.block.items.length : 0,
-      cycleStamp: (a.verbatim.issue && a.verbatim.issue.block.stamp) || (a.verbatim.expected && a.verbatim.expected.block.stamp) || null,
-      issueBy: a.verbatim.issue ? a.verbatim.issue.block.author : null,
-      issueRole: a.verbatim.issue ? a.verbatim.issue.role.cls : null,
-      issueIsBaSpec: a.verbatim.issue ? a.verbatim.issue.isSpec : null,
-      expectedBy: a.verbatim.expected ? a.verbatim.expected.block.author : null,
-      expectedRole: a.verbatim.expected ? a.verbatim.expected.role.cls : null,
-    })),
-  });
 }
 
 try { main(); } catch (e) {

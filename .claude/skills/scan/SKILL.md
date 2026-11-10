@@ -30,13 +30,13 @@ node domain/scan/scan.js <target> [--record] [--pmd-only|--spotbugs-only] [--bas
 |---|---|
 | **Recon — blast-radius** | `/scan <the package/class the fix touches>` before Apply. Two tools agreeing on a line (like the live PelupusanLiteService:789 NPE) = a real defect near your change. |
 | **After cloning/editing a file** | scan the edited class to catch a defect you introduced or a latent one you're now responsible for. |
-| **Recording a confirmed bug** | `--record` it → it surfaces automatically next time anyone touches that file (see known-bug surfacer). |
+| **Recording a confirmed bug** | `--record` it → it is stored in `domain/scan/known-bugs.jsonl`. |
 
 Not an always-on gate — it's an on-demand scan (whole-repo runs OOM; per-package fits the blast-radius model). Style/perf rows are de-emphasized (`·` prefix / boxing patterns); **judge harm yourself** — the tool is accurate but not every accurate finding is worth fixing (a benign dead store ≠ a live NPE).
 
-## The known-bug loop (per みや — "load known bugs every quest")
+## The known-bug store
 
-`--record` writes findings to `domain/scan/known-bugs.jsonl`. `known-bug-surfacer.hook.js` (PreToolUse Read|Edit) then surfaces any recorded bug for a file the moment you read or edit it during work — so a pre-existing defect in the area you're touching is in front of you, not discovered later. Mark an entry `status:"fixed"` (or delete the row) once resolved.
+`--record` writes findings to `domain/scan/known-bugs.jsonl`. Read it during Recon of a `.java` file. Mark an entry `status:"fixed"` (or delete the row) once resolved. (The auto-surfacing PreToolUse hook was retired 2026-11-10: 0 surfaced in 53,772 runs.)
 
 ## Output
 

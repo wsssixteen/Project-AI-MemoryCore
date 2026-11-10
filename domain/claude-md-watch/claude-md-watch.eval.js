@@ -30,7 +30,7 @@ let r = hook();
 check('F1 no open watch: session start prints nothing, exit 0', r.status === 0 && !/CHANGE-WATCH/.test(r.stdout + r.stderr), 'exit=' + r.status + ' ' + (r.stdout + r.stderr).slice(0, 80));
 
 // five watches of different ages, one already overdue
-seed([5, 4, 3, 2, 1].map((d, i) => ({ kind: 'watch', id: 'w' + i, ts: iso(d), target: 'file' + i + '.js', observe: 'observe text ' + i + ' ' + 'x'.repeat(200), sessions_left: i === 0 ? 0 : 3, rollback_sha: 'abcdef1234567890' })));
+seed([5, 4, 3, 2, 1].map((d, i) => ({ kind: 'watch', id: 'w' + i, ts: iso(d), target: 'file' + i + '.js', observe: 'observe text ' + i + ' ' + 'x'.repeat(200), sessions_left: i === 0 ? 0 : 10, rollback_sha: 'abcdef1234567890' })));
 const full = w('check').stdout;
 check('F2 `check` is unchanged: 5 watches, each with OBSERVE, the revert line and the close line', (full.match(/OBSERVE:/g) || []).length === 5 && (full.match(/revert : git checkout abcdef1234 -- /g) || []).length === 5 && (full.match(/close  : node lib\/watch\.js resolve /g) || []).length === 5 && /5 active observation/.test(full), full.slice(0, 120));
 const brief = w('brief').stdout;
@@ -46,14 +46,14 @@ r = hook();
 const out = r.stdout + r.stderr;
 check('F7 session start prints the short form (not 5 lines per watch)', r.status === 0 && /CHANGE-WATCH: 5 open/.test(out) && !/OBSERVE:/.test(out), out.slice(0, 160));
 const t1 = rows().filter(x => x.kind === 'tick').length;
-check('F8 the first start of the day steps the countdown once per watch', t1 === t0 + 5, t0 + ' → ' + t1);
+check('F8 a start writes NO tick row (2026-11-10: the countdown is derived, the ledger no longer grows per day)', t1 === t0, t0 + ' → ' + t1);
 hook(); hook();
-check('F9 two more starts the same day do NOT step it again', rows().filter(x => x.kind === 'tick').length === t1, String(rows().filter(x => x.kind === 'tick').length));
-check('F10 after the tick: w0 is at -1, the others at 2 (one step, not three)', /\[w0\] file0\.js \(changed .*, -1 session/.test(w('check').stdout) && /\[w1\] file1\.js \(changed .*, 2 session/.test(w('check').stdout));
-// yesterday's tick does not block today's
-seed(rows().map(x => (x.kind === 'tick' ? { ...x, ts: iso(1) } : x)));
-hook();
-check('F11 a tick from yesterday does not stop today\'s step', rows().filter(x => x.kind === 'tick').length === t1 + 5, String(rows().filter(x => x.kind === 'tick').length));
+check('F9 more starts the same day write none either', rows().filter(x => x.kind === 'tick').length === t1, String(rows().filter(x => x.kind === 'tick').length));
+check('F10 the countdown is the watch number minus the days since the watch: w0 at -5, w1 at 6', /\[w0\] file0\.js \(changed .*, -5 session/.test(w('check').stdout) && /\[w1\] file1\.js \(changed .*, 6 session/.test(w('check').stdout), w('check').stdout.slice(0, 300));
+// a legacy tick row is still honoured: it re-bases the countdown at its own date
+seed(rows().concat([{ kind: 'tick', id: 'w1', ts: iso(1), sessions_left: 2 }]));
+check('F11 a legacy tick row re-bases the countdown (2 left a day ago = 1 now)', /\[w1\] file1\.js \(changed .*, 1 session/.test(w('check').stdout), w('check').stdout.slice(0, 300));
+check('F11b `tick` is a no-op that exits 0 and writes nothing', (() => { const n = rows().length; const x = w('tick'); return x.status === 0 && rows().length === n; })());
 
 // resolve + add still work as before
 r = w('resolve', 'w0', 'ok', '--note', 'seen working');

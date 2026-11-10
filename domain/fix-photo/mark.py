@@ -6,7 +6,7 @@
 #          --box "x0,y0,x1,y1" [--box ...] --label "x,y=Label text" [--label ...]
 #
 # Output: WARN lines (clamped box, shifted label, bad folder/name, date/email in label), then
-#         FIX-PHOTO: <dst> ✓   ← paste this line into the hand-back (fix-photo Stop gate checks it).
+#         FIX-PHOTO: <dst> ✓   ← paste this line into the hand-back (the quest hand-back carries it).
 # Exit:   0 saved · 2 bad input (nothing saved).
 # Log:    domain/fix-photo/log.jsonl (retention: rotate monthly) — ts · dst · boxes · labels · warns · outcome · dur_ms.
 import argparse, json, os, re, sys, time

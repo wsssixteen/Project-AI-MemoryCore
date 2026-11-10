@@ -24,9 +24,8 @@ retention: rotate monthly
 | Piece | Path | Role |
 |---|---|---|
 | Validator CLI | `domain/bpmn-check/bpmn-check.js` | deterministic checks C1–C9 + `--baseline` element-diff · exit 1 on ERROR |
-| PostToolUse hook | `domain/bpmn-check/bpmn-check.check.hook.js` | ADVISORY v1 — auto-runs the validator on any `.bpmn*.xml` Ruri writes (registered in `.claude/settings.json` via forge; wrapped by `lib/hook-runtime.js` for telemetry) |
 | Judgment skill | `.claude/skills/bpmn-check/SKILL.md` | the 10 checks J1–J10 no validator can see — MANDATORY before speccing modeler changes (the main coverage path: miya edits in the MODELER, not in files) |
-| Behavioural evals | `domain/bpmn-check/eval.js` (mine) + `bpmn-check.eval.js` (forge fixture) | E1 pre-fix must surface the original bug · E2 senior fix must pass with exact diff · E3 synthetic must exit 1 |
+| Behavioural evals | `domain/bpmn-check/eval.js` | E1 pre-fix must surface the original bug · E2 senior fix must pass with exact diff · E3 synthetic must exit 1 |
 
 ## Deterministic checks (validator)
 
@@ -57,3 +56,4 @@ retention: rotate monthly
 ## Versions
 
 - v1.0 2026-08-19 — born (QA-274914). ADVISORY hook per /system-rules Rule 4 (start simple); promote to blocking on confirmed-fire evidence.
+- v1.1 2026-11-10 — PostToolUse hook retired: 20,414 runs, 0 fired since telemetry began 2026-07-12. The validator CLI and the judgment skill stay.
