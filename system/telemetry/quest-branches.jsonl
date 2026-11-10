@@ -71,3 +71,5 @@
 {"ts":"2026-11-03T14:40:30.209Z","num":"287925","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":5733}
 {"ts":"2026-11-04T14:09:13.194Z","num":"287346","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":14267}
 {"ts":"2026-11-04T17:01:34.609Z","num":"287346","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":9685}
+{"ts":"2026-11-06T07:03:18.900Z","num":"288622","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":13375}
+{"ts":"2026-11-06T07:03:29.512Z","num":"288622","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":10078}
