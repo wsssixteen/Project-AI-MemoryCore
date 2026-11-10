@@ -65,7 +65,7 @@ Skipped, never blocked: a commit with no ticket number · a ticket with no block
 - `node domain/falsifier-ran-check/check.js <QA>` — exit 0 clear, 1 blocked
 - `node domain/falsifier-ran-check/check.js <QA> --show` — print the ledger
 - `node domain/falsifier-ran-check/check.js <QA> --staged <repo>` — add the drift check against that repo's staged files
-- `node domain/falsifier-ran-check/check.eval.js` — 45 fixtures, first three are the #244600 replay
+- `node domain/falsifier-ran-check/check.eval.js` — 79 fixtures (S1-S19 = the standing rows), first three are the #244600 replay
 
 log: `domain/falsifier-ran-check/log.jsonl` (ts · qa · ctx cli/commit/note · outcome · kinds · dur_ms).
 
@@ -105,6 +105,8 @@ log: `domain/falsifier-ran-check/log.jsonl` (ts · qa · ctx cli/commit/note · 
 | 30 | compile-gate is unregistered or deleted | handled: `system-audit` reports a ghost hook at boot; check.js still runs at close-phase and the note |
 
 ## History
+
+- 2026-11-10 five standing rows (path · siblings · render · given · env) required in every ledger, `standing-missing`; `OPEN: after deploy` on standing path/env passes commit + cli, never the BA note; `RAN: n/a — <reason>` named. Per miya after the replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-3 (61 scenarios: AUDIT-ROUND-3). check.eval 79/79.
 
 - 2026-07-12 born: Stop advisory for a planted probe never shown firing (narrow).
 - 2026-10-04 ledger check added per miya (#244600). Spec preservation: the Stop advisory is untouched (its eval 7/7).

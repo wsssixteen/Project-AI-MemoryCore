@@ -14,7 +14,8 @@
 //   Fix files: A.java, B.xhtml
 //   | # | design | falsifier | cheapest test | status |
 //   status = OPEN | RAN: <evidence> | BROKE: <evidence> → row N | ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD
-//            | SUPERSEDED: row N
+//            | SUPERSEDED: row N | RAN: n/a — <reason> | OPEN: after deploy (standing: path / env only; passes commit + cli, never the BA note)
+// Every ledger carries five standing rows: standing: path · siblings · render · given · env (2026-11-10).
 // Callers: compile-gate (etanah commit) · close-phase Phase 1 · ticket-close-block --ba.
 // The local-test override is read from miya's OWN messages through lib/his-words.js (system-rules Rule 8, 2026-10-29):
 // his plain words ("test on server", "skip local testing") or [risk-ok: <num> <reason>], up to 8 of his messages back,
@@ -129,7 +130,7 @@ function statusKind(row, rows) {
   return { kind: 'bad', why: 'status must start with OPEN / RAN: / BROKE: / ACCEPTED-RISK: / SUPERSEDED: row N' };
 }
 
-// Pure evaluation of one doc. opts: { needLedger, staged: [paths]|null, merge: bool }
+// Pure evaluation of one doc. opts: { needLedger, staged: [paths]|null, merge: bool, ctx: 'cli'|'commit'|'note', standing: bool }
 function evaluate(text, opts) {
   const o = opts || {};
   const fails = [];
@@ -145,7 +146,7 @@ function evaluate(text, opts) {
     const k = statusKind(r, L.rows);
     r.kind = k.kind;
     // A row that can only run on the deployed env waits there: it passes the commit and the cli, never the BA note (2026-11-10).
-    if (k.kind === 'open' && /^[*`\s]*standing:/i.test(r.design || '') && /^[*`\s]*OPEN\s*[:—-]\s*after\s+(?:the\s+)?deploy/i.test(r.status) && o.ctx !== 'note') { r.kind = 'waiting'; continue; }
+    if (k.kind === 'open' && /^[*`\s]*standing:\s*(?:path|env)\b/i.test(r.design || '') && /^[*`\s]*OPEN\s*[:—-]\s*after\s+(?:the\s+)?deploy/i.test(r.status) && o.ctx !== 'note') { r.kind = 'waiting'; continue; }
     if (k.kind === 'open') fails.push({ kind: 'open', msg: `row ${r.n} OPEN — ${r.falsifier} · cheapest test: ${r.test || '(none written)'}` });
     else if (k.kind === 'broke') fails.push({ kind: 'broke', msg: `row ${r.n} BROKE — ${k.why}` });
     else if (k.kind === 'bad') fails.push({ kind: 'bad-status', msg: `row ${r.n} — ${k.why}` });
@@ -260,6 +261,7 @@ function message(qa, r, head) {
     '   Clear a row by RUNNING its cheapest test and writing `RAN: <what was run, what it showed>`.',
     '   A fired falsifier is `BROKE: <evidence> → row N` with the replacement row written.',
     '   Only miya accepts a risk: `ACCEPTED-RISK: "<his words>" miya YYYY-MM-DD`.',
+    '   Standing rows: copy rows 2-6 from .claude/skills/quest/QA-NNN-template.md; env (and path on a fast path) may wait as `OPEN: after deploy` until the BA note.',
     `   Ledger: ${r.doc || '(no quest doc)'} · re-check: node domain/falsifier-ran-check/check.js ${qa}`,
     '   There is no skip token for this check.',
   ].join('\n');

@@ -217,8 +217,10 @@ r = ev(GOOD0 + st(2, 'path', RAN5) + st(3, 'siblings', RAN5), { needLedger: true
 ok('S9 two of five present → standing-missing ×3', r.fails.filter(f => f.kind === 'standing-missing').length === 3, kinds(r));
 r = ev(GOOD0 + FIVE(RAN5).replace(/standing: /g, 'S: '), { needLedger: true, standing: true });
 ok('S10 rows renamed away from "standing:" → standing-missing ×5', r.fails.filter(f => f.kind === 'standing-missing').length === 5, kinds(r));
-r = ev(GOOD0 + FIVE('OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'cli' });
-ok('S11 OPEN: after deploy passes the cli (close-phase step 1)', r.fails.length === 0, kinds(r));
+r = ev(GOOD0 + st(2, 'path', 'OPEN: after deploy') + st(3, 'siblings', RAN5) + st(4, 'render', RAN5) + st(5, 'given', RAN5) + st(6, 'env', 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'cli' });
+ok('S11 path + env OPEN: after deploy pass the cli (close-phase step 1)', r.fails.length === 0, kinds(r));
+r = ev(GOOD0 + FIVE('OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'commit' });
+ok('S19 siblings, render, given cannot wait: 3 open at the commit', kinds(r) === 'open,open,open', kinds(r));
 r = ev(GOOD0 + FIVE('OPEN: later'), { needLedger: true, standing: true, ctx: 'commit' });
 ok('S12 any other OPEN: text still blocks the commit', r.fails.filter(f => f.kind === 'open').length === 5, kinds(r));
 active('true', 'quest_start=2026-11-11'); doc(GOOD0); r = C.check('QA-244600', { ctx: 'cli' });
