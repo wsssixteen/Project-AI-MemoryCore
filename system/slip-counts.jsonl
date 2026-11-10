@@ -1936,6 +1936,7 @@
 {"ts":"2026-11-05T09:54:49.025Z","category":"blocker"}
 {"ts":"2026-11-05T10:03:44.084Z","category":"A2"}
 {"ts":"2026-11-05T10:03:45.512Z","category":"verify-before-claim"}
+{"ts":"2026-11-06T03:56:40.738Z","category":"over-build"}
 {"ts":"2026-11-05T16:11:53.890Z","category":"blocker"}
 {"ts":"2026-11-06T03:49:34.591Z","category":"wrong-fix"}
 {"ts":"2026-11-05T16:25:24.229Z","category":"blocker"}
@@ -2060,3 +2061,8 @@
 {"ts":"2026-11-10T04:54:52.475Z","category":"A3"}
 {"ts":"2026-11-10T04:54:53.321Z","category":"A4"}
 {"ts":"2026-11-10T04:54:54.155Z","category":"A5"}
+{"ts":"2026-11-10T06:27:49.395Z","category":"blocker"}
+{"ts":"2026-11-10T06:34:33.182Z","category":"reask/redundant"}
+{"ts":"2026-11-10T06:37:03.769Z","category":"bounty"}
+{"ts":"2026-11-10T06:39:16.703Z","category":"boot-skip"}
+{"ts":"2026-11-10T06:39:18.429Z","category":"A2"}

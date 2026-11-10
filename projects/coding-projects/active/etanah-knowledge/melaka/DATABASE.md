@@ -1734,3 +1734,14 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 - Perserahan made from a PLP permohonan: `umm_aplikasi.hubungan_aplikasi_id` = the parent `aplikasi_id`; `flag_integrasi` = Y.
 
 - Task-holder lookup by permohonan (verified 2026-11-04, 288095, 5 query misses first): the permohonan number is `umm_aplikasi.id_pengenalan` (not id_permohonan / no_rujukan / no_fail); the holder is `umm_a_tgsn.pengguna_semasa_id` -> `pcp_pengguna.pengguna_id`, login column `pcp_pengguna.nama_pengguna`. `SELECT a_tgsn_id, tgsn_id, status_tugasan, pengguna_semasa_id FROM umm_a_tgsn WHERE aplikasi_id = (SELECT aplikasi_id FROM umm_aplikasi WHERE id_pengenalan = '<id>') ORDER BY a_tgsn_id DESC;`
+
+## MPT (Maklumat Permohonan Terperinci) page list — how it is chosen (verified 2026-11-05, QA-239386)
+- The sidebar = every `ind_langkah` row whose tugasan kod is `MPT` and whose urusan kod is the permohonan's urusan, ordered by `turutan` (etanah-common `LuceneForm.onClickShowMaklumatPermohonan()`, origin/mlk/master `LuceneForm.java:1820-1828`). No filter on user, peranan, modul or `flag_aktif`; `shouldShowLangkah` runs only on the BPM path.
+- So a page is hidden for an urusan only by removing its row. Two rows on the same turutan: the second is unreachable, and two on the LAST turutan throw "query did not return a unique result: 2" (`findLastLangkah`).
+- The MPT button shows only when an active MPT tugasan exists for the urusan. Per-user check gates the whole dialog only (`AccessControlUtil.canUserAccessAplikasiNew`).
+- Column name reminder: `umm_a_tgsn.pengguna_semasa_id` (not `pengguna_semasa`) joins `pcp_pengguna.pengguna_id`.
+- **tkl_a_laporan_tnh.perihal_tanah** (JSON, key `perkara`) is the Perkara the teknikal Jasper reports print: Laporan Tanah (`MLKLaporanTanah_Sub1.jrxml`) and Laporan Bergambar Map Info / Google (`MLKLaporanGambar*.jrxml:298-311`, grey title box). It is copied when the report is generated, so a blank Tajuk Risalat at that moment leaves it blank; patching the column does not refresh a report already stored. Verified PROD 2026-11-05/06, #288442.
+
+## 16. Peranan (role) names — where they live (2026-11-10, #288188)
+- There is no ind_peranan table. `pcp_peranan_modul.peranan_id` points at `rjk_senarai_ahli_kumpulan.senarai_ahli_kumpulan_id` (kod + nama, e.g. 1514 PPT Penolong Pentadbir Tanah, 7131 PPD Penolong Pegawai Daerah, 1519 PH Pendaftar). No FK is declared, so information_schema does not show the link.
+- A user's roles: `SELECT peranan_modul_id, flag_peranan_utama FROM pcp_capaian_pengguna WHERE pengguna_id = (SELECT pengguna_id FROM pcp_pengguna WHERE nama_pengguna = '<login>');` then `SELECT peranan_id, modul_id FROM pcp_peranan_modul WHERE peranan_modul_id IN (...)` then `SELECT kod, nama FROM rjk_senarai_ahli_kumpulan WHERE senarai_ahli_kumpulan_id IN (...)`.

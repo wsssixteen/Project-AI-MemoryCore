@@ -622,3 +622,25 @@
 {"ts":"2026-11-04T09:57:24.544Z","id":"ADHOC-UPS-2026-2","outcome":"pass","fails":[],"dur_ms":31}
 {"ts":"2026-11-05T16:16:46.758Z","id":"ADHOC-PLTP-2026-5","outcome":"pass","fails":[],"dur_ms":86}
 {"ts":"2026-11-05T16:17:42.184Z","id":"ADHOC-UPP-2026-3","outcome":"pass","fails":[],"dur_ms":86}
+{"ts":"2026-11-05T07:23:54.806Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-11-05T07:24:13.779Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":93}
+{"ts":"2026-11-05T08:34:24.333Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":31}
+{"ts":"2026-11-05T08:34:44.295Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-11-05T08:45:35.392Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["block: required keys present","qa_doc: has \"## Issue Summary\"","qa_doc: has \"## Match Keys\"","qa_doc: Issue Summary \"Title\" line","qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","qa_doc: Issue Summary \"Route\" line with a known route","qa_doc: \"## Next-Steps Checklist\" section"],"dur_ms":59}
+{"ts":"2026-11-05T08:45:55.995Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["qa_doc: Issue Summary \"Route\" line with a known route"],"dur_ms":91}
+{"ts":"2026-11-05T08:46:02.153Z","id":"ADHOC-PRBB-2026-23","outcome":"pass","fails":[],"dur_ms":34}
+{"ts":"2026-11-05T09:03:24.059Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["qa_doc: \"## 0. Resume Point\" for a waiting adhoc","register: status ↔ block status","register: A99 not claimed by another open block"],"dur_ms":41}
+{"ts":"2026-11-05T09:03:58.792Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["block: open ↔ file location","qa_doc: \"## 0. Resume Point\" for a waiting adhoc","register: status ↔ block status"],"dur_ms":37}
+{"ts":"2026-11-05T09:04:05.099Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["block: open ↔ file location","qa_doc: \"## 0. Resume Point\" for a waiting adhoc","register: status ↔ block status"],"dur_ms":43}
+{"ts":"2026-11-05T09:04:11.982Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["task folder: a closed adhoc is archived"],"dur_ms":34}
+{"ts":"2026-11-05T09:04:35.963Z","id":"ADHOC-PRBB-2026-23","outcome":"fail","fails":["task folder: exists"],"dur_ms":33}
+{"ts":"2026-11-06T03:40:51.333Z","id":"ADHOC-PT-2026-17","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":39}
+{"ts":"2026-11-06T03:41:13.296Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":168}
+{"ts":"2026-11-06T03:41:39.759Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":66}
+{"ts":"2026-11-06T07:44:45.061Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-11-06T07:44:56.974Z","id":"ADHOC-PPTPB-2026-9","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":38}
+{"ts":"2026-11-06T07:45:10.105Z","id":"ADHOC-PPTPB-2026-9","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":72}
+{"ts":"2026-11-06T07:45:19.076Z","id":"ADHOC-PPTPB-2026-9","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-11-10T02:57:46.236Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":75}
+{"ts":"2026-11-10T02:59:25.125Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":216}
+{"ts":"2026-11-10T04:07:30.552Z","id":"ADHOC-UPP-2026-3","outcome":"pass","fails":[],"dur_ms":132}
