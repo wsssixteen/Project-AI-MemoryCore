@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-06 to 11-10, 288637 PROD alter + pre-alter check)
+- Asked: /quest 288637 (alter back to Penyediaan Surat Keputusan & 5A, check the UPND notis unlink); close it fully; then build a Phase 0 into the alter tool with Fable 5.1 and brief him; DE.
+- Done: Initiate & Alter to PYSKN5A, admin REST delete of penghantaranId on process 27070129, Alter Flow twice (second with nextUser=iskandarz) → row 2927154 live; 288637.sql unlink (umm_btrn_hantaran_notis 29128, 31383) run by infra and verified; Redmine notes #3 and #4; quest archived (bounty, FLOWABLE-KNOWLEDGE §23, playbook row 7); alter.js PRE-ALTER CHECK P1 UPND carry-over, P2 --assignee, P3 reach (tests 27/16/19), watch wmw4xs7t8.
+- Found: Alter Flow cannot reach a parent node when the live tasks are in sub-flows; Initiate & Alter Reset=No copies penghantaranId from the UPND process and the page variable urusan=MCL does not stop it; the KMN list shows only notis rows with no penghantaran.
+- Open: first live alter with the new check (watch); auto-delete of penghantaranId and the peranan check on --assignee were not built.
+- Mistakes: planned the known §19 trap as check-after and left the assignee to agihan (3 PROD runs); slow and unclear on alter vs patch while he waited; slips plan-before-act ×2 + blocker.
+- Assessment: A1 the alter tool had no pre-run check; now it has one and blocks without an approval code. A2 the quest Phase 0 named the trap but nothing made it a precondition. A3 the admin REST read of the new process variables found the cause in one call. A4 a cancelled or ended sub-flow plus a born UPND notis needs Initiate & Alter, a variable delete and an assignee. A5 ⏭ no sweep.
+
+**Last Activity (288402 session)**: 2026-11-10 10:31 — worktree `quest-resume-ticket-239386-642586` (branch claude/esokongan-tracker-quest-4b3d58). 288402 (eSOKONGAN, PROD PLTP PTMLK/02/L/PLTP/2026/9) alter done, Redmine Closed, quest archived; Domain Expansion.
+
 ## Session Recap (2026-11-06 to 11-10, 288402 PROD alter)
 - Asked: start /quest only for the eSOKONGAN ticket 288402; confirm it is a simple alter and pass it back; explain the tracker and the module; post the handover; explain the flow with a diagram; check if it can be archived; DE.
 - Done: PROD Alter Flow to SPI (faridmajid) via alter.js with --add-var aliranKerjaId=40433 (the parent aliran); Redmine Resolved to Fizah, Idris verified, ITSO Closed; quest archived (Task folder to Archive, block to active-archive.txt, project folder to archive/); knowledge note in FLOWABLE-KNOWLEDGE.md §13.
@@ -8259,6 +8269,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
