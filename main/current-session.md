@@ -64,3 +64,13 @@ Where picture = the change map (lib/change-map.js).
 - **Blocker logged**: the step-3 rider of design-consult-gate could not see the reply lines (the transcript held no text block for those messages); writes to rider paths went through node scripts. Slips row 2026-11-10, category blocker.
 - **WaRead repo**: own git repo, no remote; the change is committed there separately.
 - **Office-report rules (same day, his words: office reports start with the pejabat and daerah code, the BA lines after them outrank)**: `domain/whatsapp/RULES.md` v1.1 section 1b; the reader keeps the forwarded flag; filter signals `office:<code>` and `forwarded`; candidate and handover carry office and daerah (00 PTG, 01 Melaka Tengah, 02 Jasin, 03 Alor Gajah, checked on staging); rules-only env tells Staging from Internal. Watcher selftest 67, whatsapp eval 29. **His choice 2026-11-10: "start after 2"**, read as a 2-minute wait: an office report is held 2 minutes (`officeWaitMs`, `lib/watcher/officewait.js`), lines in that window ride along, then one judge call and one session; RULES v1.2; watcher selftest 78, whatsapp eval 31. Not run on a live message: the watcher is still stopped.
+
+CHANGE-CARD (after): assessed delete rule
+- What: Script-check rule 4 now asks five questions before a wrong row is cancelled, deleted or unlinked, and the gate denies four unsafe delete shapes in a patch script file.
+- Why: You said on 2026-11-10 that never-DELETE was a wrong rule, that proof like receipts is kept, and that a flag must be shown to work.
+- How: The first YES wins in the flow picture `.claude/skills/script-check/diagram.png`, and the gate eval passed 37 of 37.
+- When: Rule 4 runs when I prepare a patch script, and the gate is live from the main folder since commit 4c65c4be.
+- Where: It landed in the script-check skill, the convention-check-gate Feature, one memory file and the evolution protocol, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\be1fddb58a3e4988\a732fefb-d015-4f08-8882-468242dd1007\scratchpad\cm-delrule\change-map-20261110-074246.png`.
+Where picture = the change map (lib/change-map.js).
+
+**Last Activity (288625 session)**: 2026-11-10 15:45 — worktree `quest-issue-288625-f5b23e`. 288625 Resolved to BA (Phase 1 closed, waits BA). System change landed: script-check rule 4 assessed delete rule + convention-check-gate v1.9 (eval 37/37) + highest-model-id claude-fable-5-2. Open: note to Fizah that the PDT user can cancel No Serahan 02MH1579/2026 on the Batal Perserahan screen (waits his "draft the note"); BA asked whether training needs the SQL. Blockers logged: build-turn rider cannot see reply text sent with the tool call; step3-check cannot pass the edit that raises highest-model-id.
