@@ -1,3 +1,12 @@
+**Last Activity (287346 tail session)**: 2026-11-10 11:30 — worktree `common-version-1-10-20-mlk-c5ee8f`. 287346 archive check stopped, silent-hooks explanation, reply-noise slip, Domain Expansion.
+
+## Session Recap (2026-11-05 to 11-10, 287346 tail + silent hooks)
+- Asked: what the silent hooks are, in a diagram; why I was not speaking plainly; "What am I supposed to read with all of this?" (screenshots of replies full of check codes).
+- Done: hourly 287346 archive check (cron 3f9b175f) deleted after Redmine showed Rework; silent-hooks picture (project-load.resume 209 runs, project-load.precompact 121 runs, spawn-task-folder-guard dead); slip `reply-noise` logged.
+- Found: lib/audit-briefing.js looks for logs in domain/project-load.resume/ instead of domain/project-load/log.jsonl; spawn-task-folder-guard matches mcp__ccd_session__spawn_task, renamed to start_session; bypass tokens and HTML-comment lines render as visible text in the app.
+- Open: his choice on "fix the audit" and "repoint the guard"; 3 slow gates to rule (quest-context-load-gate, quest-doc-freshness, notes-on-test-data); 287346 Resolved to Anis by the rework session, archive waits for Closed.
+- Mistakes: replies carried hook answers he had to read; app branch sync is off, this folder was 149 commits behind main.
+
 **Last Activity (hakmilik-pejabat session)**: 2026-11-10 11:09 — worktree `hakmilik-pejabat-awareness-32c5c1`. Hakmilik office rule added to the hakmilik memory (GitHub main e9c91da5); PLTP/2026/6 NPE traced, same as ticket 288662 (owned by the "288662 rubric audit" session, quest doc + A101 there); Domain Expansion.
 
 **Last Activity (287811 audit session)**: 2026-11-10 11:40 — worktree `penang-common-null-error-219adf`, post-DE addendum. 287811 journal 7 EDITED in place per miya "Save it" (commit d7ff0bec43, int-env f2ebd118f7, no new journal); tab rule in browser memory + prefill skill (f61b98a9 / 22e974f0); his rulings 2026-11-10: keep all three hooks (audit-briefing own-log fix, no false never-fired), impact card for Alex built as cross-module-check step 8 (eval 30/30, columns open to Alex's feedback), items 3, 7, 10 dropped, item 4 a proposal; GitHub main 89d08fdf, main folder fd175a45. Open and not mine: Mira's verify of 287811 on MLIT; Alex's reaction to the first impact card.
