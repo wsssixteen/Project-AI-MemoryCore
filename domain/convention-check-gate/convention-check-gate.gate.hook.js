@@ -227,6 +227,23 @@ process.stdin.on('end', () => {
         }));
         process.exit(0);
       }
+      // v1.8 BLOCKING: no DELETE in a .sql patch (みや 2026-11-06, 288625: "make sure that patch is to only unlink")
+      if (/\bDELETE\s+FROM\b/i.test(code) && !bypassInCurrentTurn(data.transcript_path, BYPASS) && !BYPASS.test(body)) {
+        logFire('blocked-delete', filePath);
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: 'PreToolUse',
+            permissionDecision: 'deny',
+            permissionDecisionReason: [
+              `🚫 convention-check-gate v1.8: DELETE found in a .sql patch — BANNED (script-check rule 4).`,
+              `   File: ${filePath}`,
+              `   A wrong or stray row is unlinked (UPDATE ... SET <link column> = NULL) or set inactive, never removed.`,
+              `   Genuinely need a DELETE? add [skip-convention-check: <reason>] and say why in chat.`,
+            ].join('\n'),
+          },
+        }));
+        process.exit(0);
+      }
     }
 
     // docx / config / sql → advisory (unchanged from v1.1)

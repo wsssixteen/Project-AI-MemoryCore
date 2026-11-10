@@ -87,7 +87,8 @@
       "work_scope": "active",
       "task_folder": "Putrajaya",
       "knowledge_dir": "wp",
-      "repo_dir": "KL",
+      "repo_dir": "WP",
+      "repo_note": "E:/Projects/WP (corrected from KL per miya 2026-09-04). Git = company GitLab git@10.16.63.27:etanah-wp/<repo>.git (per miya 2026-11-10 'we're using gitlab'; verified by git ls-remote, same SSH key as Melaka, master current 2026-11-06). The old origin ssh://git@172.16.90.151 refuses our key. etanah-teknikal not on disk and not found in etanah-wp.",
       "modules": {
         "pelupusan":       { "repo": "etanah-pelupusan",            "trunk": "master" },
         "common":          { "repo": "etanah-common",               "trunk": "master" },
@@ -96,8 +97,35 @@
       "branch_prefix": null,
       "ticket_branch": null,
       "bpmn": { "prefix": "WP", "root_module": "PLP" },
-      "db": { "engine": "oracle", "mcp": { "prod": "oracle-wp" }, "schemas": {}, "primary_env": "prod" },
-      "redmine": { "project": null, "project_names": [] },
+      "flowable_source": {
+        "engine_db": "oracle-wp (owners ET_MAIN_STAG_FLOWABLE KL · ET_MAIN_STAG_WPPJ_FLOWABLE · ET_MAIN_STAG_WPL_FLOWABLE)",
+        "how": "latest version per key read from act_re_procdef + act_ge_bytearray into wp/flowables-bpmn/<KL|WPPJ|WPL>/ + _manifest.json (2026-11-06: 551 models, staging). PROD engines ET_FLOWABLE / _WPPJ / _WPL readable via oracle-wp-kl-prod-read."
+      },
+      "db": {
+        "engine": "oracle",
+        "mcp": {
+          "prod": "oracle-wp-kl-prod-read",
+          "stag": "oracle-wp",
+          "stag-wppj": "oracle-wp-wppj-stag",
+          "stag-wpl": "oracle-wp-wpl-stag",
+          "stag-flowable": "oracle-wp-kl-stag-flowable",
+          "stag-dms": "oracle-wp-kl-stag-dms",
+          "stag-sistem": "oracle-wp-kl-stag-sistem"
+        },
+        "schemas": {
+          "prod": "ET_MAIN (KL) · ET_MAIN_WPPJ · ET_MAIN_WPL — user et_main_read, SELECT only, 192.168.8.104/etprod",
+          "stag": "ET_MAIN_STAG (KL) · ET_MAIN_STAG_PUT (WPPJ) · ET_MAIN_STAG_LAB (WPL) — 192.168.11.100/etanah",
+          "it": "ET_MAIN_WPKL_IT · ET_MAIN_WPPJ_IT · ET_MAIN_WPL_IT (same server as stag, read through oracle-wp)",
+          "train": "ET_MAIN_TRAIN · ET_MAIN_TRAIN_WPPJ · ET_MAIN_TRAIN_WPL (same server as stag)"
+        },
+        "primary_env": "stag",
+        "note": "verified 2026-11-06: all 7 MCPs answer; oracle-wp = ET_MAIN_STAG on host mermaid4 (was wrongly registered as prod)."
+      },
+      "redmine": {
+        "project": null,
+        "project_names": ["eSOKONGAN PUTRAJAYA", "eSOKONGAN LABUAN", "eTanah WP", "WPKL_Pelupusan", "WPPj_Pelupusan", "WPL_Pelupusan", "WPKL_Awam", "WPPj_Awam", "WPL_Awam"],
+        "project_ids": { "eSOKONGAN PUTRAJAYA": 223, "eSOKONGAN LABUAN": 224, "eTanah WP": 1 }
+      },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null
     },

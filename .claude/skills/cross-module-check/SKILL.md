@@ -40,6 +40,18 @@ A failing frame in another module proves **where it broke**, never **who caused 
 
 After the verdict: write any new boundary fact (entry point, derived name, trap) back into OTHER-MODULES.md in the same turn.
 
+## Step 8 — Impact card (2026-11-10 per みや, from Alex the manager: "when it involves different modules, please share like an impact analysis as evidence it might take a long time since last month we've breached our SLA")
+
+When the verdict is THEIRS, BOTH or CATER, or the fix touches more than one module, the Phase 0 hand-back carries one **Impact card** for the ticket, and it goes on the Redmine ticket as evidence on his "post it". Shape (first version; he said the columns will change on Alex's feedback, so change them here, never in a second copy):
+
+| Module touched | Owner | What changes there | Who tests it | Days (ours / waiting on them) |
+|---|---|---|---|---|
+| etanah-awam (portal form) | us | save tujuanPermohonan for the Penang branch | BA on internal | 1 / 0 |
+| etanah-pelupusan (reader) | us | read the same field on reload | BA on internal | 1 / 0 |
+| etanah-common (shared VO) | common team (Aaron) | one new field on the shared object | common team | 0 / 3 to 5 |
+
+Then one **SLA line**: `SLA: <priority> = <hours>; ours <n> days fits; the ticket as a whole cannot, because <the waiting row, owner, date the request went out>`. (Example above = 284169, Penang PRU tujuan not saving.) Source of every row: steps 1 to 7 of this skill (module boundary, hand-off file, deployed version). Plain words for Alex: no file paths, no class names (`feedback_ticket_writing_style`). **Banned**: a cross-module hand-back with no card · a card that names a wait without its owner and request date.
+
 ## Red Flags — STOP if you catch yourself thinking
 
 - "The top frame is in etanah-common, so it is common's" — that is step 1's input, not step 7's answer
@@ -71,5 +83,6 @@ retention: rotate monthly
 footprint: none: skill text only; the eval runs on demand
 
 ## History
+- 2026-11-10 — step 8 Impact card added per miya (Alex's ask, 2026-11-06; ruling "proceed but as usual, keep in mind we will change it based on feedback"). Spec-preservation: steps 1 to 7, the verdict table, Red Flags, Enforcement unchanged; additive. Eval: C10 in `domain/cross-module-check/eval.js`.
 - 2026-11-05 — step 4 gains the callActivity caller list (every flow calling the same `calledElement`, each caller's value for the input) and the comparison with the quest's `REQUIREMENT-RULES:` rows, per miya, ADHOC-PPTPB-2026-9. Spec-preservation: all 7 steps, the verdict table, Red Flags and Enforcement kept word for word; step 4's original clause (sibling callers in our modules) kept, the new clause is added to the same row.
 - 2026-10-01 — created per miya after #282442: ADHOC-PRBB-2026-6 (2026-09-30) was closed OWNED-ELSEWHERE on `relation "et_ptg.log_service" does not exist`; the GIS team showed our `MlkUtilitiPembatalanPermohonanForm.initBPMFlow():346` sent an empty kodPejabat. Steps 2-4 would each have caught it.
