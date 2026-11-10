@@ -4,6 +4,25 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-06 to 11-10, 288402 PROD alter)
+- Asked: start /quest only for the eSOKONGAN ticket 288402; confirm it is a simple alter and pass it back; explain the tracker and the module; post the handover; explain the flow with a diagram; check if it can be archived; DE.
+- Done: PROD Alter Flow to SPI (faridmajid) via alter.js with --add-var aliranKerjaId=40433 (the parent aliran); Redmine Resolved to Fizah, Idris verified, ITSO Closed; quest archived (Task folder to Archive, block to active-archive.txt, project folder to archive/); knowledge note in FLOWABLE-KNOWLEDGE.md §13.
+- Found: Pendaftaran cancelled serahan 02N902/2026 (child aliran 44986) and left the PLTP with 0 active tugasan; the same 0-active state is why Pergerakan Fail says "Maklumat tiada dalam rekod sistem!"; --var fails there because the row is absent, --add-var on the parent works.
+- Open: none for 288402.
+- Mistakes: wrote the ticket number with a hashtag in the archive reply (terse-gate caught it).
+- Assessment: A1 the Edit tool cannot reach untracked main-only files from a worktree; a node write was the way round. A2 the archive dry-run caught the missing Bounty block before any move. A3 ⏭ no debugging, the state was read in one query. A4 a cancelled serahan in another module leaves our urusan with no tugasan; the fix is an alter, not code. A5 ⏭ no sweep.
+**Last Activity (PT plot 100 adhoc session)**: 2026-11-10 10:30 — worktree `jovial-kepler-a07ba6`. ADHOC-PT-2026-17 (stg1 PTMLK/02/L/PT/2026/18, Penyediaan Risalat MMKN - PDT): the 100.00 under Tindakan is the area percentage total jumlahPeratus (PelupusanExcelReaderHelper.java:2862), a footer cell left from the TRG table (mlkMaklumatPlotTable.xhtml:175-177), not tax; saved, audit 31/31, block active. Domain Expansion.
+
+## Session Recap (2026-11-06 to 11-10, ADHOC-PT-2026-17)
+- Asked: where the 100.00 comes from when kadar cukai is RM66; can it ever be other than 100; do the requirements want a title on that column; the Java file's full path; save adhoc; DE.
+- Done: answer with SELECTs; PROD PT: 198 with luas > 0 (100.00), 3 zero luas (0), 3 no plots (blank); stg1 199/3/6; requirements 216013 + 220410 have no Peratus column; save-set (Task folder 382, register A100, LATENT-BUGS L39, qa_doc), audit 31/31.
+- Found: RM66 = jumlah_cukai_tnh on plot 50103 (kadar 11.00); the footer only ever reads 100.00, 0 or blank.
+- Open: his call on a ticket to remove the leftover isPT footer cell.
+- Mistakes: none logged; five Stop-hook delta corrections on reply shape.
+- Assessment: A1 one background sonnet save agent, audit failed once (register OPEN vs ANSWERED) and was fixed. A2 ⏭ no quest. A3 the leftover was found in two reads (xhtml footer + helper formula). A4 TRG-copied components carry orphan footer cells. A5 ⏭ no sweep.
+
+**Last Activity (Masterline look-modes session)**: 2026-11-08 06:40 — worktree `session-orchestration-deploy-e6a380` (branch claude/masterline-look-modes-eecd24), delegated by the Masterline orchestrator. Four switchable looks built into the app prototype; Domain Expansion.
+
 ## Session Recap (2026-11-08, Masterline look modes, delegated)
 - Asked (orchestrator, his rulings row 44 and 2026-10-20): a Look switch with 1 Operations console, 2 Service ledger, 3 Dispatch board, 4 Mix on every screen; remove the Claude look from the base; impeccable-checked; prove with flows, click walk, screenshots; never stop to ask.
 - Done: `app-samples\prototype\` v2 in the main-checkout project folder (app.css neutral token base, new looks.css, look switch + `?look=` `?layout=`, PRODUCT.md); COMPARE.md v2; DECISIONS rows 46 to 54; VERSIONS row; START.md Main app row; report `reports\look-modes.md`. Proof: 40/40 flows per look desk + phone; walk 14,928 clicks 0 errors; impeccable detector 0 over 272 pages; taste-skill 0 FAIL at 1366/768/375; impeccable critique dual-agent (A about 21/40).
@@ -8240,6 +8259,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 

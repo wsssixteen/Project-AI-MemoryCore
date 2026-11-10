@@ -1,3 +1,13 @@
+**Last Activity (hakmilik-pejabat session)**: 2026-11-10 11:09 — worktree `hakmilik-pejabat-awareness-32c5c1`. Hakmilik office rule added to the hakmilik memory (GitHub main e9c91da5); PLTP/2026/6 NPE traced, same as ticket 288662 (owned by the "288662 rubric audit" session, quest doc + A101 there); Domain Expansion.
+
+## Session Recap (2026-11-06 to 11-10, hakmilik office rule + PLTP/2026/6 NPE)
+- Asked: is Ruri aware a hakmilik is tied to a pejabat; run the change route properly before adding it; adhoc PROD PLTP/2026/6 NPE (trace first); is ticket 288662 the same; DE.
+- Done: rule GRN/PN/HSD = PTG 00, others = district PTD written into reference_hakmilik_change_map.md + MEMORY.md hook, PPTPB-TICKETS.md:38 marked superseded; change route 8 steps, cards PASS, watch wmw4nigbz; NPE traced to PelupusanExcelReaderHelper.java:3963 (.toString() on a null pilihanPremium, check added e8489bb343 for UAT-CR 236562; SPI + nextUrusan PSPB falls to the else at :1780 and turns the cukai panel on); 288662 confirmed the same record and error.
+- Found: the office rule lived only in OTHER-MODULES.md, which a hakmilik question never loads; Fizah's 288662 journal widens scope to both panels at SPI PSPB, Minit Bebas and Surat Tolak.
+- Open: 288662 fix sits with the "288662 rubric audit" session; main folder HEAD behind GitHub main while another session's current-session.md and slips files are dirty there.
+- Mistakes: 06/11 adhoc turn ended with no scaffold (logged by the 288662 session as knowledgebase-not-written); first hakmilik answer proposed DOMAIN-GLOSSARY.md, a file no hook loads; three reply-shape gate rounds (hashtag ticket numbers, part paths, missing SELECTs).
+- Assessment: A1 a knowledge rule belongs in the file the workflow already loads, never a new copy. A2 an adhoc paste needs its scaffold in the same turn even when he asks for the trace first. A3 the stack line plus one PROD read of mklmt_tmbhn proved the NPE in four reads. A4 a Simpan check that calls toString on an optional value crashes every record that never set it. A5 ⏭ no sweep.
+
 **Last Activity (288622 session)**: 2026-11-10 10:50 — worktree `redmine-issue-288622-19563d` (branch claude/redmine-issue-288622-19563d). 288622 (Internal Issue PROD, PRBB PTMLK/03/L/PRBB/2026/17) PROD alter PYSTP → PJTLT done 2026-11-06 14:39, Redmine Resolved to Nurhafizah 15:00, quest archived; MemoryCore b6f952f6 on GitHub main; Domain Expansion.
 
 ## Session Recap (2026-11-06 to 2026-11-10, 288622 PROD alter)
@@ -18,22 +28,3 @@
 - Assessment: A1 the alter tool had no pre-run check; now it has one and blocks without an approval code. A2 the quest Phase 0 named the trap but nothing made it a precondition. A3 the admin REST read of the new process variables found the cause in one call. A4 a cancelled or ended sub-flow plus a born UPND notis needs Initiate & Alter, a variable delete and an assignee. A5 ⏭ no sweep.
 
 **Last Activity (288402 session)**: 2026-11-10 10:31 — worktree `quest-resume-ticket-239386-642586` (branch claude/esokongan-tracker-quest-4b3d58). 288402 (eSOKONGAN, PROD PLTP PTMLK/02/L/PLTP/2026/9) alter done, Redmine Closed, quest archived; Domain Expansion.
-
-## Session Recap (2026-11-06 to 11-10, 288402 PROD alter)
-- Asked: start /quest only for the eSOKONGAN ticket 288402; confirm it is a simple alter and pass it back; explain the tracker and the module; post the handover; explain the flow with a diagram; check if it can be archived; DE.
-- Done: PROD Alter Flow to SPI (faridmajid) via alter.js with --add-var aliranKerjaId=40433 (the parent aliran); Redmine Resolved to Fizah, Idris verified, ITSO Closed; quest archived (Task folder to Archive, block to active-archive.txt, project folder to archive/); knowledge note in FLOWABLE-KNOWLEDGE.md §13.
-- Found: Pendaftaran cancelled serahan 02N902/2026 (child aliran 44986) and left the PLTP with 0 active tugasan; the same 0-active state is why Pergerakan Fail says "Maklumat tiada dalam rekod sistem!"; --var fails there because the row is absent, --add-var on the parent works.
-- Open: none for 288402.
-- Mistakes: wrote the ticket number with a hashtag in the archive reply (terse-gate caught it).
-- Assessment: A1 the Edit tool cannot reach untracked main-only files from a worktree; a node write was the way round. A2 the archive dry-run caught the missing Bounty block before any move. A3 ⏭ no debugging, the state was read in one query. A4 a cancelled serahan in another module leaves our urusan with no tugasan; the fix is an alter, not code. A5 ⏭ no sweep.
-**Last Activity (PT plot 100 adhoc session)**: 2026-11-10 10:30 — worktree `jovial-kepler-a07ba6`. ADHOC-PT-2026-17 (stg1 PTMLK/02/L/PT/2026/18, Penyediaan Risalat MMKN - PDT): the 100.00 under Tindakan is the area percentage total jumlahPeratus (PelupusanExcelReaderHelper.java:2862), a footer cell left from the TRG table (mlkMaklumatPlotTable.xhtml:175-177), not tax; saved, audit 31/31, block active. Domain Expansion.
-
-## Session Recap (2026-11-06 to 11-10, ADHOC-PT-2026-17)
-- Asked: where the 100.00 comes from when kadar cukai is RM66; can it ever be other than 100; do the requirements want a title on that column; the Java file's full path; save adhoc; DE.
-- Done: answer with SELECTs; PROD PT: 198 with luas > 0 (100.00), 3 zero luas (0), 3 no plots (blank); stg1 199/3/6; requirements 216013 + 220410 have no Peratus column; save-set (Task folder 382, register A100, LATENT-BUGS L39, qa_doc), audit 31/31.
-- Found: RM66 = jumlah_cukai_tnh on plot 50103 (kadar 11.00); the footer only ever reads 100.00, 0 or blank.
-- Open: his call on a ticket to remove the leftover isPT footer cell.
-- Mistakes: none logged; five Stop-hook delta corrections on reply shape.
-- Assessment: A1 one background sonnet save agent, audit failed once (register OPEN vs ANSWERED) and was fixed. A2 ⏭ no quest. A3 the leftover was found in two reads (xhtml footer + helper formula). A4 TRG-copied components carry orphan footer cells. A5 ⏭ no sweep.
-
-**Last Activity (Masterline look-modes session)**: 2026-11-08 06:40 — worktree `session-orchestration-deploy-e6a380` (branch claude/masterline-look-modes-eecd24), delegated by the Masterline orchestrator. Four switchable looks built into the app prototype; Domain Expansion.
