@@ -1993,3 +1993,7 @@
 {"ts":"2026-11-05T16:35:14.026Z","category":"A4"}
 {"ts":"2026-11-06T02:31:11.922Z","category":"A1"}
 {"ts":"2026-11-06T02:31:13.217Z","category":"reply-shape"}
+{"ts":"2026-11-06T07:08:57.791Z","category":"scope-drift"}
+{"ts":"2026-11-06T08:45:48.611Z","category":"reask/redundant"}
+{"ts":"2026-11-06T09:37:06.338Z","category":"script-rule"}
+{"ts":"2026-11-10T02:47:22.045Z","category":"gate/repeat-block"}
