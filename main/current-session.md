@@ -1,5 +1,7 @@
 **Last Activity (hakmilik-pejabat session)**: 2026-11-10 11:09 — worktree `hakmilik-pejabat-awareness-32c5c1`. Hakmilik office rule added to the hakmilik memory (GitHub main e9c91da5); PLTP/2026/6 NPE traced, same as ticket 288662 (owned by the "288662 rubric audit" session, quest doc + A101 there); Domain Expansion.
 
+**Last Activity (287811 audit session)**: 2026-11-10 11:40 — worktree `penang-common-null-error-219adf`, post-DE addendum. 287811 journal 7 EDITED in place per miya "Save it" (commit d7ff0bec43, int-env f2ebd118f7, no new journal); tab rule in browser memory + prefill skill (f61b98a9 / 22e974f0); his rulings 2026-11-10: keep all three hooks (audit-briefing own-log fix, no false never-fired), impact card for Alex built as cross-module-check step 8 (eval 30/30, columns open to Alex's feedback), items 3, 7, 10 dropped, item 4 a proposal; GitHub main 89d08fdf, main folder fd175a45. Open and not mine: Mira's verify of 287811 on MLIT; Alex's reaction to the first impact card.
+
 **Last Activity**: 2026-11-06 00:45 — worktree `cool-margulis-5bb326` (branch claude/redmine-287346-audit-implement-a86f35), 287346 rework 1 shipped and Phase 1 closed, template-scenario check 6 (tag sources) built and landed, Domain Expansion.
 
 ## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
