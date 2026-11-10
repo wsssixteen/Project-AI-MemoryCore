@@ -309,3 +309,4 @@
 {"ts":"2026-11-10T04:55:47.809Z","qa":"QA-288533","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"f2ed718b","branch":null}
 {"ts":"2026-11-10T06:36:08.529Z","qa":"QA-288188","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-11-10T06:37:06.101Z","qa":"QA-288188","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-10T06:49:12.011Z","qa":"QA-288662","kind":"wrong-fix","n":1,"was":"C1 fixed only the SPI nextUrusan branch (initMode():1780); the identical PSPM branch for Keputusan Pendaftar at initMode():1824 was left, so KP (PSPB) still showed Kadar Cukai + Syarat panels","why":"BA Fizah 2026-11-10 (via miya): tertinggal tugasan Keputusan Pendaftar; photo PTMLK/01/L/PLTP/2026/7 KP 01N751/2026 shows Kadar Cukai Tanah panel","learned":"When a fix adds a value to one branch of a repeated if/else ladder, grep the exact condition text (\\"}
