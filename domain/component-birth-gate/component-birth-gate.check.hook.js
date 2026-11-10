@@ -27,9 +27,15 @@ runHook({ name: 'component-birth-gate', event: 'PreToolUse' }, (input) => {
       // system-design Rule 17 (2026-10-28): the Feature's own picture, checked by lib/diagram-census.js
       diagram: /^\s*\**diagram\**\s*:\s*\S/mi,
       // system-rules Rule 9 (2026-10-30): boundary: covers <…> · never <…> · stops <…> — where the part stops, read beside the goal at every audit
-      boundary: /^\s*\**boundary\**\s*:\s*covers\s+[^·;\n]*\S\s*[·;]\s*never\s+[^·;\n]*\S\s*[·;]\s*stops\s+\S/mi };
-    const missing = ['goal', 'retention', 'footprint', 'self_audit', 'diagram', 'boundary'].filter(k => !KEY[k].test(content));
-    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rules 13 + 16 + 17 / system-rules Rules 6-7 + 9; self_audit: = how each run checks its own output against the goal; footprint: starts with per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none; diagram: = diagram.png in the Feature folder, checked by node lib/diagram-census.js --check domain/<name>; boundary: = "covers <what it reads and acts on> · never <what it must not do or touch> · stops <when it hands to miya, or none: report only>"). Add the machine-readable lines at the top, or let core/forge.js write them.' };
+      boundary: /^\s*\**boundary\**\s*:\s*covers\s+[^·;\n]*\S\s*[·;]\s*never\s+[^·;\n]*\S\s*[·;]\s*stops\s+\S/mi,
+      // net-zero part budget (2026-11-10 per miya, over-complexity audit way 1): a new Feature names the part it retires or merges, or `none: <the reason miya gave>`
+      replaces: /^[ \t]*\**replaces\**[ \t]*:[ \t]*(?:(?!(?:none|todo|tbd|n\/?a)\b|<)\S.*|none[ \t]*:[ \t]*[^\s<].{10,})$/mi };
+    const missing = ['goal', 'retention', 'footprint', 'self_audit', 'diagram', 'boundary', 'replaces'].filter(k => !KEY[k].test(content));
+    // a part cannot retire itself
+    const own = fp.split('/').slice(-2, -1)[0].toLowerCase();
+    const rep = /^[ \t]*\**replaces\**[ \t]*:[ \t]*(.+)$/mi.exec(content);
+    if (rep && !missing.includes('replaces') && rep[1].replace(/[`'"*]/g, '').trim().toLowerCase() === own) missing.push('replaces');
+    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rules 13 + 16 + 17 / system-rules Rules 6-7 + 9; self_audit: = how each run checks its own output against the goal; footprint: starts with per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none; diagram: = diagram.png in the Feature folder, checked by node lib/diagram-census.js --check domain/<name>; boundary: = "covers <what it reads and acts on> · never <what it must not do or touch> · stops <when it hands to miya, or none: report only>"; replaces: = the name of the part this change retires or merges (not the new part itself), or "none: <the reason miya gave>" — a new part is born only when another leaves). Add the machine-readable lines at the top, or let core/forge.js write them.' };
     return { fired: false };
   }
   if (!isComponent) return { fired: false };

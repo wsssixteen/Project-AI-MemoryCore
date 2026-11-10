@@ -58,3 +58,7 @@
 {"ts":"2026-10-14T15:25:50.725Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
 {"ts":"2026-10-14T15:25:50.827Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
 {"ts":"2026-10-21T02:37:14.498Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":482}
+{"ts":"2026-11-06T08:36:30.682Z","cmd":"gates","state":"wp","outcome":"6 bad","exit":1,"dur_ms":254}
+{"ts":"2026-11-06T08:36:50.032Z","cmd":"gates","state":"kedah","outcome":"3 bad","exit":1,"dur_ms":410}
+{"ts":"2026-11-06T08:42:40.279Z","cmd":"gates","state":"wp","outcome":"5 bad","exit":1,"dur_ms":448}
+{"ts":"2026-11-06T08:43:45.618Z","cmd":"gates","state":"wp","outcome":"4 bad","exit":1,"dur_ms":286}

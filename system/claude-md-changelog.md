@@ -10,6 +10,23 @@
 
 ---
 
+## v2.08 (2026-11-10)
+
+- §Disposition rule 5 and §System-Layer hook+skill pairs: the retired hooks `operational-follow-through.js` (Stop, 0 fires in 21,021 runs) and `diagnostic-self-heal-gate.js` (Stop, 0 fires in 21,020 runs) are no longer named. Over-complexity audit set A (retire never-acting parts), per みや "why not all at once?". Pointer repair; no rule changed; `system-audit.js --full` had flagged both lines as broken pointers.
+
+## v2.07 (2026-11-10)
+
+- §8 Etanah non-negotiables: the bullets "Working-analog first", "Smallest change + programmer-written convention", "Minimal-diff discipline" and "In-file convention first" each gain "(the size rule: Disposition rule 11)" and lose the sentences rule 11 already says. Per みや on the over-complexity audit, stage B ("why not all at once?" — the nod to build all eight ways at once). Cause: the same "keep it small, copy what works" rule had been written ~26 times in ~36 files; rule 11 (v2.06) is now the one home for the size of a fix.
+- Dropped and named: bullet Working-analog first — "Match the existing shape." and "**Slip-log running count: 22 strikes (2nd most frequent slip category).**" (rule 11: "inside the part that already exists"; the count is history, in the slip ledger). Bullet Smallest change — "make every code change as **small + specific** as the fix needs — touch nothing extra." (rule 11: "in the fewest lines"). Bullet Minimal-diff discipline — "incidental churn (declaration-split, whitespace, reordering) hides the real change and obscures *what you actually needed to touch*" and "**Banned**: touching any line the fix doesn't require." (rule 11). Bullet In-file convention first — nothing dropped.
+- Kept (Etanah-only specs that rule 11 does not carry): the working-analog list (sibling urusan / tugasan / bean / template / config entries) and the Phase-0 row #4 pointer; "match the convention of THIS system's own programmers, not framework idioms" with the `populateLuasTanahMilik` example; Minimal-diff "never split an existing declaration, reformat, remove/re-add whitespace" and the additive-form example; In-file convention "grep the TARGET FILE ITSELF" with the `URS_X.equals(...)` 16x example and its Banned line.
+- Paired in the same change (stage B): `domain/review-etanah/REVIEW.md` two checklist lines merged into one pointing here; `feedback_simplify_and_reference.md` opening Rule paragraph points here and keeps the Etanah procedure; quest skill "Before any git commit" step 2 = the simple-fix fast path (merges memory simple-fix-no-probe-no-local-test and four slip proposals); auto-skill-on-mistake Step 2.0 += EDIT-CANNOT-HOLD clause; `domain/component-birth-gate` net-zero part budget (`replaces:`); `domain/design-consult-gate/step3-check.js` build-turn rider.
+- Spec preservation: nothing that only these four bullets held was removed; rules 0 to 11 unchanged. Model: Sonnet 5.5 (stage B build), decision and review by the orchestrator.
+
+## v2.06 (2026-11-06)
+
+- §Disposition gains rule 11 SIMPLEST FIX, NEVER MORE STEPS per みや on 288533 ("Can you add an awareness to your CLAUDE.md to NEVER MAKE THINGS MORE UNNECESSARILY COMPLICATED? I've always asked you to simplify things" · "You kept on adding steps and building things specific and complex for no reason"). A fault is fixed at its cause step, fewest lines, inside the existing part; one line before any build names the cause step and the smallest change; banned: a gate, bypass, token, flag, step, file, agent or special case built around a fault, a part for one ticket, a fix across several parts. Root cause: `adhoc-lifecycle promote` never creates the ticket's own quest doc, so QA-288533 pointed at the archived ADHOC doc and the brief-first gate blocked it; the proposed fix loosened the gate (two files) instead of adding the missing step to promote.
+- Spec preservation: additive; rules 0 to 10 unchanged. Standing nod: a correction he gave. Model: Fable 5.1.
+
 ## v2.05 (2026-11-05)
 
 - §Vocabulary "awareness" gains one sentence per みや on 288533 ("I thought I've asked you to add into CLAUDE.md if you add anything into feedback_ to properly find the right location/step in the related workflow/feature/tool/skill to add it"): a correction or feedback_ rule goes into the step that makes that output, and that step calls the one tool that makes it; never a second copy. Root cause (Fable 5.1 audit): the rule lived only in the MEMORY.md header, system-rules Rule 1 and memory-write-gate (fires on a feedback_ file write only); a correction answered by a skill edit met none of them, and the 288533 handover-note shape ended up written in 8 places. Wording shown to and approved by him ("Yes, add it").

@@ -49,6 +49,7 @@ function readTurn(transcriptPath) {
     const s = line.trim(); if (!s) continue;
     let o; try { o = JSON.parse(s); } catch (_) { continue; }
     if (!o || typeof o !== 'object') continue;
+    if (o.type && o.type !== 'user' && o.type !== 'assistant') continue; // api-request-blob rows re-copy old user text at the tail (2026-11-10, per miya)
     parsed++;
     const m = o.message && typeof o.message === 'object' ? o.message : o;
     const role = m.role || o.type;

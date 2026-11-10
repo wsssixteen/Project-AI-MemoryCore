@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-20T02:10:00.000Z
 ---
 
-**wayfinder** (Matt Pocock, `github.com/mattpocock/skills`) — installed 2026-09-11 with `npx --yes skills add https://github.com/mattpocock/skills --skill wayfinder -y` run in the MemoryCore root. Lives at `.agents/skills/wayfinder/` with a symlink `.claude/skills/wayfinder/` (both committed). Invoke with the Skill tool as `wayfinder`; it depends on the `grilling` and `domain-modeling` skills (already present) and, with no issue tracker configured, falls back to a local Markdown map. First use: charting the WhatsApp watcher rules map (see [[project_wa_read]]).
+**wayfinder** (Matt Pocock, `github.com/mattpocock/skills`) — installed 2026-09-11 with `npx --yes skills add https://github.com/mattpocock/skills --skill wayfinder -y` run in the MemoryCore root. Lives at `.agents/skills/wayfinder/` with a symlink `.claude/skills/wayfinder/` (both committed). **I cannot invoke it** (`disable-model-invocation: true`, verified 2026-11-06: the Skill tool refuses it): when a map is needed I ask miya to type `/mattpocock-skills:wayfinder` himself, never claim it unreachable without that ask. It depends on the `grilling` and `domain-modeling` skills (already present) and, with no issue tracker configured, falls back to a local Markdown map. First use: charting the WhatsApp watcher rules map (see [[project_wa_read]]).
 
 **Design and build tools, installed 2026-10-19 and 2026-10-20 by session app-samples on his word** (user scope, all enabled; they load in sessions started after the install). Which tool for which job, every time: `.claude/skills/project/SKILL.md` section 7.
 

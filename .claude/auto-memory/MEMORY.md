@@ -5,7 +5,6 @@
 > BEFORE MERGING, RENAMING OR DELETING A MEMORY: search the whole repo (tracked + untracked, underscore and hyphen spellings) for its name, keep or repoint every live referrer, then run the evals of every hook or skill that reads it. Show the result.
 
 ## Always on
-- [simple-fix-no-probe-no-local-test](feedback_simple_fix_no_probe_no_local_test.md) — 🚨 simple 80%+ additive fix he agreed to → commit + deploy straight away; no probe loggers, no local-test ask
 - [no-unrequested-fix-photo](feedback_no_unrequested_fix_photo.md) — 🚨 no fix photo or image unless miya asks; only a real after-fix screen, never a box drawn on BA's before-screenshot
 - [reply-shape](feedback_reply_separation_of_concerns.md) — 🚨 long table or list (over ~5 rows, over 2 tables) becomes ONE drawing, one thing at a time; numbered topics, 2-sentence default, shortest option, mark extras
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, approval text he types back in its own text block (never quoted in a table cell), full folder path every time, chat tables are normal Markdown, never a code block, plain punctuation, show it in chat; 🚨 ticket numbers as plain digits, never #286462 (dead link, cannot copy)
@@ -87,7 +86,7 @@
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
 
 ## Etanah facts
-- [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk
+- [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk; office by title type: GRN/PN/HSD = PTG 00, others = district PTD
 - [etanah-facts](reference_jasper_field_sources.md) — Jasper $F sources, kadar cukai duplicates, doc reset tool, DMS patch, #246512
 - [multi-ticket-sweep](reference_multi_ticket_sweep.md) — /sweep is built: skill + domain/sweep (audit Tool, run ledger); design history in five places, cite all five
 

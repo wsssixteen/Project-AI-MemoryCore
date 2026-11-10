@@ -280,3 +280,6 @@
 {"ts":"2026-11-05T16:24:54.584Z","qa":"QA-287811","kind":"wrong-fix","n":1,"verdict":"feature:predicate-box v6 (a rework owes the WRITERS TABLE whatever the confidence: every writer of the shown value, page-open callers included, listed before any fix)"}
 {"ts":"2026-11-05T16:24:55.030Z","qa":"QA-287811","kind":"wrong-fix","n":2,"verdict":"feature:quest-phase-gate v5 + ticket-gate re-open (a rework re-opens its block and binds the edit to the branch ticket; the callers of a hook point are rows of the writers table)"}
 {"ts":"2026-11-05T16:24:55.285Z","qa":"QA-287811","kind":"wrong-fix","n":3,"verdict":"feature:test-scenario-login-gate v6 (one test row per ISSUE row and per BA-named tugasan, each with its urusan and login; a fix is never called working on a code read)"}
+{"ts":"2026-11-06T07:03:42.798Z","qa":"QA-288622","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-06T07:05:19.453Z","qa":"QA-288622","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-06T07:06:42.078Z","qa":"QA-288622","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}

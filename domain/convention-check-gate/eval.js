@@ -112,6 +112,30 @@ const results = [];
   results.push({ name: '5. .md edit -> silent (exit 0, no output)', pass });
 }
 
+// ── Fixtures 6-8: v1.8 DELETE in a .sql patch (288625) ──
+const SQL_FILE = 'C:\\Tasks\\384. ES #288625\\2. Fix\\288625.sql';
+{
+  const t = writeTranscript('t6.txt', 'no token\n');
+  const r = runHook({ tool_name: 'Write', tool_input: { file_path: SQL_FILE, content: "DELETE FROM et_main.umm_aplikasi WHERE id_pengenalan = '02MH1579/2026';\n-- 1 row deleted\n" }, transcript_path: t });
+  const hso = r.out && r.out.hookSpecificOutput;
+  const pass = !!(hso && hso.permissionDecision === 'deny' && /DELETE found/.test(hso.permissionDecisionReason || '') && lastLogAction() === 'blocked-delete');
+  results.push({ name: '6. .sql with DELETE FROM -> deny (reason names DELETE)', pass });
+}
+{
+  const t = writeTranscript('t7.txt', 'no token\n');
+  const r = runHook({ tool_name: 'Write', tool_input: { file_path: SQL_FILE, content: "UPDATE et_main.umm_aplikasi SET hubungan_aplikasi_id = NULL WHERE id_pengenalan = '02MH1579/2026';\n-- 1 row updated\n" }, transcript_path: t });
+  const hso = r.out && r.out.hookSpecificOutput;
+  const pass = !(hso && hso.permissionDecision === 'deny');
+  results.push({ name: '7. .sql unlink UPDATE -> not denied', pass });
+}
+{
+  const t = writeTranscript('t8.txt', 'no token\n');
+  const r = runHook({ tool_name: 'Write', tool_input: { file_path: SQL_FILE, content: "-- never DELETE FROM a table here\nUPDATE et_main.umm_aplikasi SET hubungan_aplikasi_id = NULL WHERE aplikasi_id = 1;\n" }, transcript_path: t });
+  const hso = r.out && r.out.hookSpecificOutput;
+  const pass = !(hso && hso.permissionDecision === 'deny');
+  results.push({ name: '8. DELETE FROM only inside a -- comment -> not denied', pass });
+}
+
 // ── Report ──
 let failed = 0;
 for (const r of results) {
