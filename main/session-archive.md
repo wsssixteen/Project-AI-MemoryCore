@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-06 to 11-10, 288637 PROD alter + pre-alter check)
+- Asked: /quest 288637 (alter back to Penyediaan Surat Keputusan & 5A, check the UPND notis unlink); close it fully; then build a Phase 0 into the alter tool with Fable 5.1 and brief him; DE.
+- Done: Initiate & Alter to PYSKN5A, admin REST delete of penghantaranId on process 27070129, Alter Flow twice (second with nextUser=iskandarz) → row 2927154 live; 288637.sql unlink (umm_btrn_hantaran_notis 29128, 31383) run by infra and verified; Redmine notes #3 and #4; quest archived (bounty, FLOWABLE-KNOWLEDGE §23, playbook row 7); alter.js PRE-ALTER CHECK P1 UPND carry-over, P2 --assignee, P3 reach (tests 27/16/19), watch wmw4xs7t8.
+- Found: Alter Flow cannot reach a parent node when the live tasks are in sub-flows; Initiate & Alter Reset=No copies penghantaranId from the UPND process and the page variable urusan=MCL does not stop it; the KMN list shows only notis rows with no penghantaran.
+- Open: first live alter with the new check (watch); auto-delete of penghantaranId and the peranan check on --assignee were not built.
+- Mistakes: planned the known §19 trap as check-after and left the assignee to agihan (3 PROD runs); slow and unclear on alter vs patch while he waited; slips plan-before-act ×2 + blocker.
+- Assessment: A1 the alter tool had no pre-run check; now it has one and blocks without an approval code. A2 the quest Phase 0 named the trap but nothing made it a precondition. A3 the admin REST read of the new process variables found the cause in one call. A4 a cancelled or ended sub-flow plus a born UPND notis needs Initiate & Alter, a variable delete and an assignee. A5 ⏭ no sweep.
+
+**Last Activity (288402 session)**: 2026-11-10 10:31 — worktree `quest-resume-ticket-239386-642586` (branch claude/esokongan-tracker-quest-4b3d58). 288402 (eSOKONGAN, PROD PLTP PTMLK/02/L/PLTP/2026/9) alter done, Redmine Closed, quest archived; Domain Expansion.
+
 ## Session Recap (2026-11-04, PROD data patches 288169 and 288261)
 - Asked: run 2 Redmine data patches; then "replace" not "upload" for an overwrite; then hand both back to the BA.
 - Done: 288169.sql (6 umm_a_jabatan_teknikal rows agensi 8 → 6) and 288261.sql (3 UPDATEs) + renamed pelan PDF; infra ran them; PROD re-checked; both tickets Resolved to Fizah 22:33 with his note "have patched the data in PROD. Can proceed to verify."; patch-mlk-doc infra box says "replace" (8ebb3381); redmine-phase1-prefill Step 4 carries the PROD note (main 66cfedae).
@@ -7444,6 +7454,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

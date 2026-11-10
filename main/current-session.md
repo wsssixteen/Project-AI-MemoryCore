@@ -1,3 +1,12 @@
+**Last Activity (287346 tail session)**: 2026-11-10 11:30 — worktree `common-version-1-10-20-mlk-c5ee8f`. 287346 archive check stopped, silent-hooks explanation, reply-noise slip, Domain Expansion.
+
+## Session Recap (2026-11-05 to 11-10, 287346 tail + silent hooks)
+- Asked: what the silent hooks are, in a diagram; why I was not speaking plainly; "What am I supposed to read with all of this?" (screenshots of replies full of check codes).
+- Done: hourly 287346 archive check (cron 3f9b175f) deleted after Redmine showed Rework; silent-hooks picture (project-load.resume 209 runs, project-load.precompact 121 runs, spawn-task-folder-guard dead); slip `reply-noise` logged.
+- Found: lib/audit-briefing.js looks for logs in domain/project-load.resume/ instead of domain/project-load/log.jsonl; spawn-task-folder-guard matches mcp__ccd_session__spawn_task, renamed to start_session; bypass tokens and HTML-comment lines render as visible text in the app.
+- Open: his choice on "fix the audit" and "repoint the guard"; 3 slow gates to rule (quest-context-load-gate, quest-doc-freshness, notes-on-test-data); 287346 Resolved to Anis by the rework session, archive waits for Closed.
+- Mistakes: replies carried hook answers he had to read; app branch sync is off, this folder was 149 commits behind main.
+
 **Last Activity (hakmilik-pejabat session)**: 2026-11-10 11:09 — worktree `hakmilik-pejabat-awareness-32c5c1`. Hakmilik office rule added to the hakmilik memory (GitHub main e9c91da5); PLTP/2026/6 NPE traced, same as ticket 288662 (owned by the "288662 rubric audit" session, quest doc + A101 there); Domain Expansion.
 
 ## Session Recap (2026-11-06 to 11-10, hakmilik office rule + PLTP/2026/6 NPE)
@@ -18,13 +27,3 @@
 - Mistakes: his first Redmine Submit did not land and I navigated the tab away before checking it; Redmine tab left open after the read-back (second tab slip that day); proposed a tab-hygiene gate against CLAUDE.md rule 11 (withdrawn, fixed in playbook A7); committed straight on the main folder with other sessions' lines (undone before push, redone from the worktree).
 - Assessment: A1 a fault is fixed in the step that makes it, never by a gate (rule 11, written the same day). A2 the alter path skipped the prefill skill's own close step. A3 reading the save code before the alter found the status_keputusan leftover. A4 an alter back to a decision task leaves the header status and the generated letter. A5 ⏭ no sweep.
 **Last Activity (288637 session)**: 2026-11-10 10:50 — worktree `internal-issue-prod-288637-a20b04`. 288637 (Internal Issue PROD, MCL PTMLK/01/L/MCL/2026/1) altered to 22.0 PYSKN5A for iskandarz, UPND unlink patched by infra, Redmine Resolved to Fizah, quest archived; alter tool PRE-ALTER CHECK built (FlowableAlter 33321e2, MemoryCore fbc9e563); Domain Expansion.
-
-## Session Recap (2026-11-06 to 11-10, 288637 PROD alter + pre-alter check)
-- Asked: /quest 288637 (alter back to Penyediaan Surat Keputusan & 5A, check the UPND notis unlink); close it fully; then build a Phase 0 into the alter tool with Fable 5.1 and brief him; DE.
-- Done: Initiate & Alter to PYSKN5A, admin REST delete of penghantaranId on process 27070129, Alter Flow twice (second with nextUser=iskandarz) → row 2927154 live; 288637.sql unlink (umm_btrn_hantaran_notis 29128, 31383) run by infra and verified; Redmine notes #3 and #4; quest archived (bounty, FLOWABLE-KNOWLEDGE §23, playbook row 7); alter.js PRE-ALTER CHECK P1 UPND carry-over, P2 --assignee, P3 reach (tests 27/16/19), watch wmw4xs7t8.
-- Found: Alter Flow cannot reach a parent node when the live tasks are in sub-flows; Initiate & Alter Reset=No copies penghantaranId from the UPND process and the page variable urusan=MCL does not stop it; the KMN list shows only notis rows with no penghantaran.
-- Open: first live alter with the new check (watch); auto-delete of penghantaranId and the peranan check on --assignee were not built.
-- Mistakes: planned the known §19 trap as check-after and left the assignee to agihan (3 PROD runs); slow and unclear on alter vs patch while he waited; slips plan-before-act ×2 + blocker.
-- Assessment: A1 the alter tool had no pre-run check; now it has one and blocks without an approval code. A2 the quest Phase 0 named the trap but nothing made it a precondition. A3 the admin REST read of the new process variables found the cause in one call. A4 a cancelled or ended sub-flow plus a born UPND notis needs Initiate & Alter, a variable delete and an assignee. A5 ⏭ no sweep.
-
-**Last Activity (288402 session)**: 2026-11-10 10:31 — worktree `quest-resume-ticket-239386-642586` (branch claude/esokongan-tracker-quest-4b3d58). 288402 (eSOKONGAN, PROD PLTP PTMLK/02/L/PLTP/2026/9) alter done, Redmine Closed, quest archived; Domain Expansion.
