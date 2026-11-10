@@ -4,6 +4,28 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-08, Masterline look modes, delegated)
+- Asked (orchestrator, his rulings row 44 and 2026-10-20): a Look switch with 1 Operations console, 2 Service ledger, 3 Dispatch board, 4 Mix on every screen; remove the Claude look from the base; impeccable-checked; prove with flows, click walk, screenshots; never stop to ask.
+- Done: `app-samples\prototype\` v2 in the main-checkout project folder (app.css neutral token base, new looks.css, look switch + `?look=` `?layout=`, PRODUCT.md); COMPARE.md v2; DECISIONS rows 46 to 54; VERSIONS row; START.md Main app row; report `reports\look-modes.md`. Proof: 40/40 flows per look desk + phone; walk 14,928 clicks 0 errors; impeccable detector 0 over 272 pages; taste-skill 0 FAIL at 1366/768/375; impeccable critique dual-agent (A about 21/40).
+- Found: impeccable's `.cmd` launcher splits URLs at `&` (call `~\.impeccable\bin\0.1.15\impeccable.exe`); its monotonous-spacing rule reads inline `style=` values; taste-skill inspect takes a file, not a URL with a query.
+- Open: his pick of look (or keep the switch) and whether engineers and clients see the switches; layout and stack picks still open.
+- Mistakes: my proof harness left one headless-browser profile per run in Temp (142, 6.2 GB) and filled drive C: to 0 MB; Edge stopped launching. Fixed (deleted, harness now cleans up); `core/slips.js` blocker rows.
+- Assessment: A1 a proof harness needs a disk budget like a server (Rule 7). A2 ⏭ no quest. A3 bisecting a compiled detector by hiding parts found the cause in two runs. A4 ⏭ no etanah work. A5 ⏭ no sweep.
+
+**Last Activity**: 2026-11-06 00:45 — worktree `cool-margulis-5bb326` (branch claude/redmine-287346-audit-implement-a86f35), 287346 rework 1 shipped and Phase 1 closed, template-scenario check 6 (tag sources) built and landed, Domain Expansion.
+
+## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
+- Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
+- Done: c2364d2bde on mlk/esokongan/287346, int-env a32fb6abab; marked paper in 3. Rework; Redmine 287346 Resolved to Nurhafizah 05/11 17:17; wrong-fix rows 1 and 2 ruled; template-scenario check 6 (tag-sources.js + tag-sources.json, eval 58/58) on GitHub main c0177357, main folder d12719a8; quest Phase 1 closed (WAIT for Redmine Closed).
+- Found: Datuk Sabrina's blank signature on MLIT = her newest signature file (LAIN-36582925) returns no bytes from MLIT DMS, NO_SIGN fallback; PROD MCL luas_dipohon empty 1718 of 3551; Git Bash rewrites "--case empty|PTMLK/..." into a Windows path.
+- Open: BA verifies 287346 → Phase 2; Sabrina signature re-upload on MLIT (BA side); MCL tags in tag-sources.json still 33 unmapped (filled ticket by ticket); main folder diverged from GitHub main (landed by hand).
+- Mistakes: added a legend and labels to the marked paper he never asked for (memory rule 841ec441); cycle 1 tested one permohonan with luas filled.
+- Assessment: A1 the change route's land step needs a by-hand path when the main folder has diverged. A2 template hand-back now asks every printed tag for its source. A3 doc-sim + PROD count proved the empty case offline. A4 a test permohonan proves nothing about a column it happens to have filled. A5 ⏭ no sweep.
+
+**Last Activity (288169 session)**: 2026-11-06 00:15 — worktree `jovial-kepler-a07ba6`. ADHOC-PLTP-2026-5 (PROD PLTP/2026/8 Ulasan JT: JKR twice, MPAG gone) → cause: agency record 8 (JKRNM) renamed to MPAG 21/07 16:58 then back 13/08, so MPAG picks saved as agensi 8; promoted to ticket 288169 (TSO Shafiq); patch 6 rows agensi 8→6 run on PROD and verified; 288169 saved Phase 1 only (Redmine In Progress 20%), adhoc archived (audit 31/31). Open: miya writes the Redmine resolve note; Phase 2 archive when Redmine shows Closed; 12 other rows (PT/PTS same window) still agensi 8, no ticket.
+
+**Last Activity**: 2026-11-06 00:35 — worktree `penang-common-null-error-219adf` (branch claude/redmine-ticket-sweep-plan-369375). 287811 audit rounds 1 and 2 BUILT and landed: GitHub main 49d59176 · main folder 0df9eb5c (round 1: 803d46f2 / 3d0c9e13). Round 2 = P5 ticket-close-block multi-commit refusal 11/11 · P6 login-gate v6 ISSUE rows 25/25 + deploy eval 56/56 · P7 next-steps-shape v6 62/62 · P8 design-consult-gate quest-turn rider 55/55 · P9 memory line; 287811 wrong-fix verdicts 1-3 written; qa_doc saved (block status=delegated, save-quest KEEP-DELEGATED); the corrected commit-reference note is FILLED in his Chrome Edit form of 287811, NOT submitted (his "post it"). Open: audit items 3, 4, 7, 10; harness fault (reply text with a RULE-PLACEMENT line stored only as request blob, todo row). Domain Expansion run.
+
 ## Session Recap (2026-11-06, 287811 audit rounds 1 and 2)
 - Asked: do not stop until every goal is met and we can safely DE (after: pinpoint WHERE/HOW/WHY/WHAT so the 287811 mistakes cannot recur; clean the branch; ban myself).
 - Done: nine routes built in two rounds, ten evals green, landed twice; qa_doc Branches row corrected to f2ebd118f7; wrong-fix verdicts; change maps sent; change-watch rows wmw3mjave and wmw3rl96e; Redmine note staged, not sent.
@@ -8218,6 +8240,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
