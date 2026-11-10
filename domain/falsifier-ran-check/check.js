@@ -43,6 +43,8 @@ const PLAIN_WAIVE_RX = new RegExp([
   String.raw`\b(?:test(?:ing|ed)?|check|verify|try)\b[^.?!\n]{0,40}?\b(?:on|in|at)\s+(?:the\s+)?(?:server|internal|staging|stag|mlit|int[- ]env|stag[- ]env|stg\d?)\b`,
   String.raw`\b(?:skip|skipping|without|no need (?:for|to do|to)|don'?t need|do not need)\b[^.?!\n]{0,20}?\blocal(?:ly)?\s*test(?:ing|s)?\b`,
   String.raw`\bno\s+local\s+test(?:ing|s)?\b`,
+  // "I'll just deploy and test" (2026-11-06 per miya, 287164: his /goal said it, the check did not know it)
+  String.raw`\bdeploy(?:ing)?\s+(?:it\s+)?(?:and|then|&)\s+test\b`,
 ].join('|'), 'gi');
 const PLAIN_NEGATE_RX = /\b(?:don'?t|do not|never|not|cannot|can'?t|won'?t|jangan|tak|before|after|until|unless|if|whether)\b[^.?!\n]{0,30}$/i;
 const TICKET_NUM_RX = /(?<![\d/])\d{5,6}(?![\d/])/g;
