@@ -50,8 +50,9 @@ PRODUCER: workflow=<name> · step=<n> · output=<what he corrected> · generator
 - The fix lands IN that step. A rule written anywhere else (a memory, CLAUDE.md, another skill) is not the fix.
 - When a generator or check exists, the step CALLS it; the step never restates what the generator prints.
 - A second copy of a shape (a note format, a message template) in any other file is the slip: replace it with a pointer to the producing step or the generator.
+- A NEW rule, memory or gate is written only with a one-line reason the edit to the producing step cannot hold it (`EDIT-CANNOT-HOLD: <why>`), and it names the part it replaces or `none: <the reason he gave>`. No reason, no new part: edit the step.
 
-**Banned**: a fix with no `PRODUCER:` line · a fix that lands in a file the producing step never reads · restating a generator's output shape beside the call.
+**Banned**: a fix with no `PRODUCER:` line · a fix that lands in a file the producing step never reads · restating a generator's output shape beside the call · a new rule, memory or gate with no `EDIT-CANNOT-HOLD:` line.
 
 ### Step 2 — Skill inventory check
 
@@ -299,7 +300,7 @@ Format: appended-only entries + running-count table at top (per Step 5 refined 2
 
 *Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `system/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*
 
-*Version: 4 | Last updated: 2026-11-05 — Step 2.0 added per みや ("others I agree", Fable 5.1 audit): name the producing step with a `PRODUCER:` line; the fix lands in that step and calls its generator or check; a second copy of a shape is the slip. Root cause: his rule "a correction lands in the step that produces the output" was enforced only on feedback_ memory writes (`domain/memory-write-gate`), never when a correction was answered by editing a skill; the Redmine handover note shape sat in 8 places. Spec-preservation: Steps 1 to 6 untouched; additive. Paired: `auto-skill-trigger.js` += `unacceptable`, `I thought I('ve| have)? asked you`, `why (is|are) … not loaded`.*
+*Version: 5 | Last updated: 2026-11-10 — Step 2.0 += one clause per miya ("why not all at once?", over-complexity audit way 7): a new rule, memory or gate only with an `EDIT-CANNOT-HOLD:` line and the part it replaces; additive, nothing else changed. Version 4 | 2026-11-05 — Step 2.0 added per みや ("others I agree", Fable 5.1 audit): name the producing step with a `PRODUCER:` line; the fix lands in that step and calls its generator or check; a second copy of a shape is the slip. Root cause: his rule "a correction lands in the step that produces the output" was enforced only on feedback_ memory writes (`domain/memory-write-gate`), never when a correction was answered by editing a skill; the Redmine handover note shape sat in 8 places. Spec-preservation: Steps 1 to 6 untouched; additive. Paired: `auto-skill-trigger.js` += `unacceptable`, `I thought I('ve| have)? asked you`, `why (is|are) … not loaded`.*
 
 *Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
 

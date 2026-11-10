@@ -1,22 +1,16 @@
 # turn-ledger
 
 symptom: 2026-09-04 miya: 'you still haven't answered the monitoring part' — no ledger can say which quest/phase a block served, whether it was true or false, or what a turn cost (reply-log = rhythm only)
-goal: one wide row per user turn in system/telemetry/turns.jsonl carrying tool calls, hooks fired, true/false blocks, bypasses, user signal and quest phase, so gate rulings and cost per phase are read from data
-goal_signal: after a Stop, turns.jsonl has a row whose turn_id equals current-turn-<sid>.json turn_id
+goal: a feature that blocked a turn is judged against its goal_signal_regex without model input, and the judgment is a row in that feature's goal-log.jsonl
+goal_signal: after a Stop that blocked a feature with a goal_signal_regex, that feature's goal-log.jsonl has a row for the turn
 retention: keep
-footprint: per Stop: the hook's own node start, one read of the transcript tail for that turn, one appended row in system/telemetry/turns.jsonl; registered on Stop only, so nothing at boot or per prompt
+footprint: none: a library required in-process by domain/turn-log's Stop hook; it registers nothing and runs no process of its own
+boundary: covers the bypass-token parse, the user signal, the goal lens and the wrong-fix advisory of one turn · never writes a turns file, a ledger or a pending queue · stops when a README has no goal (no verdict is invented)
 
-**What fires when**: Stop — every Stop (not stop_hook_active) — reads the transcript tail for the current turn window
+**2026-11-10 (turn-log, stage 8 of the over-complexity audit)**: the WRITER moved to domain/turn-log. The Stop hook this folder once held (`turn-ledger.check.hook.js`) is now `turn-ledger.js`, a library with no entry point: `system/telemetry/turns.jsonl`, `domain/turn-ledger/log.jsonl` and the `goal-lens-pending.jsonl` parking are no longer written. What stayed here is judgment, not logging: `parseBypasses`, `userSignal`, `goalLens`, `advisoryLines`.
 
-**Contract**: append ONE turns.jsonl row; absorb reply-log fields; emit a goal-lens prompt for up to 3 features that BLOCKED this turn and lack a mechanical goal_signal
+**Layer choice (Rule 7)**: library. Its caller is one Stop hook; a second registration would read the transcript twice.
 
-**Layer choice (Rule 7)**: hook-only — the finished turn is observable only at Stop; zero model judgment in the writer. The judgment half (goal-lens notes) is a CLI, `lib/goal-lens.js`, not a skill.
+**state-scoped**: no, state-agnostic.
 
-**Trigger moment (Rule 8)**: Stop is the only moment the whole turn (tools + hooks + reply) exists; it is also the moment reply-log already fired, whose fields this absorbs — net registrations: 0 (reply-log unregistered at birth).
-
-**Observability**: every fire appends ONE wide row to `system/telemetry/turns.jsonl` (schema plan §M.3: turn_id · session_id · opened/closed · qa · phase · tool_calls · tool_names · assistant_msgs · reply_chars · hooks_fired · hook_ms · blocks[] · bypasses[{token,hook,fp,reason}] · suppressed · user_signal · gap_since_prev_minutes) plus a one-line summary to `domain/turn-ledger/log.jsonl`. Known limit: Stop-sibling hook rows may not yet exist when the row is written — `lib/turn-report.js` recomputes hook stats by joining `hook-fires*.jsonl` on turn_id, so the join is authoritative, the row's hooks_fired is a floor. Goal-lens prompts (features that BLOCKED this turn, cap 3) are emitted as Stop advisory context and parked in `goal-lens-pending.jsonl` until `lib/goal-lens.js note` answers them; `goal_signal_regex` features are judged mechanically into `domain/<feature>/goal-log.jsonl` with no model input.
-
-**state-scoped**: no, state-agnostic (`qa` is data; no state literal).
-
-**Rollback**: see NUKE-MARKER.md — remove the Stop registration, restore the `reply-log.js` Stop entry (`node "${CLAUDE_PROJECT_DIR}\lib\hook-runtime.js" --wrap "${CLAUDE_PROJECT_DIR}\.claude\hooks
-eply-log.js" Stop`), delete the folder; `lib/turn-context.js` fields in hook-fires rows are additive and may stay.
+**Rollback**: see NUKE-MARKER.md. `git mv domain/turn-ledger/turn-ledger.js domain/turn-ledger/turn-ledger.check.hook.js` and restore its Stop registration; the old logs on disk are untouched.

@@ -117,7 +117,7 @@ Pairs with [[feedback_do_dont_ask_answer_literal]] and the `deploy` skill §4. A
 
 ## Merged 2026-10-04: feedback_probe_builds_local_only (was feedback_probe_builds_local_only.md)
 
-> 🚨 PROBE / logger builds are tested on miya's LOCAL JBoss only — never merged or pushed to int-env / stag-env / master / release; enforced by domain/probe-local-only-gate (PreToolUse Bash+PowerShell). Rule stands 'for now', may change later.
+> 🚨 PROBE / logger builds are tested on miya's LOCAL JBoss only — never merged or pushed to int-env / stag-env / master / release; the probe-local-only-gate hook that enforced this was retired 2026-11-10 (0 blocks in 86,700 runs); the rule stands. Rule stands 'for now', may change later.
 
 🚨 When a diagnosis needs runtime loggers (a `QA<num>-PROBE` build), the probe is tested **locally** on みや's JBoss (`E:\Dev\jboss-7.4-plp-melaka`, local `etanahDS` → `et_main_stg2`, so the same staging data works). It is NEVER merged or pushed to `mlk/int-env`, `mlk/stag-env`, `mlk/master`, `mlk/release/*`, `mlk/mlit` or `prk/*`.
 
@@ -126,7 +126,7 @@ Pairs with [[feedback_do_dont_ask_answer_literal]] and the `deploy` skill §4. A
 **How to apply**:
 - Write the probe on the ticket branch in the work clone (`E:\Dev\etanah-work\etanah-pelupusan`), compile there, export a patch (`E:\Dev\etanah-work\<ticket>-local.patch`) and apply it to みや's local `mlk/master` working tree, uncommitted.
 - He builds + reproduces; read `E:\Dev\jboss-7.4-plp-melaka\standalone\log\server.log` for the `QA…-PROBE` lines.
-- The fix commit that follows carries NO probe lines. `domain/probe-local-only-gate` blocks any merge/push of a marker-carrying ref into a protected branch; bypass `[skip-probe-gate: <reason>]` only on みや's explicit word.
+- The fix commit that follows carries NO probe lines. Never merge or push a marker-carrying ref into a protected branch (the blocking hook `probe-local-only-gate` was retired 2026-11-10).
 - "For now": if みや later moves probe testing back to an env, retire the gate and this rule together.
 
 Related: [[feedback_etanah_git_separate_clone]] (write-side git in the clone, never his tree), (merged above).

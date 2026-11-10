@@ -18,7 +18,7 @@ The **ACT** side of the adhoc register. The `adhoc-register` hook DETECTS open r
 
 | Door | Trigger | Command | Effect |
 |---|---|---|---|
-| **A — promote** | a new/existing ticket's unique key matches a row | `adhoc-lifecycle.js promote --row A18 --ticket QA-1234 --slug <dir>` | Status → `TICKETED → #`, qa_doc → `archive\` |
+| **A — promote** | a new/existing ticket's unique key matches a row | `adhoc-lifecycle.js promote --row A18 --ticket QA-1234 --slug <dir>` | Status → `TICKETED → #`, adhoc dir → `archive\`, the adhoc doc copied to `active\<QA>\<QA>.md` and the QA block's `qa_doc=` repointed (2026-11-10, 288533) |
 | **B — weekly sweep** | first boot of a new ISO week (hook) | `adhoc-lifecycle.js sweep` | lists terminal-status rows ripe for archive (propose-only) |
 | **C — manual archive** | you say "another module's — archive it" | `adhoc-lifecycle.js archive --row A18 --reason "MP handling" --slug <dir>` | Status → `OWNED-ELSEWHERE`, qa_doc → `archive\` |
 | reverse | any time | `adhoc-lifecycle.js unarchive --row A18 --slug <dir>` | restores dir + Status |

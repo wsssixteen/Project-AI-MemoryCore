@@ -315,7 +315,7 @@ const PROBE_REASON = [
   '   | # | Candidate writer (full address) | Probe placed? | If silent, what it proves |',
   '   At least 3 rows (every path that could produce the value, not only the favourite), and one row marked FALLBACK:',
   '   the outermost probe that still fires when none of the expected paths run, so a failed test still tells something.',
-  '   Probes stay local and uncommitted (probe-local-only-gate) — do not commit or merge them.',
+  '   Probes stay local and uncommitted — do not commit or merge them.',
   '   Probes are for an uncertain diagnosis: a fix confidence stated at eighty percent or more in the reply passes with no probes.',
   '   No runtime path to probe? Add [skip-probe-matrix: <reason>] to the reply. A size reason (small / trivial / simple / one-line) is refused.',
 ];

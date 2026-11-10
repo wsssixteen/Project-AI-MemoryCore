@@ -6,6 +6,11 @@
  * USAGE:
  *   node core/slips.js add --category <c> [--qa <QA-n>] [--guard-expected <name>]
  *        [--guard-fired true|false] [--evidence <link/path>] [--action <what>] [--caught-by miya|self|gate]
+ *        [--his-words "<verbatim>"] [--repeat-of <event_id of the earlier row>] [--rule-expected <rule or gate that should have held>]
+ *        [--part <hook|skill|file the slip is about>] [--turn-id <id>] [--session <id>]
+ *   Turn context (2026-11-10, domain/turn-log): every row carries event_id, turn_id and session_id (session id = --session, else
+ *   CLAUDE_CODE_SESSION_ID, else the newest current-turn stamp of the last 6 hours); a miya-caught row with no --his-words takes
+ *   his words of that turn from the transcript, verbatim, and says so in his_words_src.
  *   node core/slips.js dashboard        → regenerates system/slip-dashboard.md
  */
 'use strict';
@@ -21,6 +26,46 @@ function arg(name) { const i = process.argv.indexOf('--' + name); return i > 0 ?
 function readJsonl(f) {
   try { return fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean); }
   catch (_) { return []; }
+}
+
+// Which turn is this row written in? The stamp lib/turn-context.js keeps per session (domain/turn-log joins on turn_id).
+function newestStamp() {
+  const dir = path.join(ROOT, 'system', 'telemetry');
+  let best = null;
+  try {
+    for (const n of fs.readdirSync(dir)) {
+      if (!/^current-turn-[^.]*\.json$/.test(n)) continue;
+      const m = fs.statSync(path.join(dir, n)).mtimeMs;
+      if (Date.now() - m < 6 * 3600000 && (!best || m > best.m)) best = { n, m };
+    }
+    if (best) return JSON.parse(fs.readFileSync(path.join(dir, best.n), 'utf8'));
+  } catch (_) {}
+  return null;
+}
+function turnContext() {
+  const base = { event_id: Date.now().toString(36) + '-' + require('crypto').randomBytes(5).toString('hex'), turn_id: arg('turn-id') || null, session_id: arg('session') || process.env.CLAUDE_CODE_SESSION_ID || null, session_src: null, _stamp: null };
+  let stamp = null;
+  try { stamp = base.session_id ? require(path.join(ROOT, 'lib', 'turn-context.js')).readStamp(base.session_id) : null; } catch (_) {}
+  if (base.session_id) base.session_src = arg('session') ? 'flag' : 'env';
+  if (!stamp && !base.session_id) { stamp = newestStamp(); if (stamp) { base.session_id = stamp.session_id; base.session_src = 'newest-stamp'; } }
+  if (stamp && !base.turn_id) base.turn_id = stamp.turn_id;
+  base._stamp = stamp;
+  return base;
+}
+// his_words: --his-words as typed; else, for a row he caught, his words of this turn out of the transcript (lib/his-words.js)
+function hisWordsFor(row) {
+  const stamp = row._stamp; delete row._stamp;
+  const given = arg('his-words');
+  if (given) return { his_words: given.slice(0, 2000), his_words_src: 'flag' };
+  if (row.caught_by === 'miya' && stamp && stamp.transcript_path) {
+    try {
+      const hw = require(path.join(ROOT, 'lib', 'his-words.js'));
+      const head = String(stamp.prompt_head || '').replace(/\s+/g, ' ').trim();
+      const m = hw.hisMessages(stamp.transcript_path, { limit: 6 }).find(x => head && String(x.text).replace(/\s+/g, ' ').trim().startsWith(head));
+      if (m) return { his_words: m.text.slice(0, 2000), his_words_src: 'turn-ask' };
+    } catch (_) {}
+  }
+  return { his_words: null, his_words_src: null };
 }
 
 const cmd = process.argv[2];
@@ -40,7 +85,13 @@ if (cmd === 'add') {
     situation: arg('situation') || null,
     action: arg('action') || null,
     caught_by: arg('caught-by') || null,
+    // 2026-11-10 (domain/turn-log): tie the row to the turn that wrote it, with his words verbatim
+    ...turnContext(),
+    rule_expected: arg('rule-expected') || null,
+    repeat_of: arg('repeat-of') || null,
+    part: arg('part') || null,
   };
+  Object.assign(row, hisWordsFor(row));
   if (!row.category) { console.error('slips: --category required'); process.exit(2); }
   fs.appendFileSync(FILE, JSON.stringify(row) + '\n');
   // keep legacy slip-counts.jsonl fed too (other tooling reads it)

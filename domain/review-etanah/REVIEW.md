@@ -19,8 +19,7 @@ Style / naming / formatting = **Nit at most**, usually don't report.
 
 ## Always check (etanah non-negotiables)
 
-- **Working-analog first**: new code copies the nearest WORKING sibling urusan/tugasan/bean/template — this is a mature system, the pattern exists. Flag invented code where a sibling branch idiom exists (`URS_X.equals(kodUrusan)` appears 16× in `PelupusanWordCCMethodConstant.java`).
-- **Smallest change**: touches only what the fix needs; matches THIS system's programmers' convention, not generic framework idioms.
+- **Working-analog first + smallest change** (CLAUDE.md §8; size rule: Disposition rule 11): flag invented code where a sibling branch idiom exists (`URS_X.equals(kodUrusan)` appears 16× in `PelupusanWordCCMethodConstant.java`); flag any line the fix does not need.
 - **Name by purpose**, reuse the established/analog name; no screen/context suffixes (`onChangeKategoriTujuanMigrasi` ❌ — "Migrasi" is the screen, not the behaviour).
 - **Module scope**: the fix is in the module that actually renders the BA's page (`MLK_TKL_*` = etanah-teknikal, NOT deployed locally — a pelupusan "fix" can't fire there).
 - **Other states excluded**: the diff touches only the ticket's own state (a Melaka fix touches no TRG code path; a Terengganu fix lives on `trg/*` and touches no MLK one).

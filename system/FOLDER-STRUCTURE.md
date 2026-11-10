@@ -20,7 +20,7 @@
 | `Feature/` | legacy-keep | pre-forge systems still boot-loaded: Domain-Expansion · Session-Briefing · Observation · Time-based · Forge (mostly tombstoned 2026-08-16) | Ruri (protocol edits only) |
 | `daily-diary/` | canonical | day archive (`current/<date>.md` + format) | Ruri (DE step 4) |
 | `projects/` | canonical (gitignored) | per-ticket quest docs (`coding-projects/active/QA-*/`) · **project folders** (`coding-projects/active/<Name>/` with `project.json` + `PROJECT.md` `VERSIONS.md` `ARCHITECTURE.md` `PROOFS.md` `ROADMAP.md`; today: PymTime · DawahMap · Eisenhower · mas-ergonomics-animation) · **etanah-knowledge/<state>/** (untracked-confidential) · codemap · archive | Ruri |
-| `etanah_atlas/` | canonical | the Atlas build (per-state HTML + config) — a project that ships from this repo; guarded by atlas-ship-gate / atlas-full-check | Ruri |
+| `etanah_atlas/` | canonical | the Atlas build (per-state HTML + config) — a project that ships from this repo; guarded by atlas-full-check | Ruri |
 | `library-items/` | canonical | external reference material we re-read (claude-code-best-practices · security) — read by evolution-protocol + 4 hooks | Ruri |
 | `README.md` | canonical | public repo description | Ruri |
 | `RURI-NOTEBOOK.md` · `MIYA-NOTEBOOK.md` · `AGENT-ARCHITECTURE.md` | canonical (docs) | who Ruri is · how みや drives the system · operator's guide (AGENT-ARCHITECTURE supersedes MIYA-NOTEBOOK — tombstone pending) | Ruri |

@@ -15,7 +15,7 @@
 | T4 | Implicit (no-FK) links are REAL relations: detect by name-match, verify by orphan-count query, show dashed, save to DATABASE.md §10b | 2026-08-22 initial goal ("PLEASE PLEASE PLEASE TAKE NOTE") |
 | T5 | Muting/dimming must be TRUE: an urusan filter includes the workflow spine (umm_aplikasi · ind_ursn · umm_a_tgsn · ind_tgsn · umm_a_pihak_bkptg) — "MCL has no ind_ursn" class of lie is banned | 2026-08-27 |
 | T6 | A checker that silently SKIPs counts as NO check — geometry/behavior gates must always run (smoke T6a/T6b) | 2026-08-27 overlap claim |
-| T7 | Screenshots shared as proof after every UI change; ship_check (smoke + real render + per-tab barcode) must PASS before any session stops (atlas-ship-gate) | 2026-08-22 |
+| T7 | Screenshots shared as proof after every UI change; ship_check (smoke + real render + per-tab barcode) must PASS before any session stops (the atlas-ship-gate hook was retired 2026-11-10; run it by hand) | 2026-08-22 |
 
 ## 2. Design rules (NO BLOAT)
 

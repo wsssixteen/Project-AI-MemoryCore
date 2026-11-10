@@ -30,7 +30,9 @@ fs.writeFileSync(path.join(regDir, 'ADHOC-REGISTER.md'), `# ADHOC-REGISTER — M
 | A20 | 2026-08-02 | miya | some latent thing | latent | z.md | \`LATENT\` |
 `);
 fs.mkdirSync(path.join(actDir, 'ADHOC-ppjk-warta-single-record'), { recursive: true });
-fs.writeFileSync(path.join(actDir, 'ADHOC-ppjk-warta-single-record', 'doc.md'), '# doc');
+fs.writeFileSync(path.join(actDir, 'ADHOC-ppjk-warta-single-record', 'ADHOC-ppjk-warta-single-record.md'), '# doc\n\nfinding: ind_rizab 2 rows');
+fs.mkdirSync(path.join(TMP, 'quest'), { recursive: true });
+fs.writeFileSync(path.join(TMP, 'quest', 'active.txt'), 'qa=QA-1234\nstatus=active\nqa_doc=projects/coding-projects/archive/ADHOC-ppjk-warta-single-record/ADHOC-ppjk-warta-single-record.md\n\nqa=QA-5\nstatus=hold\nqa_doc=x\n');
 
 function run(args) {
   try { return { out: execFileSync('node', [CLI, ...args, '--root', TMP], { encoding: 'utf8' }), code: 0 }; }
@@ -52,6 +54,10 @@ r = run(['promote', '--row', 'A18', '--ticket', 'QA-1234', '--slug', 'ADHOC-ppjk
 ok('F4 promote exit 0', r.code === 0);
 ok('F4 register shows TICKETED → QA-1234 on A18', /A18 \|.*TICKETED → QA-1234/.test(reg()));
 ok('F4 dir moved active→archive', fs.existsSync(path.join(arcDir, 'ADHOC-ppjk-warta-single-record')) && !fs.existsSync(path.join(actDir, 'ADHOC-ppjk-warta-single-record')));
+const qdoc = path.join(actDir, 'QA-1234', 'QA-1234.md');
+ok('F4b ticket quest doc created under its own name with the adhoc content', fs.existsSync(qdoc) && /ind_rizab 2 rows/.test(fs.readFileSync(qdoc, 'utf8')));
+const act = fs.readFileSync(path.join(TMP, 'quest', 'active.txt'), 'utf8');
+ok('F4c active.txt QA-1234 qa_doc repointed, QA-5 untouched', /qa=QA-1234\nstatus=active\nqa_doc=projects\/coding-projects\/active\/QA-1234\/QA-1234\.md/.test(act) && /qa=QA-5\nstatus=hold\nqa_doc=x/.test(act));
 
 r = run(['unarchive', '--row', 'A18', '--slug', 'ADHOC-ppjk-warta-single-record', '--status', 'OPEN']);
 ok('F5 unarchive restores dir', fs.existsSync(path.join(actDir, 'ADHOC-ppjk-warta-single-record')));

@@ -14,7 +14,8 @@
 //   Fix files: A.java, B.xhtml
 //   | # | design | falsifier | cheapest test | status |
 //   status = OPEN | RAN: <evidence> | BROKE: <evidence> → row N | ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD
-//            | SUPERSEDED: row N
+//            | SUPERSEDED: row N | RAN: n/a — <reason> | OPEN: after deploy (standing: path / env only; passes commit + cli, never the BA note)
+// Every ledger carries five standing rows: standing: path · siblings · render · given · env (2026-11-10).
 // Callers: compile-gate (etanah commit) · close-phase Phase 1 · ticket-close-block --ba.
 // The local-test override is read from miya's OWN messages through lib/his-words.js (system-rules Rule 8, 2026-10-29):
 // his plain words ("test on server", "skip local testing") or [risk-ok: <num> <reason>], up to 8 of his messages back,
@@ -31,6 +32,7 @@ const ACTIVE = process.env.FALSIFIER_ACTIVE || path.join(ROOT, 'quest', 'active.
 const LOG = process.env.FALSIFIER_LOG || path.join(__dirname, 'log.jsonl');
 const OVERRIDES = process.env.FALSIFIER_OVERRIDES || path.join(__dirname, 'overrides.jsonl');
 const OVERRIDE_HOURS = 72;
+const STANDING = ['path', 'siblings', 'render', 'given', 'env'];
 
 const LEDGER_HEAD = /^(#{1,4})\s*Falsifier ledger\b.*$/im;
 const RUBRIC_HEAD = /^#{1,4}[^\n]*\bRubric\b|═══\s*RUBRIC\b/im;
@@ -128,7 +130,7 @@ function statusKind(row, rows) {
   return { kind: 'bad', why: 'status must start with OPEN / RAN: / BROKE: / ACCEPTED-RISK: / SUPERSEDED: row N' };
 }
 
-// Pure evaluation of one doc. opts: { needLedger, staged: [paths]|null, merge: bool }
+// Pure evaluation of one doc. opts: { needLedger, staged: [paths]|null, merge: bool, ctx: 'cli'|'commit'|'note', standing: bool }
 function evaluate(text, opts) {
   const o = opts || {};
   const fails = [];
@@ -143,10 +145,14 @@ function evaluate(text, opts) {
   for (const r of L.rows) {
     const k = statusKind(r, L.rows);
     r.kind = k.kind;
+    // A row that can only run on the deployed env waits there: it passes the commit and the cli, never the BA note (2026-11-10).
+    if (k.kind === 'open' && /^[*`\s]*standing:\s*(?:path|env)\b/i.test(r.design || '') && /^[*`\s]*OPEN\s*[:—-]\s*after\s+(?:the\s+)?deploy/i.test(r.status) && o.ctx !== 'note') { r.kind = 'waiting'; continue; }
     if (k.kind === 'open') fails.push({ kind: 'open', msg: `row ${r.n} OPEN — ${r.falsifier} · cheapest test: ${r.test || '(none written)'}` });
     else if (k.kind === 'broke') fails.push({ kind: 'broke', msg: `row ${r.n} BROKE — ${k.why}` });
     else if (k.kind === 'bad') fails.push({ kind: 'bad-status', msg: `row ${r.n} — ${k.why}` });
   }
+  // Five standing rows in every ledger (2026-11-10, replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-2).
+  if (o.standing && L.rows.length) for (const s of STANDING) if (!L.rows.some(r => new RegExp('^[*`\\s]*standing:\\s*' + s + '\\b', 'i').test(r.design || ''))) fails.push({ kind: 'standing-missing', msg: `the ledger has no "standing: ${s}" row (the five: ${STANDING.join(' · ')})` });
   if (o.staged && o.staged.length && !o.merge) {
     if (!L.fixFiles.length) fails.push({ kind: 'no-fix-files', msg: 'the ledger has no "Fix files:" line, so the staged files cannot be compared with the design' });
     else {
@@ -230,7 +236,7 @@ function check(qa, opts) {
     const codeFix = ctx === 'commit' || !!o.codeFix;
     let res = { fails: [], rows: [], fixFiles: [] };
     if (!doc) { if (codeFix) res.fails.push({ kind: 'no-doc', msg: `no quest doc found for ${qa} (active.txt qa_doc=${block.qa_doc || '(empty)'})` }); }
-    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge });
+    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge, ctx, standing: true });
     let override = null;
     if (codeFix || ctx === 'cli') {
       if (String(block.local_test_confirmed || '').toLowerCase() !== 'true') {
@@ -255,6 +261,7 @@ function message(qa, r, head) {
     '   Clear a row by RUNNING its cheapest test and writing `RAN: <what was run, what it showed>`.',
     '   A fired falsifier is `BROKE: <evidence> → row N` with the replacement row written.',
     '   Only miya accepts a risk: `ACCEPTED-RISK: "<his words>" miya YYYY-MM-DD`.',
+    '   Standing rows: copy rows 2-6 from .claude/skills/quest/QA-NNN-template.md; env (and path on a fast path) may wait as `OPEN: after deploy` until the BA note.',
     `   Ledger: ${r.doc || '(no quest doc)'} · re-check: node domain/falsifier-ran-check/check.js ${qa}`,
     '   There is no skip token for this check.',
   ].join('\n');
@@ -304,7 +311,7 @@ if (require.main === module) {
   const r = check(qa, { ctx: 'cli', staged });
   if (a.includes('--show')) { show(qa, r); console.log(''); }
   if (r.skipped) { console.log(`falsifier-ledger: ${qa} skipped (${r.skipped})`); process.exit(0); }
-  if (r.ok) { console.log(`falsifier-ledger: ${qa} clear — ${r.rows.length} row(s), none OPEN${r.override ? ' · local test overridden by miya: ' + r.override.reason : ''}`); process.exit(0); }
+  if (r.ok) { console.log(`falsifier-ledger: ${qa} clear — ${r.rows.length} row(s), none OPEN${r.rows.some(x => x.kind === 'waiting') ? ' · ' + r.rows.filter(x => x.kind === 'waiting').length + ' waiting after deploy (block the BA note)' : ''}${r.override ? ' · local test overridden by miya: ' + r.override.reason : ''}`); process.exit(0); }
   console.error(message(qa, r));
   process.exit(1);
 }
