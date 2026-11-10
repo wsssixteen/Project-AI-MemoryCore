@@ -759,7 +759,7 @@
     {
       "id": "flowable-alter-js",
       "answers": "Run a Flowable alter on the Alter page (PROD with an approval code, STG/MLIT with a saved session)",
-      "call": "node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <...> --id <ID> --target <KOD> --dry-run",
+      "call": "node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <...> --id <ID> --target <KOD> --assignee <login|default> --dry-run",
       "home": "FlowableAlter alter.js (E:\\Dev\\scripts\\FlowableAlter, its own git repo at that path since 2026-11-05, outside MemoryCore git)",
       "groups": [
         "flow"

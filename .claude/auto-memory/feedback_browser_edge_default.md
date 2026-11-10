@@ -14,7 +14,7 @@ When miya wants to SEE something in a browser (Redmine note preview, a ticket, a
 - Edge not connected → say so in one line and ask him to open Edge with the extension. Do NOT fall back to the built-in pane or Chrome without his word.
 - The built-in pane is only for localhost dev-server previews, never for his signed-in work sites.
 - Redmine writes still need his "post it". Fill + Preview is fine, Submit is not.
-- 🚨 **Close every tab I opened, in the same turn, once the check or the write is done (2026-11-06 per みや: "always close back tabs if you're simply checking something & not leave it opened and be irresponsible")**: a tab opened with `tabs_create_mcp` or `navigate` for a read (a Redmine page, a journal check, a Flowable page) is closed with `tabs_close_mcp` right after the read; a staged form stays open only while it waits for his word, and closes after his Submit or his Cancel. Never his own tabs. **Why**: 2026-11-06, two Redmine tabs for 287811 were left open after checks. Until the tab-hygiene gate exists, this line is the rule.
+- 🚨 **Close every tab I opened, in the same turn, once the check or the write is done (2026-11-06 per みや: "always close back tabs if you're simply checking something & not leave it opened and be irresponsible")**: a tab opened with `tabs_create_mcp` or `navigate` for a read (a Redmine page, a journal check, a Flowable page) is closed with `tabs_close_mcp` right after the read; a staged form stays open only while it waits for his word, and closes after his Submit or his Cancel. Never his own tabs. **Why**: 2026-11-06, two Redmine tabs for 287811 were left open after checks. The close is a step inside each workflow that opens the tab (alter playbook A7), never a gate.
 
 ---
 
