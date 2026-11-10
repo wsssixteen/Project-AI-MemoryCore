@@ -8,6 +8,7 @@
 - **Not done / not verified**: the watcher daemon is NOT running and its Claude login is dead since 2026-10-15; `claude login` is his step, then `node E:\Dev\scripts\WaRead\wa-watch.js check-login`, then `schtasks /run /tn "WaRead Watcher"`. The fast lane has not fired on a live message. The first 08:30 run is 2026-11-11. A daemon start and stop 3 seconds apart at 13:31 on 2026-11-10 has no known cause (old code, no reason logged).
 - **Blocker logged**: the step-3 rider of design-consult-gate could not see the reply lines (the transcript held no text block for those messages); writes to rider paths went through node scripts. Slips row 2026-11-10, category blocker.
 - **WaRead repo**: own git repo, no remote; the change is committed there separately.
+- **Office-report rules (same day, his words: office reports start with the pejabat and daerah code, the BA lines after them outrank)**: `domain/whatsapp/RULES.md` v1.1 section 1b; the reader keeps the forwarded flag; filter signals `office:<code>` and `forwarded`; candidate and handover carry office and daerah (00 PTG, 01 Melaka Tengah, 02 Jasin, 03 Alor Gajah, checked on staging); rules-only env tells Staging from Internal. Watcher selftest 67, whatsapp eval 29. **Open, his choice**: BA lines that arrive after the session started (A start at once and add them to the handover, B wait at most 3 minutes).
 
 ## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
 - Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
@@ -226,6 +227,36 @@ CHANGE-CARD (after): auto-start
 - When: A message is handled the moment it lands once the watcher runs again, the heartbeat is written every 5 minutes, the check runs at every session start and the sweep fires at about 08:36 Monday to Friday while the Claude app is open.
 - Where: The check is `domain/wa-watch-health/`, the watcher change is in `E:\Dev\scripts\WaRead\`, the note is in `.claude/skills/sweep/SKILL.md`, and the system map is unchanged because it does not draw single Features.
   ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-060251.png)
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: office-report rules (whatsapp RULES.md section 1b · wa-watch.js filter and judge step)
+session: 2026-11-10 dreamy-pike-08af0b (6/11/2026 - redmine scheduler, WA adhoc automation)
+his words: "they typically start with "<pejabat><daerah>" i.e PDTAG or PTG<??>. to also prioritize context from BA" (order)
+fix or report: fix
+who pays: nothing new runs; the filter does one more regex per message and the judge prompt grows by one line per candidate plus about 30 lines of rules once a day
+goal without the part: the judge cannot tell the office's relayed wording from the BA's own lines (the reader dropped the forwarded flag), knows no daerah, and the rules-only path called staging "Internal"
+appraise: A = "an office report starts with the office code and is forwarded, the BA's lines are not" is his statement, not yet measured on stored messages because rows stored before today have no forwarded flag. S = office codes proven against ind_pejabat and ind_daerah on Melaka staging (00 PTG, 01 Melaka Tengah, 02 Jasin, 03 Alor Gajah). C = BA lines that arrive after the session started reach only the day registry for an adhoc; that step is NOT changed here and is put to him as a choice
+model: claude-fable-5-2 (highest; no new part, one changed step: filter and judge)
+shown: office-report.png (the flow with the changed step and the two options) · change-map-20261110-062204.png
+
+CHANGE-CARD (before): office-report rules
+- What: The watcher will read an office report by its office code, know which daerah it is, and treat the BA's own lines after it as the real ask.
+- Why: On 2026-11-10 you said office reports start with the pejabat and daerah code and that the BA's lines after them are more specific, and the reader was dropping the forwarded flag that tells the two apart.
+- How: The reader keeps the forwarded flag, the filter adds an office signal and a daerah, and the judge's rule file gains one section on who is speaking.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\office-report.png)
+- When: It applies to every message the watcher judges from the moment the watcher runs again.
+- Where: The rules are in `domain/whatsapp/RULES.md` and the code is in `E:\Dev\scripts\WaRead\`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-062204.png)
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): office-report rules
+- What: The watcher now tags a message that starts with `PDTMT`, `PDTJ`, `PDTAG` or `PTG` with its office and daerah, marks forwarded messages, and its rule file tells the judge that the BA's own lines outrank the forwarded report.
+- Why: You gave the shape of an office report on 2026-11-10, and without the forwarded flag the judge could not tell the office's wording from the BA's.
+- How: Section 1b in the rule file, a forwarded flag kept by the reader, office and daerah on the candidate and in the handover, and Staging told apart from Internal in the rules-only path.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\office-report.png)
+- When: New messages carry the flag once the watcher runs again, and messages stored before today have no flag.
+- Where: Section 1b sits in `domain/whatsapp/RULES.md`, the code in `E:\Dev\scripts\WaRead\lib\`, and late BA lines for an adhoc are not changed yet.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-062204.png)
 Where picture = the change map (lib/change-map.js).
 
 STEP-3: 287811 audit round 2 (P5 ticket-close-block · P6 login-gate v6 · P7 next-steps-shape v6 · P8 design-consult-gate quest-turn rider · P9 memory)

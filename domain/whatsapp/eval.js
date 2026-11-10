@@ -66,6 +66,14 @@ if (fs.existsSync(path.join(WAREAD, 'wa-read.js'))) {
   check('watcher: every stop row carries a reason', !/event: 'daemon-stop' \}/.test(watchSrc) && /reason: 'logged-out'/.test(watchSrc));
   const spawnSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'watcher', 'spawn.js'), 'utf8');
   check('watcher: a headless child that ends is logged done or failed', /function childOutcome/.test(spawnSrc) && /'child-done' : 'child-failed'/.test(spawnSrc));
+  // office reports (2026-11-10): the rule file the judge reads and the script side agree
+  const rules = fs.readFileSync(path.join(__dirname, 'RULES.md'), 'utf8');
+  check('RULES 1b: office prefix table, forwarded = office wording, BA lines outrank it', /## 1b\. Office reports/.test(rules) && ['PDTMT', 'PDTJ', 'PDTAG', 'PTG'].every(k => rules.includes('`' + k)) && /OUTRANKS the first message/.test(rules) && /FORWARDED: yes\|no/.test(rules));
+  check('RULES 1b: environment words IT and STG, and the non-question rule', /`IT`, `MLIT`, `internal` = Internal/.test(rules) && /`STG`, `stg1`, `staging` = Staging/.test(rules) && /not a question to the developers/.test(rules));
+  const filt = require(path.join(WAREAD, 'lib', 'watcher', 'filter.js'));
+  check('watcher: office codes match the rule file (PDTMT 01, PDTJ 02, PDTAG 03, PTG 00)', filt.officeOf('PDTMT x').kod === '01' && filt.officeOf('PDTJ x').kod === '02' && filt.officeOf('PDTAG x').kod === '03' && filt.officeOf('PTG x').kod === '00' && /\| `PDTAG` \| PDT Alor Gajah \| Alor Gajah \| `03` \|/.test(rules));
+  const textSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'text.js'), 'utf8');
+  check('reader keeps the forwarded flag and still sends nothing', /forwarded: !!\(ctx && \(ctx\.isForwarded/.test(textSrc));
 } else {
   console.log('  SKIP  WaRead tool not on this machine — tool checks skipped');
 }
