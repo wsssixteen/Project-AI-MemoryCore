@@ -29,3 +29,8 @@ Pre-migration this file was the post-mortem registry maintained by Domain Expans
 - Contributing: two AWAM syer checks add numerators, not fractions · "seterusnya" in the ticket meant the dialog button, not the page button.
 - Process: adhoc saved before the ticket → no re-Scout · int-env cherry-pick conflict with an env-only variant · local test waived, server test passed first deploy.
 - Carry forward: apps `validateSyer()` Double rounding false warning (LATENT L14).
+
+## QA-288533 — PRBB PROD: 3 resit on the wrong permohonan id (closed 2026-11-10)
+- Cause: counter receipts recorded under the wrong ID Permohonan, so the fee stayed unpaid and the flow sat before Borang 4Ce.
+- Fix: PROD data patch (3 UPDATE) by infra + one Flowable alter; no code.
+- Lesson: the adhoc→ticket promote step never created the ticket's own quest doc; I proposed loosening a gate instead of adding the missing step. Fixed at the cause step 2026-11-10 (adhoc-lifecycle promote, eval F4b F4c); CLAUDE.md rule 11 born from it.
