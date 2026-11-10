@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>turn-log: one file, one row per turn, one query · Flowchart</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow { font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Feature · domain/turn-log</p>
+    <h1>One file, one row per turn, one query: what he asked, what I understood, what I chose, what it cost</h1>
+    <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="d-title d-desc">
+      <title id="d-title">turn-log: one file, one row per turn, one query</title>
+      <desc id="d-desc">His prompt opens a turn and the prompt hooks stamp a turn id. I work: tool calls run and hooks run. Quiet hook runs are only counted in a scratch file in the OS temp folder; acting hook rows (a block, advice, a bypass) go to the per-machine month file of hook-fires. At Stop, the turn-log hook reads the transcript backwards, takes his words through lib/his-words.js, reads the counters and the acting rows, and appends a turn row and one tool row per call to system/telemetry/turn-log/machine-month.jsonl. core/slips.js add now writes the turn id, session id, his words, rule expected and repeat-of into system/slips.jsonl. lib/events.js reads the last two month files and slips.jsonl and prints one table. lib/housekeeping.js deletes month files older than 180 days.</desc>
+      <defs>
+        <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/></pattern>
+        <marker id="a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="aa" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <rect width="100%" height="100%" fill="url(#dots)" opacity="0.55"/>
+      <!-- row A: the turn -->
+      <line x1="210" y1="82" x2="248" y2="82" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="440" y1="82" x2="478" y2="82" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="700" y1="82" x2="738" y2="82" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <rect x="20" y="50" width="190" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="115" y="76" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">His prompt</text>
+      <text x="115" y="92" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">stamp: turn_id · opened_ts</text>
+      <rect x="250" y="50" width="190" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="345" y="76" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">I work</text>
+      <text x="345" y="92" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">tool calls · hooks run · gates</text>
+      <rect x="480" y="50" width="220" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="590" y="72" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Stop: turn-log</text>
+      <text x="590" y="88" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">his words · model · tools · files</text>
+      <text x="590" y="101" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">skills · gates · bypass typed by</text>
+      <rect x="740" y="50" width="240" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="860" y="72" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">turn-log / machine-YYYY-MM</text>
+      <text x="860" y="88" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">turn row · tool row per call</text>
+      <text x="860" y="101" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">signal row on the previous turn</text>
+      <!-- row B: what feeds the Stop -->
+      <line x1="345" y1="170" x2="520" y2="116" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="590" y1="170" x2="590" y2="116" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <rect x="250" y="170" width="190" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="345" y="196" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Quiet hook runs</text>
+      <text x="345" y="212" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">counted in OS temp, no row</text>
+      <rect x="480" y="170" width="220" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="590" y="196" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Acting hook rows</text>
+      <text x="590" y="212" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">block · advice · bypass · error only</text>
+      <rect x="20" y="170" width="190" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="115" y="196" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">core/slips.js add</text>
+      <text x="115" y="212" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">turn_id · his_words · repeat_of</text>
+      <!-- row C: the reader -->
+      <line x1="115" y1="234" x2="115" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="210" y1="332" x2="738" y2="332" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a)"/>
+      <line x1="860" y1="114" x2="860" y2="298" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <rect x="20" y="300" width="190" height="64" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+      <text x="115" y="326" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">system/slips.jsonl</text>
+      <text x="115" y="342" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">stays where it is</text>
+      <rect x="740" y="300" width="240" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+      <text x="860" y="322" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">lib/events.js</text>
+      <text x="860" y="338" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">--turn · --session · --ask · --since</text>
+      <text x="860" y="351" fill="#bf4520" font-size="9" font-family="Consolas, monospace" text-anchor="middle">--gates · --slips · --tools · --audit</text>
+      <line x1="860" y1="364" x2="860" y2="394" stroke="#bf4520" stroke-width="1.4" marker-end="url(#aa)"/>
+      <rect x="480" y="396" width="500" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="730" y="414" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">One table, last two months, under two seconds</text>
+      <text x="730" y="430" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">his words · restated ask · model · tools · gates · slip · cost</text>
+      <rect x="20" y="396" width="400" height="44" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="220" y="414" fill="#2d3142" font-size="12" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">lib/housekeeping.js prune (step 12.5)</text>
+      <text x="220" y="430" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">turn-log months 180 days · hook rows 30 days</text>
+      <text x="20" y="462" fill="#4f5d75" font-size="11" font-style="italic" font-family="'Segoe UI', Arial, sans-serif">Replaces four logs: hook-fires quiet rows, turns.jsonl, turn-ledger log.jsonl, skill-invocation-log. A field the hook cannot know is null.</text>
+    </svg>
+  </div>
+</body>
+</html>

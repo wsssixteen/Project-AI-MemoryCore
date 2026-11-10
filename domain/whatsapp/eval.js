@@ -56,6 +56,28 @@ if (fs.existsSync(path.join(WAREAD, 'wa-read.js'))) {
   check('WaRead ALLOW list has no sendMessage / readMessages / chatModify / logout', ['sendMessage', 'readMessages', 'chatModify', 'logout', 'sendPresenceUpdate'].every(k => !ro.ALLOW.includes(k) && ro.DENY.includes(k)));
   const cli = fs.readFileSync(path.join(WAREAD, 'wa-read.js'), 'utf8');
   check('WaRead CLI sets markOnlineOnConnect:false', /markOnlineOnConnect:\s*false/.test(cli));
+  // the watcher (2026-11-10): its own selftest, the rules-only fallback, the heartbeat, stop reasons, child outcome
+  const ws = spawnSync(process.execPath, ['watcher-selftest.js'], { cwd: WAREAD, encoding: 'utf8', timeout: 120000 });
+  check('WaRead watcher selftest is green', ws.status === 0, (ws.stdout || '').split('\n').filter(l => /FAIL|failed/.test(l)).join(' | '));
+  const judgeSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'watcher', 'judge.js'), 'utf8');
+  check('watcher: a failed judge call falls back to the rules, never a blind hold', /function fallbackVerdict/.test(judgeSrc) && !/issueKey: 'judge-error-'/.test(judgeSrc));
+  const watchSrc = fs.readFileSync(path.join(WAREAD, 'wa-watch.js'), 'utf8');
+  check('watcher: a heartbeat row with pid every 5 minutes', /event: 'heartbeat', pid: process\.pid/.test(watchSrc) && /setInterval\(beat, 5 \* 60 \* 1000\)/.test(watchSrc));
+  check('watcher: every stop row carries a reason', !/event: 'daemon-stop' \}/.test(watchSrc) && /reason: 'logged-out'/.test(watchSrc));
+  const spawnSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'watcher', 'spawn.js'), 'utf8');
+  check('watcher: a headless child that ends is logged done or failed', /function childOutcome/.test(spawnSrc) && /'child-done' : 'child-failed'/.test(spawnSrc));
+  // office reports (2026-11-10): the rule file the judge reads and the script side agree
+  const rules = fs.readFileSync(path.join(__dirname, 'RULES.md'), 'utf8');
+  check('RULES 1b: office prefix table, forwarded = office wording, BA lines outrank it', /## 1b\. Office reports/.test(rules) && ['PDTMT', 'PDTJ', 'PDTAG', 'PTG'].every(k => rules.includes('`' + k)) && /OUTRANKS the first message/.test(rules) && /FORWARDED: yes\|no/.test(rules));
+  check('RULES 1b: environment words IT and STG, and the non-question rule', /`IT`, `MLIT`, `internal` = Internal/.test(rules) && /`STG`, `stg1`, `staging` = Staging/.test(rules) && /not a question to the developers/.test(rules));
+  const filt = require(path.join(WAREAD, 'lib', 'watcher', 'filter.js'));
+  check('watcher: office codes match the rule file (PDTMT 01, PDTJ 02, PDTAG 03, PTG 00)', filt.officeOf('PDTMT x').kod === '01' && filt.officeOf('PDTJ x').kod === '02' && filt.officeOf('PDTAG x').kod === '03' && filt.officeOf('PTG x').kod === '00' && /\| `PDTAG` \| PDT Alor Gajah \| Alor Gajah \| `03` \|/.test(rules));
+  const textSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'text.js'), 'utf8');
+  check('reader keeps the forwarded flag and still sends nothing', /forwarded: !!\(ctx && \(ctx\.isForwarded/.test(textSrc));
+  // the 2-minute office wait (2026-11-10): rule file and code agree
+  const ow = require(path.join(WAREAD, 'lib', 'watcher', 'officewait.js')).createOfficeWait({ waitMs: 120000, isOffice: (t) => !!filt.officeOf(t) });
+  check('watcher: an office report is held and a line 30 s later rides with it', ow.offer({ id: 'o', chat: 'c', ts: 1000, text: 'PDTAG ralat' }, true) === 'hold' && ow.offer({ id: 'b', chat: 'c', ts: 31000, text: 'saya dah semak' }, false) === 'ride' && ow.due(121000)[0] === 'c');
+  check('RULES: the 2-minute wait is written down and the run loop uses it', /The 2-minute wait/.test(rules) && /LINES THAT FOLLOWED WITHIN THE WAIT/.test(rules) && /officeWait\.due\(Date\.now\(\)\)/.test(watchSrc) && /cfg\.officeWaitMs === undefined \? 120000/.test(watchSrc));
 } else {
   console.log('  SKIP  WaRead tool not on this machine — tool checks skipped');
 }

@@ -3,6 +3,16 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-10 (288533 + over-complexity audit — "why not all at once?")
+- He had asked for an audit of my over-building; the report ranked eight ways. When I offered to build them one by one he answered "why not all at once?": nothing waits on another, so all of it runs side by side. The pattern: when the work is independent and already decided, he expects the whole set now, in parallel builders, with me reviewing and landing each; one-at-a-time is my caution, not his ask.
+- Same day, 288533: "NEVER MAKE THINGS MORE UNNECESSARILY COMPLICATED" became rule 11. The two together: build everything agreed, but each thing in its smallest shape at its cause step.
+## Relationship reinforcement — 2026-11-06 (288637 — "will this keep on happening every single time you do alter?")
+
+- **A known trap planned as "check after" is a trap walked into.** I had §19 in my own notes and still ran the alter first. He expects every process to have a Phase 0 that runs before it acts, as common sense, not as a rule he has to write.
+- **When he waits, silence and a vague answer cost more than a slow one.** He asked "alter or patch?" because my replies did not say it in the first line. The ticket's own words ("Need help to alter") were the answer.
+- **His rage carries an exact order.** Under it: close the ticket first, cover everything, then build the check later. I did it in that order and he went quiet.
+- **"Submit if you can" is a go.** He wants the Redmine step done, read back and the tab closed, not staged again.
+
 ## Relationship reinforcement — 2026-10-30 (#287273 — "wrong test scenario", then "is DE enough?")
 
 - **A test row is a claim, and he spends his time on it.** A JOIN doubled the owners, I called it duplicate data, and he ran it. He asked for the script behind the claim, and that was the moment the claim fell. One plain SELECT before naming a record.

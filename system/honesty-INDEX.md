@@ -71,7 +71,7 @@ silent-claim-drift-gate.js (Phase 2 Enforcement hook) catches missed invocations
 |---|---|---|---|---|
 | G1 | Which `.xhtml` form renders a screen or tugasan | `ind_skrin.jsf_view` + `ind_langkah` + Flowable routing | query `ind_langkah.nama` / `ind_skrin.jsf_view`, or みや gives the xhtml | quest skill `ind_langkah.nama` lookup row |
 | G2 | What runtime data shows: dropdown options, panel visibility, row values | DB rows + config at request time | read the actual rows / the feeding config | none static; a runtime probe |
-| G3 | Whether my edited code is deployed and runs | the WAR + the JVM, not the diff | `QA<num>-PROBE:` logger in server.log · build timestamp · his reproduction | `deploy-proof-gate` |
+| G3 | Whether my edited code is deployed and runs | the WAR + the JVM, not the diff | `QA<num>-PROBE:` logger in server.log · build timestamp · his reproduction | none (`deploy-proof-gate` retired 2026-11-10: 0 advice in 21,021 runs) |
 | G4 | Table and column existence, entity↔schema | the live DB, not the Java names | `information_schema` / SchemaCrawler before the SQL | quest skill schema-prefix + entity-first rows |
 | G5 | Which branch executes at runtime | the request's data | read the branch body + confirm the data shape or a probe logger | none static; a runtime probe |
 | G6 | Which module is deployed locally | `etanah-teknikal` not on local JBoss | BPMN `<userTask>` vs `<callActivity MLK_TKL_*>` before Scout | CLAUDE.md BPMN-FIRST rule |

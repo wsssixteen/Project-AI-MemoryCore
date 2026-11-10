@@ -1,7 +1,7 @@
 ---
 goal: the judge reads THIS file inline on every candidate and turns a WhatsApp message into one verdict (fire / follow-up / baseline / hold / skip) that starts the right Claude Code session, or nothing
 retention: keep
-version: 1.0 (2026-09-13)
+version: 1.2 (2026-11-10: the watcher holds an office report for 2 minutes and judges it with the lines that followed; 1.1 same day: section 1b; nothing removed)
 ---
 
 # WhatsApp watcher — RULES (judge-readable)
@@ -18,6 +18,36 @@ Edit this file to change behaviour. The daemon (`E:\Dev\scripts\WaRead\wa-watch.
 | Alex (manager) direct chat | ? | every message reaches the judge | a ticket number or link = work handed over; a question about a ticket = a session with that context; anything else = skip |
 
 Mention of miya = a real WhatsApp @mention of his number, or the whole words `Ahmad`, `Ridhwan`, `@Ridhwan`, `@AhmadRidhwanAnuar`, `@Ahmad`.
+
+## 1b. Office reports: the shape, who is speaking, which office (2026-11-10 per miya)
+
+The CANDIDATE block carries two lines for this: `OFFICE:` (office prefix or permohonan id) and `FORWARDED: yes|no`. Earlier messages are marked `[forwarded]`.
+
+| Part of the thread | How it looks | Who is speaking | Weight |
+|---|---|---|---|
+| The first message | starts with `<pejabat><daerah>`: `PDTMT`, `PDTJ`, `PDTAG`, `PTG…`; usually FORWARDED: yes | the office user or the TSO, relayed into the room | background: the first wording of the problem |
+| The next several messages | FORWARDED: no, minutes after the first | the BA | the real ask. The BA has already checked the issue and is more specific. It OUTRANKS the first message |
+| A straight question | short, aimed at the developers; may name the environment | the BA | a question the developers can answer is work |
+| Anything else | no question, no id, no ask | anyone | judge it: work only when it asks the developers for something |
+
+| Office prefix | Office | Daerah | 2nd part of a `PTMLK` id |
+|---|---|---|---|
+| `PTG…` | PTG Melaka (state office) | Melaka | `00` |
+| `PDTMT` | PDT Melaka Tengah | Melaka Tengah | `01` |
+| `PDTJ` | PDT Jasin | Jasin | `02` |
+| `PDTAG` | PDT Alor Gajah | Alor Gajah | `03` |
+
+Codes checked against `ind_pejabat` and `ind_daerah` on Melaka staging, 2026-11-10. Perak: the state comes from the room or a `PTPK/…` id; the 2nd part of the id is the daerah number, its name is not recorded here.
+
+**The 2-minute wait** (2026-11-10 per miya: "start after 2"): the watcher HOLDS a message that starts with an office code for 2 minutes (`officeWaitMs` in `watcher.config.json`, `0` = off). Every line that arrives in that room inside the 2 minutes rides along. Then the report reaches the judge ONCE, with the block `LINES THAT FOLLOWED WITHIN THE WAIT`. Judge the report and those lines as one candidate: one verdict, one session. A line that arrives after the 2 minutes is a separate candidate, normally `follow-up`. His own messages neither ride nor end the wait.
+
+How the judge uses it:
+- A forwarded office report and the BA's own lines after it are ONE issue. Fire once. When a session already started for it, each BA line is `follow-up` with the SAME `issueKey`.
+- Build `paraphrase`, `urusan`, `keyword` and `env` from the BA's lines when they exist. Where a BA line narrows or corrects the forwarded text, the BA line wins.
+- A BA line with no office prefix and no id still belongs to the office report just above it in the room (same topic, minutes apart): take the office, the daerah and the permohonan id from that report.
+- `state` and daerah: the `OFFICE:` line first, then the permohonan id, then the room.
+- `env` words in a BA line: `IT`, `MLIT`, `internal` = Internal · `STG`, `stg1`, `staging` = Staging · `prod`, `live` = Prod. An office report with no environment word is usually Prod.
+- A message that is not a question to the developers: `fire` or `follow-up` only when it hands the developers something to do or to answer (an error with an id, "boleh semak", "kenapa", a request to patch). BA talking to the office, a status line, a thanks, "noted", "ok dah settle" = `skip`. Work-shaped but nothing to act on = `hold`.
 
 ## 2. Verdicts
 

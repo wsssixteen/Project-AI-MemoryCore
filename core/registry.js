@@ -79,7 +79,8 @@ for (const dir of safeList(path.join(ROOT, 'domain'), d => d.isDirectory())) {
 }
 
 // --- telemetry last-fire ---
-const fires = readJsonl(path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl'));
+const fires = [];
+for (const n of (() => { try { return fs.readdirSync(path.join(ROOT, 'system', 'telemetry')).filter(x => /^hook-fires.*\.jsonl$/.test(x)).sort(); } catch (_) { return []; } })()) for (const r of readJsonl(path.join(ROOT, 'system', 'telemetry', n))) fires.push(r); // base file, old shards, per-machine month files (acting rows only since 2026-11-10)
 const lastFire = new Map();
 for (const r of fires) if (r.hook) lastFire.set(r.hook, r.ts);
 

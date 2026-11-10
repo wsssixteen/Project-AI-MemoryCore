@@ -14,7 +14,7 @@ const { spawnSync } = require('child_process');
 
 const HOOK = path.join(__dirname, 'citation-cross-check.check.hook.js');
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
-const TELEMETRY_FILE = path.join(REPO_ROOT, 'system', 'telemetry', 'hook-fires.jsonl');
+const TELEMETRY_FILE = require(path.join(REPO_ROOT, 'lib', 'hook-runtime.js')).hookFiresFile(); // this machine, this month (2026-11-10)
 const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
@@ -58,8 +58,7 @@ let r = run(f1Path);
 check('F1 clean input exits 0', r.status === 0, 'exit=' + r.status);
 check('F1 clean input stdout empty', (r.stdout || '') === '', JSON.stringify(r.stdout));
 let after = telemetryLineCount();
-check('F1 telemetry gains exactly 1 row (standard only)', after - before === 1, 'delta=' + (after - before));
-check('F1 telemetry row has no spawn_tool', !/spawn_tool/.test(telemetryTail(1).join('')), telemetryTail(1).join(''));
+check('F1 a quiet run writes NO row (the standard row is a pass row since 2026-11-10; it is counted in the turn log)', after - before === 0, 'delta=' + (after - before));
 
 // ---------------------------------------------------------------------------
 // F2: TRIGGER — trace-shaped reply citing 2 files, only one of which was actually
@@ -102,7 +101,7 @@ r = run(f3Path);
 check('F3 all-backed citations exits 0', r.status === 0, 'exit=' + r.status);
 check('F3 all-backed citations stdout empty', (r.stdout || '') === '', JSON.stringify(r.stdout));
 after = telemetryLineCount();
-check('F3 telemetry gains exactly 1 row (standard only, no fire)', after - before === 1, 'delta=' + (after - before));
+check('F3 telemetry gains no row (quiet run, no fire)', after - before === 0, 'delta=' + (after - before));
 check('F3 telemetry row has no spawn_tool', !/spawn_tool/.test(telemetryTail(1).join('')), telemetryTail(1).join(''));
 
 // cleanup tmp fixtures

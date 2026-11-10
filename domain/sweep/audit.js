@@ -36,7 +36,8 @@ function mainFolder() {
 const MAIN = mainFolder();
 const FLAG = path.join(MAIN, 'system', 'orchestration-mode.flag');
 const LEDGER = path.join(MAIN, 'domain', 'sweep', 'log.jsonl');
-const HOOKLOG = path.join(MAIN, 'system', 'telemetry', 'hook-fires.jsonl');
+const HOOKDIR = path.join(MAIN, 'system', 'telemetry');
+const HOOKLOGS = () => { try { return fs.readdirSync(HOOKDIR).filter(n => /^hook-fires.*\.jsonl$/.test(n)).map(n => path.join(HOOKDIR, n)); } catch { return []; } }; // base file + per-machine month files (2026-11-10)
 const QUESTS = path.join(MAIN, 'projects', 'coding-projects', 'active');
 
 // Refinement per defect class. `accuracy` says what the fix does to accuracy; a fix that would
@@ -257,14 +258,17 @@ function familiar(dir, f, ctx) {
 // Count orch-suppressed rows in the main hook log since the run start (streamed: the file is large).
 // Rows carry no session id, so the window is bounded at both ends to keep other sessions out.
 async function suppressedSince(sinceMs, untilMs) {
-  if (!fs.existsSync(HOOKLOG)) return { count: null, gates: {} };
-  const rl = readline.createInterface({ input: fs.createReadStream(HOOKLOG, 'utf8'), crlfDelay: Infinity });
+  const files = HOOKLOGS();
+  if (!files.length) return { count: null, gates: {} };
   let count = 0; const gates = {};
-  for await (const line of rl) {
-    if (!line.includes('orch-suppressed')) continue;
-    let r; try { r = JSON.parse(line); } catch { continue; }
-    const t = Date.parse(r.ts || r.timestamp);
-    if (!isNaN(t) && t >= sinceMs && t <= untilMs) { count++; const g = r.hook || r.gate || r.name || '?'; gates[g] = (gates[g] || 0) + 1; }
+  for (const file of files) {
+    const rl = readline.createInterface({ input: fs.createReadStream(file, 'utf8'), crlfDelay: Infinity });
+    for await (const line of rl) {
+      if (!line.includes('orch-suppressed')) continue;
+      let r; try { r = JSON.parse(line); } catch { continue; }
+      const t = Date.parse(r.ts || r.timestamp);
+      if (!isNaN(t) && t >= sinceMs && t <= untilMs) { count++; const g = r.hook || r.gate || r.name || '?'; gates[g] = (gates[g] || 0) + 1; }
+    }
   }
   return { count, gates };
 }

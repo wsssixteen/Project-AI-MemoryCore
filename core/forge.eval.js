@@ -116,7 +116,7 @@ check('F5 docs naming the old path are LISTED, not silently left', /DOCS still n
 
 // F6 the moved hook still runs from its new home through the wrapper, logged under its OLD name
 const wr5 = spawnSync(process.execPath, [path.join(TMP, 'lib', 'hook-runtime.js'), '--wrap', path.join(fdir, 'loose-probe.hook.js'), 'SessionStart', 'LooseProbe'], { input: '{}', encoding: 'utf8', env: { ...process.env, CLAUDE_PROJECT_DIR: TMP } });
-const tele = fs.readFileSync(path.join(TMP, 'system', 'telemetry', 'hook-fires.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+const tele = (() => { try { return fs.readdirSync(path.join(TMP, 'system', 'telemetry')).filter(n => /^hook-fires.*\.jsonl$/.test(n)).sort().map(n => fs.readFileSync(path.join(path.join(TMP, 'system', 'telemetry'), n), 'utf8')).join(''); } catch (_) { return ''; } })().trim().split('\n').map(l => JSON.parse(l)); // forge row in the base file + hook rows in the per-machine month file
 check('F6 behaviour unchanged after install (same output) + telemetry row under the pre-install name', wr5.stdout === 'loose ok' && tele.some(t => t.hook === 'LooseProbe' && t.mode === 'wrap'), wr5.stdout + ' ' + JSON.stringify(tele.slice(-1)));
 
 // F7 no eval of its own → an INSTALL pin is generated and is green

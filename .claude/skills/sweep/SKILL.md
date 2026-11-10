@@ -19,6 +19,8 @@ Design source: `projects/coding-projects/active/multi-ticket-sweep/DESIGN.md` (2
 /sweep --resume                       → re-enter after a stop; replay banked waves, run only missing ones
 ```
 
+**Started by the clock (2026-11-10 per miya: "we'll stick with ... sweep at the morning")**: the desktop scheduled task `sweep-0830-workday` (cron `30 8 * * 1-5`, fires about 08:36, only while the Claude app is open; a missed run fires at the next launch) starts a fresh session in the MAIN folder that runs `node .claude/hooks/open-quest-surfacer.js --mode`, stops on `Quiet mode`, then runs a bare `/sweep`. Same skill, same limits: no Redmine write, no commit, no Apply, no Task-folder file. Its prompt lives in `%USERPROFILE%\.claude\scheduled-tasks\sweep-0830-workday\SKILL.md`; change the schedule in the app's Scheduled list, never by editing the app's registry.
+
 ## Step 0 — orchestration mode ON + run start
 
 `node domain/sweep/audit.js flag on` — writes `system/orchestration-mode.flag` in the MAIN folder (hooks run from there; a flag in a worktree mutes nothing — 0 suppressions on 2026-09-25 and 2026-10-23). TTL of a FEW HOURS (4h) by default, capped at 8h, so a crashed sweep cannot mute gates forever.

@@ -71,3 +71,17 @@
 {"ts":"2026-11-03T14:40:30.209Z","num":"287925","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":5733}
 {"ts":"2026-11-04T14:09:13.194Z","num":"287346","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":14267}
 {"ts":"2026-11-04T17:01:34.609Z","num":"287346","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":9685}
+{"ts":"2026-11-05T09:47:18.613Z","num":"239386","branches":5,"outcome":"fail","goal_met":false,"missing":["mlk/reqirement/239386","mlk/requirement/239386","mlk/requirement/239386-deprecated","mlk/requirement/239386-reference","mlk/requirement/239386v2"],"dur_ms":11389}
+{"ts":"2026-11-05T09:48:02.799Z","num":"239386","branches":5,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":9264}
+{"ts":"2026-11-05T16:11:29.535Z","num":"288442","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":19527}
+{"ts":"2026-11-05T16:31:37.950Z","num":"287346","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":5920}
+{"ts":"2026-11-06T13:46:09.728Z","num":"287164","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":4475}
+{"ts":"2026-11-06T07:03:18.900Z","num":"288622","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":13375}
+{"ts":"2026-11-06T07:03:29.512Z","num":"288622","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":10078}
+{"ts":"2026-11-06T09:41:23.047Z","num":"288625","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":7615}
+{"ts":"2026-11-10T02:57:00.510Z","num":"288662","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":40980}
+{"ts":"2026-11-10T02:57:42.481Z","num":"288662","branches":0,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":15314}
+{"ts":"2026-11-10T04:21:41.728Z","num":"288662","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":14067}
+{"ts":"2026-11-10T06:07:35.482Z","num":"288662","branches":1,"outcome":"fail","goal_met":false,"missing":["mlk/esokongan/288662"],"dur_ms":7727}
+{"ts":"2026-11-10T06:07:56.662Z","num":"288662","branches":1,"outcome":"pass","goal_met":true,"missing":[],"dur_ms":8794}
+{"ts":"2026-11-10T06:35:31.130Z","num":"288188","branches":0,"outcome":"fail","goal_met":false,"missing":[],"dur_ms":11142}
