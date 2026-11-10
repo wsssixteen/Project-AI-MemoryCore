@@ -30,10 +30,8 @@ Hook conflict matrix to be built during Phase 2. Existing hooks:
 | `commit-gate.js` | PreToolUse (git commit) | Verifies commit message conventions |
 | `file-list-after-refine.js` | (TBD) | A7 file-list table enforcement |
 | `notes-on-test-data.js` | (TBD) | Existing Notes.txt enforcement (will be subsumed by pre-action-check-gate) |
-| `operational-follow-through.js` | (TBD) | A9 visible next-operational-step enforcement |
 | `phase0-artifact-gate.js` | (TBD) | Quest Phase 0 artifact validation |
 | `prayer-gate.js` | (TBD) | Prayer time awareness |
-| `reply-log.js` | (TBD) | Reply timing tracking |
 | `self-gate-impulse.js` | (TBD) | A8 self-gate at impulse enforcement |
 | `ticket-gate.js` | (TBD) | Quest ticket workflow gating |
 | `worktree-cleanup-boot.js` | SessionStart | Worktree hygiene |

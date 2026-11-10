@@ -1,90 +1,25 @@
 # fix-photo
 
 symptom: 2026-09-28 #256334 miya: 'include the fix photo with red box you add into fix folder ... a step/behaviour you always do when talking about the UI, especially since BA have already provided the photos'
-goal: every UI-changing quest hand-back ships a red-box fix photo per changed screen in the cycle 2. Fix folder, so miya can upload it to Redmine without asking
-diagram: domain/fix-photo/diagram.png (v4 step marked)
-goal_signal: the hand-back reply carries one FIX-PHOTO: <path> line per changed screen and each path exists on disk
-goal_signal_regex: FIX-PHOTO:\s*`?[A-Za-z]:[\\/].*[\\/]2\. Fix[\\/].+\.(png|jpe?g)
+goal: a red-box fix photo per changed screen is made in one command (`mark.py`) and saved in the cycle's `2. Fix` folder, so miya can upload it to Redmine without asking
+diagram: domain/fix-photo/diagram.png (shows the Stop gate that was retired 2026-11-10)
+goal_signal: `mark.py` prints one `FIX-PHOTO: <path>` line per photo and the path exists on disk
 retention: rotate monthly
 
-**What fires when**: Stop. The CURRENT reply is an etanah hand-back (`▶ YOUR MOVE` · `Test Scenario` · `DEPLOY —` card · `Redmine` note) that describes a UI change (medan/field · butang/button · dropdown · checkbox · Agihan Kepada · panel · popup · papar/hilang/dibuang), BA screenshots were seen this session (a pasted image, or a `Read` of an image under `0. Brief`), and no VALID `FIX-PHOTO:` line exists in any reply this session.
-
-**Contract**: BLOCK until each changed screen has a red-box photo made with `mark.py` in the cycle's `2. Fix` folder and a `FIX-PHOTO: <full path> ✓` line is in the reply. VALID = full path · `.png`/`.jpg` · inside a `2. Fix` folder · exists on disk. Bypass `[skip-fix-photo: <real reason>]` in the current reply (a `<reason>` placeholder never counts, so the block text quoted back cannot disarm it).
+**Retired 2026-11-10: the Stop gate `fix-photo.check.hook.js`.** From telemetry 2026-07-12 to 2026-11-10 it ran 18,563 times: 261 blocks and 186 bypasses (42% of its decisions were the bypass token, 40 sessions). The ask rule stays where it lives: the quest SKILL.md pre-emit row for the UI fix photo, and the memory rule that a fix photo is made only when miya asks. The red-box tool stays.
 
 ## Pieces
 
 | Piece | Role |
 |---|---|
-| `mark.py` | Draws red boxes + white-backed red labels on BA's screenshot, saves PNG. Clamps boxes / shifts labels into the image (WARN), warns on a non-`2. Fix` folder, an off-pattern name, or a date/email in a label; exit 2 on bad input with nothing saved. Prints the `FIX-PHOTO:` line to paste. |
-| `fix-photo.check.hook.js` | Stop gate above. Reads the last 20 MB of the transcript. |
-| `fix-photo.eval.js` | 42 fixtures: 24 hook (H01-H24) + 17 mark.py (M01-M17) + 1 end-to-end (E01). 42/42 green 2026-09-28; live replay on the real #256334 session transcript blocked without a photo line and passed with one. |
-| `log.jsonl` | one row per `mark.py` run: ts · dst · boxes · labels · warns · outcome (`saved`/`error`) · dur_ms. Eval runs log to a temp file (`FIX_PHOTO_LOG`). Hook fires log to `system/telemetry/hook-fires.jsonl`. |
+| `mark.py` | Draws red boxes + white-backed red labels on BA's screenshot, saves PNG. Clamps boxes / shifts labels into the image (WARN), warns on a non-`2. Fix` folder, an off-pattern name, or a date/email in a label; exit 2 on bad input with nothing saved. Refuses boxes that overlap or sit inside each other (`--merge` draws the union). Prints the `FIX-PHOTO:` line to paste. |
+| `fix-photo.eval.js` | 17 mark.py fixtures (M01-M17). |
+| `log.jsonl` | one row per `mark.py` run: ts · dst · boxes · labels · warns · outcome (`saved`/`error`) · dur_ms. Eval runs log to a temp file (`FIX_PHOTO_LOG`). |
 
-**Layer choice (Rule 7)**: hook + script, plus the quest SKILL.md pre-emit gate row. The rule alone (skill text) already missed once on 2026-09-28; a Stop advisory is never shown to the model, so the visible form is a block.
+**state-scoped**: no, state-agnostic (paths come from the arguments).
 
-**Trigger moment (Rule 8)**: Stop on a hand-back only. Three narrowing conditions (hand-back marker AND UI-change words AND etanah terms) plus BA-image evidence keep it off ordinary UI talk and off MemoryCore UI work.
+## Rules kept from earlier versions
 
-**state-scoped**: no, state-agnostic (etanah terms include PTMLK and PTPRK; paths come from the reply).
-
-## Adversarial scenarios (system-design Rule 12)
-
-| # | Scenario | Verdict |
-|---|---|---|
-| 1 | empty / malformed stdin | fixture H01 H02 |
-| 2 | transcript path missing | fixture H03 |
-| 3 | replay: UI hand-back, BA screenshot, no photo line | fixture H04 (block) |
-| 4 | valid photo line | fixture H05 |
-| 5 | photo line to a missing file | fixture H06 |
-| 6 | photo saved outside a `2. Fix` folder | fixture H07 |
-| 7 | relative photo path | fixture H08 |
-| 8 | real bypass reason | fixture H09 |
-| 9 | self-disarm: block text quoted back with `<reason>` | fixture H10 |
-| 10 | empty bypass reason | fixture H11 |
-| 11 | no BA screenshot this session | fixture H12 |
-| 12 | image arrives as an image block, not a text marker | fixture H13 |
-| 13 | BA screenshot only read from `0. Brief` | fixture H14 |
-| 14 | Read of my own fix photo is not BA evidence | fixture H15 |
-| 15 | UI explanation that is not a hand-back | fixture H16 |
-| 16 | hand-back with no UI change | fixture H17 |
-| 17 | MemoryCore (non-etanah) UI hand-back | fixture H18 |
-| 18 | photo made in an earlier reply, deploy card later | fixture H19 |
-| 19 | short reply | fixture H20 |
-| 20 | malformed transcript lines | fixture H21 |
-| 21 | large transcript | fixture H22 (20 MB tail cap) |
-| 22 | path in backticks | fixture H23 |
-| 23 | Redmine note describing a UI change | fixture H24 |
-| 24 | several screens changed, only one photo line | accepted-risk: the reply cannot be mapped to a screen count reliably; one valid photo satisfies the gate |
-| 25 | Stop re-fires until satisfied (loop) | accepted-risk: every block names the exact fix and the bypass; no state to go stale |
-| 26 | BA words quoted with `medan` on a data-only fix | accepted-risk: a photo still helps Redmine; bypass with the reason when not |
-| 27 | mark.py bad inputs (missing src, missing folder, non-png, bad box, bad label, not an image) | fixtures M03 M04 M05 M07 M13 M14 M15 |
-| 28 | box / label outside the image | fixtures M06 M08 |
-| 29 | wrong folder, wrong name, date/email in label | fixtures M09 M10 M11 |
-| 30 | re-run overwrites (idempotent) · webp source · logging | fixtures M12 M16 M17 |
-| 31 | the line mark.py prints satisfies the gate end to end | fixture E01 |
-
-## v3 (2026-10-23, #246964)
-
-Keyword "test result" installed per miya: when his message carries "test result(s)", "here test scenario", "here screenshot of test" or "please save this" together with an image, the next long reply must carry a valid `FIX-PHOTO:` line (photo saved in the cycle folder `2. Fix` or the `N. Rework` root, named `<n>. <what it shows>.png`, red box where it helps). No hand-back / UI / etanah words are needed for this path. Spec kept: the v2 ask path, path rules, bypass token, block shape. Eval 63/63 (T01-T17 added).
-
-## v2 (2026-10-04, #282924)
-
-The gate fires only when miya asked for a fix photo in his own words this session. A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it. Why: an unrequested marked-up BA screenshot was created for #282924 and read as a fake screenshot of the fix. Eval 46/46.
-
-- **One box per change (2026-10-22 per miya, #285768).** Draw exactly one box for each change the note or ticket names. Never box an unchanged field (no 'Kekal' boxes) and never box an empty spot where something was removed: a removal is said in the note, not drawn. Count the boxes against the note's changes before handing back.
-
-## v4 (2026-10-30, #287048)
-Per miya: "if I share with you screenshots that is related to the test scenario, you will save it into task fix folder, then highlight with red box ... and WILL attach to the ticket/upload to redmine. Ensure this will be done. eval & verify." The test-share trigger now also fires on "test scenario(s)" without "here", on "attach ... ticket/redmine", and on a message he sends while I am mid-turn (a `queued_command` attachment entry holds his text and images, not a user message). Same release: a valid FIX-PHOTO line. Reads its own lines with the marker `his-words: not an approval reader` because lib/his-words.js returns text only. Eval 69/69 (T18-T23 written red first). Spec kept: every v3 keyword and fixture unchanged; the "here test scenario" phrase is a subset of the new "test scenarios?" alternative.
-
-| # | v4 adversarial scenario (Rule 12) | Verdict |
-|---|---|---|
-| 1 | "test scenarios" + image | fixture T18 |
-| 2 | "attach these to redmine" + image | fixture T19 |
-| 3 | mid-turn message with image + keyword | fixture T20 |
-| 4 | mid-turn keyword, no image | fixture T21 silent |
-| 5 | mid-turn share then valid FIX-PHOTO | fixture T22 silent |
-| 6 | "attach" with no ticket/redmine word | fixture T23 silent |
-| 7 | "test scenario" in a question about a test plan, with a design image | accepted-risk: blocks once; one save or one skip line clears it |
-| 8 | mid-turn entry shape changes in a future app version | accepted-risk: falls back to v3 behaviour, no crash (walk is defensive) |
-
-
-*v5 2026-11-05 (per みや: 'the red boxes need to be chill, just big red box or specific red box, DO NOT have smaller red boxes inside bigger red box and overlapping red boxes'): mark.py refuses boxes that overlap or sit inside each other (exit 2 naming the union), --merge draws the union; label backgrounds lose their red frame. Specific boxes, one per change. Fixtures F30-F33 in domain/template-scenario/template-scenario.eval.js. Spec-preservation: every v4 rule kept; additive.*
+- A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it (v2, #282924).
+- One box per change the note or ticket names. Never box an unchanged field and never box an empty spot where something was removed (2026-10-22, #285768).
+- Boxes are big or specific, never nested or overlapping (v5, 2026-11-05).

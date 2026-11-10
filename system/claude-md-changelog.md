@@ -10,6 +10,10 @@
 
 ---
 
+## v2.08 (2026-11-10)
+
+- §Disposition rule 5 and §System-Layer hook+skill pairs: the retired hooks `operational-follow-through.js` (Stop, 0 fires in 21,021 runs) and `diagnostic-self-heal-gate.js` (Stop, 0 fires in 21,020 runs) are no longer named. Over-complexity audit set A (retire never-acting parts), per みや "why not all at once?". Pointer repair; no rule changed; `system-audit.js --full` had flagged both lines as broken pointers.
+
 ## v2.07 (2026-11-10)
 
 - §8 Etanah non-negotiables: the bullets "Working-analog first", "Smallest change + programmer-written convention", "Minimal-diff discipline" and "In-file convention first" each gain "(the size rule: Disposition rule 11)" and lose the sentences rule 11 already says. Per みや on the over-complexity audit, stage B ("why not all at once?" — the nod to build all eight ways at once). Cause: the same "keep it small, copy what works" rule had been written ~26 times in ~36 files; rule 11 (v2.06) is now the one home for the size of a fix.

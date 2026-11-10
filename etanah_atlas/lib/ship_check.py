@@ -1,4 +1,4 @@
-"""Ship-check for the Atlas deliverable — the ONLY thing that satisfies atlas-ship-gate.
+"""Ship-check for the Atlas deliverable — the Atlas smoke + real-render check (the atlas-ship-gate Stop hook that read it was retired 2026-11-10).
 1. Runs the headless smoke test (node lib/smoke_test.js) — must exit 0.
 2. Renders the CURRENT etanah_atlas_melaka.html via headless Edge over file://
    (the exact way miya opens it) and asserts a real screenshot came back.

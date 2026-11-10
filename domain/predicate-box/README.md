@@ -33,7 +33,7 @@ Bypass: `[skip-predicate-box: <reason>]` anywhere in the session. v3: a reason h
 | Skip | `[skip-probe-matrix: <reason>]` in **assistant text, after the last `.java` edit**. Refused: a reason holding `<`, shorter than 8 characters, or arguing from size (`small` · `tiny` · `trivial` · `simple` · `minor` · `quick` · `one-line` · `kecil`). A skip never covers a later edit. |
 | Block | exit 2, reason on stderr. Fires at every Stop until paid. With requirement 1 also unmet, both reasons ride in the one `decision:block`. |
 | Not counted | one probe placed with no matrix (one probe answers one hypothesis) · `QA<num>-PROBE` named in reply text only · a matrix with fewer than 3 rows or no fallback row · a token in a user-role message |
-| Probes stay local | `domain/probe-local-only-gate` keeps probes off env branches. The matrix may describe uncommitted probes; this gate never asks for a commit. |
+| Probes stay local | Probes stay off env branches by rule (the `probe-local-only-gate` hook was retired 2026-11-10). The matrix may describe uncommitted probes; this gate never asks for a commit. |
 
 ## v2 (2026-07-07): quest-independent + blocking
 

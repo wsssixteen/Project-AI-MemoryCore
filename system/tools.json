@@ -31,7 +31,10 @@
       "footprint": "on-demand: one git push and one fetch + reset; log lib/origin-rewrite.log.jsonl",
       "eval": "node lib/origin-rewrite.eval.js",
       "born": "2026-11-05 (#287811: two origin rewrites, his clone never reset, his pull merged the failed commits back). deploy-guard allows a force push only through this Tool.",
-      "usage": { "sessions": 0, "last": "" },
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
       "status": "unused"
     },
     {
@@ -407,22 +410,6 @@
       },
       "status": "rare",
       "note": "Folder is a pending orphan in system/FOLDER-STRUCTURE.md"
-    },
-    {
-      "id": "cc-tags",
-      "answers": "The content-control tags of a template",
-      "call": "node quest/cc-tags.js",
-      "home": "quest/cc-tags.js",
-      "groups": [
-        "documents"
-      ],
-      "state_scope": "none",
-      "footprint": "on demand",
-      "usage": {
-        "sessions": 0,
-        "last": ""
-      },
-      "status": "unused"
     },
     {
       "id": "redmine-sync",
@@ -825,13 +812,6 @@
   "unused_scripts_2026-10-06": {
     "_note": "On disk, never run by Ruri in the 357 scanned sessions, and not named by settings.json, a skill or a hook. A script started with a relative path after a cd is not matched by the scan, so a row here is a suspect, not a verdict.",
     "list": [
-      "system/phrase-registry.js",
-      "lib/apply-bundles.js",
-      "lib/shrink-claude-md.js",
-      "lib/wrap-all-hooks.js",
-      "quest/cc-tags.js",
-      "quest/migrate-post-mortems.js",
-      "quest/backfill-active.js",
       "domain/observatory/server.js",
       "domain/patch-ticket-intake-flag/patch-intake.js"
     ]
