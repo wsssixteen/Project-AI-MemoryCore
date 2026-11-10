@@ -4,6 +4,20 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-06, 287811 audit rounds 1 and 2)
+- Asked: do not stop until every goal is met and we can safely DE (after: pinpoint WHERE/HOW/WHY/WHAT so the 287811 mistakes cannot recur; clean the branch; ban myself).
+- Done: nine routes built in two rounds, ten evals green, landed twice; qa_doc Branches row corrected to f2ebd118f7; wrong-fix verdicts; change maps sent; change-watch rows wmw3mjave and wmw3rl96e; Redmine note staged, not sent.
+- Found: a reply carrying a RULE-PLACEMENT line is stored only as an api-request-blob line (five times, 16:20 to 16:40), so every text-reading gate is blind to it; the line went through a PowerShell here-string, which the gate reads.
+- Open: his "post it" for the note · int-env redeploy and stag-env merge are his · audit items 3 (report-action-scan), 4 (RAN runtime split), 7 (wrong-fix --log-evidence), 10 (one int-env merge per round).
+- Mistakes: first eval fixtures for P7 tripped the heading-above check (fixture, not gate); first STEP-3 goal line over 160 characters; the memory edit was retried five times before the transcript fault was found.
+- Assessment: A1 a text-reading gate needs a second channel when the harness drops the text (proposal logged). A2 the block lied for a day until ticket-gate re-open; sync should write it. A3 code-read fixes failed four times, the server log passed once: runtime RAN split still open. A4 our own 286610 config change was the cause; the scan Tool is still open. A5 W4 replaced tested fixes with a code-read one.
+
+**Last Activity (earlier)**: 2026-11-05 23:20 — worktree `penang-common-null-error-219adf`. 288059 submitted (15:11) · 287948 and 261986 submitted by miya · 287811: fix = fix 2 + 3 + 4 together (three writers of the Notis 5A name), tested PASS on MLIT 20:58, Redmine journal 7 to Mira 21:05; branch `mlk/internal/287811` rewritten to one commit d7ff0bec43, `mlk/int-env` reset to yihkitc's 39b917f870 + one merge f2ebd118f7, his clone reset to match (he said clean, others must not see the five failed commits). Pending on his word: "post it" (commit-reference journal on 287811, journal 7 names a hash that no longer exists). **system-change queue below: nine routes at step 3 with build code, order P2 P1 P3 P4 P5 P6 P7 P8 P9; his nod "go P2 P1" starts the build.** Earlier system-change step 3 (quest "check before asking" step) still paused (todo row).
+
+**Last Activity (288261 session)**: 2026-11-06 00:07 — worktree `redmine-288261-quest-d586ef`. 288261 rework patched, handed over, archived; rework audit (Fable 5.1) → B3 Patch scope built via /system-change (ticket-load-verify.js v1.6 + quest Pre-emit gate row, commit 8e1090ee, landed: GitHub main 921ff221, main folder 0bf3d0ad); eval 28/28 green. Open: redmine-write-gate blocks a direct `node quest/ticket-load-verify.eval.js` (fixture key `status_id:`); the READ_ONLY_SCRIPT exemption for `.eval.js` was denied by the auto-mode classifier, needs miya's nod as its own /system-change.
+
+**Last Activity (UPP adhoc session)**: 2026-11-06 00:20 — worktree `dreamy-pike-08af0b`. ADHOC-UPP-2026-3: PROD UPP 18/19/20 signed 03/11 after 1.9.1, letters made 26-27/10 with the old template, sign step fills the stored letter; BA's "so data patching?" answered: yes for 19 and 20 only. Open: BA ticket number → patch-mlk-doc for 19/20; Jana Semula on staging untested.
+
 ## Session Recap (2026-11-04 to 06, ADHOC-UPP-2026-3 UPP signature)
 - Asked: were UPP 18/19/20 signed before or after the release; then "ada perubahan template, so data patching?".
 - Done: real IDs found (/L/, not /B/); all three signed 03/11 after the 1.9.1 PROD release 02/11 22:16; cause traced (CommonMaklumanPembatalanForm.java:542 and :1229 fill the stored letter, :566-614 Jana Semula reloads the template); 36 open SMPPP letters swept; adhoc save-set 31/31 PASS.
@@ -8204,6 +8218,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
