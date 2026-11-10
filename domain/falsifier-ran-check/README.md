@@ -36,7 +36,7 @@ Fix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java
 | `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD` | miya took the risk | yes |
 | `SUPERSEDED: row N` | replaced by a live row | yes |
 | `RAN: n/a — <why this ticket has none>` | a standing row with nothing to run, reason written (2026-11-10) | yes, with a reason of 12+ characters |
-| `OPEN: after deploy` | a standing row that can only run on the deployed env (2026-11-10) | at the commit and the cli; never at the BA note |
+| `OPEN: after deploy` | a `standing:` row that can only run on the deployed env (2026-11-10); any other row stays a plain OPEN | at the commit and the cli; never at the BA note |
 
 ## What blocks
 
@@ -44,7 +44,7 @@ Fix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java
 |---|---|
 | `no-ledger` | the doc has a Rubric or a falsifier, or this is a code commit, and there is no ledger section |
 | `empty-ledger` | ledger with no rows |
-| `standing-missing` | a quest started from 2026-11-11 whose ledger lacks one of `standing: path · siblings · render · given · env` |
+| `standing-missing` | the ledger lacks one of `standing: path · siblings · render · given · env` |
 | `open` / `broke` / `bad-status` | a row is unrun, refuted with no replacement, or has no evidence |
 | `drift` / `no-fix-files` | a staged file is not on the `Fix files:` line (the design moved after the Rubric). Skipped on a merge commit |
 | `stage-separately` | `git add` and `git commit` in one command, or `commit -a` |

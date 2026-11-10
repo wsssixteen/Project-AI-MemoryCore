@@ -187,7 +187,7 @@ Fix files: <File1.java>, <File2.xhtml>
 | 1 | <chosen fix, one line> | <data shape that proves it wrong> | <the 5-minute run that would show it> | OPEN |
 | 2 | standing: path | a langkah, choice or role after the fix still fails or loses the value | with the BA's own ID and scenario, walk past the first error to the last langkah; save, then reload | OPEN |
 | 3 | standing: siblings | another screen, template, variant, tugasan, holder or caller shares the changed thing and is not fixed | list every sharer (grep / codegraph) and check each one | OPEN |
-| 4 | standing: render | the printed document differs from the BA's expected file | print the real document and compare its text and its layout (position, spacing, alignment) with the BA's file (`doc-sim`) | OPEN |
+| 4 | standing: render | the printed document differs from the BA's expected file | print the real document for the BA's own ID and compare its text and its layout (position, spacing, alignment) with the BA's file (`doc-sim`) | OPEN |
 | 5 | standing: given | a BA item, attachment, mockup or linked ticket is not answered | tick every one against the fix | OPEN |
 | 6 | standing: env | the fix is missing on an env the BA tests | check the branch and the data on every env the BA tests | OPEN |
 

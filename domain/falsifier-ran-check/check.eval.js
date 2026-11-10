@@ -42,7 +42,9 @@ const RUBRIC = [
   '| C1 | Editor upload with unchanged content returns the old id | WordEditorService.java:133 | common |', '',
   '- Falsifier C1: Word no-op save that changes body XML beyond rsid/paraId → compare says "changed" → still bumps.', '',
 ].join('\n');
-const HEAD = '## Falsifier ledger\n\nFix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java\n\n| # | design | falsifier | cheapest test | status |\n|---|---|---|---|---|\n';
+const HEAD0 = '## Falsifier ledger\n\nFix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java\n\n| # | design | falsifier | cheapest test | status |\n|---|---|---|---|---|\n';
+const STAND = ['path', 'siblings', 'render', 'given', 'env'].map((k, i) => `| ${91 + i} | standing: ${k} | ${k} gap | ${k} run | RAN: ${k} checked on the BA ID, nothing found |\n`).join('');
+const HEAD = HEAD0 + STAND; // every ledger carries the five standing rows (2026-11-10)
 const row = (n, status, f) => `| ${n} | same-content compare | ${f || 'Word no-change save changes body XML beyond rsid/paraId'} | Word COM re-save of a template + compare | ${status} |\n`;
 const doc = body => fs.writeFileSync(DOC, RUBRIC + body);
 const cli = args => spawnSync(process.execPath, [CHECK, ...args], { encoding: 'utf8', env: { ...process.env, ...ENV }, timeout: 30000 });
@@ -81,7 +83,7 @@ doc(HEAD + row(1, 'done')); r = C.check('QA-244600'); ok('13 unknown status word
 doc(HEAD + row(1, 'RAN: 2026-10-04 re-save run, compare unchanged', 'row stays OPEN in Word when the doc is OPEN \\| locked'));
 r = C.check('QA-244600'); ok('14 the word OPEN and an escaped pipe inside the falsifier cell do not flip the status', r.ok, kinds(r));
 doc(HEAD + row(1, 'open')); r = C.check('QA-244600'); ok('15 lowercase "open" is OPEN', kinds(r) === 'open', kinds(r));
-doc(HEAD); r = C.check('QA-244600'); ok('16 ledger with zero rows blocks', kinds(r) === 'empty-ledger', kinds(r));
+doc(HEAD0); r = C.check('QA-244600'); ok('16 ledger with zero rows blocks', kinds(r) === 'empty-ledger', kinds(r));
 doc((HEAD + row(1, 'OPEN')).replace(/\n/g, '\r\n')); r = C.check('QA-244600'); ok('17 CRLF doc parses (OPEN seen)', kinds(r) === 'open', kinds(r));
 doc('```\n' + HEAD + row(1, 'RAN: example text inside a code fence only') + '```\n'); r = C.check('QA-244600'); ok('18 a ledger that exists only inside a code fence is not a ledger', kinds(r) === 'no-ledger', kinds(r));
 doc(HEAD + row(1, 'OPEN') + '\n## Rework cycle 1\n\n' + HEAD.replace('## ', '### ') + row(2, 'RAN: 2026-10-04 re-save run, compare unchanged'));
@@ -194,36 +196,43 @@ const st = (n, k, s) => `| ${n} | standing: ${k} | ${k} gap | ${k} run | ${s} |\
 const FIVE = (s, envS) => st(2, 'path', s) + st(3, 'siblings', s) + st(4, 'render', s) + st(5, 'given', s) + st(6, 'env', envS || s);
 const RAN5 = 'RAN: walked Simpan, Papar, Hantar with the BA ID, value kept after reload';
 const ev = (body, o) => C.evaluate(RUBRIC + body, o);
-r = ev(GOOD, { needLedger: true, standing: true });
+const GOOD0 = HEAD0 + row(1, 'RAN: 2026-10-04 re-save run, compare unchanged'); // a ledger with no standing rows
+r = ev(GOOD0, { needLedger: true, standing: true });
 ok('S1 new quest, ledger without the five rows → standing-missing ×5', r.fails.filter(f => f.kind === 'standing-missing').length === 5, kinds(r));
-r = ev(GOOD + FIVE(RAN5), { needLedger: true, standing: true });
+r = ev(GOOD0 + FIVE(RAN5), { needLedger: true, standing: true });
 ok('S2 new quest, five rows RAN with evidence → pass', r.fails.length === 0, kinds(r));
-r = ev(GOOD, { needLedger: true, standing: false });
-ok('S3 quest started before 2026-11-11 → no standing rows asked', r.fails.length === 0, kinds(r));
-r = ev(GOOD + FIVE('OPEN'), { needLedger: true, standing: true });
+r = ev(GOOD0, { needLedger: true });
+ok('S3 evaluate() without the standing option (direct callers) does not ask', r.fails.length === 0, kinds(r));
+r = ev(GOOD0 + FIVE('OPEN'), { needLedger: true, standing: true });
 ok('S4 five rows OPEN → 5 open fails', r.fails.filter(f => f.kind === 'open').length === 5, kinds(r));
-r = ev(GOOD + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'commit' });
+r = ev(GOOD0 + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'commit' });
 ok('S5 env OPEN: after deploy passes at the commit', r.fails.length === 0, kinds(r));
-r = ev(GOOD + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'note' });
+r = ev(GOOD0 + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'note' });
 ok('S6 env OPEN: after deploy blocks the BA note', kinds(r) === 'open', kinds(r));
-r = ev(GOOD + FIVE('RAN: n/a'), { needLedger: true, standing: true });
+r = ev(GOOD0 + FIVE('RAN: n/a'), { needLedger: true, standing: true });
 ok('S7 bare RAN: n/a on the five → 5 bad-status', r.fails.filter(f => f.kind === 'bad-status').length === 5, kinds(r));
-r = ev(GOOD + FIVE('RAN: n/a — patch ticket, no screen changes'), { needLedger: true, standing: true });
+r = ev(GOOD0 + FIVE('RAN: n/a — patch ticket, no screen changes'), { needLedger: true, standing: true });
 ok('S8 RAN: n/a with a reason → pass', r.fails.length === 0, kinds(r));
-r = ev(GOOD + st(2, 'path', RAN5) + st(3, 'siblings', RAN5), { needLedger: true, standing: true });
+r = ev(GOOD0 + st(2, 'path', RAN5) + st(3, 'siblings', RAN5), { needLedger: true, standing: true });
 ok('S9 two of five present → standing-missing ×3', r.fails.filter(f => f.kind === 'standing-missing').length === 3, kinds(r));
-r = ev(GOOD + FIVE(RAN5).replace(/standing: /g, 'S: '), { needLedger: true, standing: true });
+r = ev(GOOD0 + FIVE(RAN5).replace(/standing: /g, 'S: '), { needLedger: true, standing: true });
 ok('S10 rows renamed away from "standing:" → standing-missing ×5', r.fails.filter(f => f.kind === 'standing-missing').length === 5, kinds(r));
-r = ev(GOOD + FIVE('OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'cli' });
+r = ev(GOOD0 + FIVE('OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'cli' });
 ok('S11 OPEN: after deploy passes the cli (close-phase step 1)', r.fails.length === 0, kinds(r));
-r = ev(GOOD + FIVE('OPEN: later'), { needLedger: true, standing: true, ctx: 'commit' });
+r = ev(GOOD0 + FIVE('OPEN: later'), { needLedger: true, standing: true, ctx: 'commit' });
 ok('S12 any other OPEN: text still blocks the commit', r.fails.filter(f => f.kind === 'open').length === 5, kinds(r));
-active('true', 'quest_start=2026-11-11'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
-ok('S13 check(): block quest_start 2026-11-11, doc without the five → fails', !r.ok && /standing-missing/.test(kinds(r)), kinds(r));
-active('true', 'quest_start=2026-11-10'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
-ok('S14 check(): block quest_start 2026-11-10 → not asked, passes', r.ok, kinds(r));
-active('true'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
-ok('S15 check(): block with no quest_start → not asked, passes', r.ok, kinds(r));
+active('true', 'quest_start=2026-11-11'); doc(GOOD0); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S13 check(): doc without the five → fails', !r.ok && /standing-missing/.test(kinds(r)), kinds(r));
+active('true', 'quest_start=2026-10-01'); doc(GOOD0); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S14 check(): an older quest (quest_start 2026-10-01) is asked too (round 2: no cut-off)', !r.ok && /standing-missing/.test(kinds(r)), kinds(r));
+active('true'); doc(GOOD0); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S15 check(): a block with no quest_start is asked too', !r.ok && /standing-missing/.test(kinds(r)), kinds(r));
+r = ev(GOOD0 + row(2, 'OPEN: after deploy') + FIVE(RAN5), { needLedger: true, standing: true, ctx: 'commit' });
+ok('S16 a Rubric row (not standing:) cannot wait: OPEN: after deploy blocks the commit', kinds(r) === 'open', kinds(r));
+r = ev(GOOD0 + FIVE(RAN5, 'OPEN — after the deploy'), { needLedger: true, standing: true, ctx: 'commit' });
+ok('S17 "OPEN — after the deploy" spelling waits too', r.fails.length === 0, kinds(r));
+active('true'); doc((HEAD + row(1, 'RAN: 2026-10-04 re-save run, compare unchanged')).replace('RAN: env checked on the BA ID, nothing found', 'OPEN: after deploy')); r = cli(['QA-244600']);
+ok('S18 cli clear line names the rows waiting after deploy', r.status === 0 && /1 waiting after deploy/.test(r.stdout), r.status + ' ' + r.stdout.slice(0, 160));
 
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 let failed = 0;
