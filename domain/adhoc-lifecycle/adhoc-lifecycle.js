@@ -171,9 +171,36 @@ function cmdPromote() {
   // The ticket a hold waited for has arrived: release it so the normal close path can run later.
   for (const released of archiveHold.releaseByRegisterRow(id, ticket, holdFile())) console.log('  archive hold released on ' + released + ' (ticket ' + ticket + ' arrived)');
   const mv = slug ? moveDir(slug, 'archive') : { moved: false, why: 'no-slug-given' };
-  editStatus(id, 'TICKETED → ' + ticket + ' (' + nowIso().slice(0, 10) + ')', 'promote', { ticket, dirMove: mv });
+  const doc = mv.moved ? migrateDoc(slug, ticket) : { migrated: false, why: mv.why };
+  editStatus(id, 'TICKETED → ' + ticket + ' (' + nowIso().slice(0, 10) + ')', 'promote', { ticket, dirMove: mv, docMigrate: doc });
   if (mv.moved) console.log('  qa_doc moved -> archive\\' + slug);
   else console.log('  qa_doc NOT moved (' + mv.why + ') — move by hand if needed');
+  if (doc.migrated) console.log('  quest doc created -> active\\' + ticket + '\\' + ticket + '.md' + (doc.repointed ? ' (active.txt qa_doc repointed)' : ' (no ' + ticket + ' block in active.txt yet)'));
+  else console.log('  quest doc NOT created (' + doc.why + ')');
+}
+
+// The ticket gets its own quest doc under its own name (2026-11-10, 288533: promote left the
+// QA block pointing at the archived ADHOC-*.md). Copies the adhoc doc to active/<QA>/<QA>.md
+// and repoints qa_doc= in the QA block of quest/active.txt when that block exists.
+function migrateDoc(slug, ticket) {
+  const from = path.join(archiveDir(), slug);
+  const src = fs.existsSync(path.join(from, slug + '.md')) ? path.join(from, slug + '.md')
+    : (fs.readdirSync(from).filter(f => f.endsWith('.md')).map(f => path.join(from, f))[0]);
+  if (!src) return { migrated: false, why: 'no-md-in-' + slug };
+  const destDir = path.join(activeDir(), ticket), dest = path.join(destDir, ticket + '.md');
+  try {
+    fs.mkdirSync(destDir, { recursive: true });
+    if (!fs.existsSync(dest)) fs.writeFileSync(dest, '# ' + ticket + ' (from ' + slug + ')\n\n' + fs.readFileSync(src, 'utf8'));
+  } catch (e) { return { migrated: false, why: String(e && e.message || e) }; }
+  const rel = 'projects/coding-projects/active/' + ticket + '/' + ticket + '.md';
+  const activeTxt = arg('root') ? path.join(ROOT, 'quest', 'active.txt') : path.join(mainRoot(), 'quest', 'active.txt');
+  let repointed = false;
+  if (fs.existsSync(activeTxt)) {
+    const txt = fs.readFileSync(activeTxt, 'utf8');
+    const re = new RegExp('(qa=' + ticket.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\r?\\n(?:(?!\\r?\\n\\r?\\n)[\\s\\S])*?qa_doc=)[^\\r\\n]*');
+    if (re.test(txt)) { fs.writeFileSync(activeTxt, txt.replace(re, '$1' + rel)); repointed = true; }
+  }
+  return { migrated: true, dest, repointed };
 }
 
 function cmdArchive() {
