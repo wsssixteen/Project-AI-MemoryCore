@@ -1993,6 +1993,10 @@
 {"ts":"2026-11-05T16:35:14.026Z","category":"A4"}
 {"ts":"2026-11-06T02:31:11.922Z","category":"A1"}
 {"ts":"2026-11-06T02:31:13.217Z","category":"reply-shape"}
+{"ts":"2026-11-06T07:08:57.791Z","category":"scope-drift"}
+{"ts":"2026-11-06T08:45:48.611Z","category":"reask/redundant"}
+{"ts":"2026-11-06T09:37:06.338Z","category":"script-rule"}
+{"ts":"2026-11-10T02:47:22.045Z","category":"gate/repeat-block"}
 {"ts":"2026-11-06T07:00:54.522Z","category":"blocker"}
 {"ts":"2026-11-06T07:09:38.283Z","category":"tab-hygiene"}
 {"ts":"2026-11-06T11:53:53.959Z","category":"plan-before-act"}
@@ -2005,6 +2009,7 @@
 {"ts":"2026-11-10T02:39:04.641Z","category":"A1"}
 {"ts":"2026-11-10T02:39:09.264Z","category":"A2"}
 {"ts":"2026-11-10T02:39:12.958Z","category":"A4"}
+{"ts":"2026-11-10T02:48:16.524Z","category":"blocker"}
 {"ts":"2026-11-10T02:36:16.610Z","category":"blocker"}
 {"ts":"2026-11-10T02:40:47.023Z","category":"A2"}
 {"ts":"2026-11-10T02:40:50.476Z","category":"A4"}
