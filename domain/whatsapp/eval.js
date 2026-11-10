@@ -56,6 +56,16 @@ if (fs.existsSync(path.join(WAREAD, 'wa-read.js'))) {
   check('WaRead ALLOW list has no sendMessage / readMessages / chatModify / logout', ['sendMessage', 'readMessages', 'chatModify', 'logout', 'sendPresenceUpdate'].every(k => !ro.ALLOW.includes(k) && ro.DENY.includes(k)));
   const cli = fs.readFileSync(path.join(WAREAD, 'wa-read.js'), 'utf8');
   check('WaRead CLI sets markOnlineOnConnect:false', /markOnlineOnConnect:\s*false/.test(cli));
+  // the watcher (2026-11-10): its own selftest, the rules-only fallback, the heartbeat, stop reasons, child outcome
+  const ws = spawnSync(process.execPath, ['watcher-selftest.js'], { cwd: WAREAD, encoding: 'utf8', timeout: 120000 });
+  check('WaRead watcher selftest is green', ws.status === 0, (ws.stdout || '').split('\n').filter(l => /FAIL|failed/.test(l)).join(' | '));
+  const judgeSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'watcher', 'judge.js'), 'utf8');
+  check('watcher: a failed judge call falls back to the rules, never a blind hold', /function fallbackVerdict/.test(judgeSrc) && !/issueKey: 'judge-error-'/.test(judgeSrc));
+  const watchSrc = fs.readFileSync(path.join(WAREAD, 'wa-watch.js'), 'utf8');
+  check('watcher: a heartbeat row with pid every 5 minutes', /event: 'heartbeat', pid: process\.pid/.test(watchSrc) && /setInterval\(beat, 5 \* 60 \* 1000\)/.test(watchSrc));
+  check('watcher: every stop row carries a reason', !/event: 'daemon-stop' \}/.test(watchSrc) && /reason: 'logged-out'/.test(watchSrc));
+  const spawnSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'watcher', 'spawn.js'), 'utf8');
+  check('watcher: a headless child that ends is logged done or failed', /function childOutcome/.test(spawnSrc) && /'child-done' : 'child-failed'/.test(spawnSrc));
 } else {
   console.log('  SKIP  WaRead tool not on this machine — tool checks skipped');
 }
