@@ -1,6 +1,6 @@
 goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote scan)
 symptom: not recorded at birth (pre-Rule-13 feature)
-goal: known-bug-surfacer.hook.js — PreToolUse Read|Edit|Write hook (scan Power). When a Read/Edit/Write targets an etanah `.java` file that has recorded known bugs in `domain/scan/known-bugs.jsonl` (status != "fixed"), surface them NOW —
+goal: /scan finds real defects in etanah Java (PMD + SpotBugs) and records confirmed ones in `domain/scan/known-bugs.jsonl`.
 goal_signal: a fire on: its trigger
 retention: rotate monthly
 # Power: scan — static bug-pattern detection for etanah
@@ -14,16 +14,15 @@ retention: rotate monthly
 | `../../.claude/skills/scan/SKILL.md` | the invocable `/scan` skill (procedure) |
 | `scan.js` | the runner — resolves target, runs both tools, merges, prints, `--record`s, `--selftest`s |
 | `bug-ruleset.xml` | curated PMD ruleset — error-prone bug-classes only, no style noise |
-| `known-bug-surfacer.hook.js` | PreToolUse Read\|Edit\|Write — surfaces recorded known-bugs for a file the moment you touch it |
-| `known-bugs.jsonl` | the store — `/scan --record` appends; surfacer reads; mark `status:"fixed"` when resolved |
-| `log.jsonl` | instrumentation (every run + every surfacer fire) |
+| `known-bugs.jsonl` | the store — `/scan --record` appends; mark `status:"fixed"` when resolved |
+| `log.jsonl` | instrumentation (every run) |
 
 Tools live at `%LOCALAPPDATA%\etanah-static-analysis` (PMD 7.25 + SpotBugs 4.10), out of the repo (no OneDrive bloat). `node scan.js --setup` checks them.
 
 ## What fires when
 
 - **`/scan <file|package>`** — manual, on the blast-radius during Recon, or after editing a class. Skill-triggered.
-- **known-bug-surfacer** — deterministic, on every Read/Edit/Write of a `.java` file that has a recorded known-bug. Advisory, fail-open.
+- The `known-bug-surfacer` PreToolUse hook was retired 2026-11-10: 53,772 runs, 0 surfaced since telemetry began 2026-07-12 (3 rows, all 2026-07-08).
 
 ## Evidence it works (2026-06-22 spike)
 
@@ -33,4 +32,4 @@ Tools live at `%LOCALAPPDATA%\etanah-static-analysis` (PMD 7.25 + SpotBugs 4.10)
 
 ## Decay / audit
 
-Per `/system-rules` Rule 3: if `log.jsonl` shows /scan unused for 60 days, reconsider. Per Rule 5: every run + surfacer fire is logged. The tools auto-stay current only by manual re-download (pin: PMD 7.25, SpotBugs 4.10).
+Per `/system-rules` Rule 3: if `log.jsonl` shows /scan unused for 60 days, reconsider. Per Rule 5: every run is logged. The tools auto-stay current only by manual re-download (pin: PMD 7.25, SpotBugs 4.10).

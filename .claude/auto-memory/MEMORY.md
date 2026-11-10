@@ -5,7 +5,6 @@
 > BEFORE MERGING, RENAMING OR DELETING A MEMORY: search the whole repo (tracked + untracked, underscore and hyphen spellings) for its name, keep or repoint every live referrer, then run the evals of every hook or skill that reads it. Show the result.
 
 ## Always on
-- [simple-fix-no-probe-no-local-test](feedback_simple_fix_no_probe_no_local_test.md) — 🚨 simple 80%+ additive fix he agreed to → commit + deploy straight away; no probe loggers, no local-test ask
 - [no-unrequested-fix-photo](feedback_no_unrequested_fix_photo.md) — 🚨 no fix photo or image unless miya asks; only a real after-fix screen, never a box drawn on BA's before-screenshot
 - [reply-shape](feedback_reply_separation_of_concerns.md) — 🚨 long table or list (over ~5 rows, over 2 tables) becomes ONE drawing, one thing at a time; numbered topics, 2-sentence default, shortest option, mark extras
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, approval text he types back in its own text block (never quoted in a table cell), full folder path every time, chat tables are normal Markdown, never a code block, plain punctuation, show it in chat; 🚨 ticket numbers as plain digits, never #286462 (dead link, cannot copy)

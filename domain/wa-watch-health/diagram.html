@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>wa-watch-health: a dead WhatsApp watcher is named at the next session start · Flowchart</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #bf4520;
+      --font-sans:     'Segoe UI', Arial, sans-serif;
+      --font-mono:     Consolas, ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; padding: 28px 32px; box-sizing: content-box; background: var(--color-paper); }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-sans); font-size: clamp(1.4rem, 2.2vw + 0.7rem, 1.8rem); font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; color: var(--color-ink); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · domain/wa-watch-health</p>
+    <h1>A dead WhatsApp watcher is named at the next session start</h1>
+
+    <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">wa-watch-health flow</title>
+      <desc id="d">The watcher writes a heartbeat every five minutes and a stop reason. At session start the check reads the tail of that log and the waiting list. Healthy means silent. Otherwise one alarm line per problem, with its fix command, reaches the first reply.</desc>
+      <defs>
+        <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/></pattern>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <rect width="100%" height="100%" fill="url(#dots)" opacity="0.55"/>
+
+      <line x1="220" y1="84" x2="264" y2="84" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="470" y1="84" x2="514" y2="84" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="720" y1="84" x2="764" y2="84" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 620,112 V 200" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <line x1="514" y1="232" x2="376" y2="232" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+      <text x="742" y="74" fill="#4f5d75" font-size="9" font-family="Consolas, monospace" text-anchor="middle">all good</text>
+      <text x="632" y="160" fill="#bf4520" font-size="9" font-family="Consolas, monospace">a problem</text>
+
+      <rect x="40" y="56" width="180" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="130" y="80" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Watcher writes its log</text>
+      <text x="130" y="96" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">heartbeat 5 min · stop reason</text>
+
+      <rect x="270" y="56" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="370" y="80" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">A session starts</text>
+      <text x="370" y="96" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">SessionStart hook</text>
+
+      <rect x="520" y="56" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="620" y="80" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Read the log tail</text>
+      <text x="620" y="96" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">alive? login? starts waiting?</text>
+
+      <rect x="770" y="56" width="190" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="865" y="80" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">Silent</text>
+      <text x="865" y="96" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">nothing printed</text>
+
+      <rect x="520" y="204" width="200" height="56" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+      <text x="620" y="228" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">One WA-WATCH line each</text>
+      <text x="620" y="244" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">stopped · login dead · waiting</text>
+
+      <rect x="170" y="204" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="270" y="228" fill="#2d3142" font-size="11" font-weight="600" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">First reply tells you</text>
+      <text x="270" y="244" fill="#4f5d75" font-size="8" font-family="Consolas, monospace" text-anchor="middle">with the fix command</text>
+    </svg>
+  </div>
+</body>
+</html>

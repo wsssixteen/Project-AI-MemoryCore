@@ -52,7 +52,6 @@ The DOC-SIM line goes into `QA-<num>.md` and into the reply. The permohonan is p
 | Gate | What doc-sim gives it |
 |---|---|
 | `TEMPLATE-SCENARIO:` (`domain/template-scenario/`) | The chain output is the paper whose changed CC tags, word diff and green highlight are checked |
-| `RENDER-VERIFY:` (`domain/render-verify/`) | The generated `.docx` to open and read is `out\<run>\…__filled.docx` |
 
 ## What it never covers
 

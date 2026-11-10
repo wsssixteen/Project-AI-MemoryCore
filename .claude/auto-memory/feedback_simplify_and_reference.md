@@ -5,7 +5,7 @@ type: feedback
 originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
 modified: 2026-10-04T08:56:49.208Z
 ---
-**Rule**: Etanah is a mature system — most patterns are already solved somewhere. Before adding any new fix, find the closest working analog (urusan/tugasan combination) that solves a similar problem and read its config + code path. Match the existing shape. When みや asks to "simplify" or says the implementation is "too much," the next iteration's diff MUST shrink — fewer files, fewer lines. If you're adding code after a simplify feedback, you're misreading the feedback.
+**Rule** (the size of a fix lives in CLAUDE.md Disposition rule 11; this file keeps the Etanah procedure): Etanah is a mature system — most patterns are already solved somewhere. Before adding any new fix, find the closest working analog (urusan/tugasan combination) that solves a similar problem and read its config + code path. When みや asks to "simplify" or says the implementation is "too much," the next iteration's diff MUST shrink (item 2 below).
 
 **Why:** During QA #258022 (3 sessions, 2026-04-28 → 2026-04-29), みや repeatedly told me:
 - "This is a mature system — things are catered for"
@@ -97,7 +97,7 @@ enforcement: hook-pending: null-bug lifecycle gate (P1)
 
 > 🚨 Loggers ONLY when needed (diagnosis under 80%). When they are needed: extensive (every candidate path, at least 3) PLUS fallback loggers for when the run does not go through the paths I expected
 
-**Scope (みや 2026-10-04, corrected the same day):** loggers go in only when the diagnosis is still uncertain (Rubric confidence under 80%, or a runtime-only residue). An agreed fix at 80% or more ships with no loggers and no local test: [[simple-fix-no-probe-no-local-test]]. I first wrote this rule as "every fix build, every time"; that was wrong and he rejected it.
+**Scope (みや 2026-10-04, corrected the same day):** loggers go in only when the diagnosis is still uncertain (Rubric confidence under 80%, or a runtime-only residue). An agreed fix at 80% or more ships with no loggers and no local test (quest skill, "Before any `git commit` on a quest" step 2, fast path). I first wrote this rule as "every fix build, every time"; that was wrong and he rejected it.
 
 When loggers ARE needed, the build that goes to みや carries `QA<num>-PROBE` loggers, planned as a PROBE COVERAGE MATRIX before the edit:
 

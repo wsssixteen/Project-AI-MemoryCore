@@ -58,7 +58,7 @@ const passed = r => r.status === 0;
 const lastDecision = sb => { const l = sb.log(); return l && l.length ? l[l.length - 1].decision : null; };
 
 // F0: Rule 9 / Rule 13 build artefacts present
-check('F0 NUKE-MARKER.md + README keys present', fs.existsSync(path.join(__dirname, 'NUKE-MARKER.md')) && ['symptom', 'goal', 'goal_signal', 'retention', 'footprint'].every(k => new RegExp('^' + k + ':\\s*\\S', 'm').test(fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8'))), 'missing');
+check('F0 README keys present (NUKE-MARKER retired 2026-11-10, Feature trusted)', ['symptom', 'goal', 'goal_signal', 'retention', 'footprint'].every(k => new RegExp('^' + k + ':\\s*\\S', 'm').test(fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8'))), 'missing');
 // F0b: registered in settings.json under a matcher that covers Edit, Write and MultiEdit
 {
   let reg = false;

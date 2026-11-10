@@ -23,6 +23,8 @@ for (const s of ['Boundary call-site', 'Input contract', 'Name walk-back', 'Sibl
 check('C7 four verdicts OURS/THEIRS/BOTH/CATER', ['**OURS**', '**THEIRS**', '**BOTH**', '**CATER**'].every(v => SKILL.includes(v)));
 check('C8 points at OTHER-MODULES.md', SKILL.includes('OTHER-MODULES.md'));
 check('C9 replay case recorded in History', /ADHOC-PRBB-2026-6/.test(SKILL) && /et_ptg/.test(SKILL));
+// 2026-11-10: step 8 Impact card for Alex (modules touched, owner, who tests, days ours / waiting, one SLA line).
+check('C10 step 8 Impact card: the five columns, the SLA line, the hand-back ban', /## Step 8 — Impact card/.test(SKILL) && /\| Module touched \| Owner \| What changes there \| Who tests it \| Days \(ours \/ waiting on them\) \|/.test(SKILL) && /SLA line/.test(SKILL) && /Banned\*\*: a cross-module hand-back with no card/.test(SKILL));
 
 // Wiring: every route into the skill names it.
 check('W1 cross-module-intake scanner alert names the skill', read(path.join(ROOT, 'domain', 'cross-module-intake', 'scan.js')).includes('cross-module-check'));
