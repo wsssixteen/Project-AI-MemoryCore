@@ -1,5 +1,14 @@
 **Last Activity**: 2026-11-06 00:45 — worktree `cool-margulis-5bb326` (branch claude/redmine-287346-audit-implement-a86f35), 287346 rework 1 shipped and Phase 1 closed, template-scenario check 6 (tag sources) built and landed, Domain Expansion.
 
+## Session Recap (2026-11-06 to 10, auto-start: 08:30 sweep by the clock, WhatsApp fast lane, watcher health)
+
+- **Ask** (2026-11-06): a scheduler so a Redmine ticket or a WhatsApp ask starts a session by itself. **Scope change 2026-11-10**: the Redmine poll is dropped ("I will obviously keep on checking it myself every hour"); the morning sweep and a quicker WhatsApp start stay.
+- **Built**: desktop scheduled task `sweep-0830-workday` (cron `30 8 * * 1-5`, fires about 08:36, saved in Bypass permissions mode, findings only) · WaRead watcher: a failed judge call falls back to the rules, a child that fails to start waits in `pending` and is retried, heartbeat every 5 min with pid, every stop row carries a reason, `status` prints health lines · new Feature `domain/wa-watch-health/` (SessionStart, one WA-WATCH line per problem, silent when healthy) · whatsapp README keys + 5 eval checks · note in the sweep skill.
+- **Proven**: a desktop scheduled task starts a session on the app's own login (probe 2026-11-10, session created 46 s after the fire time, succeeded). Evals: wa-watch-health 20/20 · whatsapp 25 · WaRead watcher selftest 56 · WaRead selftest 51.
+- **Not done / not verified**: the watcher daemon is NOT running and its Claude login is dead since 2026-10-15; `claude login` is his step, then `node E:\Dev\scripts\WaRead\wa-watch.js check-login`, then `schtasks /run /tn "WaRead Watcher"`. The fast lane has not fired on a live message. The first 08:30 run is 2026-11-11. A daemon start and stop 3 seconds apart at 13:31 on 2026-11-10 has no known cause (old code, no reason logged).
+- **Blocker logged**: the step-3 rider of design-consult-gate could not see the reply lines (the transcript held no text block for those messages); writes to rider paths went through node scripts. Slips row 2026-11-10, category blocker.
+- **WaRead repo**: own git repo, no remote; the change is committed there separately.
+
 ## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
 - Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
 - Done: c2364d2bde on mlk/esokongan/287346, int-env a32fb6abab; marked paper in 3. Rework; Redmine 287346 Resolved to Nurhafizah 05/11 17:17; wrong-fix rows 1 and 2 ruled; template-scenario check 6 (tag-sources.js + tag-sources.json, eval 58/58) on GitHub main c0177357, main folder d12719a8; quest Phase 1 closed (WAIT for Redmine Closed).
@@ -174,6 +183,36 @@ try {
 } catch (_) {}
 ```
 Fixture +2 in `design-consult-gate.eval.js`.
+
+STEP-3: auto-start (new Feature domain/wa-watch-health · WhatsApp fast lane in wa-watch.js · sweep at 08:30)
+session: 2026-11-10 dreamy-pike-08af0b (6/11/2026 - redmine scheduler, WA adhoc automation)
+his words: "Yes, build it here" (order) · "for the whatsapp message should be much quicker" · 2026-11-10: "I think we need to change for the redmine tickets. I will obviously keep on checking it myself every hour, we'll stick with the ones that is the original plan like sweep at the morning"
+fix or report: fix
+who pays: per-session: one SessionStart hook reading one log file and one registry file, no process kept; the WaRead daemon (already always-on) gains one log append every 5 min; one desktop task run at 08:30 on work days; no Redmine poll and no recurring dispatcher
+goal without the part: the WhatsApp watcher has fired 0 sessions since 2026-09-14, its CLI login has been dead since 2026-10-15 and the daemon stopped on 2026-11-03, and nothing told him; a sweep starts only when he types it
+appraise: A = "a desktop scheduled task starts a session" is proven (probe 2026-11-10, session created 46 s after fire time); the fast lane's headless child still needs his one-time `claude login`, not verified until he runs it. S = the Redmine poll is dropped on his words; a 5-minute recurring desktop task is rejected (about 120 mostly empty sessions a day). C = a failed child start was never detected, a judge failure held every message; both are closed by this change
+model: claude-fable-5-2 (highest; the boot check runs once per session; built by this session)
+shown: auto-start.png (the plan, sent 2026-11-10) · change-map-20261110-054711.png (planned change map)
+
+CHANGE-CARD (before): auto-start
+- What: A WhatsApp work message in a watched room starts a session within seconds, a sweep starts by itself at 08:30 on work days, and a dead watcher is named in the first reply of the next session.
+- Why: On 2026-11-10 you dropped the Redmine poll and kept the morning sweep and a quicker WhatsApp start, and the check showed the watcher had fired 0 sessions since 2026-09-14 because its login died unseen.
+- How: The watcher falls back to its own rules when the judge call fails and logs a heartbeat and a stop reason, a boot check reads that log, and one desktop scheduled task runs the sweep.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\auto-start.png)
+- When: A message is handled the moment it lands, the heartbeat is written every 5 minutes, the boot check runs at every session start and the sweep at 08:30 Monday to Friday.
+- Where: The boot check lives in `domain/wa-watch-health/`, the watcher change in `E:\Dev\scripts\WaRead\`, the sweep note in `.claude/skills/sweep/SKILL.md`, and the map in `system/INDEX.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-054711.png)
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): auto-start
+- What: A WhatsApp work message in a watched room now starts its session by the rules even when the judge call fails, a sweep starts by the clock at 08:30 on work days, and a stopped watcher or a dead login is one `WA-WATCH` line at the next session start.
+- Why: You dropped the Redmine poll on 2026-11-10 and kept the morning sweep and a quicker WhatsApp start, and the watcher had been dead for weeks with no alarm.
+- How: The watcher gained a rules-only fallback, a waiting list with retry, a heartbeat and a stop reason, a new session-start check reads that log, and the desktop task `sweep-0830-workday` runs the sweep.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\auto-start.png)
+- When: A message is handled the moment it lands once the watcher runs again, the heartbeat is written every 5 minutes, the check runs at every session start and the sweep fires at about 08:36 Monday to Friday while the Claude app is open.
+- Where: The check is `domain/wa-watch-health/`, the watcher change is in `E:\Dev\scripts\WaRead\`, the note is in `.claude/skills/sweep/SKILL.md`, and the system map is unchanged because it does not draw single Features.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-060251.png)
+Where picture = the change map (lib/change-map.js).
 
 STEP-3: 287811 audit round 2 (P5 ticket-close-block · P6 login-gate v6 · P7 next-steps-shape v6 · P8 design-consult-gate quest-turn rider · P9 memory)
 session: 5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc

@@ -433,3 +433,11 @@ Audit 2026-10-29 of the plan's 81 items: 47 built, 4 dropped, 30 open. The open 
 | G8 | Before/after proof for each built item (Q3, Q5, the turn-ledger layer, part of Q7) against the §1 baselines (boot 45 s · Stop 5,238 s per 30 d · block rate 2.3% · false blocks 58% in one session), or drop the condition by ruling | :363 |
 | A2 | Feature audit run 2 from the turn-ledger rows (goal · fires · blocks · slip recurrence · duplicates); his nod on RETIRE and MERGE rows only; then execute them (tombstone one cycle) together with the 6a delete | :267, :273 |
 | B5 | The three uncollected blind spots (subagent/Workflow cost · MCP query counts · his reaction beyond reask/correction/nod): collect in the turn ledger or list as "unknown" in the audit | :285 |
+
+## TODO (2026-11-10, auto-start: 08:30 sweep + WhatsApp fast lane + watcher health)
+
+- **His step**: `claude login` in a terminal, then `node E:\Dev\scripts\WaRead\wa-watch.js check-login`, then `schtasks /run /tn "WaRead Watcher"`. Until then the watcher stays stopped and `WA-WATCH` prints at every session start.
+- Watch the first clock-started sweep (2026-11-11, about 08:36): did the session start, did the work-day check and the sweep run, was anything written outside the findings files.
+- The fast lane has not fired on a live WhatsApp message: after his login, confirm one `child-start` then `child-done` row in `%USERPROFILE%\.wa-read\events.jsonl`.
+- design-consult-gate step-3 rider: on 2026-11-10 the transcript held no text block for the assistant messages that carried the three lines, so the rider blocked four times. Find why those text blocks are absent (not verified) before trusting the rider on a long session. Slips row 2026-11-10, blocker.
+- `domain/whatsapp` still shows "no log (unobservable)" in the feature census: its log lives in `%USERPROFILE%\.wa-read\events.jsonl`, outside the folder. Decide: teach the census that path, or leave it named.
