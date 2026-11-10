@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-// template-scenario.eval.js — fixtures for the orchestrator logic, the Stop gate and the fix-photo box rule.
+// template-scenario.eval.js — fixtures for the orchestrator logic and the fix-photo box rule. The Stop gate was retired 2026-11-10.
 'use strict';
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const T = require('./template-scenario.js');
-const { decide } = require('./template-scenario.check.hook.js');
 
 let pass = 0, fail = 0;
 function check(name, ok, info) { if (ok) { pass++; console.log('PASS  ' + name); } else { fail++; console.log('FAIL  ' + name + (info ? '  :: ' + info : '')); } }
@@ -49,24 +48,6 @@ const d3 = T.wordDiff('Nama Norazmar bin Jais'.split(' '), [...tok('Nama', 'stat
 check('F17 sample name vs real name is DATA', d3.length && d3.every(d => d.cls === 'DATA'), JSON.stringify(d3));
 const d4 = T.wordDiff('Penjenisa : Bangunan'.split(' '), [...tok('Penjenisan', 'static'), ...tok(':', 'static'), ...tok('Bangunan', 'cc')], ['Penjenisa']);
 check('F18 accepted requirement typo is ACCEPTED, not DEFECT', d4.every(d => d.cls !== 'DEFECT'), JSON.stringify(d4));
-
-// ---- gate
-const J = (o) => JSON.stringify(o);
-const asst = (text, tools) => J({ type: 'assistant', message: { content: [...(tools || []).map(i => ({ type: 'tool_use', input: i })), { type: 'text', text }] } });
-const result = (text) => J({ type: 'user', message: { content: [{ type: 'tool_result', content: text }] } });
-const long = (s) => s + ' ' + 'x'.repeat(220);
-const work = { command: 'node domain/doc-sim/doc-sim.js chain --template TemplateKertasPertimbanganPentadbirTanah_MCL.docx' };
-check('F19 template hand-back with no run = BLOCK', decide([asst('run', [work]), asst(long('Salam Anis ... Redmine handover staged'))].join('\n')).blocked === true);
-check('F20 PASS line in a tool result = silent', !decide([asst('run', [work]), result('TEMPLATE-SCENARIO: PASS QA-287346 ...'), asst(long('Redmine handover staged'))].join('\n')).fired);
-check('F21 PASS typed only in my reply = still BLOCK (no self-disarm)', decide([asst('run', [work]), asst(long('TEMPLATE-SCENARIO: PASS QA-287346 · Redmine'))].join('\n')).blocked === true);
-check('F22 FAIL line does not satisfy', decide([asst('run', [work]), result('TEMPLATE-SCENARIO: FAIL QA-287346'), asst(long('Redmine handover'))].join('\n')).blocked === true);
-check('F23 non-template session hand-back = silent', !decide(asst(long('Redmine handover for a data patch'))).fired);
-check('F24 real bypass reason = bypassed', decide([asst('run', [work]), asst(long('[skip-template-scenario: PROD document patch, no template change] Redmine'))].join('\n')).bypassed === true);
-check('F25 placeholder bypass is refused', decide([asst('run', [work]), asst(long('[skip-template-scenario: <reason>] Redmine'))].join('\n')).blocked === true);
-check('F26 short reply = silent', !decide([asst('run', [work]), asst('Redmine?')].join('\n')).fired);
-check('F27 template work but no hand-back words = silent', !decide([asst('run', [work]), asst(long('Checked the sempadan rows.'))].join('\n')).fired);
-check('F28 bad JSON lines are skipped', decide(['{oops', asst('run', [work]), asst(long('Test Scenario'))].join('\n')).blocked === true);
-check('F29 block reason names the command and the bypass', /template-scenario\.js/.test(decide([asst('run', [work]), asst(long('Test Scenario'))].join('\n')).blockReason || '') && /skip-template-scenario/.test(decide([asst('run', [work]), asst(long('Test Scenario'))].join('\n')).blockReason || ''));
 
 // ---- fix-photo box rule (mark.py)
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ts-eval-'));

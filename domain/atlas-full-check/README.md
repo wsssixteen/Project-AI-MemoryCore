@@ -34,7 +34,7 @@ running it non-optional after an Atlas change. No front gate — nothing to prom
 leanest point — the check only matters when the Atlas actually changed this session, and
 Stop is the last moment before a "done / it works" claim reaches miya. A UserPromptSubmit
 trigger would fire on turns that never touched the Atlas; SessionStart would fire on boots
-that do no Atlas work. Same shape as the sibling `atlas-ship-gate`.
+that do no Atlas work. Same shape as the former sibling `atlas-ship-gate` (retired 2026-11-10).
 
 **Sibling / no-overlap**: `atlas-ship-gate` checks BUILD integrity (smoke test + one
 headless render of Melaka → `ship_check.json`). `atlas-full-check` checks INTERACTION
