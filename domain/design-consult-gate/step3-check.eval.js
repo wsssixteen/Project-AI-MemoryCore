@@ -54,6 +54,8 @@ function run(filePath, entries, sessionText, opts) {
   fs.writeFileSync(sf, sessionText || '');
   const input = { tool_name: 'Write', tool_input: { file_path: filePath, content: 'x' }, transcript_path: transcript(entries) };
   if (!o.noSession) input.session_id = SID; else input.transcript_path = '';
+  if (o.agent) input.agent_id = 'agent-1';
+  if (o.badTranscript) input.transcript_path = path.join(TMP, 'missing.jsonl');
   const env = Object.assign({}, process.env, { STEP3_SESSION_FILE: sf, MODELS_STATE_FILE: MODELS_FILE });
   const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(input), encoding: 'utf8', timeout: 30000, env });
   let deny = false, reason = '';
@@ -142,6 +144,81 @@ check('S24 an older block without a card does not matter; this session card pass
 
 r = run(NEWPART, [HIS], block() + '\n' + block({ session: 'other', card: null }));
 check('S25 card under this session block, next block another session -> allow', !r.deny, r.reason.slice(0, 160));
+
+// R-series: the build-turn rider (2026-11-10): three lines in the reply of any turn that edits a hook, skill, Feature file, rule file or memory file
+function mk(p) { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, 'x'); return p; }
+const EXHOOK = mk(path.join(TMP, '.claude', 'hooks', 'old-hook.js'));
+const EXSKILL = mk(path.join(TMP, '.claude', 'skills', 'old-skill', 'SKILL.md'));
+const EXRULE = mk(path.join(TMP, '.claude', 'CLAUDE.md'));
+const EXMEM = mk(path.join(TMP, '.claude', 'auto-memory', 'feedback_old.md'));
+const EXFEAT = mk(path.join(TMP, 'domain', 'old-feature', 'README.md'));
+const EXEVAL = mk(path.join(TMP, 'domain', 'old-feature', 'old-feature.eval.js'));
+const EXOTHER = mk(path.join(TMP, 'main', 'current-session.md'));
+const NEWMEM = path.join(TMP, '.claude', 'auto-memory', 'feedback_brand_new.md');
+const A = t => ({ role: 'assistant', text: t });
+const GOOD = 'his words: "Go, build it"\ncause step: .claude/hooks/old-hook.js:decide · change: 3 lines · new parts: 0';
+let rr;
+
+rr = run(EXHOOK, [HIS, ...CONSULT, A(GOOD)]);
+check('R1 existing hook, all three lines -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('I will fix the hook now.')]);
+check('R2 existing hook, no lines -> deny naming all three', rr.deny && /his words/.test(rr.reason) && /cause step/.test(rr.reason) && /new parts/.test(rr.reason), rr.reason.slice(0, 200));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('cause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R3 his words missing -> deny', rr.deny && /missing line: his words/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Go, build it"\nnew parts: 0')]);
+check('R4 cause step missing -> deny', rr.deny && /missing line: cause step/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Go, build it"\ncause step: hook.js:decide · change: 3 lines')]);
+check('R5 new parts missing -> deny', rr.deny && /missing line: new parts/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Please tidy everything else too"\ncause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R6 quote he never typed -> deny', rr.deny && /not in his messages/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "go,   BUILD it"\ncause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R7 quote with other case and spacing -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Go it"\ncause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R8 quote under 8 characters counts as missing -> deny', rr.deny && /missing line: his words/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A(GOOD)]);
+check('R9 creating a memory file while saying new parts: 0 -> deny', rr.deny && /does not exist yet/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A('his words: "Go, build it"\ncause step: MEMORY.md:index · change: 2 lines · new parts: 1 · replaces: feedback_old')]);
+check('R10 new memory file with new parts: 1 and the part it retires -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A('his words: "Go, build it"\ncause step: MEMORY.md:index · change: 2 lines · new parts: 1')]);
+check('R11 new parts: 1 with no replaces -> deny', rr.deny && /needs replaces/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A('his words: "Go, build it"\ncause step: MEMORY.md:index · change: 2 lines · new parts: 1 · replaces: none: miya said nothing leaves here')]);
+check('R12 new parts: 1 with replaces: none: <reason> -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A('his words: "Go, build it"\ncause step: MEMORY.md:index · change: 2 lines · new parts: 1 · replaces: TODO')]);
+check('R13 replaces: TODO -> deny', rr.deny && /needs replaces/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXSKILL, [HIS, ...CONSULT, A(GOOD)]);
+check('R14 existing skill, all three lines -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXSKILL, [HIS, ...CONSULT]);
+check('R15 existing skill, no lines -> deny', rr.deny, rr.reason.slice(0, 160));
+rr = run(EXRULE, [HIS, A('Editing the rule.')]);
+check('R16 rule file (CLAUDE.md), no lines -> deny', rr.deny, rr.reason.slice(0, 160));
+rr = run(EXMEM, [HIS, A('Editing the memory.')]);
+check('R17 memory file, no lines -> deny', rr.deny, rr.reason.slice(0, 160));
+rr = run(EXFEAT, [HIS, A('Editing the README.')]);
+check('R18 Feature file (README), no lines -> deny', rr.deny, rr.reason.slice(0, 160));
+rr = run(EXEVAL, [HIS, A('Adding a fixture.')]);
+check('R19 a Feature eval file is exempt -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXOTHER, [HIS, A('Saving the session.')]);
+check('R20 a path outside the five classes -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('no lines')], '', { agent: true });
+check('R21 inside a subagent (agent_id) -> allow, its caller carries the lines', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXMEM, [HIS, A('no lines')], '', { noSession: true });
+check('R22 no session_id (older synthetic input) -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [{ role: 'user', text: 'Fix the typo in the hook. [skip-step3: one-word typo]' }, ...CONSULT, A('no lines')]);
+check('R23 [skip-step3: reason] in HIS message -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A(GOOD), { role: 'user', text: 'Now do the next thing' }, A('Editing again.')]);
+check('R24 lines from an EARLIER turn do not carry over -> deny', rr.deny && /missing line: his words/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXMEM, [HIS, A('no lines')], '', { badTranscript: true });
+check('R25 transcript unreadable -> allow (fail open)', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Go, build it"\ncause step: <file:function>\nnew parts: 0')]);
+check('R26 cause step left as the <placeholder> -> deny', rr.deny && /missing line: cause step/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Go, build it" · cause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R27 all three on one line -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(HIGH, [HIS, ...CONSULT, FABLE_CALL, A(GOOD)], '');
+check('R28 a highest-order path still needs the full STEP-3 block whatever the rider lines say -> deny', rr.deny && /no STEP-3 block/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, { role: 'user', text: 'Earlier ask: make the gate quieter' }, HIS, A('his words: "make the gate quieter"\ncause step: hook.js:decide · change: 3 lines · new parts: 0')]);
+check('R29 quote from an earlier message of his (within his last 20) -> allow (accepted: any of his recent words)', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A(GOOD), A('Now editing.')]);
+check('R30 lines in the first text block of the turn, a second block after it -> allow', !rr.deny, rr.reason.slice(0, 160));
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }

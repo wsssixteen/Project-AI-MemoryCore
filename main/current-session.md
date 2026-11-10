@@ -390,3 +390,20 @@ CHANGE-CARD (before): 287811 audit round 2
   ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\5f32e9fd-fff8-4c98-8fdb-ed4f67fdabbc\scratchpad\change-map-20261105-161553.png)
 Where picture = the change map (lib/change-map.js).
 
+
+STEP-3: over-complexity audit ways 1 and 6 (component-birth-gate `replaces:` budget · design-consult-gate build-turn rider)
+session: a6147a6b-2da3-4098-aaeb-787b977b8c6c
+his words: "why not all at once?" (the nod to build all eight ways of the over-complexity audit, 2026-11-10)
+fix or report: fix
+who pays: per-tool: both checks run inside the existing PreToolUse Edit|Write dispatch; the rider adds one transcript tail read (2 MB cap) per Edit|Write on a hook, skill, Feature, rule or memory file; no new process, no new registration
+goal without the part: a new Feature is born with nothing retired (53 past-due NUKE-MARKERs, 22 never-acting hooks), and a build turn edits a gate, skill or memory with no quote of his ask, no cause step and no part count, so over-building goes unnoticed until the next audit
+model: claude-fable-5-1 (review and decision; stage B build by claude-sonnet-5-5, patched copies 35/35 and 55/55 green)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\fdb8507917703d14\a6147a6b-2da3-4098-aaeb-787b977b8c6c\scratchpad\change-map-20261110-025612.png
+
+CHANGE-CARD (before): over-complexity audit ways 1 and 6
+- What: Two existing gates each gain one check: a new Feature README must name the part it replaces, and a build-turn edit must carry his words, the cause step and the new-part count.
+- Why: The audit of 2026-11-10 found parts added around faults instead of fixes at the cause step, and nothing at build time asked what each new part replaced.
+- How: component-birth-gate adds a `replaces:` key beside goal and retention; design-consult-gate's step3-check adds riderCheck, which reads the current turn's reply for the three lines.
+- When: Each fires at the Write or Edit of a new domain README, or of a hook, skill, Feature file, rule file or memory file.
+- Where: `domain/component-birth-gate/component-birth-gate.check.hook.js` + eval, `domain/design-consult-gate/step3-check.js` + step3-check.eval.js.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\fdb8507917703d14\a6147a6b-2da3-4098-aaeb-787b977b8c6c\scratchpad\change-map-20261110-025612.png)
