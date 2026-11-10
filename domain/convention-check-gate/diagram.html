@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>convention-check-gate: what it stops</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #2d3142; display: flex; justify-content: center; padding: 2rem; }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: #4f5d75; margin-bottom: 0.4rem; }
+    h1 { font-size: 1.7rem; font-weight: 600; margin-bottom: 1.2rem; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">domain/convention-check-gate · runs before an Edit, Write or Bash call · v1.9</p>
+    <h1>convention-check-gate: what it stops</h1>
+    <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ccg-title ccg-desc">
+      <title id="ccg-title">convention-check-gate: what it stops</title>
+      <desc id="ccg-desc">A file edit is sorted by kind. A Java edit with no analog cited is denied. A .sql file with a JOIN, a TRUNCATE, a DELETE with no WHERE, a DELETE on a proof table, or any other DELETE with no 0-row SELECT above it is denied. Every other matched edit gets a reminder only.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <line x1="200" y1="280" x2="290" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="200" y1="280" x2="290" y2="280" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="200" y1="280" x2="290" y2="460" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="560" y1="110" x2="680" y2="110" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="560" y1="280" x2="680" y2="280" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="560" y1="460" x2="680" y2="460" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <rect x="40" y="250" width="160" height="60" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="120" y="276" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">A file edit</text>
+      <text x="120" y="296" font-size="11" font-family="Consolas, monospace" fill="#4f5d75" text-anchor="middle">sorted by file kind</text>
+
+      <g fill="#ffffff" stroke="#2d3142" stroke-width="1">
+        <rect x="290" y="70" width="270" height="80" rx="6"/>
+        <rect x="290" y="190" width="270" height="180" rx="6"/>
+        <rect x="290" y="420" width="270" height="80" rx="6"/>
+      </g>
+      <text x="425" y="104" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Java file</text>
+      <text x="425" y="126" font-size="12" fill="#4f5d75" text-anchor="middle">no working analog cited this session</text>
+
+      <text x="425" y="218" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Patch script (.sql file)</text>
+      <g font-size="12" fill="#4f5d75">
+        <text x="310" y="246">a JOIN</text>
+        <text x="310" y="268">TRUNCATE</text>
+        <text x="310" y="290">a DELETE with no WHERE</text>
+        <text x="310" y="312">a DELETE on a proof table</text>
+        <text x="310" y="334">any other DELETE with no SELECT</text>
+        <text x="310" y="352">ending "-- 0 rows" above it</text>
+      </g>
+
+      <text x="425" y="454" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Word template, screen, config</text>
+      <text x="425" y="476" font-size="12" fill="#4f5d75" text-anchor="middle">and every edit that passed above</text>
+
+      <g fill="#ffffff" stroke="#2d3142" stroke-width="1">
+        <rect x="680" y="80" width="280" height="60" rx="6"/>
+        <rect x="680" y="250" width="280" height="60" rx="6"/>
+        <rect x="680" y="430" width="280" height="60" rx="20"/>
+      </g>
+      <text x="820" y="106" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Denied</text>
+      <text x="820" y="126" font-size="11" font-family="Consolas, monospace" fill="#4f5d75" text-anchor="middle">cite the sibling file and line first</text>
+      <text x="820" y="276" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Denied</text>
+      <text x="820" y="296" font-size="11" font-family="Consolas, monospace" fill="#4f5d75" text-anchor="middle">script-check rule 4 decides the row</text>
+      <text x="820" y="456" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">Goes ahead, with a reminder</text>
+      <text x="820" y="476" font-size="11" font-family="Consolas, monospace" fill="#4f5d75" text-anchor="middle">the convention checks, as text</text>
+
+      <text x="40" y="540" font-size="11" font-family="Consolas, monospace" fill="#4f5d75">a denied edit goes ahead with [skip-convention-check: reason] in the same turn · every decision is a row in log.jsonl</text>
+    </svg>
+  </div>
+</body>
+</html>

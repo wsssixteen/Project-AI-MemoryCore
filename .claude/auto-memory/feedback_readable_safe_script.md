@@ -1,6 +1,6 @@
 ---
 name: feedback_readable_safe_script
-description: "SCRIPT-CHECK first; script must look safe; never DELETE ind_*; patch-only needs write-path + scope sweep; analog check; anchor ids; I run SELECTs myself"
+description: "SCRIPT-CHECK first; script must look safe; never DELETE ind_*, any other wrong row is assessed by script-check rule 4; patch-only needs write-path + scope sweep; analog check; anchor ids; I run SELECTs myself"
 metadata:
   type: feedback
 ---
@@ -42,6 +42,8 @@ Pairs with [[feedback_verify_before_claim]] · [[feedback_show_evidence_script_o
 > 🚨 PILLAR — never DELETE from ind_* (registry/master) tables; an ind_ row = record succeeded to daftar / permanent. Default cleanup = reset the umm_a_* application side only, leave the registry intact
 
 🚨 **PILLAR: never `DELETE FROM ind_*` (registry / master tables).** An `ind_*` row (`ind_permit_lesen`, `ind_versi_permit_lesen`, `ind_mklmt_tnh_permit_lesen`, `ind_hkmlk`, etc.) means the record **already succeeded to daftar and is PERMANENT**. Deleting one destroys registered data — there is **almost NO legitimate reason** to do it.
+
+**Rows outside `ind_*` (2026-11-10 per みや, 288625)**: a wrong row is assessed, never deleted by habit and never banned from deletion. The five questions and the four flag proofs are in `.claude/skills/script-check/SKILL.md` §Rule 4 (one home; nothing is repeated here). `domain/convention-check-gate` v1.9 blocks the unsafe deletes in a `.sql` file.
 
 **Why:** Aaron (senior dev) 2026-08-10, #273461 — *"for ind_permit_lesen, if it's in there, it means the lesen is already succeeded to daftar, it is already permanent. so we are not supposed to delete ind_permit_lesen, there is almost NO reason that we should delete."*
 

@@ -61,7 +61,7 @@
 - [commit-and-deploy](feedback_commit_deploy_runbook.md) — 6-step ceremony, subject shape, staging implies internal, probes local only, servers
 
 ## SQL and data patch (skills: script-check, patch-mlk-doc)
-- [patch-script-rules](feedback_readable_safe_script.md) — SCRIPT-CHECK, looks-safe script, never DELETE ind_*, scope sweep, I run SELECTs
+- [patch-script-rules](feedback_readable_safe_script.md) — SCRIPT-CHECK, looks-safe script, never DELETE ind_*, any other wrong row assessed by rule 4, scope sweep, I run SELECTs
 - [script-file-naming](feedback_script_file_naming.md) — <ticket>.sql = the update, <ticket>-check.sql = one combined check; never -2/-3
 - [sql-insert-id](feedback_sql_insert_id_check.md) — INSERT with hardcoded PK: check @GeneratedValue first
 - [infra-requests](feedback_prod_patch_infra_handoff.md) — PROD patch message format; server log one-liner, no path

@@ -22,11 +22,36 @@ NO SQL MUTATION IS HANDED TO みや UNTIL ALL 5 SCRIPT-CHECK RULES ARE ANSWERED 
 | 1 | **Expected-outcome annotation** | ends with `-- N rows {updated\|deleted\|inserted}` — executor verifies actual vs N |
 | 2 | **Stage-Match** (transactional tables `umm_*`/`dft_a_*`/`pks_a_*`) | derive the row's workflow stage + the code method that writes these columns; emit the 5-step block. Reference tables → `⏭ N/A — reference table` |
 | 3 | **Reviewer-obvious safe** | pinned `IN ('v1','v2')` + a leading BEFORE SELECT; never a broad `LIKE '%'` / buried `NOT IN (SELECT …)` |
-| 4 | **🚨 Never DELETE, unlink instead** (2026-11-06 per みや, 288625: "make sure that patch is to only unlink") | no `DELETE` on ANY table in a patch handed out. A wrong or stray row is unlinked (`UPDATE … SET <link column> = NULL`) or set inactive, never removed. `ind_*` rows are permanent registry; reset the `umm_a_*` side only. 288625: DELETE on `umm_aplikasi` + `umm_a_hkmlk` passed because this rule named only `ind_*` |
+| 4 | **🚨 A wrong row is assessed before it is removed** (2026-11-10 per みや, 288625: "it should be assessed accordingly, things that has been recorded and is a proof like receipts should be kept") | answer the five questions in §Rule 4 below, first YES wins, and put the verdict and its proof in the SCRIPT-CHECK line. A record or proof is never deleted. `ind_*` rows are permanent registry; reset the `umm_a_*` side only |
 | 5 | **🚨 Display-column verification** | if the patch fixes what a user SEES, confirm WHICH column the UI/report renders BEFORE writing — reference rows carry sibling labels (`nama` AND `perihal`); patch the wrong one and nothing changes on screen |
 | 6 | **🚨 Schema-qualified · comments = mandatory annotation ONLY** (Infra 2026-08-19; comment-scope 2026-08-27 #275847) | schema prefix on every table (`et_main` PROD · `et_main_stg2` STG · `et_main_mlit` MLIT · `ET_MAIN` Perak Oracle — the first three are the Melaka values; any other state = the resolved state's value, `node lib/states.js show <state>` → `db.schemas` + `db.mcp`). ⚠️ A schema name does NOT identify the state (two states' staging schemas carry the same names), so the MCP server name is the discriminator: name the server in the handoff message and check it before every query. **EVERY statement ends with its expected-outcome annotation (mandatory, both kinds): DML → `-- N rows {updated\|deleted\|inserted}` · SELECT → `-- N rows, <expected state>`.** No other comment. 🚫 BANNED: header comment · env line · table/column-mapping · run-order · any explanation — those go in the **chat handoff message**, never the `.sql`. The prior "env-tagged header comment" mandate is WITHDRAWN (2026-08-27 #275847: I piled header + table description + `LOKASI=Tempat` mapping + run-order into a patch). Applies to any script HANDED OFF; unqualified default stays ONLY for queries みや runs himself |
 | 7 | **🚨 File placement + name** (みや 2026-08-19) | the script file is named `<ticket>.sql` (check script `<ticket>-check.sql`, per auto-memory `feedback_script_file_naming`) and lives in the Task folder's `2. Fix\` — or the LATEST `Rework` folder when one exists (a rework supersedes `2. Fix\`). Never at the Task-folder root. **Always `.sql`, never `.txt`, and the Redmine upload is this same file** (2026-10-01 #274266). An existing `<ticket>.sql` in that folder is READ first and replaced if superseded. Lint the file before saying it is ready |
 | 8 | **🚨 Patch-only justification + scope sweep** (みや 2026-09-07, ADHOC-PRBB-2026-5) — MANDATORY whenever the handback is a DATA PATCH with NO code fix applied in the same handback | Two things, both required, or the patch is not handed over: **(a) why patch-only** — name the CODE that produced the bad/missing data (`<repo>\path\File.java:line` — the write path, not the crash line) and state why it is a data patch now and not a code change (one-off legacy row · forward creation already prevented · code guard owed under a separate ticket). **(b) scope sweep** — the SELECT that swept ALL similar records + its result, proving exactly how many permohonan are affected and that the patch targets ONLY them; NAME this permohonan. 🚫 BANNED: a data patch with no sweep (blanket-patch risk) · claiming "only this permohonan" without the query that proves it. Code-fix included in the same handback → `⏭ N/A — code fix applied` |
+
+## Rule 4 — a wrong row: what to do with it (2026-11-10 per みや, 288625)
+
+Picture: `diagram.png` beside this file. First YES wins.
+
+| # | Question | YES → | Proof shown with the verdict |
+|---|---|---|---|
+| 1 | A record or proof? (receipt · payment made · registry `ind_*` · title · signed document · log · a submitted `umm_aplikasi` · a task in `umm_a_tgsn`) | never DELETE. Cancel it by its own flag; a row another team owns goes to that team | what makes it a record (its number, receipt or signature) |
+| 2 | The app has a cancel screen that reaches this row? | the user runs that screen. No patch | the screen's filter read in code, and the row's values that meet it |
+| 3 | A status or flag the app really honours? | cancel by status or set inactive, column for column what the app's own cancel writes | all 4 flag proofs below. Any one fails → next question |
+| 4 | A pointer, a draft or a duplicate, and nothing points to it? | DELETE is fine | one `SELECT` per child table above the DELETE, each ending `-- 0 rows` |
+| 5 | None of the above, or unsure | unlink (`UPDATE … SET <link column> = NULL`). On PROD stop and ask him | the link column and the row it pointed to |
+
+**The 4 flag proofs (question 3).** A status or flag column counts only when all four hold (みや 2026-11-10: "not all the flag or status column works, some are overridden or simply not reflected").
+
+| # | Proof | How |
+|---|---|---|
+| 1 | the screens and lookups read it | grep the column in the queries and filters behind the screen |
+| 2 | the app's own cancel writes it | the code path that sets it: the analog the patch copies |
+| 3 | nothing sets it back later | grep every setter: no save, regenerate or sync turns it back |
+| 4 | a row already in that state is hidden today | a real row with that value, shown not to appear or block (DB + screen) |
+
+**Gate.** `domain/convention-check-gate` v1.9 denies, in a `.sql` file: `TRUNCATE` · a `DELETE` with no `WHERE` · a `DELETE` on a proof table (the list in the hook) · any other `DELETE` with no `SELECT … -- 0 rows` above it. The five questions and the flag proofs are code and database checks; the gate cannot run them.
+
+**288625, the case.** The first script DELETEd No Serahan `02MH1579/2026` from `umm_aplikasi` + `umm_a_hkmlk`. By this rule: Q1 a numbered perserahan is a record. Q2 the Batal Perserahan screen reaches it (`E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\web\form\PembetulanBatalPerserahanHakmilikForm.java:125-129`), so the PDT user cancels it on screen and no script is needed. Flag proof 4 for Batal / Tamat: on PROD, 2,379 cancelled perserahan since 2025 were followed by a new one on the same title.
 
 ## Rule 8 — the one that just landed (ADHOC-PRBB-2026-5, 2026-09-07)
 
@@ -56,7 +81,7 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 
 ## Emit before the script
 
-`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <schema `<et_main|et_main_stg2|et_main_mlit|ET_MAIN>` (Melaka / Perak examples; else the resolved state's schema from `node lib/states.js show <state>`, with its MCP server named when the schema name is shared across states) on every table · every statement ends with `-- <expected>` (DML: N rows updated/deleted/inserted · SELECT: N rows + state) · env in handoff MESSAGE> · rule 8 <patch-only: cause `<File.java:line>` write-path + why-not-code · scope-sweep = N affected (query cited), this = `<permohonan>` | ⏭ code fix applied>`
+`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 <no row removed | Q<n> <verdict>: <its proof; for Q3 flag proof 1 ✓ 2 ✓ 3 ✓ 4 ✓, each with its grep or SELECT>> · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <schema `<et_main|et_main_stg2|et_main_mlit|ET_MAIN>` (Melaka / Perak examples; else the resolved state's schema from `node lib/states.js show <state>`, with its MCP server named when the schema name is shared across states) on every table · every statement ends with `-- <expected>` (DML: N rows updated/deleted/inserted · SELECT: N rows + state) · env in handoff MESSAGE> · rule 8 <patch-only: cause `<File.java:line>` write-path + why-not-code · scope-sweep = N affected (query cited), this = `<permohonan>` | ⏭ code fix applied>`
 
 ## Running a master-data script on staging (2026-10-21 per みや, #282587)
 
@@ -82,5 +107,7 @@ A script that changes master or reference data (`ind_*` · `rjk_*` · `kod_*` ·
 - `.claude/auto-memory/feedback_sql_insert_id_check.md` — INSERT with hardcoded PK
 - `.claude/auto-memory/feedback_prod_patch_infra_handoff.md` — PROD patch message to infra, server log request
 - `.claude/auto-memory/feedback_infra_script_schema_env.md` — Infra/PROD script format
+
+*v6 — 2026-11-10 per みや (288625): rule 4 rewritten. The 2026-11-06 text "never DELETE on any table" is RETIRED as wrong (his words: "It should be assessed accordingly"); it is replaced by five questions (record or proof · app cancel screen · proven status or flag · pointer, draft or duplicate · unlink) and four flag proofs; picture `diagram.png`; gate `convention-check-gate` v1.9. Spec-preservation: the `ind_*` registry ban of the original rule 4 is kept (question 1); rules 1-3 and 5-8 untouched. Designed on claude-fable-5-2.*
 
 *v5 — 2026-10-03, Terengganu active per みや: rule 6 + the emit line read "the resolved state's value (`node lib/states.js show <state>`)" and carry the general warning that a schema name does not identify the state (the MCP server name does); the rule 8 story is labelled as the Melaka example. Spec-preservation: rules 1-8 untouched; every Melaka and Perak schema literal kept.*

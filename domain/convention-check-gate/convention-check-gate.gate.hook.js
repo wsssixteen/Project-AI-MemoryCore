@@ -35,6 +35,12 @@
  *   SELECT must project raw column values, never a derived BOOL_OR/COUNT/CASE stand-in that hides
  *   the truth. Rule home: CLAUDE.md §9 Database & Entity Resolution.
  *
+ * v1.6 2026-07-17 — BLOCKING: no JOIN in a .sql file. v1.7 2026-07-17 — space + noise advisory lines.
+ * v1.8 2026-11-06 — BLOCKING: every DELETE in a .sql file. RETIRED 2026-11-10 as wrong (みや: "It should be assessed accordingly").
+ * v1.9 2026-11-10 (per みや, 288625) — a DELETE is assessed (script-check rule 4). In a .sql file the gate denies only:
+ *   TRUNCATE · a DELETE with no WHERE · a DELETE on a proof table (PROOF_TABLES, PROOF_NAME) · any other DELETE
+ *   with no SELECT ending "-- 0 rows" above it. The five questions and the four flag proofs stay judgment.
+ *
  *   CAN (shape/presence ~100%): verify an analog WAS cited before a Java edit → kills SKIPPING.
  *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
  *   Fail-OPEN: transcript unreadable / parse error → advisory only, never block on our bug.
@@ -49,6 +55,29 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 const ANALOG_CITED = /←\s*sibling|\bsibling\b[^\n]{0,90}\b[\w/.\\-]+\.\w+:\d+|\banalog\b[^\n]{0,90}:\d+|\bconvention\b[^\n]{0,90}:\d+|\bmirror(?:s|ed|ing)?\b[^\n]{0,90}:\d+/i;
 const BYPASS = /\[skip-convention-check:/i;
 let bypassInCurrentTurn; try { bypassInCurrentTurn = require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { bypassInCurrentTurn = function () { return false; }; } // env-first + fail-CLOSED (bypass ignored if lib unreachable) — 2026-08-21 self-disarm fix
+
+// v1.9 (みや 2026-11-10, 288625): tables whose rows are records or proof. A DELETE on one is denied in a .sql file.
+// Names read from et_main_stg1 information_schema on 2026-11-10. No module prefix here: hsl_ and tkr_ also hold config and temp tables.
+const PROOF_TABLES = new Set(['umm_aplikasi', 'umm_a_tgsn', 'skg_dok', 'hsl_bayaran', 'hsl_bayaran_luar', 'hsl_bayaran_cukai_pintu', 'hsl_pindahan_cukai_tnh_resit']);
+const PROOF_NAME = /^ind_|(?:^|_)(?:log|audit|sejarah)(?:_|$)/; // registry (Aaron, #273461) · any log, audit or history table
+// First DELETE problem in a script, or null. Statements split on ";"; the note of a statement is the comment that follows its ";".
+function deleteProblem(raw) {
+  const chunks = String(raw || '').replace(/\/\*[\s\S]*?\*\//g, '').split(';');
+  let zeroRowSelect = false;
+  for (let i = 0; i < chunks.length; i++) {
+    const stmt = chunks[i].replace(/--[^\n]*/g, '').trim();
+    const note = ((chunks[i + 1] || '').match(/^\s*--([^\n]*)/) || [])[1] || '';
+    if (/^(?:SELECT|WITH)\b/i.test(stmt) && !/\bDELETE\s+FROM\b/i.test(stmt) && /^\s*0\s+rows?\b/i.test(note)) zeroRowSelect = true;
+    if (/^TRUNCATE\b/i.test(stmt)) return { why: 'truncate', table: '' };
+    const m = stmt.match(/\bDELETE\s+FROM\s+(?:ONLY\s+)?([\w."]+)/i);
+    if (!m) continue;
+    const table = m[1].replace(/"/g, '').split('.').pop().toLowerCase();
+    if (!/\bWHERE\b/i.test(stmt)) return { why: 'no-where', table };
+    if (PROOF_TABLES.has(table) || PROOF_NAME.test(table)) return { why: 'proof', table };
+    if (!zeroRowSelect) return { why: 'no-child-check', table };
+  }
+  return null;
+}
 
 function logFire(action, detail) {
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), action, detail }) + '\n'); } catch (_) {}
@@ -115,7 +144,7 @@ process.stdin.on('end', () => {
         '  - Cited the example you mirrored?',
       ],
       sql: [
-        '  - 🚨 SCRIPT-CHECK (5-rule pre-flight, MANDATORY before handing any SQL mutation — `.claude/skills/script-check/SKILL.md`): emit the line `SCRIPT-CHECK — rule 1 <expected-outcome annotation> · rule 2 <Stage-Match | ⏭ ref> · rule 3 <reviewer-obvious safe> · rule 4 <no ind_* DELETE> · rule 5 <display/read column = `<col>`, verified via grep/DB>`. Rule 5 is the one that bit us (QA-275009): confirm WHICH column the UI/code READS before patching.',
+        '  - 🚨 SCRIPT-CHECK (5-rule pre-flight, MANDATORY before handing any SQL mutation — `.claude/skills/script-check/SKILL.md`): emit the line `SCRIPT-CHECK — rule 1 <expected-outcome annotation> · rule 2 <Stage-Match | ⏭ ref> · rule 3 <reviewer-obvious safe> · rule 4 <wrong row assessed, first YES wins: record or proof → never delete · app cancel screen → user runs it · proven status or flag (4 proofs) → cancel by status · pointer, draft or duplicate with 0 children → DELETE · else unlink> · rule 5 <display/read column = `<col>`, verified via grep/DB>`. Rule 5 is the one that bit us (QA-275009): confirm WHICH column the UI/code READS before patching.',
         '  - Queried other rows in this table to see the VALUE-FORMAT convention for the column(s) you are setting/inserting?',
         '  - Cited a sample of existing values in the chat prose BEFORE the UPDATE/INSERT?',
         '  - Audit columns (created_by / last_modified_by) — matches sibling rows on the same aplikasi? NEVER ticket/session-specific identifiers.',
@@ -227,18 +256,34 @@ process.stdin.on('end', () => {
         }));
         process.exit(0);
       }
-      // v1.8 BLOCKING: no DELETE in a .sql patch (みや 2026-11-06, 288625: "make sure that patch is to only unlink")
-      if (/\bDELETE\s+FROM\b/i.test(code) && !bypassInCurrentTurn(data.transcript_path, BYPASS) && !BYPASS.test(body)) {
-        logFire('blocked-delete', filePath);
+      // v1.9 BLOCKING (みや 2026-11-10, 288625): a DELETE is assessed, not banned (script-check rule 4).
+      // The check reads the file as it will be after this Write or Edit; an Edit whose file cannot be rebuilt skips the child check.
+      let result = body, whole = toolName === 'Write';
+      if (toolName === 'Edit' && typeof toolInput.old_string === 'string') {
+        try {
+          const cur = fs.readFileSync(filePath, 'utf8');
+          if (cur.includes(toolInput.old_string)) { result = toolInput.replace_all ? cur.split(toolInput.old_string).join(body) : cur.replace(toolInput.old_string, () => body); whole = true; }
+        } catch (_) { /* fragment only */ }
+      }
+      const dp = deleteProblem(result);
+      if (dp && !(dp.why === 'no-child-check' && !whole) && !bypassInCurrentTurn(data.transcript_path, BYPASS) && !BYPASS.test(body)) {
+        logFire('blocked-delete', dp.why + ' ' + dp.table + ' ' + filePath);
+        const why = {
+          truncate: 'TRUNCATE removes every row of the table.',
+          'no-where': 'DELETE FROM ' + dp.table + ' has no WHERE: it removes every row.',
+          proof: dp.table + ' holds records or proof (receipt, registry, signed document, log, submitted application, task): cancel it by its own flag or the app cancel screen, never DELETE.',
+          'no-child-check': 'DELETE FROM ' + dp.table + ' has no child check above it: add one SELECT per child table before the DELETE, each ending "-- 0 rows".',
+        }[dp.why];
         process.stdout.write(JSON.stringify({
           hookSpecificOutput: {
             hookEventName: 'PreToolUse',
             permissionDecision: 'deny',
             permissionDecisionReason: [
-              `🚫 convention-check-gate v1.8: DELETE found in a .sql patch — BANNED (script-check rule 4).`,
+              `🚫 convention-check-gate v1.9: this DELETE is not allowed as written (script-check rule 4).`,
               `   File: ${filePath}`,
-              `   A wrong or stray row is unlinked (UPDATE ... SET <link column> = NULL) or set inactive, never removed.`,
-              `   Genuinely need a DELETE? add [skip-convention-check: <reason>] and say why in chat.`,
+              `   ${why}`,
+              `   Rule 4, first YES wins: record or proof → never delete · app cancel screen → the user runs it · a proven status or flag → cancel by status · pointer, draft or duplicate with 0 children → DELETE · else unlink.`,
+              `   Assessed and still right? add [skip-convention-check: <reason>] and say why in chat.`,
             ].join('\n'),
           },
         }));

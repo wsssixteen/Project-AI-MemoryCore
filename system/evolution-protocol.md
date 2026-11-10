@@ -47,8 +47,8 @@ Recursive through system-design-router:
 ```yaml
 last-evolution-check: 2026-09-22  # run via system-check run 3 Familiar 5 (Claude Code changelog 2026-06-30→09-22 + comparative matrix); digest in chat 2026-09-22 + todo.md Q1 row; research file NOT re-run
 next-elapsed-check-due: 2026-10-22  # +30 days
-last-model-id-seen: claude-fable-5-1  # current session model
-highest-model-id: claude-fable-5-1  # the model change-route step 3 requires for highest-order changes; read by lib/models.js; update when a stronger model ships
+last-model-id-seen: claude-fable-5-2  # current session model
+highest-model-id: claude-fable-5-2  # set 2026-11-10 per みや ("not going to be Fable 5.1, but Fable 5.2"), seen running in session a732fefb; the model change-route step 3 requires for highest-order changes; read by lib/models.js; update when a stronger model ships
 research-file-last-updated: 2026-05-23  # research file itself NOT re-run; only the cadence stamp reset
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
 

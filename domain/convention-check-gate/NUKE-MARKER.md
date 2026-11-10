@@ -43,7 +43,7 @@ git push origin main
 | File | Purpose | Blast radius if kept broken |
 |---|---|---|
 | `convention-check-gate.gate.hook.js` | PreToolUse gate (Bash + Edit\|Write) — blocks a new-Java-code Edit/commit without an analog-citation (working sibling `file:line`); v1.5 behavior byte-preserved from the legacy hook | Blocks etanah Java edits/commits until an analog is cited — worst case: false-positive blocks (same risk profile as the trusted v1.5) |
-| `eval.js` | 5/5 fixture eval (first-ever for this gate) | No runtime effect — safe to keep even if hook is nuked |
+| `eval.js` | 37-fixture eval (5 base + the v1.9 DELETE set, 2026-11-10) | No runtime effect — safe to keep even if hook is nuked |
 | `README.md` | Feature contract | No runtime effect |
 | `.claude/settings.json` entries (×2) | Register the hook on Bash AND Edit\|Write | THE trigger points — remove BOTH or the hook still fires on one surface |
 

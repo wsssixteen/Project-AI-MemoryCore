@@ -40,3 +40,19 @@
 **Last Activity (288169 session)**: 2026-11-06 00:15 — worktree `jovial-kepler-a07ba6`. ADHOC-PLTP-2026-5 (PROD PLTP/2026/8 Ulasan JT: JKR twice, MPAG gone) → cause: agency record 8 (JKRNM) renamed to MPAG 21/07 16:58 then back 13/08, so MPAG picks saved as agensi 8; promoted to ticket 288169 (TSO Shafiq); patch 6 rows agensi 8→6 run on PROD and verified; 288169 saved Phase 1 only (Redmine In Progress 20%), adhoc archived (audit 31/31). Open: miya writes the Redmine resolve note; Phase 2 archive when Redmine shows Closed; 12 other rows (PT/PTS same window) still agensi 8, no ticket.
 
 **Last Activity**: 2026-11-06 00:35 — worktree `penang-common-null-error-219adf` (branch claude/redmine-ticket-sweep-plan-369375). 287811 audit rounds 1 and 2 BUILT and landed: GitHub main 49d59176 · main folder 0df9eb5c (round 1: 803d46f2 / 3d0c9e13). Round 2 = P5 ticket-close-block multi-commit refusal 11/11 · P6 login-gate v6 ISSUE rows 25/25 + deploy eval 56/56 · P7 next-steps-shape v6 62/62 · P8 design-consult-gate quest-turn rider 55/55 · P9 memory line; 287811 wrong-fix verdicts 1-3 written; qa_doc saved (block status=delegated, save-quest KEEP-DELEGATED); the corrected commit-reference note is FILLED in his Chrome Edit form of 287811, NOT submitted (his "post it"). Open: audit items 3, 4, 7, 10; harness fault (reply text with a RULE-PLACEMENT line stored only as request blob, todo row). Domain Expansion run.
+
+STEP-3: script-check rule 4 assessed delete criteria, convention-check-gate v1.9, highest model record
+session: a732fefb-d015-4f08-8882-468242dd1007
+his words: "build it. Also, I thought I specified to use highest model so it is not going to be Fable 5.1, but Fable 5.2." (order)
+fix or report: fix
+who pays: per-tool: the gate already runs on each Edit or Write, the DELETE check adds no process and reads only a .sql file
+goal without the part: a patch never removes a record or proof, and removes another row only after its children are shown to be zero
+model: claude-fable-5-2
+shown: .claude/skills/script-check/diagram.png
+CHANGE-CARD (before): assessed delete rule
+- What: Script-check rule 4 becomes five questions that decide whether a wrong row is cancelled, deleted or unlinked, and the gate blocks the unsafe deletes.
+- Why: On 2026-11-10 you said a blanket never-DELETE rule is wrong, records and proof like receipts are kept, and a flag counts only when it really works.
+- How: The first YES wins in the flow picture `.claude/skills/script-check/diagram.png`.
+- When: Rule 4 runs each time I prepare a patch script, and the gate runs when I write a patch script file.
+- Where: The change sits in the script-check skill, the convention-check-gate Feature, one memory file and the evolution protocol, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\be1fddb58a3e4988\a732fefb-d015-4f08-8882-468242dd1007\scratchpad\cm-delrule\change-map-20261110-073318.png`.
+Where picture = the change map (lib/change-map.js).
