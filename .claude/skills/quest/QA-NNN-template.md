@@ -178,7 +178,7 @@
 
 ## Falsifier ledger
 
-> ← one row per falsifier written in the Rubric. A row leaves `OPEN` only by running its cheapest test (`RAN: <what was run, what it showed>` / `BROKE: <evidence> → row N`) or by `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD`. Design changed after the Rubric → rewrite the rows and `Fix files:` before Apply. Check: `node domain/falsifier-ran-check/check.js <QA>` (commit gate · close-phase · BA pass note). The five `standing:` rows stay in every ledger, numbered after the Rubric rows: each ends `RAN: <evidence>` or `RAN: n/a — <why this ticket has none>`; a row that can only run on the deployed env stays `OPEN: after deploy` (passes the commit, blocks the BA note). A new cycle or a changed design sets the five back to `OPEN`.
+> ← one row per falsifier written in the Rubric. A row leaves `OPEN` only by running its cheapest test (`RAN: <what was run, what it showed>` / `BROKE: <evidence> → row N`) or by `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD`. Design changed after the Rubric → rewrite the rows and `Fix files:` before Apply. Check: `node domain/falsifier-ran-check/check.js <QA>` (commit gate · close-phase · BA pass note). The five `standing:` rows stay in every ledger, numbered after the Rubric rows: each ends `RAN: <evidence>` or `RAN: n/a — <why this ticket has none>`; env (and path on a fast-path fix) stays `OPEN: after deploy` (passes the commit, blocks the BA note). A new cycle or a changed design sets the five back to `OPEN`.
 
 Fix files: <File1.java>, <File2.xhtml>
 

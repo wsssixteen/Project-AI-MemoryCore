@@ -36,7 +36,7 @@ Fix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java
 | `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD` | miya took the risk | yes |
 | `SUPERSEDED: row N` | replaced by a live row | yes |
 | `RAN: n/a — <why this ticket has none>` | a standing row with nothing to run, reason written (2026-11-10) | yes, with a reason of 12+ characters |
-| `OPEN: after deploy` | a `standing:` row that can only run on the deployed env (2026-11-10); any other row stays a plain OPEN | at the commit and the cli; never at the BA note |
+| `OPEN: after deploy` | `standing: path` (fast-path fix) or `standing: env`, which can only run on the deployed env (2026-11-10); any other row stays a plain OPEN | at the commit and the cli; never at the BA note |
 
 ## What blocks
 
@@ -106,7 +106,7 @@ log: `domain/falsifier-ran-check/log.jsonl` (ts · qa · ctx cli/commit/note · 
 
 ## History
 
-- 2026-11-10 five standing rows (path · siblings · render · given · env) required in every ledger, `standing-missing`; `OPEN: after deploy` on standing path/env passes commit + cli, never the BA note; `RAN: n/a — <reason>` named. Per miya after the replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-3 (61 scenarios: AUDIT-ROUND-3). check.eval 79/79.
+- 2026-11-10 five standing rows (path · siblings · render · given · env) required in every ledger, `standing-missing`; `OPEN: after deploy` on standing path/env passes commit + cli, never the BA note; `RAN: n/a — <reason>` named. Per miya after the replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-4 (61 scenarios, ready at round 4). check.eval 79/79.
 
 - 2026-07-12 born: Stop advisory for a planted probe never shown firing (narrow).
 - 2026-10-04 ledger check added per miya (#244600). Spec preservation: the Stop advisory is untouched (its eval 7/7).
