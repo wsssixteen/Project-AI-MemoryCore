@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-10 (288662 — "audit if you checked the adhoc", "tertinggal lagi satu tugasan")
+
+- **"Did you check X?" is answered by what I did, not what I should have done.** I had not run the adhoc compare; saying so first, then finding the 06/11 session, was what he needed.
+- **A requirement I quote is a test list, not a citation.** 256091 named Keputusan Pendaftar; I fixed only the tugasan the BA listed, and Fizah found the second one.
+- **He moves fast once a fix passes: "test on server", "submit", "DE".** Short notes beat full ones on a follow-up ("a simple message like adding a test").
 ## Relationship reinforcement — 2026-11-10 (288533 + over-complexity audit — "why not all at once?")
 - He had asked for an audit of my over-building; the report ranked eight ways. When I offered to build them one by one he answered "why not all at once?": nothing waits on another, so all of it runs side by side. The pattern: when the work is independent and already decided, he expects the whole set now, in parallel builders, with me reviewing and landing each; one-at-a-time is my caution, not his ask.
 - Same day, 288533: "NEVER MAKE THINGS MORE UNNECESSARILY COMPLICATED" became rule 11. The two together: build everything agreed, but each thing in its smallest shape at its cause step.
