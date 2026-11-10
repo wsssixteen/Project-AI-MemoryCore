@@ -189,6 +189,42 @@ ok('44 NOTE: the BA pass note is REFUSED (exit 3, no "Salam" printed) for the #2
 active('true'); doc(GOOD); r = note();
 ok('45 NOTE: clean ledger + local test true prints the note', r.status === 0 && /Salam Fizah/.test(r.stdout), r.status + ' ' + r.stderr.slice(0, 160));
 
+// Five standing rows (2026-11-10, replay of 59 Melaka reworks; Fable 5.2 audit round 1).
+const st = (n, k, s) => `| ${n} | standing: ${k} | ${k} gap | ${k} run | ${s} |\n`;
+const FIVE = (s, envS) => st(2, 'path', s) + st(3, 'siblings', s) + st(4, 'render', s) + st(5, 'given', s) + st(6, 'env', envS || s);
+const RAN5 = 'RAN: walked Simpan, Papar, Hantar with the BA ID, value kept after reload';
+const ev = (body, o) => C.evaluate(RUBRIC + body, o);
+r = ev(GOOD, { needLedger: true, standing: true });
+ok('S1 new quest, ledger without the five rows → standing-missing ×5', r.fails.filter(f => f.kind === 'standing-missing').length === 5, kinds(r));
+r = ev(GOOD + FIVE(RAN5), { needLedger: true, standing: true });
+ok('S2 new quest, five rows RAN with evidence → pass', r.fails.length === 0, kinds(r));
+r = ev(GOOD, { needLedger: true, standing: false });
+ok('S3 quest started before 2026-11-11 → no standing rows asked', r.fails.length === 0, kinds(r));
+r = ev(GOOD + FIVE('OPEN'), { needLedger: true, standing: true });
+ok('S4 five rows OPEN → 5 open fails', r.fails.filter(f => f.kind === 'open').length === 5, kinds(r));
+r = ev(GOOD + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'commit' });
+ok('S5 env OPEN: after deploy passes at the commit', r.fails.length === 0, kinds(r));
+r = ev(GOOD + FIVE(RAN5, 'OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'note' });
+ok('S6 env OPEN: after deploy blocks the BA note', kinds(r) === 'open', kinds(r));
+r = ev(GOOD + FIVE('RAN: n/a'), { needLedger: true, standing: true });
+ok('S7 bare RAN: n/a on the five → 5 bad-status', r.fails.filter(f => f.kind === 'bad-status').length === 5, kinds(r));
+r = ev(GOOD + FIVE('RAN: n/a — patch ticket, no screen changes'), { needLedger: true, standing: true });
+ok('S8 RAN: n/a with a reason → pass', r.fails.length === 0, kinds(r));
+r = ev(GOOD + st(2, 'path', RAN5) + st(3, 'siblings', RAN5), { needLedger: true, standing: true });
+ok('S9 two of five present → standing-missing ×3', r.fails.filter(f => f.kind === 'standing-missing').length === 3, kinds(r));
+r = ev(GOOD + FIVE(RAN5).replace(/standing: /g, 'S: '), { needLedger: true, standing: true });
+ok('S10 rows renamed away from "standing:" → standing-missing ×5', r.fails.filter(f => f.kind === 'standing-missing').length === 5, kinds(r));
+r = ev(GOOD + FIVE('OPEN: after deploy'), { needLedger: true, standing: true, ctx: 'cli' });
+ok('S11 OPEN: after deploy passes the cli (close-phase step 1)', r.fails.length === 0, kinds(r));
+r = ev(GOOD + FIVE('OPEN: later'), { needLedger: true, standing: true, ctx: 'commit' });
+ok('S12 any other OPEN: text still blocks the commit', r.fails.filter(f => f.kind === 'open').length === 5, kinds(r));
+active('true', 'quest_start=2026-11-11'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S13 check(): block quest_start 2026-11-11, doc without the five → fails', !r.ok && /standing-missing/.test(kinds(r)), kinds(r));
+active('true', 'quest_start=2026-11-10'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S14 check(): block quest_start 2026-11-10 → not asked, passes', r.ok, kinds(r));
+active('true'); doc(GOOD); r = C.check('QA-244600', { ctx: 'cli' });
+ok('S15 check(): block with no quest_start → not asked, passes', r.ok, kinds(r));
+
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

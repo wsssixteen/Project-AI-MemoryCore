@@ -31,6 +31,8 @@ const ACTIVE = process.env.FALSIFIER_ACTIVE || path.join(ROOT, 'quest', 'active.
 const LOG = process.env.FALSIFIER_LOG || path.join(__dirname, 'log.jsonl');
 const OVERRIDES = process.env.FALSIFIER_OVERRIDES || path.join(__dirname, 'overrides.jsonl');
 const OVERRIDE_HOURS = 72;
+const STANDING = ['path', 'siblings', 'render', 'given', 'env'];
+const STANDING_FROM = '2026-11-11'; // quests started before this keep their ledgers as written
 
 const LEDGER_HEAD = /^(#{1,4})\s*Falsifier ledger\b.*$/im;
 const RUBRIC_HEAD = /^#{1,4}[^\n]*\bRubric\b|═══\s*RUBRIC\b/im;
@@ -143,10 +145,14 @@ function evaluate(text, opts) {
   for (const r of L.rows) {
     const k = statusKind(r, L.rows);
     r.kind = k.kind;
+    // A row that can only run on the deployed env waits there: it passes the commit and the cli, never the BA note (2026-11-10).
+    if (k.kind === 'open' && /^[*`\s]*OPEN\s*:\s*after deploy\b/i.test(r.status) && o.ctx !== 'note') continue;
     if (k.kind === 'open') fails.push({ kind: 'open', msg: `row ${r.n} OPEN — ${r.falsifier} · cheapest test: ${r.test || '(none written)'}` });
     else if (k.kind === 'broke') fails.push({ kind: 'broke', msg: `row ${r.n} BROKE — ${k.why}` });
     else if (k.kind === 'bad') fails.push({ kind: 'bad-status', msg: `row ${r.n} — ${k.why}` });
   }
+  // Five standing rows in every ledger of a quest started from STANDING_FROM (2026-11-10, replay of 59 Melaka reworks).
+  if (o.standing && L.rows.length) for (const s of STANDING) if (!L.rows.some(r => new RegExp('^[*`\\s]*standing:\\s*' + s + '\\b', 'i').test(r.design || ''))) fails.push({ kind: 'standing-missing', msg: `the ledger has no "standing: ${s}" row (the five: ${STANDING.join(' · ')})` });
   if (o.staged && o.staged.length && !o.merge) {
     if (!L.fixFiles.length) fails.push({ kind: 'no-fix-files', msg: 'the ledger has no "Fix files:" line, so the staged files cannot be compared with the design' });
     else {
@@ -230,7 +236,7 @@ function check(qa, opts) {
     const codeFix = ctx === 'commit' || !!o.codeFix;
     let res = { fails: [], rows: [], fixFiles: [] };
     if (!doc) { if (codeFix) res.fails.push({ kind: 'no-doc', msg: `no quest doc found for ${qa} (active.txt qa_doc=${block.qa_doc || '(empty)'})` }); }
-    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge });
+    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge, ctx, standing: (block.quest_start || '') >= STANDING_FROM });
     let override = null;
     if (codeFix || ctx === 'cli') {
       if (String(block.local_test_confirmed || '').toLowerCase() !== 'true') {

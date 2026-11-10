@@ -178,16 +178,16 @@
 
 ## Falsifier ledger
 
-> ← one row per falsifier written in the Rubric. A row leaves `OPEN` only by running its cheapest test (`RAN: <what was run, what it showed>` / `BROKE: <evidence> → row N`) or by `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD`. Design changed after the Rubric → rewrite the rows and `Fix files:` before Apply. Check: `node domain/falsifier-ran-check/check.js <QA>` (commit gate · close-phase · BA pass note). The five `standing:` rows stay in every ledger, numbered after the Rubric rows: each ends `RAN: <evidence>` or `RAN: n/a — <why this ticket has none>`.
+> ← one row per falsifier written in the Rubric. A row leaves `OPEN` only by running its cheapest test (`RAN: <what was run, what it showed>` / `BROKE: <evidence> → row N`) or by `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD`. Design changed after the Rubric → rewrite the rows and `Fix files:` before Apply. Check: `node domain/falsifier-ran-check/check.js <QA>` (commit gate · close-phase · BA pass note). The five `standing:` rows stay in every ledger, numbered after the Rubric rows: each ends `RAN: <evidence>` or `RAN: n/a — <why this ticket has none>`; a row that can only run on the deployed env stays `OPEN: after deploy` (passes the commit, blocks the BA note). A new cycle or a changed design sets the five back to `OPEN`.
 
 Fix files: <File1.java>, <File2.xhtml>
 
 | # | design | falsifier | cheapest test | status |
 |---|---|---|---|---|
 | 1 | <chosen fix, one line> | <data shape that proves it wrong> | <the 5-minute run that would show it> | OPEN |
-| 2 | standing: path | a langkah, choice or role after the fix still fails or loses the value | walk the whole path past the first error; save, then reload | OPEN |
+| 2 | standing: path | a langkah, choice or role after the fix still fails or loses the value | with the BA's own ID and scenario, walk past the first error to the last langkah; save, then reload | OPEN |
 | 3 | standing: siblings | another screen, template, variant, tugasan, holder or caller shares the changed thing and is not fixed | list every sharer (grep / codegraph) and check each one | OPEN |
-| 4 | standing: render | the printed document differs from the BA's expected file | print the real document and compare line by line (`doc-sim`) | OPEN |
+| 4 | standing: render | the printed document differs from the BA's expected file | print the real document and compare its text and its layout (position, spacing, alignment) with the BA's file (`doc-sim`) | OPEN |
 | 5 | standing: given | a BA item, attachment, mockup or linked ticket is not answered | tick every one against the fix | OPEN |
 | 6 | standing: env | the fix is missing on an env the BA tests | check the branch and the data on every env the BA tests | OPEN |
 
