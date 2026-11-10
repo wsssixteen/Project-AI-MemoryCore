@@ -8,7 +8,7 @@
 - **Not done / not verified**: the watcher daemon is NOT running and its Claude login is dead since 2026-10-15; `claude login` is his step, then `node E:\Dev\scripts\WaRead\wa-watch.js check-login`, then `schtasks /run /tn "WaRead Watcher"`. The fast lane has not fired on a live message. The first 08:30 run is 2026-11-11. A daemon start and stop 3 seconds apart at 13:31 on 2026-11-10 has no known cause (old code, no reason logged).
 - **Blocker logged**: the step-3 rider of design-consult-gate could not see the reply lines (the transcript held no text block for those messages); writes to rider paths went through node scripts. Slips row 2026-11-10, category blocker.
 - **WaRead repo**: own git repo, no remote; the change is committed there separately.
-- **Office-report rules (same day, his words: office reports start with the pejabat and daerah code, the BA lines after them outrank)**: `domain/whatsapp/RULES.md` v1.1 section 1b; the reader keeps the forwarded flag; filter signals `office:<code>` and `forwarded`; candidate and handover carry office and daerah (00 PTG, 01 Melaka Tengah, 02 Jasin, 03 Alor Gajah, checked on staging); rules-only env tells Staging from Internal. Watcher selftest 67, whatsapp eval 29. **Open, his choice**: BA lines that arrive after the session started (A start at once and add them to the handover, B wait at most 3 minutes).
+- **Office-report rules (same day, his words: office reports start with the pejabat and daerah code, the BA lines after them outrank)**: `domain/whatsapp/RULES.md` v1.1 section 1b; the reader keeps the forwarded flag; filter signals `office:<code>` and `forwarded`; candidate and handover carry office and daerah (00 PTG, 01 Melaka Tengah, 02 Jasin, 03 Alor Gajah, checked on staging); rules-only env tells Staging from Internal. Watcher selftest 67, whatsapp eval 29. **His choice 2026-11-10: "start after 2"**, read as a 2-minute wait: an office report is held 2 minutes (`officeWaitMs`, `lib/watcher/officewait.js`), lines in that window ride along, then one judge call and one session; RULES v1.2; watcher selftest 78, whatsapp eval 31. Not run on a live message: the watcher is still stopped.
 
 ## Session Recap (2026-11-05/06, 287346 rework 1 + tag source check)
 - Asked: fix Fizah's 2 rework items; check both signatures on the MLIT Peraku paper; highlight every CC tag, red-box only the BA's asks, stage then submit Redmine; why the tag source check is needed; /goal: build it, eval verify, system-change, DE.
@@ -257,6 +257,36 @@ CHANGE-CARD (after): office-report rules
 - When: New messages carry the flag once the watcher runs again, and messages stored before today have no flag.
 - Where: Section 1b sits in `domain/whatsapp/RULES.md`, the code in `E:\Dev\scripts\WaRead\lib\`, and late BA lines for an adhoc are not changed yet.
   ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-062204.png)
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: office-report wait (wa-watch.js run loop · whatsapp RULES.md section 1b)
+session: 2026-11-10 dreamy-pike-08af0b (6/11/2026 - redmine scheduler, WA adhoc automation)
+his words: "I guess start after 2." (order)
+fix or report: fix
+who pays: the daemon gains one 5-second timer that reads a small in-memory map; an office report starts its session 2 minutes later than before; nothing else is slower
+goal without the part: a session started on the office wording alone, and the BA lines that came a minute later reached only the day log for an adhoc
+appraise: A = "start after 2" is read as a 2-minute wait; the number is one config value (`officeWaitMs`) if he meant something else. S = the wait logic is a pure module with 8 fixtures; the run loop that uses it is not exercised by a test because that needs a live WhatsApp connection. C = other people's lines on another topic in the same room inside the 2 minutes ride along too; the judge sees them marked and separates them, the rules-only path cannot
+model: claude-fable-5-2 (highest; no new part, one changed step: when the judge is called)
+shown: office-report.png (the two options, sent before his choice) · change-map-20261110-071803.png
+
+CHANGE-CARD (before): office-report wait
+- What: An office report will wait 2 minutes before it is judged, so the BA lines that follow are read together with it.
+- Why: On 2026-11-10 you chose "start after 2" when asked whether to start at once or wait for the BA.
+- How: The run loop holds a message that starts with an office code, collects the lines that arrive in that room for 2 minutes, then makes one judge call and one session.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\office-report.png)
+- When: The wait applies only to messages that start with an office code, and every other message is judged the moment it lands.
+- Where: The wait is in `E:\Dev\scripts\WaRead\lib\watcher\officewait.js` and the rule is in `domain/whatsapp/RULES.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-071803.png)
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): office-report wait
+- What: A message that starts with `PDTMT`, `PDTJ`, `PDTAG` or `PTG` is now held for 2 minutes and then judged once, with every line that followed it in that room.
+- Why: You chose "start after 2" on 2026-11-10 so the session opens with the BA's own words and not only the office wording.
+- How: A small wait module holds the report, a 5-second timer releases it, and the judge prompt and the handover both carry a block of the lines that followed.
+  ![flow](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\office-report.png)
+- When: It takes effect when the watcher runs again, and it has not been run on a live message yet.
+- Where: The module is `E:\Dev\scripts\WaRead\lib\watcher\officewait.js`, the setting is `officeWaitMs`, and the rule is section 1b of `domain/whatsapp/RULES.md`.
+  ![where](C:\Users\Ridhwan\AppData\Local\Temp\claude\d481fa474ffb6741\42890bf6-c041-403c-abb5-5ae7523daa6a\scratchpad\change-map-20261110-071803.png)
 Where picture = the change map (lib/change-map.js).
 
 STEP-3: 287811 audit round 2 (P5 ticket-close-block · P6 login-gate v6 · P7 next-steps-shape v6 · P8 design-consult-gate quest-turn rider · P9 memory)

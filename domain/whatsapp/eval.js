@@ -74,6 +74,10 @@ if (fs.existsSync(path.join(WAREAD, 'wa-read.js'))) {
   check('watcher: office codes match the rule file (PDTMT 01, PDTJ 02, PDTAG 03, PTG 00)', filt.officeOf('PDTMT x').kod === '01' && filt.officeOf('PDTJ x').kod === '02' && filt.officeOf('PDTAG x').kod === '03' && filt.officeOf('PTG x').kod === '00' && /\| `PDTAG` \| PDT Alor Gajah \| Alor Gajah \| `03` \|/.test(rules));
   const textSrc = fs.readFileSync(path.join(WAREAD, 'lib', 'text.js'), 'utf8');
   check('reader keeps the forwarded flag and still sends nothing', /forwarded: !!\(ctx && \(ctx\.isForwarded/.test(textSrc));
+  // the 2-minute office wait (2026-11-10): rule file and code agree
+  const ow = require(path.join(WAREAD, 'lib', 'watcher', 'officewait.js')).createOfficeWait({ waitMs: 120000, isOffice: (t) => !!filt.officeOf(t) });
+  check('watcher: an office report is held and a line 30 s later rides with it', ow.offer({ id: 'o', chat: 'c', ts: 1000, text: 'PDTAG ralat' }, true) === 'hold' && ow.offer({ id: 'b', chat: 'c', ts: 31000, text: 'saya dah semak' }, false) === 'ride' && ow.due(121000)[0] === 'c');
+  check('RULES: the 2-minute wait is written down and the run loop uses it', /The 2-minute wait/.test(rules) && /LINES THAT FOLLOWED WITHIN THE WAIT/.test(rules) && /officeWait\.due\(Date\.now\(\)\)/.test(watchSrc) && /cfg\.officeWaitMs === undefined \? 120000/.test(watchSrc));
 } else {
   console.log('  SKIP  WaRead tool not on this machine — tool checks skipped');
 }

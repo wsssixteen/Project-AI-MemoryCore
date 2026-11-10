@@ -1,7 +1,7 @@
 ---
 goal: the judge reads THIS file inline on every candidate and turns a WhatsApp message into one verdict (fire / follow-up / baseline / hold / skip) that starts the right Claude Code session, or nothing
 retention: keep
-version: 1.1 (2026-11-10: section 1b, office reports: the <pejabat><daerah> prefix, forwarded = office wording, the BA's own lines outrank it, daerah table, IT / STG words; nothing removed)
+version: 1.2 (2026-11-10: the watcher holds an office report for 2 minutes and judges it with the lines that followed; 1.1 same day: section 1b; nothing removed)
 ---
 
 # WhatsApp watcher — RULES (judge-readable)
@@ -38,6 +38,8 @@ The CANDIDATE block carries two lines for this: `OFFICE:` (office prefix or perm
 | `PDTAG` | PDT Alor Gajah | Alor Gajah | `03` |
 
 Codes checked against `ind_pejabat` and `ind_daerah` on Melaka staging, 2026-11-10. Perak: the state comes from the room or a `PTPK/…` id; the 2nd part of the id is the daerah number, its name is not recorded here.
+
+**The 2-minute wait** (2026-11-10 per miya: "start after 2"): the watcher HOLDS a message that starts with an office code for 2 minutes (`officeWaitMs` in `watcher.config.json`, `0` = off). Every line that arrives in that room inside the 2 minutes rides along. Then the report reaches the judge ONCE, with the block `LINES THAT FOLLOWED WITHIN THE WAIT`. Judge the report and those lines as one candidate: one verdict, one session. A line that arrives after the 2 minutes is a separate candidate, normally `follow-up`. His own messages neither ride nor end the wait.
 
 How the judge uses it:
 - A forwarded office report and the BA's own lines after it are ONE issue. Fire once. When a session already started for it, each BA line is `follow-up` with the SAME `issueKey`.
