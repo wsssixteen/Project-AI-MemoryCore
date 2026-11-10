@@ -87,10 +87,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\session-items-manager.js\" UserPromptSubmit"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\prose-default-gate.js\" UserPromptSubmit"
           },
           {
@@ -222,10 +218,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\nul-redirect-gate\\\\nul-redirect-gate.check.hook.js\""
           }
         ]
@@ -236,10 +228,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
           }
         ]
       },
@@ -285,15 +273,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-scope-gate\\\\release-mlk-plp-scope-gate.check.hook.js\""
-          }
-        ]
-      },
-      {
-        "matcher": "Read|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\scan\\known-bug-surfacer.hook.js\" PreToolUse"
           }
         ]
       },
@@ -367,10 +346,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\live-action-safety\\\\live-action-safety.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
           },
           {
             "type": "command",
@@ -456,19 +431,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\operational-follow-through.js\" Stop"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\notes-on-test-data.js\" Stop"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\deploy-proof-gate.js\" Stop"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\diagnostic-self-heal-gate.js\" Stop"
           },
           {
             "type": "command",
@@ -477,10 +440,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\ask-back-gate.js\" Stop"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\rcrl-emit-check.js\" Stop"
           },
           {
             "type": "command",
@@ -572,23 +531,11 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-scenario\\\\template-scenario.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\render-verify\\\\render-verify.check.hook.js\""
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\de-knowledge-gate\\\\de-knowledge-gate.check.hook.js\""
           },
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\de-close-gate\\\\de-close-gate.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\atlas-ship-gate\\\\atlas-ship-gate.check.hook.js\""
           },
           {
             "type": "command",
@@ -608,15 +555,11 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\turn-ledger\\\\turn-ledger.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\turn-log\\\\turn-log.check.hook.js\""
           },
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\db-claim-proof\\\\db-claim-proof.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\fix-photo\\\\fix-photo.check.hook.js\""
           }
         ]
       }
@@ -649,24 +592,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\spawn-telemetry\\\\spawn-telemetry.check.hook.js\""
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bpmn-check\\\\bpmn-check.check.hook.js\""
-          }
-        ]
-      },
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\skill-invocation-log\\\\skill-invocation-log.check.hook.js\""
           }
         ]
       }

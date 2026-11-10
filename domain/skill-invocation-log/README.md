@@ -1,5 +1,7 @@
 # skill-invocation-log
 
+RETIRED 2026-11-10 — replaced by domain/turn-log: a Skill call is a tool row (tool=Skill, target=skill name) in system/telemetry/turn-log/<machine>-<YYYY-MM>.jsonl, and the turn row carries skills_invoked beside skills_triggered. Deregister the PostToolUse Skill entry; log.jsonl stays on disk as history; lib/observatory.js reads both.
+
 symptom: DE 12.5 skill-load counter suspended since 2026-08-16: skill invocations are unlogged (named observability hole)
 goal: every Skill tool invocation is one row in domain/skill-invocation-log/log.jsonl with turn_id and skill name so skill liveness can be audited
 goal_signal: invoking any skill appends a row with that skill name
