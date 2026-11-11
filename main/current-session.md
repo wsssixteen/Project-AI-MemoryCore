@@ -4,7 +4,7 @@
 - Asked: /quest the 3 PROD patch tickets; never ask Resolved again; every PROD patch note must list exactly what was patched (all patch types, built with Fable 5.2); fix the wrong 288974 note; keep "Can proceed to verify."
 - Done: 288962 alter run with his approval; 288963 + 288974 patched by infra, PROD re-read and verified; all three Resolved to Nurhafizah 100% (read back). redmine-write-gate: standing Resolved rule now fires for a JS status write and when his message says submit (e3dfaa4a, eval 171/171). ticket-close-block --patch prints the note from the .sql itself; script-check rule 9 + patch-script-gate CHECK 8 need a reason per SET column and DELETE (1a99bf39, evals 27/27 + 42/42). Greeting restored (0c46d9ad). 288974 note corrected on Redmine (journal 2588114).
 - Found: the 288974 script copied status_keputusan='Batal' and hubungan_aplikasi_id=NULL from 283980 with no reason; the hand-written note then described them wrong. PPTPB/2026/9 link is now null on PROD.
-- Open: whether to restore the 288974 PPTPB/2026/9 link and status_keputusan (not answered). Phase 2 of the three when Redmine Closed (harvest needed first).
+- Open: none. 288974 decided by miya 2026-11-11: link to PPTPB/2026/9 stays removed (PelupusanSuratStrategy reuses a linked UPS_PLP letter, this one was cancelled), Batal kept (15 of 15 ended UPS_PLP on PROD). All three archived at Phase 2 (Redmine Ready in PROD).
 - Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
 - Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
 **Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
@@ -64,3 +64,32 @@ How: The push step prints the card and add-ticket accepts a pushed release, as t
 When: It runs when a release is pushed, when the card command is asked for, and when a ticket is added after the push.
 Where: domain/release-mlk-plp/release-prep.js and the release-mlk-plp skill, as the change map shows.
 Where picture = the change map (lib/change-map.js): change-map-20261111-140928.png
+
+## system-change step 3 (2026-11-11, session b0c15c6f) — adhoc requirement before a code verdict
+
+STEP-3: adhoc brief needs a requirement read before CODE-FIX or CR
+session: b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74
+his words: "I thought I asked for the build always later at the end of the session" (order)
+fix or report: fix
+who pays: per-turn: one more regex inside the existing adhoc-brief-first Stop check, only on a turn that carries an adhoc brief
+goal without the part: Without it an adhoc brief can tell the BA "code issue" with no requirement read, as at 15:43 on ADHOC-MLPS-2026-5.
+model: claude-opus-5-5 (urgent fix on his order, not held for a model switch)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\f1bd93d17a856462\b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74\scratchpad\adhoc-req-flow.png
+cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 17 lines
+new parts: 0
+
+CHANGE-CARD (before): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then the route line is read and a CODE-FIX or CR route without a requirement match is sent back, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/, its eval, and two sentences in .claude/skills/adhoc-save/, as shown in change-map-20261111-140632.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first now blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then a CODE-FIX or CR route without a requirement match is sent back with the load and read commands, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/ with 11 new eval fixtures, and two sentences in .claude/skills/adhoc-save/, landed on main as a325f9fa, as shown in change-map-20261111-141051.png .
+Where picture = the change map (lib/change-map.js).
