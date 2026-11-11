@@ -199,7 +199,7 @@ if (arg('patch') === true) {
   if (!key) console.error(`warn: no short name for "${baArg}" in ba-names.json — check how miya greets this BA`);
   warns.forEach(w => console.error('warn: ' + w));
   const body = [...groups].map(([id, lines]) => [...(id ? [`ID Permohonan: ${id}`] : []), ...lines].join('\n')).join('\n\n');
-  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Please help to verify.`, '', '<pre>', body, '</pre>', '', 'Thank you.'].join('\n'));
+  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', 'Thank you.'].join('\n'));
   logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'patch', ids: [...groups.keys()].filter(Boolean), warns: warns.length, outcome: 'printed' });
   process.exit(0);
 }

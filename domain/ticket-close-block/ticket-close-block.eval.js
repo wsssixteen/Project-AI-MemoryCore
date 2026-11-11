@@ -105,7 +105,7 @@ const pre = out => (out.split('<pre>\n')[1] || '').split('\n</pre>')[0];
 
 r = run(['--patch', '--ticket', '288974', '--ba', 'Nurhafizah Hasan', '--sql', fx('288974.sql'), '--was', 'hubungan_aplikasi_id=PTMLK/02/L/PPTPB/2026/9', '--tugasan', 'Penyediaan Surat', '--user', 'norlina@melaka.gov.my']);
 const wantP1 = [
-  'Salam Fizah, have patched as below. Please help to verify.',
+  'Salam Fizah, have patched as below. Can proceed to verify.',
   '',
   '<pre>',
   'ID Permohonan: PTMLK/02/L/UPS_PLP/2026/15',
