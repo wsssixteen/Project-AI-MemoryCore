@@ -59,5 +59,10 @@ expect('C4 NEW no-default gateway', /C4-no-default-NEW/.test(e3.out));
 expect('C5 unknown ghost var = ERROR', /C5-bare-el-unknown-var.*ghostVar/.test(e3.out));
 try { fs.unlinkSync(tmp); } catch (_) {}
 
+console.log('E4 parser keeps conditioned flows (242553)');
+const { parseXml } = require('./bpmn-check.js');
+const m4 = parseXml('<sequenceFlow id="a" sourceRef="x" targetRef="y"></sequenceFlow><sequenceFlow id="b" sourceRef="x" targetRef="z"><conditionExpression xsi:type="tFormalExpression"><![CDATA[${k == "L"}]]></conditionExpression></sequenceFlow><sequenceFlow id="c" sourceRef="x" targetRef="w"/>');
+expect('3 flows read, 1 conditioned', m4.flows.length === 3 && m4.conditions.length === 1);
+
 console.log(`\n${pass} pass · ${fail} fail`);
 process.exit(fail ? 1 : 0);

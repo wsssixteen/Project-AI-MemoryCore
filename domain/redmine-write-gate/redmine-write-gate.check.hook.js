@@ -220,7 +220,12 @@ function browserVerdict(name, input, tail) {
     const t = String(ti.text || '');
     if (BROWSER_NET.test(t) && BROWSER_REDMINE_URL.test(t)) return 'net';
     if (BROWSER_SUBMIT.test(t)) return 'submit';
-    if (STATUS_JS.test(t)) return 'status:?';
+    if (STATUS_JS.test(t)) {
+      const m = t.match(/issue_status_id[^\n]{0,120}?\.value\s*=\s*['"]?([\w ]+?)['"]?\s*[;\n)]/i);
+      const raw = m ? m[1].trim() : '';
+      const name = STATUS_NAME.test(raw) ? raw : (SR.rule().status_ids || {})[raw];
+      return 'status:' + (name || '?');
+    }
     return '';
   }
   if (/computer$/.test(n) && /click/.test(String(ti.action || '')) && ti.ref) {
@@ -260,7 +265,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
       }
       // v1.11: no order and no hold → his standing rule decides a hand-back (status-rule.json).
       let ruled = null;
-      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS)) && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
+      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS) || SUBMIT_APPROVAL.test(lastS)) && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
         const num = data.transcript_path ? ticketFromTranscript(String(data.transcript_path), ti.tabId) : null;
         const state = num ? SR.liveStateSync(num) : null;
         ruled = { num, state, v: state ? SR.verdict(Object.assign({ to: value, stagedAssignee: stagedAssignee(num) }, state)) : null };
