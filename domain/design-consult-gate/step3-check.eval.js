@@ -220,6 +220,25 @@ check('R29 quote from an earlier message of his (within his last 20) -> allow (a
 rr = run(EXHOOK, [HIS, ...CONSULT, A(GOOD), A('Now editing.')]);
 check('R30 lines in the first text block of the turn, a second block after it -> allow', !rr.deny, rr.reason.slice(0, 160));
 
+// R31+: the three lines written in this session's STEP-3 block count too (2026-11-11: reply text written before an Edit was not in the transcript)
+const RLINES = { 'cause step': '.claude/hooks/old-hook.js:decide · change: 3 lines', 'new parts': '0' };
+rr = run(EXHOOK, [HIS, ...CONSULT, A('Editing the hook now.')], block(RLINES));
+check('R31 no lines in the reply, this session STEP-3 block carries the three -> allow', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('Editing the hook now.')], block(Object.assign({ session: 'another-session' }, RLINES)));
+check('R32 the block with the lines belongs to another session -> deny', rr.deny && /missing line: his words/.test(rr.reason) && /cause step/.test(rr.reason) && /new parts/.test(rr.reason), rr.reason.slice(0, 200));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('Editing the hook now.')], block(Object.assign({ 'his words': '"Please tidy everything else too" (order)' }, RLINES)));
+check('R33 block lines, but the quote is not in his last 20 messages -> deny', rr.deny && /not in his messages/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('Editing the hook now.')], block() + '\nnotes\ncause step: hook.js:decide · change: 3 lines\nnew parts: 0\n');
+check('R34 lines below the block (after its blank line) do not count -> deny', rr.deny && /missing line: cause step/.test(rr.reason) && !/missing line: his words/.test(rr.reason), rr.reason.slice(0, 200));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('his words: "Please tidy everything else too"')], block(RLINES));
+check('R35 a quote he never typed in the reply is not rescued by the block -> deny', rr.deny && /not in his messages/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(NEWMEM, [HIS, A('Writing the memory.')], block(RLINES));
+check('R36 block says new parts: 0 but the file does not exist yet -> deny', rr.deny && /does not exist yet/.test(rr.reason), rr.reason.slice(0, 160));
+rr = run(EXMEM, [HIS, A('no lines')], block(RLINES), { badTranscript: true });
+check('R37 transcript unreadable, block present -> allow (fail open, unchanged)', !rr.deny, rr.reason.slice(0, 160));
+rr = run(EXHOOK, [HIS, ...CONSULT, A('Editing.'), { role: 'user', text: 'Now do the next thing' }, A('Editing again.')], block(RLINES));
+check('R38 the block still counts in a later turn of the same session while the quote is in his last 20 messages -> allow (accepted)', !rr.deny, rr.reason.slice(0, 160));
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nstep3-check.eval: ' + (results.length - failed) + '/' + results.length + ' green');
