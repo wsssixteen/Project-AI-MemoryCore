@@ -33,6 +33,7 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 | J9 | **Test-permohonan health** | The test app must reach the changed node ORGANICALLY (upstream vars set). An Init-Altered app entering a child mid-flow with unset vars (skipPTB) throws §10.1. Verify live task state + `act_ru_variable` BEFORE handing it over (memory: feedback_verify_permohonan_health_before_test). |
 | J10 | **Blast radius by inbound census** | List EVERY inbound edge of each changed node (SKM had 3 entry paths — a changed exit affects ALL of them). Then list every OTHER urusan calling the same child model — a child-side change is multi-urusan by construction. |
 | J11 | **Ownership boundary + tugasan resolution** (FLOWABLE-KNOWLEDGE.md §11) | For EVERY tugasan the BA names: resolve kod → owning model (parent userTask = ours · inside MLK_TKL_* = TEKNIKAL team, we cannot edit) → page → live holder, BEFORE flow reasoning. Our fix surface = the PARENT model only (route into child + receive it back). In-child flow or page bugs = cross-team handoff. |
+| J12 | **Next tugasan after a step** (a flow question; 242553) | Before naming what follows step X: a `<callActivity>` on the path is never one tugasan. Open its `calledElement` model (and any model that one calls) and list every userTask and every parallelGateway: tugasan after a split open together, and the parent moves on only when all close. Read nodes and flows with the validator's parser, never a hand-written pattern: save the model as a file (the engine copy too), run Step 0 on it, list with `parseModel` (exported by `domain/bpmn-check/bpmn-check.js`) or `etanah-codemap/bpmn_flow.json`. The flow count read must equal the count of `<sequenceFlow` tags in the file; if it does not, the answer says "not verified". |
 
 ## Step 2 — hand-off discipline (modeler click-paths for miya)
 
@@ -53,4 +54,6 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 - `.claude/auto-memory/feedback_flowable_node_edge_trace.md` — trace real sequence flows before picking a node, Flowable admin app (diagram + variable edit), BPMN source + export recipe, Petaling archive
 
 *Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
+
+*Updated 2026-11-11 — J12 added per みや (242553: "one tugasan after 29.1" was said while the called sub-flow MLK_PLP_SUB_UPN holds 9 tugasan and 3 parallel gateways; the flows were read with a hand-written pattern that dropped every conditioned flow). Additive; J1 to J11, Step 0, Step 2 and Banned untouched.*
 

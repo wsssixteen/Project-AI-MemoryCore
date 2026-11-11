@@ -26,6 +26,7 @@ One sentence of answer, then one drawing. Nothing he did not ask for.
 | At most 9 boxes and 12 arrows; more = split into an overview + one detail | "complete" diagrams that need a legend to read |
 | Red or sharp colours only for explaining an issue or root cause. A picture of a fix or for a ticket keeps the default colours with no accent (2026-11-02 per みや, 287048). **Exception**: the system change report (`lib/change-map.js`, INDEX change route step 8) always keeps its kind colours and its green NEW / blue CHANGED / red REMOVED tags (2026-11-03 per みや: "please use colours for that system map box") | red on a scenario picture · stripping a picture to black and white when he asks for neutral |
 | Title says what it shows ("Running a PROD alter: your one step") | "Diagram", "Overview" |
+| Every box and arrow that states a fact was checked this session (CLAUDE.md Disposition rule 6). One that was not carries small grey words on the picture itself: `not verified`, or `not tested` for a step read from a model or code but never seen to run | a guessed or never-run step drawn the same as a checked one |
 | Remove test before sending: can a box, an arrow or a label go? Then it goes | — |
 
 For explaining a change to an existing part, the four rows + flow with the one changed step marked: `.claude/reply-shape-spec.md` §3d.
@@ -70,3 +71,5 @@ retention: keep
 footprint: on-demand: no process; a picture run starts one python self-check and one headless Edge, both exit
 
 *2026-10-27 — the picture is the default for any flow or structure of 3+ boxes, per みや after the first Phase 0 picture ("Beautiful, that is really really helpful ... starting with replacing the current story diagram"); the chat story diagram stays for a 2-box line and for a failed render. Check + render is one Tool, `lib/diagram-render.js` (eval `node lib/diagram-render.eval.js`). Changed and named: the old "up to 8 boxes → chat story diagram" row is retired; the 9-box / 12-arrow budget and every content rule are unchanged.*
+
+*2026-11-11 — §2 gains the checked-or-marked row per みや (242553: "Is that diagram verified 100%?"; an arrow never seen to run was drawn as fact). A pointer to Disposition rule 6, not a second rule. Additive; every other row unchanged.*
