@@ -45,3 +45,33 @@
 - Mistakes: 6 schema queries to find the peranan table; Stop hooks asked twice for the proving SELECTs and a picture line.
 - Assessment: A1 a document patch went from ticket to archive in one session because the adhoc held the cause. A2 save-quest PHASE-2 still needs the bounty block before archive-quest. A3 letter-check.py with --allow-empty matched the precedent letters. A4 a role-line "-" sits in common, not in the patch. A5 ⏭ no sweep.
 **Last Activity (288533 + over-complexity audit session)**: 2026-11-10 12:51 — worktree `prbb-permit-id-fix-f122a5`. All eight ways of the over-complexity audit built side by side (3 sonnet builders) and landed on main f2ed718b; 288533 archived at Phase 2.
+
+
+## system-change step 3 (2026-11-11, session b0c15c6f) — adhoc requirement before a code verdict
+
+STEP-3: adhoc brief needs a requirement read before CODE-FIX or CR
+session: b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74
+his words: "I thought I asked for the build always later at the end of the session" (order)
+fix or report: fix
+who pays: per-turn: one more regex inside the existing adhoc-brief-first Stop check, only on a turn that carries an adhoc brief
+goal without the part: Without it an adhoc brief can tell the BA "code issue" with no requirement read, as at 15:43 on ADHOC-MLPS-2026-5.
+model: claude-opus-5-5 (urgent fix on his order, not held for a model switch)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\f1bd93d17a856462\b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74\scratchpad\adhoc-req-flow.png
+cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 17 lines
+new parts: 0
+
+CHANGE-CARD (before): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then the route line is read and a CODE-FIX or CR route without a requirement match is sent back, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/, its eval, and two sentences in .claude/skills/adhoc-save/, as shown in change-map-20261111-140632.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first now blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then a CODE-FIX or CR route without a requirement match is sent back with the load and read commands, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/ with 11 new eval fixtures, and two sentences in .claude/skills/adhoc-save/, landed on main as a325f9fa, as shown in change-map-20261111-141051.png .
+Where picture = the change map (lib/change-map.js).
