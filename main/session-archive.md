@@ -4,6 +4,28 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-06 to 10, auto-start: 08:30 sweep by the clock, WhatsApp fast lane, watcher health)
+
+STEP-3: patch tickets: note generated, every SET column reasoned (288974)
+- session: jovial-kepler-a07ba6 (subagent of the 288974 session)
+- his words: "straight away built this so that in the future, the types of patching will always include these datas, the things we've patched. It should cover all of the patching tickets." (order)
+- fix or report: fix
+- who pays: on-demand: 1 node call per patch note, under 1 s; per-turn: CHECK 8 runs inside the existing patch-script-gate Stop hook, no new registration
+- goal without the part: the note is typed from memory and a column copied from a precedent ships with no reason, as on 288974
+- cause step: (A) quest 6c handover, the patch-done note had no generator; (B) script-check / Stage-Match step 3, no reason asked per SET column
+- change lines: ticket-close-block.js +189 (`--patch`) · patch-script-gate hook +38 (CHECK 8) · script-check rule 9 · quest 6c + step 3 · prefill Step 4
+- new parts: 0 (3 eval fixture files)
+- model: claude-fable-5-2
+- shown: domain/ticket-close-block/diagram.png
+
+CHANGE-CARD (after): patch note generated
+- What: The patch-done note for Redmine is now printed by `ticket-close-block --patch` from the patch script and the replaced files, and script-check rule 9 asks one reason for every column a script sets and every row it deletes.
+- Why: On 2026-11-11 the 288974 script set Batal and removed a link that the BA never asked for, and the typed note then said the linked permohonan was not changed.
+- How: The generator reads each UPDATE, DELETE and INSERT into one line per thing changed under its ID Permohonan as in `domain/ticket-close-block/diagram.png`, and the patch-script-gate blocks a reply whose script has a column with no reason line.
+- When: The note is generated at the handover step of a patch ticket, and the reason check runs when a reply hands over a patch script.
+- Where: The change sits in `domain/ticket-close-block/`, `domain/patch-script-gate/`, the script-check, quest and redmine-phase1-prefill skills and one memory file, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\75ad8d85f2656ad6\c845be62-69e0-4694-8a3c-0eb7b43eb78f\scratchpad\change-map-20261111-064555.png`.
+Where picture = the change map (lib/change-map.js).
+
 ## Session Recap (2026-11-08, Masterline look modes, delegated)
 - Asked (orchestrator, his rulings row 44 and 2026-10-20): a Look switch with 1 Operations console, 2 Service ledger, 3 Dispatch board, 4 Mix on every screen; remove the Claude look from the base; impeccable-checked; prove with flows, click walk, screenshots; never stop to ask.
 - Done: `app-samples\prototype\` v2 in the main-checkout project folder (app.css neutral token base, new looks.css, look switch + `?look=` `?layout=`, PRODUCT.md); COMPARE.md v2; DECISIONS rows 46 to 54; VERSIONS row; START.md Main app row; report `reports\look-modes.md`. Proof: 40/40 flows per look desk + phone; walk 14,928 clicks 0 errors; impeccable detector 0 over 272 pages; taste-skill 0 FAIL at 1366/768/375; impeccable critique dual-agent (A about 21/40).
@@ -9912,6 +9934,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
