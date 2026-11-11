@@ -132,6 +132,7 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '     (PDF, image, document, report) or needs a server log → the FIRST reply carries the infra copy box',
     '     (file: patch-mlk-doc "Retrieve-only ask", lokasi_fail from et_dms.dokumen_revision; log: "Hi infra, please',
     '     help to download server log for MLK <ENV>, module <PLP|AWAM>. Thank you."). Send it before any trace.',
+    '     The file itself is the cause → fix that file, then the patch-mlk-doc replace box: MLK STAG first, MLK PROD after.',
     '',
     '   FIX LADDER (miya 2026-10-22) — plan it from the start, cheapest rung first; CHECK each rung before offering it:',
     '     1. User side (click / fill / re-save) → trace the screen: disabled=/rendered= on that field, the flag it reads,',
