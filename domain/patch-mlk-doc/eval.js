@@ -12,6 +12,8 @@ const path = require('path');
 const SKILL = path.join(__dirname, '..', '..', '.claude', 'skills', 'patch-mlk-doc', 'SKILL.md');
 
 const MUST_CONTAIN = [
+  ['replace document for MLK <ENV>', 'replace box is env-generic (ADHOC-PRBB-2026-24)'],
+  ['same box with `MLK STAG`, the same PROD `lokasi_fail`', 'staging replace = same box, env word only'],
   // the two tables + link spine
   ['et_dms.dokumen_revision', 'revision table'],
   ['et_dms.dokumen', 'dokumen table'],
