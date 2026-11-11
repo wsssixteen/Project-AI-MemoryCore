@@ -104,8 +104,12 @@ function riderCheck(data, filePath) {
   if (!filePath || EXEMPT.test(filePath) || !RIDER_PATHS.some(re => re.test(filePath))) return null;
   if (!data.session_id || data.agent_id) return null; // a subagent's reply is not in this transcript: its caller carries the lines
   if (/\[skip-step3:[^\]]+\]/i.test(hisText(data.transcript_path))) return { scope: 'build-turn', bypassed: true, problems: [] };
-  const reply = turnReply(data.transcript_path || '');
+  let reply = turnReply(data.transcript_path || '');
   if (reply === null) return null; // transcript unreadable: fail open
+  // The three lines also count when they sit in this session's STEP-3 block (2026-11-11: reply text written before an Edit was not in the transcript).
+  let st = ''; try { st = fs.readFileSync(process.env.STEP3_SESSION_FILE || path.join(ROOT, 'main', 'current-session.md'), 'utf8'); } catch (_) { st = ''; }
+  const blk = findBlock(st, [data.session_id, data.transcript_path ? path.basename(data.transcript_path, '.jsonl') : null].filter(Boolean));
+  if (blk) reply += '\n' + blk.__raw.split(/\r?\n\s*\r?\n/)[0];
   const problems = [];
   const q = /his words:\s*["“]([^"”\n]{8,})["”]/i.exec(reply);
   if (!q) problems.push('missing line: his words: "<his ask, verbatim>"');

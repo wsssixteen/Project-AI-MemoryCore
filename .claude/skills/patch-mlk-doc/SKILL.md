@@ -77,11 +77,13 @@ Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_
 
 Replace document (he attaches the edited file). The word is "replace" when the file overwrites an existing `lokasi_fail` on the server, which is every case in this skill; "upload" only for a file new to the server (2026-11-04 per みや, #288261: "please use replace from now on if we're replacing"; supersedes the 2026-10-29 "upload, never replace"):
 ```
-Hi infra, please help to replace document for MLK PROD. Thank you.
+Hi infra, please help to replace document for MLK <ENV>. Thank you.
 #<num>
 
 <lokasi_fail>
 ```
+**Staging first, by the env word only** (2026-11-11 per みや, ADHOC-PRBB-2026-24): to test the fixed file on staging, send this same box with `MLK STAG`, the same PROD `lokasi_fail` and the same attachment, then `MLK PROD` after it shows right. Never search the staging DB for a path. No ticket (an adhoc): leave the `#<num>` line out.
+**The test scenario's FIRST line names the test type** (same day, per みや: "you have to be upfront"): `Upload test: no infra, no script` when the file is one a user uploads on a screen (the tester uploads the fixed file there and opens it), or `Infra replace test` when the tester opens a file infra replaced. Also say whether a script must run before opening (a `.docx` needs the PDF reset; a PDF whose `lokasi_fail_pdf` = `lokasi_fail` needs none).
 
 Reset PDF:
 ```
