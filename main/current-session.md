@@ -45,3 +45,22 @@
 - Mistakes: 6 schema queries to find the peranan table; Stop hooks asked twice for the proving SELECTs and a picture line.
 - Assessment: A1 a document patch went from ticket to archive in one session because the adhoc held the cause. A2 save-quest PHASE-2 still needs the bounty block before archive-quest. A3 letter-check.py with --allow-empty matched the precedent letters. A4 a role-line "-" sits in common, not in the patch. A5 ⏭ no sweep.
 **Last Activity (288533 + over-complexity audit session)**: 2026-11-10 12:51 — worktree `prbb-permit-id-fix-f122a5`. All eight ways of the over-complexity audit built side by side (3 sonnet builders) and landed on main f2ed718b; 288533 archived at Phase 2.
+
+STEP-3: release-prep card + re-open after push (B1 B2 B3)
+session: 2026-11-11 redmine-issue-288622 (Baseline 1.9.3)
+his words: "okay build all" (order)
+fix or report: fix
+who pays: on-demand: one release run, push and card only
+goal without the part: the card is typed by hand from the skill template and a post-push fix needs a hand-edited state file
+model: claude-opus-5-5
+shown: release-prep-b1-b2-flow.png
+cause step: domain/release-mlk-plp/release-prep.js:cmdPush + cmdAddTicket · change: about 60 lines
+new parts: 0
+
+CHANGE-CARD (before): release-prep card + re-open after push
+What: The release script prints the filled Baseline card after a push, and it can take one more ticket fix after the push.
+Why: On 2026-11-11 the 1.9.3 card was typed from memory with Domain and DB missing, and the 287346 fix after the push needed a hand-edited state file.
+How: The push step prints the card and add-ticket accepts a pushed release, as the flow picture release-prep-b1-b2-flow.png shows.
+When: It runs when a release is pushed, when the card command is asked for, and when a ticket is added after the push.
+Where: domain/release-mlk-plp/release-prep.js and the release-mlk-plp skill, as the change map shows.
+Where picture = the change map (lib/change-map.js): change-map-20261111-140928.png
