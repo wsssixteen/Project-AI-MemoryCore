@@ -73,6 +73,8 @@ function hasBaReply(text) {
 // the luas fields are disabled for MLMS when kwsnAsal=false, which the analog record did not share).
 const ACTION_RE = /\b(?:klik|click|tekan|tambah|isi|pilih|simpan|hantar)\b/i;
 const USER_STEP_RE = /^[ \t>*`|-]*User-step:/im;
+const CODE_ROUTE_RE = /^[ \t>*`|-]*Adhoc route:\s*(?:(?:PATCH|ALTER)\s*\+\s*CODE-FIX|CODE-FIX|CR)\b/im;
+const REQ_MATCH_RE = /^[ \t>*`|-]*REQUIREMENT-MATCH:/im;
 function baSection(text) {
   const m = text.match(BA_HEAD_RE);
   if (!m) return '';
@@ -189,6 +191,21 @@ function stopCheck(data) {
         '   No finding yet this round? Adhoc route: none (<reason>). The Reply to BA ends with the matching ask.',
         '   Pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route" (miya 2026-10-29).',
         '   ⚡ DELTA ONLY: send just the route line.',
+      ].join('\n') + '\n',
+    };
+  }
+  // A code verdict needs the requirement read first (miya 2026-11-11, ADHOC-MLPS-2026-5: "code issue" told to the BA
+  // at 15:43, requirement 218455 rule 2 made it a user step). A REQUIREMENT-MATCH line anywhere this session counts.
+  if (CODE_ROUTE_RE.test(said) && !all.some(t => t.events.some(e => e.kind === 'text' && REQ_MATCH_RE.test(e.text)))) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the brief for ' + id + ' routes to CODE-FIX or CR with no requirement read this session.',
+        '   Load and read the requirement first: node quest/requirement-index.js --load --urusan <code> --tugasan <kod> --words "<value>" --cheap,',
+        '   then ONE --read of its top row, then one line:',
+        '   REQUIREMENT-MATCH: <ADHOC-ID> → #<req> "<subject>" — aligned | extends | contradicts — read: "<quoted rule>"  (or — none found, reads named)',
+        '   A rule that makes it a user step or data entry changes the route (miya 2026-11-11).',
+        '   ⚡ DELTA ONLY: send just the REQUIREMENT-MATCH line and the route line again.',
       ].join('\n') + '\n',
     };
   }
