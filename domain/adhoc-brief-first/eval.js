@@ -100,8 +100,23 @@ expectPass('M5 no marker, save agent started in an EARLIER turn does not hold th
 // ADHOC-MCL-2026-2 (2026-10-29): the brief must end with what the BA/TSO does next (ticket, alter, patch, nothing)
 const expectRouteBlock = (n, r) => check(n, blocked(r) && /no route line/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
 expectRouteBlock('R1 brief with BA reply + picture but no route line blocks', run([ASK, QUERY, AT(BODY_NR + BA + MARK), AGENT]));
-expectPass('R2 "Adhoc route: CODE-FIX — ..." passes', run([ASK, AT(BODY_NR + '\nAdhoc route: CODE-FIX — listener method missing on the MCL page bean, no patch shape\n' + BA + MARK), AGENT]));
-expectPass('R3 "PATCH + CODE-FIX" suffix passes', run([ASK, AT(BODY_NR + '\nAdhoc route: PATCH + CODE-FIX — 1 row patched, 98 permits same shape\n' + BA + MARK), AGENT]));
+const REQ = '\nREQUIREMENT-MATCH: ADHOC-MLPS-2026-4 → #218455 "MLPS - Tugasan Penyediaan Borang 4Ae Dan L1e" — aligned — read: "Pengguna perlu masukkan tarikh mula dan tarikh tamat"\n';
+expectPass('R2 "Adhoc route: CODE-FIX — ..." with its REQUIREMENT-MATCH passes', run([ASK, AT(BODY_NR + REQ + '\nAdhoc route: CODE-FIX — listener method missing on the MCL page bean, no patch shape\n' + BA + MARK), AGENT]));
+expectPass('R3 "PATCH + CODE-FIX" suffix with its REQUIREMENT-MATCH passes', run([ASK, AT(BODY_NR + REQ + '\nAdhoc route: PATCH + CODE-FIX — 1 row patched, 98 permits same shape\n' + BA + MARK), AGENT]));
+// ADHOC-MLPS-2026-5 (2026-11-11): "code issue" told to the BA at 15:43 before requirement 218455 was read
+const expectReqBlock = (n, r) => check(n, blocked(r) && /no requirement read this session/.test(said(r)) && /REQUIREMENT-MATCH: <ADHOC-ID>/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+const MLPS_CF = '\nAdhoc route: CODE-FIX: for MLPS, Maklumat Jadual keeps a permit luput later than the renewal year, and Simpan copies it into the 2026 row.\n';
+expectReqBlock('Q1 replay 15:43: CODE-FIX route, no REQUIREMENT-MATCH, save agent started → blocks', run([ASK, QUERY, AT(BODY_NR + MLPS_CF + BA + MARK), AGENT]));
+expectReqBlock('Q2 CR route with no requirement read blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: CR — screen does what it was built to do\n' + BA + MARK), AGENT]));
+expectReqBlock('Q3 PATCH + CODE-FIX with no requirement read blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: PATCH + CODE-FIX — 1 row patched\n' + BA + MARK), AGENT]));
+expectPass('Q4 REQUIREMENT-MATCH in an EARLIER turn of the session counts', run([ASK, AT('reading the requirement' + REQ), U('ok, brief me'), AT(BODY_NR + MLPS_CF + BA + MARK), AGENT]));
+expectPass('Q5 "— none found" form counts', run([ASK, AT(BODY_NR + '\nREQUIREMENT-MATCH: ADHOC-MLPS-2026-4 — none found (read #218266, #218455)\n' + MLPS_CF + BA + MARK), AGENT]));
+expectReqBlock('Q6 REQUIREMENT-MATCH quoted only inside hook feedback (meta) does not count', run([ASK, UM('Stop hook feedback:' + REQ), AT(BODY_NR + MLPS_CF + BA + MARK), AGENT]));
+expectPass('Q7 USER-STEP route needs no requirement line', run([ASK, AT(BODY_NR + '\nAdhoc route: USER-STEP — Jadual dates editable for this record\n' + BA + MARK), AGENT]));
+expectPass('Q8 ANSWER route needs no requirement line', run([ASK, AT(BODY_NR + '\nAdhoc route: ANSWER — Tahun Permohonan is 2026 for both\n' + BA + MARK), AGENT]));
+expectPass('Q9 OWNED-ELSEWHERE needs no requirement line', run([ASK, AT(BRIEF), AGENT]));
+expectReqBlock('Q10 the word REQUIREMENT-MATCH mid-sentence is not the line', run([ASK, AT(BODY_NR + '\nI will write a REQUIREMENT-MATCH: line later.\n' + MLPS_CF + BA + MARK), AGENT]));
+expectPass('Q11 "Adhoc route: CODE-FIX" quoted in a plain turn with no brief marker or agent is not checked', run([ASK, AT('The earlier route was ' + MLPS_CF)], false));
 expectPass('R4 "Adhoc route: none (<reason>)" passes', run([ASK, AT(BODY_NR + '\nAdhoc route: none (still tracing, no finding yet)\n' + BA + MARK), AGENT]));
 expectRouteBlock('R5 an unknown route word blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: CODE-TICKET — x\n' + BA + MARK), AGENT]));
 expectRouteBlock('R6 "+ CODE-FIX" on its own route word (CR + CODE-FIX) blocks', run([ASK, AT(BODY_NR + '\nAdhoc route: CR + CODE-FIX — x\n' + BA + MARK), AGENT]));
