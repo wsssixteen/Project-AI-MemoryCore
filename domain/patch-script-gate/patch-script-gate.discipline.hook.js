@@ -23,6 +23,11 @@
  *   semantic, enforced by self-discipline + みや review; this hook only
  *   enforces the mechanical annotation check.
  *
+ * CHECK 8 — a reason per SET column and per DELETE (BLOCKS from birth, 2026-11-11 per みや, 288974:
+ *   `status_keputusan = 'Batal'` and `hubungan_aplikasi_id = NULL` were copied from the 283980 script and
+ *   shipped to PROD; the BA had asked for neither). Every column a fenced sql UPDATE SETs and every table it
+ *   DELETEs from must be named after a `SET-REASONS` marker outside the fence (script-check rule 9 owns the
+ *   line's wording). Not checked: whether the reason is true. Skipped: a handoff-only reply, [skip-patch-gate:].
  * SEVEN checks (1-6 advisory v1, per /system-rules R4 — flip to block once validated;
  *   CHECK 7 BLOCKS from birth, 2026-09-03 per みや #277346: the infra handoff fence must hold
  *   the DML + `-- N rows …` ONLY — a file header / before-SELECT inside it = wrong artifact):
@@ -150,6 +155,19 @@ function handoffFenceDefect(text) {
   return { header, selectFirst };
 }
 
+// CHECK 8 — the SET columns and DELETE tables of every sql fence that have no line after SET-REASONS.
+function unreasoned(text) {
+  const prose = text.replace(/```[\s\S]*?```/g, '');
+  const at = prose.search(/SET-REASONS/);
+  const reasons = at < 0 ? '' : prose.slice(at);
+  const want = [];
+  for (const f of text.match(/```(?:sql)?[ \t]*\r?\n[\s\S]*?```/gi) || []) {
+    f.replace(/\bUPDATE\s+[\w.]+\s+SET\s+([\s\S]*?)(?:\bWHERE\b|;|```)/gi, (_, set) => set.replace(/(?:^|,)\s*(\w+)\s*=/g, (__, c) => want.push(c.toLowerCase())));
+    f.replace(/\bDELETE\s+FROM\s+(?:\w+\.)?(\w+)/gi, (_, t) => want.push(t.toLowerCase()));
+  }
+  return [...new Set(want)].filter(c => !new RegExp('\\b' + c + '\\b', 'i').test(reasons));
+}
+
 function lastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
@@ -204,7 +222,24 @@ process.stdin.on('end', () => {
       process.exit(0);
     }
 
-    if (EXEMPT.test(text)) process.exit(0);
+    // CHECK 8 — computed before EXEMPT: a patch hand-back sits inside a ▶ YOUR MOVE reply
+    const miss = /\[skip-patch-gate:/.test(text) || (HANDOFF_GREETING.test(text) && !/SCRIPT-CHECK/.test(text)) ? [] : unreasoned(text);
+    const blockUnreasoned = extra => {
+      logFire('block-set-reasons', miss.join(','));
+      process.stdout.write(JSON.stringify({
+        decision: 'block',
+        reason: [
+          '⛔ patch-script-gate — no reason line for: ' + miss.join(', ') + '.',
+          '   Every column the script SETs and every table it DELETEs from needs one line after `SET-REASONS —`:',
+          '     <column>: <the BA\'s words that ask for it | owner <Class.method:line> that writes it at this stage>',
+          '   A column copied from a precedent script names that ticket\'s case and why this ticket is the same case.',
+          '   No reason for this ticket → the column leaves the script (script-check rule 9; 288974).',
+          '   Bypass: [skip-patch-gate: <reason>].',
+        ].concat(extra).join('\n'),
+      }));
+      process.exit(0);
+    };
+    if (EXEMPT.test(text)) { if (miss.length) blockUnreasoned([]); process.exit(0); }
 
     const hasSqlDml = SQL_DML_IN_FENCE.test(text);
     const hasTxnUpdate = TXN_TABLE_UPDATE.test(text);
@@ -314,6 +349,8 @@ process.stdin.on('end', () => {
       ].join('\n'));
       logFire('advisory-generator-state', 'generated-id-release-no-disclosure');
     }
+
+    if (miss.length) blockUnreasoned(advisories.length ? ['', ...advisories] : []);
 
     if (advisories.length === 0) {
       // all checks passed (or none triggered)

@@ -97,6 +97,92 @@ check('F10 a master merge on the branch is not counted -> exit 0', r.status === 
 const rows2 = fs.readFileSync(path.join(sb, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
 check('F11 log carries refused-multi-commit (n=2, cycles=1) and multi-ok rows', rows2.some(x => x.outcome === 'refused-multi-commit' && x.n === 2 && x.cycles === 1) && rows2.some(x => x.outcome === 'multi-ok'), JSON.stringify(rows2.slice(-5)));
 
+// ── --patch: the note is read off the patch itself (2026-11-11, 288974: a hand-written note said "tidak diubah"
+//    about a permohonan whose link the script had removed). fixtures/ = the real shipped scripts. ──
+const fx = n => path.join(__dirname, 'fixtures', n);
+const tmpSql = (n, body) => { const p = path.join(sb, n); fs.writeFileSync(p, body); return p; };
+const pre = out => (out.split('<pre>\n')[1] || '').split('\n</pre>')[0];
+
+r = run(['--patch', '--ticket', '288974', '--ba', 'Nurhafizah Hasan', '--sql', fx('288974.sql'), '--was', 'hubungan_aplikasi_id=PTMLK/02/L/PPTPB/2026/9', '--tugasan', 'Penyediaan Surat', '--user', 'norlina@melaka.gov.my']);
+const wantP1 = [
+  'Salam Fizah, have patched as below. Please help to verify.',
+  '',
+  '<pre>',
+  'ID Permohonan: PTMLK/02/L/UPS_PLP/2026/15',
+  'Status: Tamat (Batal)',
+  'Link to PTMLK/02/L/PPTPB/2026/9: removed',
+  'Tugasan Penyediaan Surat: closed, removed from Senarai Tugasan of norlina@melaka.gov.my',
+  '</pre>',
+  '',
+  'Thank you.',
+  '',
+].join('\n');
+check('P1 288974 as shipped: Status Tamat (Batal), link removed, task closed + off Senarai Tugasan; exact note, no warning', r.status === 0 && r.out === wantP1 && r.err === '', r.out + ' | ' + r.err);
+check('P1b the note never says "not changed" / "tidak diubah" about anything', !/not changed|tidak diubah|not touched/i.test(r.out), r.out);
+
+r = run(['--patch', '--ticket', '288974', '--ba', 'Fizah', '--sql', fx('288974.sql')]);
+check('P1c link column nulled with no --was: the link line is still printed, and a warning asks for the ID it pointed to', r.status === 0 && /^Link to another permohonan: removed$/m.test(r.out) && /warn: hubungan_aplikasi_id set to NULL/.test(r.err), r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '288963', '--ba', 'Fizah', '--sql', fx('288963.sql'), '--file', 'Pelan L1e=Pelan Baharu dirotate.pdf', '--user', 'nurulazura@melaka.gov.my']);
+check('P2 288963 + --file: Tempat before -> after over both rows, pelan replaced, User ID last', r.status === 0 && r.err === '' && pre(r.out) === [
+  'ID Permohonan: PTMLK/02/L/MLPS/2026/12',
+  'No. Lesen: A02/2026/27',
+  'Tempat: PT 2 -> SEK II (permohonan + lesen asal)',
+  'Pelan L1e: replaced with Pelan Baharu dirotate.pdf',
+  'User ID: nurulazura@melaka.gov.my',
+].join('\n'), r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '283980', '--ba', 'Fizah', '--sql', fx('283980.sql'), '--was', 'PTMLK/02/L/UPS_PLP/2026/12|hubungan_aplikasi_id=PTMLK/02/L/PPTPB/2026/7', '--was', 'PTMLK/02/L/UPS_PLP/2026/13|hubungan_aplikasi_id=']);
+check('P3 283980, two permohonan in one script: both listed, --was per ID (one link removed, one never linked)', r.status === 0 && r.err === '' && pre(r.out) === [
+  'ID Permohonan: PTMLK/02/L/UPS_PLP/2026/12',
+  'Status: Tamat (Batal)',
+  'Link to PTMLK/02/L/PPTPB/2026/7: removed',
+  'Tugasan: closed, removed from Senarai Tugasan',
+  '',
+  'ID Permohonan: PTMLK/02/L/UPS_PLP/2026/13',
+  'Status: Tamat (Batal)',
+  'Tugasan: closed, removed from Senarai Tugasan',
+].join('\n'), r.out + ' | ' + r.err);
+
+const reset = tmpSql('doc.sql', 'UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=41110560;\n-- 1 row updated\n');
+r = run(['--patch', '--ticket', '2', '--ba', 'Fizah', '--id', 'PTMLK/02/L/PT/2026/1', '--sql', reset, '--file', 'Dokumen Surat Kelulusan=Surat Kelulusan baharu.docx']);
+check('P4 document replace + PDF reset: one "Dokumen <name>: replaced" line', r.status === 0 && r.err === '' && pre(r.out) === 'ID Permohonan: PTMLK/02/L/PT/2026/1\nDokumen Surat Kelulusan: replaced with Surat Kelulusan baharu.docx', r.out + ' | ' + r.err);
+r = run(['--patch', '--ticket', '2', '--ba', 'Fizah', '--id', 'PTMLK/02/L/PT/2026/1', '--sql', reset]);
+check('P4b PDF reset with no --file: "Dokumen: replaced" + a warning asking for the name', r.status === 0 && /^Dokumen: replaced$/m.test(r.out) && /warn: lokasi_fail_pdf set to NULL with no --file/.test(r.err), r.out + ' | ' + r.err);
+r = run(['--patch', '--ticket', '2', '--ba', 'Fizah', '--id', 'PTMLK/02/L/PT/2026/1', '--file', 'Pelan L1e=Pelan Baharu.pdf']);
+check('P4c file-only replace, no script: ID from --id, the file line', r.status === 0 && pre(r.out) === 'ID Permohonan: PTMLK/02/L/PT/2026/1\nPelan L1e: replaced with Pelan Baharu.pdf', r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '3', '--ba', 'Fizah', '--sql', tmpSql('ins.sql',
+  "INSERT INTO et_main.umm_a_bayaran (a_bayaran_id, aplikasi_id, amaun, no_resit, version)\nVALUES (nextval('s'), (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/1'), 50.00, 'R, 1', 0);\n-- 1 row inserted\n")]);
+check('P5 an INSERT: the row is listed with its values (ids and version left out), raw table name + a warning', r.status === 0 && pre(r.out) === 'ID Permohonan: PTMLK/02/L/PT/2026/1\numm_a_bayaran row: added (amaun 50.00, no_resit R, 1)' && /warn: no plain word for a row inserted into umm_a_bayaran/.test(r.err), r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '4', '--ba', 'Fizah', '--sql', tmpSql('unk.sql',
+  "UPDATE et_main.umm_a_permohonan_tnh SET tempat = 'SEK II', kod_xyz = NULL WHERE aplikasi_id = (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/1');\n-- 1 row updated\n")]);
+check('P6 unknown column: printed by its raw name, with a warning, never dropped', r.status === 0 && pre(r.out) === 'ID Permohonan: PTMLK/02/L/PT/2026/1\nTempat: SEK II\nkod_xyz: (empty)' && /warn: no plain word for column umm_a_permohonan_tnh\.kod_xyz/.test(r.err), r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '5', '--ba', 'Fizah', '--sql', tmpSql('ref.sql',
+  "UPDATE et_main.ind_tgsn SET nama = 'Semakan Minit Bebas', perihal = 'Semakan Minit Bebas' WHERE kod = 'SMB' AND ursn_id = (SELECT ursn_id FROM et_main.ind_ursn WHERE kod = 'PT');\n-- 1 row updated\n")]);
+check('P7 reference-table patch, no permohonan: the row key heads the lines', r.status === 0 && r.err === '' && pre(r.out) === 'kod: SMB\nNama: Semakan Minit Bebas', r.out + ' | ' + r.err);
+
+r = run(['--patch', '--ticket', '6', '--ba', 'Fizah', '--sql', tmpSql('none.sql', "SELECT 1;\n-- 1 row\n")]);
+check('P8 nothing changed in the script: exit 1, no note', r.status === 1 && r.out === '' && /found nothing changed/.test(r.err), r.status + ' ' + r.err);
+r = run(['--patch', '--ticket', '6', '--sql', fx('288974.sql')]);
+check('P8b --ba missing: exit 1, no note', r.status === 1 && r.out === '' && /--patch needs: --ba/.test(r.err), r.status + ' ' + r.err);
+
+r = run(['--alter', '--ticket', '7', '--ba', 'mira', '--id', 'PTMLK/02/L/MLPS/2026/12', '--tugasan', 'Semakan Permohonan', '--user', 'aminah@melaka.gov.my', '--patched', '--sql', fx('288963.sql')]);
+check('P9 patch + alter: the patched lines sit under the ID, above the alter lines', r.status === 0 && pre(r.out) === [
+  'ID Permohonan: PTMLK/02/L/MLPS/2026/12',
+  'No. Lesen: A02/2026/27',
+  'Tempat: PT 2 -> SEK II (permohonan + lesen asal)',
+  'Tugasan: Semakan Permohonan',
+  'User ID: aminah@melaka.gov.my',
+].join('\n'), r.out + ' | ' + r.err);
+
+r = run(['--alter', '--ticket', '284775', '--ba', 'Nurhafizah Hasan', '--id', 'PTMLK/02/L/PT/2026/343', '--tugasan', 'Penyediaan Borang 4Ae', '--user', 'irwanf@melaka.gov.my']);
+check('P10 --alter with no patch flags is byte for byte what it was (F1)', r.status === 0 && r.out === want1 && r.err === '', r.out + ' | ' + r.err);
+const rows3 = fs.readFileSync(path.join(sb, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+check('P11 each printed --patch note writes a log row (mode patch, its IDs, its warning count)', rows3.filter(x => x.mode === 'patch' && x.outcome === 'printed').length === 10 && rows3.some(x => x.mode === 'patch' && x.ids.length === 2) && rows3.some(x => x.mode === 'patch' && x.warns === 1), JSON.stringify(rows3.filter(x => x.mode === 'patch')));
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);
