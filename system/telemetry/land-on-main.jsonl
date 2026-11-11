@@ -259,3 +259,4 @@
 {"ts":"2026-11-11T06:47:47.824Z","commit":"1a99bf39","outcome":"LANDED","exit":0,"dur_ms":10489}
 {"ts":"2026-11-11T06:58:12.970Z","commit":"3478f46f","outcome":"LANDED","exit":0,"dur_ms":6198}
 {"ts":"2026-11-11T13:42:06.745Z","commit":"HEAD","outcome":"nothing","exit":1,"dur_ms":590}
+{"ts":"2026-11-11T14:27:43.191Z","commit":"ed5ffed2","outcome":"REFUSED","exit":2,"dur_ms":1030}
