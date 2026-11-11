@@ -1,5 +1,5 @@
 /*
- * eval.js — fixture-driven eval for patch-script-gate (CHECK 1/2/3/4).
+ * eval.js — fixture-driven eval for patch-script-gate (CHECK 1-8).
  * Spawns the hook against many crafted assistant replies and asserts which
  * advisories fire. Run: node domain/patch-script-gate/eval.js
  * Added 2026-08-10 per みや (goal: "run evals, many scripts, check it creates the type of script").
@@ -29,7 +29,19 @@ const HANDOFF_THE_MISS = [
   "WHERE  aplikasi_id = (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PRBB/2026/12');", '-- 1 row, has_disyor = false', '',
   HANDOFF_UPDATE, '```', '', 'File: 2. Fix\\277346.sql', '', '═══ ▶ YOUR MOVE — QA-277346 ═══', '', 'Pre-emit gate: Notes.txt ✓', '', '═══ END ═══',
 ].join('\n');
+// CHECK 8 fixtures — the 288974 statements as shipped (2026-11-11): Batal and the link-null came from the 283980 script.
+const P288974 = "```sql\nUPDATE et_main.umm_aplikasi\nSET status_keputusan = 'Batal', hubungan_aplikasi_id = NULL, status_proses = 'Tamat', trkh_tamat = SYSDATE, status_awam = 'Tamat'\nWHERE id_pengenalan = 'PTMLK/02/L/UPS_PLP/2026/15';\n-- 1 row updated\n\nDELETE FROM et_main.umm_tgsn_semasa\nWHERE aplikasi_id = (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/UPS_PLP/2026/15');\n-- 1 row deleted\n```\nSCRIPT-CHECK — rule 1 ✓ · rule 2 ✓" + SM;
+const R_ASKED = "\nSET-REASONS —\nstatus_proses: BA \"tamatkan id permohonan\"\nstatus_awam: same ask, the portal status\ntrkh_tamat: the date of the Tamat\numm_tgsn_semasa: BA \"tamatkan\", the task leaves Senarai Tugasan";
 const F = [
+  { n: '288974 as shipped, no SET-REASONS (THE MISS, c8)', c8: ['status_keputusan', 'hubungan_aplikasi_id', 'status_proses', 'trkh_tamat', 'status_awam', 'umm_tgsn_semasa'], t: P288974 },
+  { n: 'reasons for the asked columns only (c8 names the two copied ones)', c8: ['status_keputusan', 'hubungan_aplikasi_id'], c8not: ['status_proses', 'umm_tgsn_semasa'], t: P288974 + R_ASKED },
+  { n: 'every SET column + DELETE reasoned (c8 off)', c8: false, t: P288974 + R_ASKED + '\nstatus_keputusan: precedent 283980 = made by mistake; this = same case, BA said batal\nhubungan_aplikasi_id: BA asked to unlink' },
+  { n: 'c8 inside a YOUR MOVE hand-back still blocks', c8: ['status_keputusan'], t: P288974 + R_ASKED + '\n═══ ▶ YOUR MOVE — QA-288974 ═══' },
+  { n: 'column named only above the marker does not count (c8)', c8: ['tempat'], t: "tempat is the column.\n```sql\nUPDATE et_main.umm_a_permohonan_tnh SET tempat = 'SEK II' WHERE tempat = 'PT 2';\n-- 1 row updated\n```\nSET-REASONS —\n(none)" + SM },
+  { n: 'handoff-only reply, no SCRIPT-CHECK (c8 off)', c8: false, c2: true, t: 'Hi infra, please assist. Thank you.\n#288974: UPS_PLP - tamatkan permohonan\n\n```sql\n' + HANDOFF_UPDATE + '\n```' },
+  { n: 'skip-patch-gate token (c8 off)', c8: false, t: P288974 + '\n[skip-patch-gate: eval]' },
+  { n: 'java fence with an UPDATE string (c8 off)', c8: false, t: '```java\nString q = "UPDATE umm_aplikasi SET status_proses = ? WHERE aplikasi_id = ?";\n```' + SM + ANN },
+  { n: 'SELECT only (c8 off)', c8: false, t: '```sql\nSELECT status_proses FROM umm_aplikasi WHERE aplikasi_id = 1;\n```' },
   // CHECK 5 — display-column verification (the QA-275009 perihal miss)
   { n: 'ind nama only (THE MISS, c5)', c5: true,  t: "```sql\nUPDATE ind_tgsn SET nama = 'Semakan Minit Bebas' WHERE tgsn_id = 5134754 AND kod = 'SMB';" + ANN + "\n```" },
   { n: 'rjk label only (c5)',          c5: true,  t: "```sql\nUPDATE rjk_negeri SET nama = 'MELAKA' WHERE negeri_id = 4;" + ANN + "\n```" },
@@ -88,9 +100,11 @@ for (const f of F) {
   const K = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'];
   const got = { c1: /CHECK 1/.test(out), c2: /CHECK 2/.test(out), c3: /CHECK 3/.test(out), c4: /CHECK 4/.test(out), c5: /CHECK 5/.test(out), c6: /CHECK 6/.test(out), c7: /CHECK 7/.test(out) && /"decision":"block"/.test(out) };
   const exp = { c1: !!f.c1, c2: !!f.c2, c3: !!f.c3, c4: !!f.c4, c5: !!f.c5, c6: !!f.c6, c7: !!f.c7 };
-  const ok = K.every(k => got[k] === exp[k]);
+  const b8 = /no reason line for: ([^\n"\\]*)/.exec(out), named = b8 ? b8[1] : '';
+  const ok8 = f.c8 === undefined || (f.c8 === false ? !b8 : /"decision":"block"/.test(out) && f.c8.every(c => named.includes(c)) && (f.c8not || []).every(c => !named.includes(c)));
+  const ok = K.every(k => got[k] === exp[k]) && ok8;
   ok ? pass++ : fail++;
-  rows.push(`${ok ? 'PASS' : 'FAIL'}  ${f.n.padEnd(36)}  exp[${K.map(k => k + '=' + (+exp[k])).join(' ')}]  got[${K.map(k => k + '=' + (+got[k])).join(' ')}]`);
+  rows.push(`${ok ? 'PASS' : 'FAIL'}  ${f.n.padEnd(36)}  exp[${K.map(k => k + '=' + (+exp[k])).join(' ')}]  got[${K.map(k => k + '=' + (+got[k])).join(' ')}]${f.c8 === undefined ? '' : `  c8 ${ok8 ? 'ok' : 'WRONG: ' + (named || 'no block')}`}`);
 }
 console.log(rows.join('\n'));
 console.log(`\n${pass}/${pass + fail} passed` + (fail ? `  — ${fail} FAILED` : '  — ALL GREEN'));

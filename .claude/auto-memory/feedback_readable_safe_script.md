@@ -83,7 +83,7 @@ Pairs with [[feedback_verify_before_claim]] · [[feedback_show_evidence_script_o
 
 **Domain fact (MLPS Tempat family #275587 → #278304 → #279793)**: MIGRATOR wrote `tempat = 'PT '||no_lot` on Jasin lesen rows in `ind_mklmt_tnh_permit_lesen`; an MLPS renewal copies land into `umm_a_permohonan_tnh` (`tempat` + `nama_kawasan_terlibat`). Full fix = patch BOTH permohonan columns + the source lesen `tempat`. See [[feedback_simplify_and_reference]] (working-analog-first) and etanah-knowledge BUG-BESTIARY:884 / DATABASE §6.1.
 
-**How to apply**: at ANY data-patch ticket, before emitting the script, run the prior-ticket search and cite the closest precedent's shipped shape in the Rubric. If a column/row the precedent patched is not in my script, either include it or state why it is out of scope. Never let "it's just a patch" skip the analog read.
+**How to apply**: at ANY data-patch ticket, before emitting the script, run the prior-ticket search and cite the closest precedent's shipped shape in the Rubric. If a column/row the precedent patched is not in my script, either include it or state why it is out of scope. Never let "it's just a patch" skip the analog read. The converse (2026-11-11, 288974): a column the precedent set is NOT copied without its own reason for this ticket; `script-check` rule 9 owns that (one home).
 
 ---
 

@@ -1,7 +1,7 @@
 goal_status: draft (derived from nuke-marker on 2026-09-06; promote with node lib/goal-backfill.js promote ticket-close-block)
 symptom: miya ask (#276436): auto-emit the git commit-reference block at ticket close, module-aware branch vs int-env, in his plain sentence style
-goal: every ticket-close text (git commit block, BA pass note, done-alter / patch+alter note) comes out of this script in miya's shape, so no step types it by hand and the shape has one home
-goal_signal: the note pasted on Redmine equals this script's stdout for the same inputs; for `--alter`, `ticket-close-block.eval.js` F1/F2 pin that stdout byte for byte and exit 0
+goal: every ticket-close text (git commit block, BA pass note, done-alter / patch+alter note, patch-done note) comes out of this script in miya's shape, so no step types it by hand and the shape has one home
+goal_signal: the note pasted on Redmine equals this script's stdout for the same inputs; `ticket-close-block.eval.js` pins that stdout byte for byte (`--alter` F1/F2, `--patch` P1-P10) and exits 0
 retention: rotate monthly
 footprint: on-demand: 1 node process per call, under 1 s, nothing running otherwise
 self_audit: each `--alter` run checks its required inputs before printing (a missing or empty `--ticket --ba --id --tugasan --user` = exit 1, nothing printed), warns on a BA with no short name, and writes a log row (ts · ticket · mode · patched · outcome); `node domain/ticket-close-block/ticket-close-block.eval.js` re-pins the exact note at every refine
@@ -39,6 +39,12 @@ The prose close-message uses miya's plain sentence voice — see `feedback_ticke
 
 Prints the Melaka done-alter note (alter alone) or the patch+alter note (`--patched`). No repo needed. This script is the note's one home: `ALTER-TICKET-PLAYBOOK.md` §5.1, quest step 6c, `redmine-phase1-prefill` Step 4 and `alter-ticket-gate` A6 point here and never restate the shape. `--resit` adds a `No. Resit:` line under the ID; `--prod-script` adds the attached-script line (file name only). Missing or empty required flag = exit 1, nothing printed. Unknown BA = greeted as given + a stderr warning. Eval: `ticket-close-block.eval.js` (alter only · patch+alter with resit and script · unknown BA · missing args · empty flag · log rows).
 
+## Patch-done note: `--patch` (2026-11-11, 288974)
+
+`node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" [--sql <num>.sql] [--file "<Dokumen name>=<new file>"]… [--was "[<ID Permohonan>|]<column>=<value in the BEFORE check>"]… [--tugasan "<tugasan>"] [--user <login>] [--id <ID>]`
+
+Reads the patch itself and prints one line per thing changed, grouped per ID Permohonan: `UPDATE` columns in BA words with `before -> after` (before = the `WHERE` literal of the same column, or `--was`), `DELETE` and `INSERT` rows, replaced files. It lists what changed only and never says "not changed". The plain-word maps (`KEY` · `SCOPE` · `ROW` · `COL`) at the top of the script are the one home of BA wording; a column or table not in them is printed by its raw name with a `warn:` on stderr, never dropped. A link column set to NULL with no `--was` prints `Link to another permohonan: removed` and a warn asking for the ID. `--alter … --sql <num>.sql` puts the same lines under the ID of a patch + alter note. Why: the 288974 note was typed from memory and said the linked permohonan was not changed after the script had removed its link. Eval P1-P11 (fixtures = the shipped 288974, 288963 and 283980 scripts).
+
 state-scoped: no, state-agnostic — module + repo are parameters; works for any state (Melaka now, Perak later) with no path change.
 
 log: `domain/ticket-close-block/log.jsonl` (ts + ticket + module + branch + commit + intenv + outcome).
@@ -72,3 +78,23 @@ With `--ba` on OUR fix (commit author is us), the tool first runs `domain/falsif
 | 18 | BA name typed in a different case | fixture-added (eval F2) — matched case-insensitively |
 | 19 | User ID taken from the BA's message instead of the AFTER check | accepted-risk: the script cannot see the DB; the flag help and the playbook name the AFTER check as the source |
 | 20 | Eval run writes test rows into the real log | handled — the eval runs a copy in a temp folder |
+| 21 | `--patch`: the script nulls a column that points at another permohonan | fixture-added (P1, P1c) — the link line is always printed; no `--was` = a warn asking for the ID |
+| 22 | `--patch`: a note claiming another permohonan is "not changed" | fixture-added (P1b) — the generator has no such sentence |
+| 23 | `--patch`: two permohonan in one statement (`IN (…)`) | fixture-added (P3) — one group each, `--was` per ID |
+| 24 | `--patch`: a statement keyed by something else (No. Lesen) in a one-permohonan script | fixture-added (P2) — goes under that permohonan, its key is a header line |
+| 25 | `--patch`: same value written to two tables | fixture-added (P2) — one line, both scopes named |
+| 26 | `--patch`: document replace + PDF reset | fixture-added (P4, P4b) — the `--file` line; a reset with no `--file` warns |
+| 27 | `--patch`: file-only replace, no script | fixture-added (P4c) — `--id` heads the note |
+| 28 | `--patch`: an INSERT | fixture-added (P5) — row listed with its values; ids and audit columns left out |
+| 29 | `--patch`: a column with no plain word | fixture-added (P6) — raw name + warn |
+| 30 | `--patch`: reference-table patch, no permohonan | fixture-added (P7) — the row key heads the lines |
+| 31 | `--patch`: script with no DML, or `--ba` missing | fixture-added (P8, P8b) — exit 1, nothing printed |
+| 32 | `--patch`: a comma, `;` or `--` inside a quoted value | fixture-added (P5 value `R, 1`) — quotes and brackets are masked before splitting |
+| 33 | `--patch`: a column set back to the value it already had (`--was` equals the new value) | handled — no line (P3, the never-linked permohonan) |
+| 34 | `--patch`: `INSERT … SELECT` or a multi-row `VALUES` | handled — the row line is printed with a warn to add the values by hand |
+| 35 | `--patch`: a `SET` value that is a subquery with its own `WHERE` | handled — the top-level `WHERE` is found on the masked text |
+| 36 | `--patch`: the script was edited after it ran | accepted-risk: the generator reads the file it is given; quest 6c keeps one `<num>.sql`, the same file that is attached |
+| 37 | `--patch`: the UPDATE matched 0 rows on PROD | accepted-risk: the script cannot see the DB; the `-- N rows` check at run time owns that |
+| 38 | `--alter` with no patch flags after this change | fixture-added (P10) — byte for byte F1 |
+| 39 | patch + alter | fixture-added (P9) — patched lines under the ID, above Tugasan and User ID |
+| 40 | `--patch` across several permohonan with `--file` | handled — the file line goes under `--id`, else the first with a warn |

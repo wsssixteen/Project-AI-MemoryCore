@@ -23,6 +23,187 @@ function logRow(row) {
   try { fs.appendFileSync(LOG, JSON.stringify(row) + '\n'); } catch (_) {}
 }
 
+// --patch (2026-11-11 per miya, 288974: "the types of patching will always include these datas, the things we've
+// patched"): the patch-done note is read off the patch itself, so every thing the script changed is one line and
+// nothing is typed from memory. The note lists what changed only; it never says "not changed" about anything.
+// node ticket-close-block.js --patch --ticket <num> --ba "<BA name>" [--sql <num>.sql] [--file "<Dokumen name>=<new file>"]...
+//      [--was "[<ID Permohonan>|]<column>=<value from the BEFORE check>"]... [--tugasan "<tugasan>"] [--user <login>] [--id <ID>]
+// The plain-word maps below are the one home of BA wording for a column. A column or table not in them is printed
+// by its raw name with a warn on stderr: add its word here, never drop the line.
+const KEY = { id_pengenalan: 'ID Permohonan', no_permit_lesen: 'No. Lesen', no_resit: 'No. Resit', no_hakmilik: 'No. Hakmilik' };
+const SCOPE = { umm_aplikasi: 'permohonan', umm_a_permohonan_tnh: 'permohonan', ind_mklmt_tnh_permit_lesen: 'lesen asal' };
+const ROW = {
+  umm_tgsn_semasa: { D: u => ['Tugasan', 'removed from Senarai Tugasan' + (u ? ' of ' + u : '')], I: u => ['Tugasan', 'added to Senarai Tugasan' + (u ? ' of ' + u : '')] },
+};
+const COL = {
+  status_proses: 'Status', status_awam: 'Status',
+  status_keputusan: v => ['Status', `(${v})`],
+  trkh_tamat: () => ['Status', ''],
+  tempat: 'Tempat', nama_kawasan_terlibat: 'Tempat',
+  nama: 'Nama', perihal: 'Nama',
+  hubungan_aplikasi_id: (v, x) => {
+    if (v !== null) return [`Link to ${(/id_pengenalan\s*=\s*'([^']+)'/i.exec(x.expr) || [])[1] || v}`, 'added'];
+    if (x.was === undefined) x.warn('hubungan_aplikasi_id set to NULL: give --was hubungan_aplikasi_id=<the ID Permohonan it pointed to in the BEFORE check; empty when it pointed to nothing>');
+    return x.was === '' ? null : [`Link to ${x.was || 'another permohonan'}`, 'removed'];
+  },
+  'umm_a_tgsn.flag_aktif': v => ['Tugasan', v === 'N' ? 'closed' : 'reopened'],
+  'umm_a_tgsn.status_tugasan': v => ['Tugasan', v === 'Selesai' ? 'closed' : v],
+  'umm_a_tgsn.trkh_tetap': () => ['Tugasan', ''],
+  lokasi_fail_pdf: (v, x) => {
+    if (v !== null) return ['PDF file', String(v)];
+    if (x.files) return null; // the --file line says the document was replaced; this statement only makes its PDF regenerate
+    x.warn('lokasi_fail_pdf set to NULL with no --file: give --file "<Dokumen name>=<new file name>"');
+    return ['Dokumen', 'replaced'];
+  },
+};
+
+function argAll(name) {
+  const o = [];
+  process.argv.forEach((a, i) => { const v = process.argv[i + 1]; if (a === '--' + name && v && !v.startsWith('--')) o.push(v); });
+  return o;
+}
+// Same string with everything inside quotes or brackets blanked, so a top-level comma, ; or WHERE is found by position.
+function mask(s) {
+  let d = 0, q = false, o = '';
+  for (const c of s) {
+    if (q) { if (c === "'") q = false; o += c === "'" && d === 0 ? c : ' '; continue; }
+    if (c === "'") { q = true; o += d === 0 ? c : ' '; continue; }
+    if (c === ')') d--;
+    o += d > 0 ? ' ' : c;
+    if (c === '(') d++;
+  }
+  return o;
+}
+function cut(s, ch) {
+  const m = mask(s), out = [];
+  let from = 0;
+  for (let i = 0; i < m.length; i++) if (m[i] === ch) { out.push(s.slice(from, i)); from = i + 1; }
+  out.push(s.slice(from));
+  return out.map(x => x.trim()).filter(Boolean);
+}
+function lit(v) {
+  v = String(v).trim();
+  const m = /^'([\s\S]*)'$/.exec(v);
+  if (m) return m[1].replace(/''/g, "'");
+  if (/^null$/i.test(v)) return null;
+  return /^(sysdate|now\(\)|current_\w+)$/i.test(v) ? 'now' : v;
+}
+// Reads the patch (.sql + replaced files) into one group of note lines per ID Permohonan.
+function patchGroups(inAlter) { // inAlter: --tugasan and --user belong to the alter lines, not to the patch lines
+  const warns = [];
+  const warn = w => { if (!warns.includes(w)) warns.push(w); };
+  const user = !inAlter && arg('user') && arg('user') !== true ? String(arg('user')) : '';
+  const tugasan = !inAlter && arg('tugasan') && arg('tugasan') !== true ? String(arg('tugasan')) : '';
+  const files = argAll('file');
+  const was = {};
+  for (const w of argAll('was')) { const m = /^(?:(.+)\|)?(\w+)=(.*)$/.exec(w); if (m) was[(m[1] || '') + '|' + m[2].toLowerCase()] = m[3]; }
+  let sql = '';
+  if (arg('sql') && arg('sql') !== true) sql = fs.readFileSync(String(arg('sql')), 'utf8');
+  sql = sql.replace(/('(?:[^']|'')*')|--[^\n]*/g, (m, q) => q || '');
+
+  const stmts = [];
+  for (const s of cut(sql, ';')) {
+    let m, kind, set = [], where = '';
+    if ((m = /^UPDATE\s+([\w.]+)\s+SET\s+/i.exec(s))) {
+      kind = 'U';
+      const rest = s.slice(m[0].length), wi = mask(rest).search(/\bWHERE\b/i);
+      where = wi < 0 ? '' : rest.slice(wi + 5);
+      set = cut(wi < 0 ? rest : rest.slice(0, wi), ',').map(a => [a.slice(0, a.indexOf('=')).trim().toLowerCase(), a.slice(a.indexOf('=') + 1).trim()]);
+    } else if ((m = /^DELETE\s+FROM\s+([\w.]+)\s*/i.exec(s))) {
+      kind = 'D'; where = s.slice(m[0].length);
+    } else if ((m = /^INSERT\s+INTO\s+([\w.]+)\s*/i.exec(s))) {
+      kind = 'I'; where = s;
+      const r = /^\(([^)]*)\)\s*VALUES\s*\(([\s\S]*)\)$/i.exec(s.slice(m[0].length));
+      const cols = r ? r[1].split(',').map(c => c.trim().toLowerCase()) : [], vals = r ? cut(r[2], ',') : [];
+      if (r && cols.length === vals.length) set = cols.map((c, i) => [c, vals[i]]);
+      else warn(`INSERT INTO ${m[1]}: values not read (not a single VALUES row); add what was inserted to the note by hand`);
+    } else continue;
+    const keys = {}, top = {};
+    where.replace(/\b(\w+)\s*(?:=|\bIN\b)\s*\(?\s*((?:'[^']*'\s*,?\s*)+)/gi, (_, c, list) => { (keys[c.toLowerCase()] = keys[c.toLowerCase()] || []).push(...list.match(/'[^']*'/g).map(lit)); });
+    if (kind !== 'I') mask(where).replace(/\b(\w+)\s*=\s*'/g, (hit, c, i) => { const q = /^'((?:[^']|'')*)'/.exec(where.slice(i + hit.length - 1)); if (q) top[c.toLowerCase()] = q[1]; });
+    stmts.push({ kind, table: m[1].split('.').pop().toLowerCase(), set, keys, top });
+  }
+
+  const groups = new Map();
+  const G = id => groups.get(id) || groups.set(id, { keys: new Map(), lines: new Map() }).get(id);
+  const add = (g, label, part, before, scope) => {
+    const l = g.lines.get(label) || g.lines.set(label, { parts: [], scopes: [], before: '' }).get(label);
+    if (part && !l.parts.includes(part)) l.parts.push(part);
+    if (before && !l.before) l.before = before;
+    if (scope && !l.scopes.includes(scope)) l.scopes.push(scope);
+  };
+  const allIds = [...new Set(stmts.flatMap(s => s.keys.id_pengenalan || []))];
+  const idArg = arg('id') && arg('id') !== true ? String(arg('id')) : '';
+  if (idArg && !allIds.includes(idArg)) allIds.unshift(idArg);
+  if (idArg) G(idArg);
+  for (const s of stmts) {
+    for (const id of (s.keys.id_pengenalan || (allIds.length === 1 ? allIds : ['']))) {
+      const g = G(id);
+      const setCols = s.set.map(a => a[0]);
+      // header lines: the named keys (No. Lesen …) wherever they sit; with no ID Permohonan, the row's own top-level key too
+      const heads = Object.entries(s.keys).filter(([c]) => KEY[c]).concat(id ? [] : Object.entries(s.top).filter(([c]) => !KEY[c]).map(([c, v]) => [c, [v]]));
+      for (const [c, vals] of heads) {
+        if (c === 'id_pengenalan' || setCols.includes(c)) continue;
+        const k = g.keys.get(KEY[c] || c) || g.keys.set(KEY[c] || c, []).get(KEY[c] || c);
+        vals.forEach(v => { if (!k.includes(v)) k.push(v); });
+      }
+      const scope = SCOPE[s.table] || s.table;
+      if (s.kind === 'U') for (const [c, expr] of s.set) {
+        const v = lit(expr), entry = COL[s.table + '.' + c] || COL[c];
+        const w = was[id + '|' + c] !== undefined ? was[id + '|' + c] : was['|' + c];
+        const shown = v === null ? '(empty)' : v;
+        if (typeof entry === 'function') { const r = entry(v, { was: w, expr, files: files.length, warn }); if (r) add(g, r[0], r[1], '', scope); continue; }
+        if (!entry) warn(`no plain word for column ${s.table}.${c}: printed by its raw name; add it to COL in ticket-close-block.js`);
+        const before = w !== undefined ? w : s.top[c];
+        if (before !== undefined && before === (v === null ? '' : v)) continue;
+        add(g, entry || c, shown, before, scope);
+      } else {
+        const row = ROW[s.table] && ROW[s.table][s.kind];
+        if (row) { add(g, ...row(user)); continue; }
+        warn(`no plain word for a row ${s.kind === 'D' ? 'deleted from' : 'inserted into'} ${s.table}: printed by its raw name; add it to ROW in ticket-close-block.js`);
+        const det = s.set.filter(a => !/_id$|^version$|^created_|^last_modified_/.test(a[0]) && lit(a[1]) !== null && lit(a[1]) !== 'now')
+          .map(a => `${typeof COL[a[0]] === 'string' ? COL[a[0]] : a[0]} ${lit(a[1])}`);
+        add(g, `${s.table} row`, (s.kind === 'D' ? 'deleted' : 'added') + (det.length ? ` (${det.join(', ')})` : ''));
+      }
+    }
+  }
+  if (files.length && !groups.size) G('');
+  const fg = groups.get(idArg) || [...groups.values()][0];
+  if (files.length && groups.size > 1 && !idArg) warn('--file with more than one ID Permohonan in the script: the file line went under the first; give --id <its ID Permohonan>');
+  for (const f of files) { const i = f.indexOf('='); if (i > 0) add(fg, f.slice(0, i).trim(), 'replaced with ' + f.slice(i + 1).trim()); else add(fg, 'Dokumen ' + path.basename(f), 'replaced'); }
+
+  const out = new Map();
+  for (const [id, g] of groups) {
+    const lines = [...g.keys].map(([k, v]) => `${k}: ${v.join(', ')}`);
+    let userSaid = false;
+    for (const [label, l] of g.lines) {
+      const text = [l.parts.filter(p => !p.startsWith('(')).join(', '), l.parts.filter(p => p.startsWith('(')).join(' ')].filter(Boolean).join(' ') || 'date updated';
+      if (user && text.includes(user)) userSaid = true;
+      lines.push(`${label === 'Tugasan' && tugasan ? 'Tugasan ' + tugasan : label}: ${l.before ? l.before + ' -> ' : ''}${text}${l.scopes.length > 1 ? ` (${l.scopes.join(' + ')})` : ''}`);
+    }
+    if (user && !userSaid) lines.push(`User ID: ${user}`);
+    out.set(id, lines);
+  }
+  return { groups: out, warns };
+}
+
+if (arg('patch') === true) {
+  const need = ['ticket', 'ba'].filter(k => !arg(k) || arg(k) === true);
+  if (need.length) { console.error('--patch needs: ' + need.map(k => '--' + k).join(' ')); process.exit(1); }
+  const { groups, warns } = patchGroups();
+  if (![...groups.values()].some(l => l.length)) { console.error('--patch found nothing changed: give --sql <num>.sql and/or --file "<Dokumen name>=<new file>"'); process.exit(1); }
+  let names = {};
+  try { names = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'ba-names.json'), 'utf8')); } catch (_) {}
+  const baArg = String(arg('ba'));
+  const key = Object.keys(names).find(k => k.toLowerCase() === baArg.toLowerCase());
+  if (!key) console.error(`warn: no short name for "${baArg}" in ba-names.json — check how miya greets this BA`);
+  warns.forEach(w => console.error('warn: ' + w));
+  const body = [...groups].map(([id, lines]) => [...(id ? [`ID Permohonan: ${id}`] : []), ...lines].join('\n')).join('\n\n');
+  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', 'Thank you.'].join('\n'));
+  logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'patch', ids: [...groups.keys()].filter(Boolean), warns: warns.length, outcome: 'printed' });
+  process.exit(0);
+}
+
 // --alter (2026-11-05 per miya, 288533: "Does quest not load the format?"): the done-alter / patch+alter note in
 // ALTER-TICKET-PLAYBOOK §5.1 shape, generated here so no step writes it by hand. No repo needed.
 // node ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check>
@@ -38,12 +219,20 @@ if (arg('alter') === true) {
   const patched = arg('patched') === true;
   const resit = arg('resit');
   const script = arg('prod-script');
+  // patch + alter: --sql / --file / --was put the --patch lines of this ID under it (2026-11-11, 288974)
+  const pg = (arg('sql') && arg('sql') !== true) || argAll('file').length ? patchGroups(true) : null;
+  if (pg) {
+    pg.warns.forEach(w => console.error('warn: ' + w));
+    const others = [...pg.groups.keys()].filter(k => k !== String(arg('id')));
+    if (others.length) console.error('warn: patched but not in this note: ' + others.map(k => k || '(no ID Permohonan)').join(', '));
+  }
   const out = [
     `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. ${patched ? 'Can proceed to verify.' : 'Please help to verify.'}`,
     '',
     '<pre>',
     `ID Permohonan: ${arg('id')}`,
     ...(resit && resit !== true ? [`No. Resit: ${resit}`] : []),
+    ...(pg ? pg.groups.get(String(arg('id'))) || [] : []),
     `Tugasan: ${arg('tugasan')}`,
     `User ID: ${arg('user')}`,
     '</pre>',
