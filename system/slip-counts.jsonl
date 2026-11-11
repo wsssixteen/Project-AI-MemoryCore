@@ -2078,3 +2078,7 @@
 {"ts":"2026-11-10T07:29:48.226Z","category":"A4"}
 {"ts":"2026-11-10T07:29:49.835Z","category":"A4"}
 {"ts":"2026-11-10T07:29:51.989Z","category":"A5"}
+{"ts":"2026-11-11T06:30:09.238Z","category":"quest/template-layout-not-checked"}
+{"ts":"2026-11-11T06:51:08.015Z","category":"blocker"}
+{"ts":"2026-11-11T08:30:58.229Z","category":"quest/ba-mark-merged"}
+{"ts":"2026-11-11T08:55:56.873Z","category":"quest/siblings-not-checked"}
