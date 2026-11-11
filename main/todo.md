@@ -444,3 +444,7 @@ Audit 2026-10-29 of the plan's 81 items: 47 built, 4 dropped, 30 open. The open 
 - design-consult-gate step-3 rider: on 2026-11-10 the transcript held no text block for the assistant messages that carried the three lines, so the rider blocked four times. Find why those text blocks are absent (not verified) before trusting the rider on a long session. Slips row 2026-11-10, blocker.
 - `domain/whatsapp` still shows "no log (unobservable)" in the feature census: its log lives in `%USERPROFILE%\.wa-read\events.jsonl`, outside the folder. Decide: teach the census that path, or leave it named.
 - [ ] 2026-11-06 (288625, per miya) Quest start must match the ticket's permohonan IDs against ADHOC-REGISTER by grep (not the truncated hook list) and print the matching row in full; a 'no match' line needs that grep's output. Home: quest SKILL Phase 0 + adhoc-register hook.
+
+- [ ] 2026-11-11 ON HOLD (miya): ADHOC-PRBB-2026-24 slide lines: BA ticket ask for the viewer code fix + Fable 5.2 adhoc-steps audit result; review at session end.
+
+- [ ] (2026-11-11, parked by miya for end of session) Build: release-prep.js push prints the filled Baseline card (SKILL.md card format), so the card is never retyped. Picture: scratchpad release-card-before-after.png. Open: how the script gets Domain + DB versions. Runs via /system-change.

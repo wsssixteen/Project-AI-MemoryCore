@@ -644,3 +644,19 @@
 {"ts":"2026-11-10T02:57:46.236Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":75}
 {"ts":"2026-11-10T02:59:25.125Z","id":"ADHOC-PT-2026-17","outcome":"pass","fails":[],"dur_ms":216}
 {"ts":"2026-11-10T04:07:30.552Z","id":"ADHOC-UPP-2026-3","outcome":"pass","fails":[],"dur_ms":132}
+{"ts":"2026-11-11T07:37:29.100Z","id":"ADHOC-MLPS-2026-5","outcome":"fail","fails":["qa_doc: has \"## Issue Summary\"","qa_doc: has \"## Match Keys\"","qa_doc: Issue Summary \"Title\" line","qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","qa_doc: Issue Summary \"Route\" line with a known route","qa_doc: \"## Quest Story\" with Asked, Paths, Cost, Result","qa_doc: \"## Next-Steps Checklist\" section"],"dur_ms":37}
+{"ts":"2026-11-11T07:38:27.804Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":49}
+{"ts":"2026-11-11T07:43:40.339Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":47}
+{"ts":"2026-11-11T07:53:02.909Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-11-11T07:55:51.241Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":29}
+{"ts":"2026-11-11T08:00:43.065Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-11-11T08:08:36.572Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":31}
+{"ts":"2026-11-11T08:28:02.515Z","id":"ADHOC-MLPS-2026-5","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":33}
+{"ts":"2026-11-11T08:28:11.240Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-11-11T09:26:00.260Z","id":"ADHOC-PRBB-2026-24","outcome":"fail","fails":["block: required keys present"],"dur_ms":47}
+{"ts":"2026-11-11T09:26:05.700Z","id":"ADHOC-PRBB-2026-24","outcome":"pass","fails":[],"dur_ms":49}
+{"ts":"2026-11-11T11:03:33.263Z","id":"ADHOC-PRBB-2026-24","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-11-11T11:08:05.539Z","id":"ADHOC-PRBB-2026-24","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":33}
+{"ts":"2026-11-11T11:08:16.333Z","id":"ADHOC-PRBB-2026-24","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-11-11T11:08:27.239Z","id":"ADHOC-PRBB-2026-24","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-11-11T13:36:35.928Z","id":"ADHOC-MLPS-2026-5","outcome":"pass","fails":[],"dur_ms":31}

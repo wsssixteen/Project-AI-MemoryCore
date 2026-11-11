@@ -26,6 +26,124 @@ CHANGE-CARD (after): patch note generated
 - Where: The change sits in `domain/ticket-close-block/`, `domain/patch-script-gate/`, the script-check, quest and redmine-phase1-prefill skills and one memory file, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\75ad8d85f2656ad6\c845be62-69e0-4694-8a3c-0eb7b43eb78f\scratchpad\change-map-20261111-064555.png`.
 Where picture = the change map (lib/change-map.js).
 
+## system-change step 3 (2026-11-11, session 275d3684) — gate fix, his nod: "both"
+
+STEP-3: build-turn rider reads the STEP-3 block
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I've asked before why do we need this token in the first place?" (question)
+fix or report: fix
+who pays: per-tool: the rider runs on every Edit or Write of a hook, skill, Feature, rule or memory file; one more read of current-session.md
+goal without the part: Without it an edit he ordered is denied every time my reply text is not in the transcript, and only his skip token gets it through.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\gate-flow.png
+cause step: domain/design-consult-gate/step3-check.js:riderCheck · change: 5 lines
+new parts: 0
+
+CHANGE-CARD (before): build-turn rider reads the STEP-3 block
+- What: The build-turn rider of design-consult-gate also accepts its three lines (his words, cause step, new parts) from this session's STEP-3 block in `main/current-session.md`, not only from my reply text.
+- Why: On 2026-11-11 the rider denied one build he had ordered six times because my reply text written before an Edit was not in the session transcript, and only his skip token could pass it.
+- How: An edit he ordered reaches the rider, which reads my reply of this turn plus this session's STEP-3 block and then allows or denies as before, as shown in gate-flow.png .
+- When: On every Edit or Write of a hook, skill, Feature, rule or memory file, inside the existing hook call, with one more file read and no new process.
+- Where: One function in `domain/design-consult-gate/` (step3-check.js riderCheck) and eight new fixtures in its eval, as shown in change-map-20261111-072932.png .
+Where picture = the change map (lib/change-map.js).
+
+## system-change step 4 (2026-11-11, session 275d3684) — 242553 rule change build
+
+STEP-3: 242553 next-tugasan rule (bpmn-check J12, explain-diagram row, quest pointer)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I want to build but please take note on this first" (order)
+fix or report: fix
+who pays: on-demand: no process; about 110 more words when bpmn-check loads, 50 for explain-diagram, 20 per ticket for quest
+goal without the part: Without J12 a next-tugasan answer depends on remembering to open the called sub-flow, which failed on 242553.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\change-flow.png
+cause step: .claude/skills/bpmn-check/SKILL.md:Step 1 judgment table (no row for naming the next tugasan) · change: 9 lines
+new parts: 0
+
+CHANGE-CARD (before): 242553 next tugasan after a step
+- What: The bpmn-check skill gains one row (J12) that makes me open every called sub-flow and list its tugasan and parallel branches before I name what comes after a step, the quest BPMN row gains one sentence that sends a flow question there, and the explain-diagram skill gains one row that puts the words "not verified" on any box or arrow I did not check.
+- Why: On 2026-11-11 (ticket 242553) I told the BA that one tugasan follows 29.1 when the called sub-flow MLK_PLP_SUB_UPN holds 9 tugasan and 3 parallel gateways, I read the flows with my own pattern that dropped every flow carrying a condition, and I drew a never-run step as fact.
+- How: A flow question goes from the quest BPMN row to the bpmn-check skill, whose validator parser reads every flow, then the changed step lists each called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask only, each time a reply names the tugasan that follow a step or draws a picture that states facts, with no process and no hook.
+- Where: Three skill folders (.claude/skills/bpmn-check/, .claude/skills/explain-diagram/, .claude/skills/quest/) and one new test in domain/bpmn-check/, as shown in change-map-20261111-061832.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): 242553 rule change + step-3 gate fix
+- What: The bpmn-check skill now has row J12, the quest BPMN row points a next-tugasan answer to it, the explain-diagram skill marks any unchecked fact on a picture, and the step-3 gate also reads this session's STEP-3 block.
+- Why: On 2026-11-11 (ticket 242553) I named one tugasan after 29.1 when the called sub-flow holds 9, drew a never-run step as fact, and the step-3 gate then blocked his ordered build six times.
+- How: A flow question goes from the quest row to bpmn-check J12, which opens every called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask for the skills, and inside the existing gate call on every edit of a hook, skill, Feature, rule or memory file.
+- Where: Three skill folders and two Feature folders, landed on main as f669e735, as shown in change-map-20261111-073840.png .
+Where picture = the change map (lib/change-map.js).
+
+
+STEP-3: adhoc intake ask-infra-first (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "OF COURSE ADD THAT STEP ON ASKING FOR INFRA" (order)
+cause step: domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:buildMessage (intake text, FIX LADDER) · change: 5 lines + 1 skill row · new parts: 0
+fix or report: fix
+who pays: always-on text: once per adhoc intake prompt
+goal without the part: the first adhoc reply sends the infra file or log ask before any trace
+model: claude-opus-5-5 (Fable 5.2 audit running in the background)
+shown: none (order, urgent fix)
+
+
+STEP-3: patch-mlk-doc infra replace box by env (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "please fix this behaviour" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Replace document box (hardcoded MLK PROD, no staging line, #<num> required) · change: 3 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads
+goal without the part: a staging infra replace is the same box with MLK STAG and the same lokasi_fail, sent before PROD
+model: claude-opus-5-5
+shown: none (order)
+
+
+STEP-3: patch-mlk-doc test scenario names its type (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I already said you have to be upfront abotu this" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Staging first line · change: 1 line · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads
+goal without the part: the test scenario's first line says upload test or infra replace test, and whether a script runs first
+model: claude-opus-5-5
+shown: none (order)
+
+
+STEP-3: revert wrong MLK STAG rule (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "Are you going to keep of butchering my system" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Staging first line + domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:ASK INFRA FIRST · change: 2 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads; per adhoc intake
+goal without the part: staging test of an uploaded file = upload through the screen; STAG infra box only when the same id_dok exists in the staging DMS
+model: claude-opus-5-5
+shown: none (order)
+
+## 2026-11-11 — ADHOC-PRBB-2026-24 (PRBB slaid bergaris)
+Cause found: the BA's slide PDF was made with Microsoft Print to PDF, so photos are stored as thin strips and the pdf.js viewer draws the seams. Fixed PDF (one image per page, 6.75 MB) is ready in the Task folder 2. Fix. Open: stg1 upload test (PTMLK/02/L/PRBB/2026/19), then PROD infra replace of LAIN-37579215_1.main, no script. Twelve own mistakes are recorded in the qa_doc: late infra download ask, asking miya to fetch the file, an unrendered side test, a premature "not our module", a ticket ID on a no-ticket infra box, a drawn-out staging answer, a wrong MLK STAG rule written into two places without audit, a test scenario without its type, missing step name, partial paths, no upfront script statement, and four unaudited system edits in one day. The two wrong MLK STAG lines still need a highest-model audit through /system-change.
+
+Update 2026-11-11 (ADHOC-PRBB-2026-24): saved, audit 31/31. Main mistake M0: never said upfront that the staging test was only a screen upload of the fixed file (no infra, no DB or DMS patch); every test plan now opens with the test type and any script needed. Original PROD slide was already moved or gone from the uploads folder; the Task folder 1. Brief holds it as 2. Original slide dari PROD.pdf.
+
+
+STEP-3: stored-file adhoc fix by Fable 5.2 audit (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "now go through proper Fable 5.2 audit and them proper system-upgrade to see what, where, why, how you're going to fix this." (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:85-86 + domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:134-135 · change: 3 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads; text: once per adhoc intake prompt
+goal without the part: a stored-file adhoc gets the infra ask first, the staging test picked by file origin, and a test plan whose first line says what the test needs
+model: claude-fable-5-2 (audit), claude-opus-5-5 (build)
+shown: prbb24-plan.png
+
+CHANGE-CARD (before): stored-file adhoc test and staging handoff
+- What: The patch-mlk-doc skill replaces its wrong staging line with a rule that picks the staging test by the file's origin and makes the test plan's first line say what the test needs, and the adhoc intake text tells me never to ask miya or the BA for the file and points to that skill instead of repeating the wrong rule.
+- Why: On 2026-11-11 (ADHOC-PRBB-2026-24) I never said the staging test was just a screen upload of the fixed file, and I wrote a rule into two places that sends a PROD file path to infra for staging, where no staging record exists, as the Fable 5.2 audit confirmed.
+- How: An adhoc about a stored file gets the infra download ask in the first reply, the fixed file goes through the patch-mlk-doc staging line that checks whether the file was uploaded or generated, and the test plan opens with the upload line, as shown in prbb24-plan.png .
+- When: On demand, each time an adhoc or patch involves a stored file, with no new process and the intake text read once per adhoc prompt.
+- Where: The patch-mlk-doc skill and its eval in domain/patch-mlk-doc/, and the adhoc intake text and its eval in domain/adhoc-paste-detector/, as shown in change-map-20261111-111559.png .
+Where picture = the change map (lib/change-map.js).
+
 ## Session Recap (2026-11-08, Masterline look modes, delegated)
 - Asked (orchestrator, his rulings row 44 and 2026-10-20): a Look switch with 1 Operations console, 2 Service ledger, 3 Dispatch board, 4 Mix on every screen; remove the Claude look from the base; impeccable-checked; prove with flows, click walk, screenshots; never stop to ask.
 - Done: `app-samples\prototype\` v2 in the main-checkout project folder (app.css neutral token base, new looks.css, look switch + `?look=` `?layout=`, PRODUCT.md); COMPARE.md v2; DECISIONS rows 46 to 54; VERSIONS row; START.md Main app row; report `reports\look-modes.md`. Proof: 40/40 flows per look desk + phone; walk 14,928 clicks 0 errors; impeccable detector 0 over 272 pages; taste-skill 0 FAIL at 1366/768/375; impeccable critique dual-agent (A about 21/40).
