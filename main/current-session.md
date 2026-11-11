@@ -7,6 +7,14 @@
 - Open: whether to restore the 288974 PPTPB/2026/9 link and status_keputusan (not answered). Phase 2 of the three when Redmine Closed (harvest needed first).
 - Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
 - Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
+**Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
+
+## Session Recap (2026-11-11, 287346 MCL Kertas Pertimbangan rework 2)
+- Asked: rework 2 fixes; Redmine prefill; MLIT test data; then the BA's blank page on stg1 PTMLK/02/L/MCL/2026/41; test with doc-sim; commit, push, tell the Baseline 1.9.3 session; DE.
+- Done: cause = 2 empty BodyText paragraphs after the sign table before the KEPUTUSAN heading (pageBreakBefore) spill to a new page. Removed in TemplateKertasPertimbanganPentadbirTanah_MCL.docx, commit b273c6b63a on mlk/esokongan/287346; merged into mlk/release/1.9.3 (f29b747ef1), pushed. doc-sim /41: 4 pages, no blank; stress test old = blank page 4, new = none.
+- Open: int-env deploy 60e19e2be2 (his password; b273c6b63a not on int-env); staged Redmine 287346 form; MLIT test /4 (norzaida) and /9 (sabrina); BA retests /41 on staging after the 1.9.3 build.
+- Mistakes: template layout not checked before hand-over (slip quest/template-layout-not-checked).
+- Assessment: A1 cross-session message to the Baseline session worked in one round. A2 Phase 1 template fixes have no layout check step. A3 doc-sim + Word render reproduced the BA page fast. A4 empty paragraph before a page break is a template class. A5 ⏭ no sweep.
 
 **Last Activity (Arabic class session)**: 2026-11-11 00:08 — worktree `arabic-1b6669`. Arabic class 2026-11-10, Lesson 15: dialogue + Exercises 1 to 6 worked, class closed (stopped at Exercise 6; next class starts Exercise 7, page 90). "Kalian" habit saved to class-vocab. New class-along breakdown format (one table per sentence, read right to left, roles from the class) in the arabic skill rule 3, landed main 78628d62. Weekly Arabic plan (Mon 5 words · Tue class · Wed baris · Thu rest · Fri fi'il + one exercise) and a 9-verb fi'il list written to the arabic journal Notes; the fi'il list is not confirmed as the teacher's list. Open: he triggers `/arabic` himself, no reminder exists; he is thinking of his own app for reminders; the Friday fi'il drill is not in the engine yet.
 
