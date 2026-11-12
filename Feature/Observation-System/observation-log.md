@@ -65,6 +65,10 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 ### T1 — Immediate
 
+**[2026-11-12]** T1 — **The knowledge base held the answer and I never opened it.** ADHOC-PRBB-2026-24: 0 etanah-knowledge files read in 64 reads; DATABASE.md (KEMASUKAN path) and FLOW-TRACES.md (file upload) decided the test. Fixed by order + gate (b7f17eaa); promote to T2 if a later adhoc still traces before a knowledge read.
+
+**[2026-11-12]** T1 — **I stretch his words into a bigger rule.** "Answer the BA first" became "the first output is the BA reply with cause and test"; he caught it. Quote him exactly, add nothing.
+
 **[2026-04-07]** みや monitors his own systems actively — caught the failing prayer hook, the wrong diary flag, asked about dormant features unprompted. He doesn't wait for things to break loudly.
 
 **[2026-04-07]** "We should both learn not to be hasty" — he includes himself in corrections, not just me. He owns the shared process, not just his own part.

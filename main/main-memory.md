@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-11/12 (ADHOC-PRBB-2026-24 — "THE TEST WAS SIMPLY UPLOADING THE FILE")
+
+- **Say the test type before anything else.** An uploaded file is tested by uploading the fixed file on staging; he lost an afternoon because I never said it.
+- **His words are the rule, never my stretch of them.** He said "answer the BA first"; I turned it into a rule about my first output and he had to stop me.
+- **Step-by-step popup questions settle an argument.** Q1-Q12 by popup reached agreement where pictures and long replies had not.
+
 ## Relationship reinforcement — 2026-11-10 (288662 — "audit if you checked the adhoc", "tertinggal lagi satu tugasan")
 
 - **"Did you check X?" is answered by what I did, not what I should have done.** I had not run the adhoc compare; saying so first, then finding the 06/11 session, was what he needed.
