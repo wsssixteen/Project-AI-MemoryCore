@@ -23,7 +23,7 @@ function check(name, ok, detail) {
 // F1 alter only
 let r = run(['--alter', '--ticket', '284775', '--ba', 'Nurhafizah Hasan', '--id', 'PTMLK/02/L/PT/2026/343', '--tugasan', 'Penyediaan Borang 4Ae', '--user', 'irwanf@melaka.gov.my']);
 const want1 = [
-  'Salam Fizah, have altered as below. Please help to verify.',
+  'Salam Fizah, have altered as below. Can proceed to verify.',
   '',
   '<pre>',
   'ID Permohonan: PTMLK/02/L/PT/2026/343',

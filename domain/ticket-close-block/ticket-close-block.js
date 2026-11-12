@@ -227,7 +227,8 @@ if (arg('alter') === true) {
     if (others.length) console.error('warn: patched but not in this note: ' + others.map(k => k || '(no ID Permohonan)').join(', '));
   }
   const out = [
-    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. ${patched ? 'Can proceed to verify.' : 'Please help to verify.'}`,
+    // every done-alter is a PROD action the BA passes to the user: "Can proceed to verify." (miya 2026-11-12, 288625)
+    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. Can proceed to verify.`,
     '',
     '<pre>',
     `ID Permohonan: ${arg('id')}`,
