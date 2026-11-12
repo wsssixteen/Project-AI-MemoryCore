@@ -40,4 +40,84 @@ CHANGE-CARD (after): patch note generated
 - How: The generator reads each UPDATE, DELETE and INSERT into one line per thing changed under its ID Permohonan as in `domain/ticket-close-block/diagram.png`, and the patch-script-gate blocks a reply whose script has a column with no reason line.
 - When: The note is generated at the handover step of a patch ticket, and the reason check runs when a reply hands over a patch script.
 - Where: The change sits in `domain/ticket-close-block/`, `domain/patch-script-gate/`, the script-check, quest and redmine-phase1-prefill skills and one memory file, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\75ad8d85f2656ad6\c845be62-69e0-4694-8a3c-0eb7b43eb78f\scratchpad\change-map-20261111-064555.png`.
+
+## system-change step 3 (2026-11-11, 242553 next-tugasan rule) — waiting for miya's nod
+
+STEP-3:
+session: adhoc-session-standby-c1d1d0 (242553 correction)
+his words: "Please audit yourself on why this happens and how in a single sentence to explain to me for the why & how you're going to fix this in accordance to our system's law." (order)
+fix or report: fix
+who pays: on-demand: no process; about 110 more words each time bpmn-check loads, 50 each time explain-diagram loads, 20 on every ticket (the quest skill loads on every ticket)
+goal without the part: Without J12 a correct next-tugasan answer depends on my remembering to open the called sub-flow, which failed on 242553, and without the explain-diagram row the drawing step never reads the not-verified law.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\change-flow.png
+
+CHANGE-CARD (before): 242553 next tugasan after a step
+- What: The bpmn-check skill gains one row (J12) that makes me open every called sub-flow and list its tugasan and parallel branches before I name what comes after a step, the quest BPMN row gains one sentence that sends a flow question there, and the explain-diagram skill gains one row that puts the words "not verified" on any box or arrow I did not check.
+- Why: On 2026-11-11 (ticket 242553) I told the BA that one tugasan follows 29.1 when the called sub-flow MLK_PLP_SUB_UPN holds 9 tugasan and 3 parallel gateways, I read the flows with my own pattern that dropped every flow carrying a condition, and I drew a never-run step as fact.
+- How: A flow question goes from the quest BPMN row to the bpmn-check skill, whose validator parser reads every flow, then the changed step lists each called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask only, each time a reply names the tugasan that follow a step or draws a picture that states facts, with no process and no hook.
+- Where: Three skill folders (.claude/skills/bpmn-check/, .claude/skills/explain-diagram/, .claude/skills/quest/) and one new test in domain/bpmn-check/, as shown in change-map-20261111-061832.png .
+Where picture = the change map (lib/change-map.js).
+
+
+## 242553 note (2026-11-11 ~14:40, per miya "take note on this first")
+- miya sent Mira the FIRST diagram at 13:58-14:01 (it says "satu tugasan sahaja selepas 29.1" and "Tiada tugasan serentak", both wrong). The corrected picture (delivery tugasan serentak, back-to-8.0 not tested) has NOT been sent to Mira.
+- Mira 14:35: "skrg Mira tgh keliru dgn requirement BA, sbb ayat dia nanti id B tu kena buat Laporan Tanah balik kalau id A tolak" — she is confirming with the BA.
+- Verified on MLIT PT v8 (flow read, not run): at B's 8.0 Perakuan JTLTPM the first gateway is "Pindaan?". Ya -> Jenis Pindaan: Siasatan Tanah -> 5.0 Penyediaan Laporan Tanah PJTPLT (MLK_TKL_ST, teknikal) -> back to 8.0; Pelan Mesyuarat -> 6.0; Jabatan Teknikal -> Jabatan Teknikal 3. Tidak -> Keputusan awal: Teruskan -> JKKL? -> 23.0 Rencana JKKL or 14.0 Risalat MMKN (NO Laporan Tanah); Tolak Ringkas -> Penyediaan Minit Bebas; Tangguh -> 28.1.
+- So "A Tolak -> B buat Laporan Tanah balik" = officer picks Pindaan Ya + Siasatan Tanah at B's 8.0, not Teruskan. The diagram box "Teruskan Permohonan: Laporan Tanah dan seterusnya" is wrong and must change.
+- Open: send Mira the corrected picture once the BA answers.
+
+system-change step 4 (242553 rule change): eval.js E4 + explain-diagram.eval.md F7 written; the 3 SKILL.md edits (bpmn-check J12, explain-diagram row, quest line 741) are blocked by the design-consult-gate step-3 rider (reply text never reaches the transcript); waiting for miya's [skip-step3:] token. Then step 5 onward.
+
+
+## system-change step 3 (2026-11-11) — gate fix, his nod: "both"
+
+STEP-3: build-turn rider reads the STEP-3 block
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I've asked before why do we need this token in the first place?" (question)
+fix or report: fix
+who pays: per-tool: the rider runs on every Edit or Write of a hook, skill, Feature, rule or memory file; one more read of current-session.md
+goal without the part: Without it an edit he ordered is denied every time my reply text is not in the transcript, and only his skip token gets it through.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\gate-flow.png
+cause step: domain/design-consult-gate/step3-check.js:riderCheck · change: 5 lines
+new parts: 0
+
+CHANGE-CARD (before): build-turn rider reads the STEP-3 block
+- What: The build-turn rider of design-consult-gate also accepts its three lines (his words, cause step, new parts) from this session's STEP-3 block in `main/current-session.md`, not only from my reply text.
+- Why: On 2026-11-11 the rider denied one build he had ordered six times because my reply text written before an Edit was not in the session transcript, and only his skip token could pass it.
+- How: An edit he ordered reaches the rider, which reads my reply of this turn plus this session's STEP-3 block and then allows or denies as before, as shown in gate-flow.png .
+- When: On every Edit or Write of a hook, skill, Feature, rule or memory file, inside the existing hook call, with one more file read and no new process.
+- Where: One function in `domain/design-consult-gate/` (step3-check.js riderCheck) and eight new fixtures in its eval, as shown in change-map-20261111-072932.png .
+Where picture = the change map (lib/change-map.js).
+
+
+## system-change step 4 (2026-11-11, session 275d3684) — 242553 rule change build
+
+STEP-3: 242553 next-tugasan rule (bpmn-check J12, explain-diagram row, quest pointer)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I want to build but please take note on this first" (order)
+fix or report: fix
+who pays: on-demand: no process; about 110 more words when bpmn-check loads, 50 for explain-diagram, 20 per ticket for quest
+goal without the part: Without J12 a next-tugasan answer depends on remembering to open the called sub-flow, which failed on 242553.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\change-flow.png
+cause step: .claude/skills/bpmn-check/SKILL.md:Step 1 judgment table (no row for naming the next tugasan) · change: 9 lines
+new parts: 0
+
+CHANGE-CARD (before): 242553 next tugasan after a step
+- What: The bpmn-check skill gains one row (J12) that makes me open every called sub-flow and list its tugasan and parallel branches before I name what comes after a step, the quest BPMN row gains one sentence that sends a flow question there, and the explain-diagram skill gains one row that puts the words "not verified" on any box or arrow I did not check.
+- Why: On 2026-11-11 (ticket 242553) I told the BA that one tugasan follows 29.1 when the called sub-flow MLK_PLP_SUB_UPN holds 9 tugasan and 3 parallel gateways, I read the flows with my own pattern that dropped every flow carrying a condition, and I drew a never-run step as fact.
+- How: A flow question goes from the quest BPMN row to the bpmn-check skill, whose validator parser reads every flow, then the changed step lists each called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask only, each time a reply names the tugasan that follow a step or draws a picture that states facts, with no process and no hook.
+- Where: Three skill folders (.claude/skills/bpmn-check/, .claude/skills/explain-diagram/, .claude/skills/quest/) and one new test in domain/bpmn-check/, as shown in change-map-20261111-061832.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): 242553 rule change + step-3 gate fix
+- What: The bpmn-check skill now has row J12, the quest BPMN row points a next-tugasan answer to it, the explain-diagram skill marks any unchecked fact on a picture, and the step-3 gate also reads this session's STEP-3 block.
+- Why: On 2026-11-11 (ticket 242553) I named one tugasan after 29.1 when the called sub-flow holds 9, drew a never-run step as fact, and the step-3 gate then blocked his ordered build six times.
+- How: A flow question goes from the quest row to bpmn-check J12, which opens every called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask for the skills, and inside the existing gate call on every edit of a hook, skill, Feature, rule or memory file.
+- Where: Three skill folders and two Feature folders, landed on main as f669e735, as shown in change-map-20261111-073840.png .
 Where picture = the change map (lib/change-map.js).
