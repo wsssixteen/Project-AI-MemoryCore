@@ -46,6 +46,12 @@ const COL = {
     if (x.was === undefined) x.warn('hubungan_aplikasi_id set to NULL: give --was hubungan_aplikasi_id=<the ID Permohonan it pointed to in the BEFORE check; empty when it pointed to nothing>');
     return x.was === '' ? null : [`Link to ${x.was || 'another permohonan'}`, 'removed'];
   },
+  // MLPS Maksud Pendudukan (289265): the lesen string is what the Borang shows; clearing the officer's own text and kegunaan only lets it show
+  'umm_a_permit_lesen.tujuan_permohonan': 'Maksud Pendudukan',
+  'umm_a_permohonan_tnh.tujuan_permohonan': v => v === null ? null : ['Maksud Pendudukan', v],
+  'umm_a_permohonan_tnh.tujuan_permohonan_id': () => null,
+  'umm_a_permit_lesen.kegunaan': v => v === null ? null : ['Kegunaan', v],
+  'umm_a_permit_lesen.kegunaan_id': () => null,
   'umm_a_tgsn.flag_aktif': v => ['Tugasan', v === 'N' ? 'closed' : 'reopened'],
   'umm_a_tgsn.status_tugasan': v => ['Tugasan', v === 'Selesai' ? 'closed' : v],
   'umm_a_tgsn.trkh_tetap': () => ['Tugasan', ''],
@@ -169,8 +175,9 @@ function patchGroups(inAlter) { // inAlter: --tugasan and --user belong to the a
   }
   if (files.length && !groups.size) G('');
   const fg = groups.get(idArg) || [...groups.values()][0];
-  if (files.length && groups.size > 1 && !idArg) warn('--file with more than one ID Permohonan in the script: the file line went under the first; give --id <its ID Permohonan>');
-  for (const f of files) { const i = f.indexOf('='); if (i > 0) add(fg, f.slice(0, i).trim(), 'replaced with ' + f.slice(i + 1).trim()); else add(fg, 'Dokumen ' + path.basename(f), 'replaced'); }
+  if (files.some(f => !f.includes('|')) && groups.size > 1 && !idArg) warn('--file with more than one ID Permohonan in the script: the file line went under the first; give --file "<ID Permohonan>|<Dokumen name>=<new file>" or --id');
+  // --file "[<ID Permohonan>|]<Dokumen name>=<new file>": the ID puts the line under that permohonan (289265: 3 files, 3 permohonan)
+  for (let f of files) { const b = f.indexOf('|'), tg = b > 0 ? G(f.slice(0, b).trim()) : fg; if (b > 0) f = f.slice(b + 1); const i = f.indexOf('='); if (i > 0) add(tg, f.slice(0, i).trim(), 'replaced with ' + f.slice(i + 1).trim()); else add(tg, 'Dokumen ' + path.basename(f), 'replaced'); }
 
   const out = new Map();
   for (const [id, g] of groups) {
