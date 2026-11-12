@@ -33,3 +33,13 @@
 - Mistakes: card typed from memory (wrong order, Domain/DB missing); answered "which date changes" instead of a way to keep the date; stg1 default assignee picked a PUU officer; hand-edited release state (now a script path).
 - Assessment: A1 release card + post-push re-merge are now script steps. A2 the alter answer reached the right route only after his push. A3 stg1 rehearsal of the PROD alter found the assignee gap before PROD. A4 PPTPB endorsement routing by title category is now fixed in code and model. A5 ⏭ no sweep.
 **Last Activity (PROD patching tickets session)**: 2026-11-11 21:34 — worktree `jovial-kepler-a07ba6` (branch claude/prod-patching-tickets-11e7ee). Three Melaka PROD patch tickets done and Resolved to Fizah: 288962 alter OPLPS/2026/2 to Borang 4Ae/L1e, 288963 MLPS/2026/12 Tempat PT 2 to SEK II + pelan L1e swap, 288974 UPS_PLP/2026/15 tamatkan. Quests closed; Phase 2 waits for Redmine Closed. Domain Expansion.
+
+
+STEP-3: adhoc-brief-first, save-agent detection and one block for all missing items
+session: bd30fbfa-5cae-4924-bf32-668fd7c105b8
+his words: "If yes, then proceed while we wait for Fable" (order)
+cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 30 lines · new parts: 0
+fix or report: fix
+model: claude-opus-5-5
+shown: abf-fix-flow.png
+
