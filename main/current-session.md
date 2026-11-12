@@ -126,3 +126,24 @@ CHANGE-CARD (after): 242553 rule change + step-3 gate fix
 - Where: Three skill folders and two Feature folders, landed on main as f669e735, as shown in change-map-20261111-073840.png .
 Where picture = the change map (lib/change-map.js).
 **Last Activity (ADHOC-MLPS-2026-5 session)**: 2026-11-11 21:34 — worktree `quest-resume-ticket-239386-642586` (branch claude/melaka-prod-issue-a26366). PROD MLPS 4Ae adhoc answered, BA SME confirmed, archived; Domain Expansion.
+
+## system-change (2026-11-12, session 275d3684) — ADHOC-PRBB-2026-24 knowledge-first + staging test, his nod: "Yes, build it (Recommended)"
+
+STEP-3: adhoc reads etanah-knowledge first; staging test by how the file got there
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "please use wayfinder to ensure we are on the same agreement, ask me questions by breaking down each and every issues by asking using plain words direct questions that doesn't need extra long context outside of that question, take it step by step." (order)
+cause step: domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:buildLines (knowledge read placed after the brief) · change: 14 lines
+new parts: 0
+fix or report: fix
+who pays: per-prompt: adhoc-paste-detector text about 60 words longer on an adhoc paste; per-tool-call: knowledge-first-gate adds one transcript scan on an etanah DB query, blocks at most once per session
+goal without the part: Without the change an adhoc reads etanah-knowledge after the investigation or never, and a DB-first adhoc is never stopped, which is how ADHOC-PRBB-2026-24 ran with 0 knowledge files read.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\agreed-build-plan.png
+
+CHANGE-CARD (before): adhoc knowledge-first and staging test by file origin
+- What: The adhoc intake text puts reading etanah-knowledge index.md and every matching file first and says to answer the BA's questions first, the knowledge-first-gate also stops the first etanah DB query until one knowledge file is read, and the patch-mlk-doc staging rule picks the test by how the file got there.
+- Why: On 2026-11-11 (ADHOC-PRBB-2026-24) I read 0 etanah-knowledge files, never said the test was only an upload on staging, and wrote a wrong MLK STAG rule into the system, while DATABASE.md and FLOW-TRACES.md already held the answer.
+- How: An adhoc paste goes through the intake text, which now orders the knowledge read first, then the DB query passes the knowledge-first-gate only after a knowledge read, as shown in agreed-build-plan.png .
+- When: The intake text shows on each adhoc paste, and the gate check runs on each etanah DB query until a knowledge file is read in that session.
+- Where: Two Features (domain/adhoc-paste-detector/, domain/knowledge-first-gate/), two skills (adhoc-save, patch-mlk-doc) and one knowledge line in DATABASE.md, as shown in change-map-20261112-013035.png .
+Where picture = the change map (lib/change-map.js).

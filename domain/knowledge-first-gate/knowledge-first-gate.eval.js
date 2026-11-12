@@ -104,6 +104,21 @@ check('F16 flowable-core .java → BLOCK on deep doc', r.status === 2, 'status='
 r = run({ tool_input: { file_path: 'C:/Tasks/evidence-plain.sql', content: 'SELECT * FROM ind_urusan' }, transcript_path: makeTranscript('unrelated query') });
 check('F17 non-flowable .sql → no fire', r.status !== 2, 'status=' + r.status);
 
+// --- v4 DB-query branch (ADHOC-PRBB-2026-24, miya 2026-11-12) ---
+const DBQ = { tool_name: 'mcp__postgres-mlkprod-pg__query_database', tool_input: { sql: 'SELECT 1' } };
+
+// F18: first etanah DB query, no knowledge read → BLOCK naming index.md
+r = run(Object.assign({}, DBQ, { transcript_path: makeTranscript('querying prod straight away') }));
+check('F18 DB query, no knowledge read → BLOCK naming index.md', r.status === 2 && /index\.md/.test(r.combined), 'status=' + r.status + ' out=' + r.combined.slice(0, 140));
+
+// F19: same query after an etanah-knowledge index.md read → allow
+r = run(Object.assign({}, DBQ, { transcript_path: makeTranscript('read etanah-knowledge/melaka/index.md first\nnow the query') }));
+check('F19 DB query after index.md read → allow', r.status !== 2, 'status=' + r.status);
+
+// F20: a non-DB tool does not fire
+r = run({ tool_name: 'mcp__codegraph__codegraph_search', tool_input: { query: 'x' }, transcript_path: makeTranscript('searching') });
+check('F20 non-DB tool → no fire', r.status !== 2, 'status=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nknowledge-first-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');
