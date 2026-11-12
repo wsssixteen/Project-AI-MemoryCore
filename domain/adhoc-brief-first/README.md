@@ -1,11 +1,13 @@
 # adhoc-brief-first
 
 symptom: 2026-10-13 miya: please fix this step, you must brief me first before saving or anything else that should be done in the background
-goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
+goal: miya reads the adhoc finding before any save-set part is written on the main thread; the save runs in a background agent
 diagram: domain/adhoc-brief-first/diagram.png (refined 2026-10-28: the brief also owes one picture of the finding and the BA reply, checked even when the save agent starts with no marker line)
 goal_signal: an adhoc turn ends with the brief and has no main-thread save-set write before it
 retention: rotate monthly
 footprint: per-tool: 1 node process per Write, Edit, PowerShell or Bash call, about 40 MB for under 100 ms
+boundary: covers adhoc save-set writes, the start of an agent that writes the save-set, and the closing reply of a turn that carries the save marker or started that agent · never blocks an agent that only reads (an audit, an Explore), never edits a file, never blocks one turn twice for parts it could have named at once · stops at one block that lists every missing part, numbered; the fix is the reply's
+self_audit: each run is replayed by its two evals (adhoc-brief-first.eval.js, eval.js); a miss in use becomes a fixture first, then the fix
 
 **What fires when**: PreToolUse — the main thread is about to write an adhoc save-set part (Task folder, active-cli start ADHOC, register row, ADHOC quest doc, notes.js, the audit) in a turn where no brief was shown and no background save agent was started
 
@@ -26,7 +28,7 @@ footprint: per-tool: 1 node process per Write, Edit, PowerShell or Bash call, ab
 | before the brief | PreToolUse, matcher `Write|Edit|PowerShell|Bash|Agent` | `.claude/settings.json` | blocks an adhoc save-set write and the start of the adhoc save agent while the turn shows no brief |
 | after the brief | Stop | `domain/bundles/stop-claim-integrity.json` | the closing reply carries `Saving in the background next: ADHOC-<id>` and no save agent was started after it: blocks the stop once and asks for the ONE background save agent |
 
-Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (after the brief, 64 cases). Shared parser: `lib/adhoc-brief-first.js` (+ `lib/adhoc-brief-first.eval.js`, 8 cases).
+Evals: `adhoc-brief-first.eval.js` (before the brief, 39 cases) · `eval.js` (after the brief, 68 cases). Shared parser: `lib/adhoc-brief-first.js` (+ `lib/adhoc-brief-first.eval.js`, 8 cases).
 
 ## Adversarial scenarios (system-design Rule 12)
 
@@ -59,9 +61,19 @@ Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (af
 | 25 | hooks run from the MAIN checkout, so a worktree edit of this gate is not live until main is pulled | accepted-risk: stated in the reply at ship time; pull main after the push |
 | 26 | two sessions saving adhocs at once | handled: each call reads only its own transcript |
 | 27 | `lib/adhoc-brief-first.js` deleted or renamed | accepted-risk: the hook throws at require, the runtime logs it and does not block |
+| 28 | the 2026-11-12 miss: a read-only audit agent names the ADHOC id, `ADHOC-REGISTER.md` and `active-cli` as sources | fixtures G6, N1 |
+| 29 | a save agent with the ADHOC id and `adhoc-save-audit` but no waiver line, before the brief | fixture G7 (still held) |
+| 30 | a brief missing the BA reply, the picture and the route at once | fixture N2 (one block, 3 parts) |
+| 31 | two parts missing, the route present | fixture N3 (numbered 1 and 2, no route item) |
+| 32 | one part missing | fixtures B1-B8, R1-R8 (single-part message unchanged) |
+| 33 | the save agent named only in my text, no Agent call | fixture N4 |
+| 34 | an agent refused by the PreToolUse half still sits in the transcript | handled: only an agent whose prompt writes the save-set (save-set, adhoc-save-audit) wakes the Stop check, and such an agent does owe a brief |
+| 35 | a real save agent that says "write the register row" but never names save-set or adhoc-save-audit | accepted-risk: the adhoc-save skill and the Stop block both tell it to run adhoc-save-audit, so every real save agent names it |
 
 ## Route line (2026-10-29, per miya, ADHOC-MCL-2026-2; logic audited by Fable 5.1)
 
 The Stop check also blocks a brief with no `Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>` line (PATCH/ALTER may add `+ CODE-FIX`; `none (<reason>)` for a round with no finding). Names and pick rules: `.claude/skills/adhoc-save/SKILL.md` section "Adhoc route". Fixtures R1-R8 in `eval.js`. Spec preservation: the BA-reply, picture, After-state, User-step and save-agent checks and their order are unchanged; additive.
+
+2026-11-12 (ADHOC-PLP-2026-7, miya: "can you audit right now and check is this the result of you building … in a stupid manner?", then "If yes, then proceed while we wait for Fable"): two defects of this gate. (1) A read-only Fable audit agent was held as the save agent because its prompt named the ADHOC id with `ADHOC-REGISTER.md` and `active-cli` as sources; the save agent is now an agent whose prompt names `save-set` or `adhoc-save-audit` with the ADHOC id. (2) The Stop check returned at the first missing part, so one turn drew three re-prompts (BA reply, picture, route); it now collects every missing part into ONE block, numbered. Fixtures G6, G7, N1-N4; G6, N1, N2, N3 fail on the old gate and pass on the new. Spec preservation: every check, its order and its single-part message are unchanged; dropped: `active-cli` and `ADHOC-REGISTER` as save-agent signals (they name sources, not a save) and the per-check "DELTA ONLY" line (one closing line now covers all parts).
 
 2026-11-11 (ADHOC-MLPS-2026-5, miya: "I thought I asked for the build always later at the end of the session"): after the route line, a `CODE-FIX` or `CR` route (a `+ CODE-FIX` suffix included) is blocked until a `REQUIREMENT-MATCH:` line has been written in this session (any turn; hook feedback does not count). Cause: "code issue" told to the BA at 15:43 before requirement 218455 was read; its rule 2 made it a user step. Fixtures Q1-Q11 (Q1 replays the 15:43 brief); R2 and R3 now carry the line. Spec preservation: every earlier check, its order and its message are unchanged; R2 and R3 pass only with the line, which is the change itself.

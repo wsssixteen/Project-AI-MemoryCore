@@ -128,6 +128,19 @@ expectPass('S10 no transcript path: fail-open', run(undefined));
 expectPass('S11 transcript missing on disk: fail-open', run(path.join(TMP, 'nope.jsonl')));
 const plain = path.join(TMP, 'plain.jsonl'); fs.writeFileSync(plain, 'not json\nstill not json');
 expectPass('S12 plain-text transcript: fail-open', run(plain));
+// 2026-11-12 replay: a READ-ONLY audit agent that names the ADHOC id, ADHOC-REGISTER.md and active-cli as sources is not a save agent
+const AUDIT_AGENT = AU('Agent', { description: 'Fable audit', model: 'fable', run_in_background: true,
+  prompt: 'You are a READ-ONLY auditor. Do NOT edit anything. Sources: etanah-knowledge (index.md, OTHER-MODULES.md, ADHOC-REGISTER.md); quest/active-cli.js lists blocks; prior write-up projects/coding-projects/archive/ADHOC-PLP-2026-7/ADHOC-PLP-2026-7.md. Verify every cell.' });
+expectPass('N1 the 2026-11-12 replay: a read-only audit agent naming ADHOC id + ADHOC-REGISTER + active-cli is not held as a save', run([ASK, AT('Yes. Starting the read-only audit.'), AUDIT_AGENT, AT('The audit is running.')], false));
+const ONE = run([ASK, AT(BODY_NR + '\nSaving in the background next: ADHOC-MLPS-2026-4')], false);
+check('N2 a brief missing BA reply, picture and route gets ONE block naming all three',
+  blocked(ONE) && /3 parts missing/.test(said(ONE)) && /no reply to the BA/.test(said(ONE)) && /no picture/.test(said(ONE)) && /no route line/.test(said(ONE)) && /all 3 parts in ONE reply/.test(said(ONE)),
+  'out=' + said(ONE).slice(0, 200));
+const TWO = run([ASK, AT(BODY + '\nSaving in the background next: ADHOC-MLPS-2026-4')], false);
+check('N3 two parts missing (BA reply + picture), route present: one block, numbered 1 and 2, no route item',
+  blocked(TWO) && /2 parts missing/.test(said(TWO)) && /\n1\. the brief/.test(said(TWO)) && /\n2\. the brief/.test(said(TWO)) && !/no route line/.test(said(TWO)),
+  'out=' + said(TWO).slice(0, 200));
+expectPass('N4 the save agent named only in my TEXT (no Agent call) does not wake the check', run([ASK, AT('Next I will start the save-set agent for ADHOC-MLPS-2026-4 and run adhoc-save-audit.')], false));
 
 try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (_) {}
 let failed = 0;
