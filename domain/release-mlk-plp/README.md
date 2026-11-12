@@ -51,3 +51,10 @@ a release ASSEMBLES branches; it never authors or fixes code. Three enforcement 
 
 Born 2026-07-16 via core/forge.js (nod: miya-2026-07-16-release-mlk-plp-shape-nod).
 First live target: Pelupusan 1.0.9 (tickets #269802 · #269939 · #270952, stag).
+diagram: domain/release-mlk-plp/diagram.png
+
+## 2026-11-11 — card print + re-open after push (per みや, "okay build all", Baseline 1.9.3)
+- `push` prints the hand-off card; `card --release <ver> [--domain --db --flowable-date --flowable --sql]` re-prints or fills it; values kept in state `card`; a value never given prints as `<FILL: --x>`.
+- `add-ticket` accepts phase `pushed` while no merge request is recorded; it checks the local branch is at the pushed tip and records `reopened` in state.
+- Why: the 1.9.3 card was typed from memory (wrong order, Domain and DB missing), and the 287346 b273c6b63a fix after the push needed a hand-edited state file.
+- Rollback: `git revert <this commit>`. Eval: `eval-merge-request.js` M36-M39 (40/40). Pre-existing: `eval.js` 13/17 before and after (T8, T8b, T8c and a fixture pom rewind fail on both).

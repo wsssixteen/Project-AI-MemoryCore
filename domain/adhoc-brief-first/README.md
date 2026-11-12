@@ -26,7 +26,7 @@ footprint: per-tool: 1 node process per Write, Edit, PowerShell or Bash call, ab
 | before the brief | PreToolUse, matcher `Write|Edit|PowerShell|Bash|Agent` | `.claude/settings.json` | blocks an adhoc save-set write and the start of the adhoc save agent while the turn shows no brief |
 | after the brief | Stop | `domain/bundles/stop-claim-integrity.json` | the closing reply carries `Saving in the background next: ADHOC-<id>` and no save agent was started after it: blocks the stop once and asks for the ONE background save agent |
 
-Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (after the brief, 12 cases). Shared parser: `lib/adhoc-brief-first.js` (+ `lib/adhoc-brief-first.eval.js`, 8 cases).
+Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (after the brief, 64 cases). Shared parser: `lib/adhoc-brief-first.js` (+ `lib/adhoc-brief-first.eval.js`, 8 cases).
 
 ## Adversarial scenarios (system-design Rule 12)
 
@@ -63,3 +63,5 @@ Evals: `adhoc-brief-first.eval.js` (before the brief, 37 cases) · `eval.js` (af
 ## Route line (2026-10-29, per miya, ADHOC-MCL-2026-2; logic audited by Fable 5.1)
 
 The Stop check also blocks a brief with no `Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>` line (PATCH/ALTER may add `+ CODE-FIX`; `none (<reason>)` for a round with no finding). Names and pick rules: `.claude/skills/adhoc-save/SKILL.md` section "Adhoc route". Fixtures R1-R8 in `eval.js`. Spec preservation: the BA-reply, picture, After-state, User-step and save-agent checks and their order are unchanged; additive.
+
+2026-11-11 (ADHOC-MLPS-2026-5, miya: "I thought I asked for the build always later at the end of the session"): after the route line, a `CODE-FIX` or `CR` route (a `+ CODE-FIX` suffix included) is blocked until a `REQUIREMENT-MATCH:` line has been written in this session (any turn; hook feedback does not count). Cause: "code issue" told to the BA at 15:43 before requirement 218455 was read; its rule 2 made it a user step. Fixtures Q1-Q11 (Q1 replays the 15:43 brief); R2 and R3 now carry the line. Spec preservation: every earlier check, its order and its message are unchanged; R2 and R3 pass only with the line, which is the change itself.

@@ -234,7 +234,11 @@ node domain/release-mlk-plp/release-prep.js verify --release <ver>   # again, if
 node domain/release-mlk-plp/release-prep.js bump-version --release <ver>
 #     bumps <version> under <artifactId>etanah-pelupusan</artifactId>; commits
 #     "pelupusan version: <ver>" — mirrors 1.0.7 · 1.0.8 · 1.0.9. Idempotent.
-node domain/release-mlk-plp/release-prep.js push   --release <ver>
+node domain/release-mlk-plp/release-prep.js push   --release <ver> --domain <x-MLK> --db <x-MLK> --flowable-date <YYYY-MM-DD> --flowable "<a.bpmn20.xml,...>|none" --sql "#<n>, <file>.sql;...|none"
+#     prints the CARD after the push (2026-11-11). Re-print or fill it later: `card --release <ver>` + the same flags.
+#   ── ONE MORE FIX AFTER THE PUSH (2026-11-11, 1.9.3 #287346) — no merge request yet:
+#     `add-ticket --release <ver> --ticket <label> --branch <origin branch>` on the release branch at the pushed tip
+#     → `merge` → `verify` → `push` (his nod) prints a new card. Refused once a merge request is recorded.
 ```
 
 Guards live IN the script (PLP-only origin check · clean tree · ff-only pull · all-branches-exist
@@ -248,7 +252,7 @@ The `release-mlk-plp-push-gate` hook additionally blocks any MANUAL `git push` o
 > properly."* Ruri does NOT ssh, does NOT deploy, does NOT touch the Sheet. No SSH keys needed
 > — that whole dependency is retired. **My job at C-E = emit the REMINDER CARD below, filled in.**
 
-**Emit this card (values substituted) once `push` succeeds — then STOP.**
+**The card comes from the script, never typed (2026-11-11): `push` prints it between `CARD` and `END CARD`; paste that block as the LAST message, unchanged, then STOP.** A `<FILL: --x>` line = a value not given yet: read it (Domain = `mvn dependency:tree` etanah-domain, DB = `V_DOMAIN` on the ON staging schema) and run `card --release <ver> --x <value>`. The shape below is what the script prints.
 
 🚨 **EVERY command that みや RUNS goes in its OWN ```bash fenced block — one command per block, so each gets its own copy/run button** (CORRECTED 2026-08-19 per みや, ~10th ask; supersedes the 2026-07-20 "no fences / inline backticks" rule, which was WRONG for THIS app — its fenced `bash` blocks render a copy button). **The rule**:
 - One command → one ```bash block. NEVER one fence wrapping multiple commands (that gives one button for many lines — the original complaint). NEVER plain inline backticks for a run-command (no button — the current complaint).
@@ -357,10 +361,10 @@ Run every command from the MemoryCore MAIN folder (the state file `domain/releas
 |---|---|---|---|
 | F1 | みや | says BAQA passed | his words are the V8 nod |
 | F2 | Ruri | prepare | `node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved` → paste its MERGE REQUEST FORM block. Refusal = stop and show it (hotfix on master, release moved). Reviewer usernames missing → after みや signs in, read the project's Members page in Edge, show him the two usernames, write them into `gitlab.reviewers`, run F2 again |
-| F3 | みや | 🛑 **CONFIRMATION 1 — permanent**: pick the reviewer | AskUserQuestion, options = the form's reviewer line only (Aaron · Alex), plus the form block as preview |
+| F3 | みや | 🛑 **CONFIRMATION 1 — permanent**: pick the reviewer | AskUserQuestion, options = the form's reviewer line only (from `gitlab.reviewers`: Aaron · Alex · Yih Kit since 2026-11-11; Yih Kit is Developer on GitLab, Aaron and Alex Maintainer), plus the form block as preview |
 | F4 | Ruri | right after his pick, in the SAME turn, both at once (2026-10-29 per みや: "You do not need to wait for master merge, you can even run both merge to master and merge to staging both at once"; the table confirmation is removed) | (a) `merge-to-master --release <ver> --create-mr --reviewer <name> --confirm`: refuses if an MR is already open; POSTs through the GitLab API with `gitlab.token` (git-ignored `servers.local.json`, never printed); description always `Need assistance to merge. Thank you.`; reads back source · target · title · description · reviewer · squash OFF · delete source OFF · state opened · commit count, one ✓/✗ each; records the URL. Any ✗ = stop and show it. (b) Phase G `stag-catchup --release <ver> --ticket <num>` dry run then `--push`: its source is the release branch while master waits for the reviewer |
 | F5 | Ruri | one reply | the MR link + the read-back table + the stag-env result + build branch `mlk/stag-env` |
-| F6 | Aaron or Alex | approve and merge in GitLab | merge commit or fast-forward; never squash |
+| F6 | the picked reviewer | approve and merge in GitLab | merge commit or fast-forward; never squash |
 | F7 | Ruri | on みや's "merged" | `merge-to-master --release <ver> --check` → `merged-to-master`. Staging is already done: the MR merge commit does not count as stag-env behind (`stag-catchup.js` measure counts non-merge commits) |
 
 | `--check` result | Meaning | Action |
@@ -377,7 +381,7 @@ from the GitLab project Members page, never guessed; a placeholder username is r
 | Gate | Rule |
 |---|---|
 | 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: prepare dies without `--ba-approved`. |
-| Who | **Us** (みや + Ruri) open the merge request for `etanah-pelupusan`; Aaron or Alex merge it. |
+| Who | **Us** (みや + Ruri) open the merge request for `etanah-pelupusan`; a reviewer from `gitlab.reviewers` merges it. |
 | Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. Never a direct push to `mlk/master` (`release-mlk-plp-push-gate` blocks it). |
 
 🚨 **This is where AWAM and PLP DIVERGE — do not carry one repo's topology onto the other:**
@@ -490,3 +494,5 @@ Then emit the two-host stag build + deploy card (deploy skill §5, one command p
 
 *Updated 2026-10-28 — quotes of みや that held swear words were rewritten as his anger or frustration (his ask); no rule or step changed.*
 
+
+*2026-11-11 per みや ("okay build all", Baseline 1.9.3): the push prints the hand-off card and the new `card` command re-prints or fills it (values the script cannot know come from --domain --db --flowable-date --flowable --sql, a missing one prints as a FILL line); `add-ticket` also works after the push while no merge request is recorded; reviewer choices come from `gitlab.reviewers` (Yih Kit added). Root cause: the 1.9.3 card was typed from memory with Domain and DB missing, and the 287346 b273c6b63a fix after the push needed a hand-edited state file. Spec-preservation: the card shape, every Phase F step and both confirmations are unchanged; the 'Emit this card' instruction is replaced by 'paste the printed card', named here. Eval: eval-merge-request.js M36 to M39 (40/40).*

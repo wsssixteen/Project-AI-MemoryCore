@@ -197,6 +197,24 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   const ms = require('./stag-catchup.js').measure(repo, 'mlk/stag-env', 'origin/mlk/master');
   check('M35 staging caught up from the release first → the later master merge commit is not "behind"', ms.behind === 0, JSON.stringify(ms));
 
+  // the hand-off card and the re-open after push (2026-11-11, Baseline 1.9.3)
+  const relC = newRelease('9.9.30', [['c1.txt', 'c1\n']]);
+  r = prep(['card', '--release', '9.9.30']);
+  check('M36 card with no values → each unknown line is a FILL line (domain, db, common, flowable, sql)', r.status === 0 && /Module Version : 9\.9\.30/.test(all(r)) && (all(r).match(/<FILL:/g) || []).length === 5 && /FILL line\(s\)/.test(all(r)), all(r));
+  r = prep(['card', '--release', '9.9.30', '--domain', '1.0.15-MLK', '--db', '1.0.16-MLK', '--flowable-date', '2026-11-11', '--flowable', 'A.bpmn20.xml,B.bpmn20.xml', '--sql', '#1, 1.sql;#2, 2.sql']);
+  check('M37 card with values → folder once, one file per line, one SQL per line, kept in state', r.status === 0 && /Domain Version : 1\.0\.15-MLK/.test(all(r)) && /Melaka\/2026-11-11\/Pelupusan\/\r?\nA\.bpmn20\.xml\r?\nB\.bpmn20\.xml\r?\n/.test(all(r)) && /#1, 1\.sql\r?\n#2, 2\.sql/.test(all(r)) && state('9.9.30').card.db === '1.0.16-MLK', all(r));
+  commitOn('mlk/master', 't555.txt', 't\n', 'Ref #555 - late fix', 'mlk/esokongan/555');
+  sh(repo, ['checkout', '-q', '-B', 'mlk/release/9.9.30', 'origin/mlk/release/9.9.30']);
+  r = prep(['add-ticket', '--release', '9.9.30', '--ticket', '555', '--branch', 'mlk/esokongan/555']);
+  const sC = state('9.9.30');
+  check('M38 add-ticket after push → re-opened on the pushed tip, phase merging', r.status === 0 && sC.phase === 'merging' && sC.reopened.length === 1 && sC.reopened[0].fromSha === relC, all(r));
+  newRelease('9.9.31', [['d1.txt', 'd1\n']]);
+  const sD = state('9.9.31'); sD.mr = { url: `${WEB}/${PROJECT}/-/merge_requests/9` };
+  fs.writeFileSync(path.join(stateDir, 'release-9.9.31.json'), JSON.stringify(sD));
+  r = prep(['add-ticket', '--release', '9.9.31', '--ticket', '555', '--branch', 'mlk/esokongan/555']);
+  check('M39 add-ticket after push is refused once a merge request is recorded', r.status === 2 && /merge request is recorded/.test(all(r)), all(r));
+  sh(repo, ['checkout', '-q', 'mlk/hotfix/1']);
+
   const logRows = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-40).map(l => { try { return JSON.parse(l); } catch (_) { return {}; } });
   check('M27 log rows: prepared · recorded · waiting · ok', ['mr-prepared', 'mr-recorded', 'mr-waiting', 'mr-abandoned', 'ok'].every(k => logRows.some(x => x.cmd === 'merge-to-master' && x.result === k)), JSON.stringify(logRows.map(x => x.result)));
 } catch (e) {

@@ -4,6 +4,231 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-11, ADHOC-MLPS-2026-5 MLPS 4Ae Tempoh Berakhir)
+- Asked: adhoc PROD MLPS PTMLK/02/L/MLPS/2026/13 and /14: Rekod Pembaharuan Tempoh Berakhir set to 31/12/2026 comes back 31/12/2028 after Simpan; answer the BA's WhatsApp questions with simple diagrams; audit why the requirement was not read; conclude.
+- Done: cause = migrated Jasin permit luput = start + 3 years; Maklumat Jadual keeps the permit dates when luput is not before 1 Jan of the Tahun Permohonan; Simpan rebuilds the renewal-year row from the Jadual dates. Requirement 218455 rule 2 (user keys the Jadual dates) makes it data entry + a user step, not a code bug. BA SME Mira via Fizah 16:22: "logic betul dah tu". Saved ANSWERED, register A102, archived (Task folder 391 to Archive), adhoc-save-audit 31/31 PASS. Knowledge: PERMIT-LESEN-RUNNING-NUMBER.md MLPS 4Ae section.
+- Open: /2 /3 /5 /10 Tamat with 2027/2028 saved, not raised (miya's call); bounty stubbed (--allow-stub); workflow-gap proposal in slips (adhoc brief with "code issue" and no REQUIREMENT-MATCH), build later per miya.
+- Mistakes: said "code issue" before reading the requirement (slip requirement-skip); first diagrams too complex, redrawn until two scenarios side by side.
+- Assessment: A1 background sonnet saves ran while I answered the BA live. A2 the adhoc path has no requirement read unless the issue step is a flow step, callActivity or other module. A3 the code trace was right, the verdict was wrong until the requirement was read. A4 migrated Jasin luput = start + 3 is now in knowledge. A5 skipped, no sweep.
+**Last Activity (Arabic class session)**: 2026-11-11 00:08 — worktree `arabic-1b6669`. Arabic class 2026-11-10, Lesson 15: dialogue + Exercises 1 to 6 worked, class closed (stopped at Exercise 6; next class starts Exercise 7, page 90). "Kalian" habit saved to class-vocab. New class-along breakdown format (one table per sentence, read right to left, roles from the class) in the arabic skill rule 3, landed main 78628d62. Weekly Arabic plan (Mon 5 words · Tue class · Wed baris · Thu rest · Fri fi'il + one exercise) and a 9-verb fi'il list written to the arabic journal Notes; the fi'il list is not confirmed as the teacher's list. Open: he triggers `/arabic` himself, no reminder exists; he is thinking of his own app for reminders; the Friday fi'il drill is not in the engine yet.
+
+**Last Activity (288662 session)**: 2026-11-10 15:30 — worktree `quest-288662-rubric-audit-10a08a`. ESOKONGAN 288662 PLTP (Maklumat Tanah panels at PSPB / Minit Bebas / Keputusan Pendaftar) fixed, two cycles, Redmine Verified by Fizah; quest closed (waits for Redmine Closed); Domain Expansion.
+
+## Session Recap (2026-11-10, 288662 PLTP Maklumat Tanah panels + Phase 0 audit)
+- Asked: /quest 288662 until Rubric, audit Phase 0 in the background into todo; then apply, test on server, stage Redmine, save; rework for Keputusan Pendaftar; DE.
+- Done: cause = SPI / Keputusan Pendaftar treat nextUrusan PSPB (Endorse Batal, 256091) as "anything else" and show Kadar Cukai + Syarat, so Simpan checks an empty premium (NPE). Fix in PelupusanExcelReaderHelper.initMode(): PSPB with PSPM at :1780 and :1824, PLTP Minit Bebas hides Syarat. Commits 7d65e42dfb (12:18) + 8f8ce94614 (14:48) on mlk/esokongan/288662, merged int-env + stag-env. miya tested staging (SPI, PYMB, PYSTP) and internal (KP 01N751/2026). Redmine journals #7 and #9; Fizah Verified.
+- Found: the 06/11 session traced the same NPE and agreed the fix on WhatsApp but saved no adhoc (row A101 written late).
+- Open: 288662 on the planned-release list; Phase 2 when Redmine Closed; todo Q1 "288662 Phase 0 audit" P1-P14 for miya's ruling.
+- Mistakes: missed the adhoc at quest start; missed Keputusan Pendaftar (same branch 44 lines below, named in requirement 256091).
+- Assessment: A1 one Fable audit agent ran beside the quest and found the B2 parser gap. A2 Phase 0 adhoc compare has no fallback source. A3 the fix was found fast; the sibling branch was not grepped. A4 stg1 alter candidates mostly have no live engine task. A5 ⏭ no sweep.
+**Last Activity (288188 session)**: 2026-11-10 14:40 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-288188-quest-start-cb3845). QA-288188 PROD UPP document patch done and archived (Phase 1 + 2, patch ticket); Domain Expansion.
+
+## Session Recap (2026-11-10, 288188 UPP signature patch)
+- Asked: /quest 288188; make the files downloadable here (WhatsApp would not open); role line A; stage Redmine after verify; Phase 2 archive + DE.
+- Done: Redmine New to In Progress 20%; matched ADHOC-UPP-2026-3 (A97, cause known); BA's signed letters for PTMLK/01/L/UPP/2026/19 and /20 checked (signature beside QR); role line set to Penolong Pegawai Daerah (as 287292); 288188.sql + LAIN-37525445_1.main + LAIN-37525562_1.main; infra ran replace + reset; PDF path empty verified on PROD; Redmine Resolved to Nurhafizah Hasan 100% submitted by miya; archived (archive/QA-288188).
+- Found: peranan names live in rjk_senarai_ahli_kumpulan (DATABASE.md §16); the letter's role line prints "-" for signers whose PLP role is not primary (LATENT-BUGS L40 SUSPECT, owner etanah-common).
+- Open: UPP/2026/18 and 36 open Semakan letters need Jana Semula before Selesai (untested, ADHOC-UPP-2026-3); bounty proposal (patch-mlk-doc rule 3 points at DATABASE §16) tracked.
+- Mistakes: 6 schema queries to find the peranan table; Stop hooks asked twice for the proving SELECTs and a picture line.
+- Assessment: A1 a document patch went from ticket to archive in one session because the adhoc held the cause. A2 save-quest PHASE-2 still needs the bounty block before archive-quest. A3 letter-check.py with --allow-empty matched the precedent letters. A4 a role-line "-" sits in common, not in the patch. A5 ⏭ no sweep.
+**Last Activity (288533 + over-complexity audit session)**: 2026-11-10 12:51 — worktree `prbb-permit-id-fix-f122a5`. All eight ways of the over-complexity audit built side by side (3 sonnet builders) and landed on main f2ed718b; 288533 archived at Phase 2.
+
+STEP-3: release-prep card + re-open after push (B1 B2 B3)
+session: 2026-11-11 redmine-issue-288622 (Baseline 1.9.3)
+his words: "okay build all" (order)
+fix or report: fix
+who pays: on-demand: one release run, push and card only
+goal without the part: the card is typed by hand from the skill template and a post-push fix needs a hand-edited state file
+model: claude-opus-5-5
+shown: release-prep-b1-b2-flow.png
+cause step: domain/release-mlk-plp/release-prep.js:cmdPush + cmdAddTicket · change: about 60 lines
+new parts: 0
+
+CHANGE-CARD (before): release-prep card + re-open after push
+What: The release script prints the filled Baseline card after a push, and it can take one more ticket fix after the push.
+Why: On 2026-11-11 the 1.9.3 card was typed from memory with Domain and DB missing, and the 287346 fix after the push needed a hand-edited state file.
+How: The push step prints the card and add-ticket accepts a pushed release, as the flow picture release-prep-b1-b2-flow.png shows.
+When: It runs when a release is pushed, when the card command is asked for, and when a ticket is added after the push.
+Where: domain/release-mlk-plp/release-prep.js and the release-mlk-plp skill, as the change map shows.
+Where picture = the change map (lib/change-map.js): change-map-20261111-140928.png
+
+## system-change step 3 (2026-11-11, session b0c15c6f) — adhoc requirement before a code verdict
+
+STEP-3: adhoc brief needs a requirement read before CODE-FIX or CR
+session: b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74
+his words: "I thought I asked for the build always later at the end of the session" (order)
+fix or report: fix
+who pays: per-turn: one more regex inside the existing adhoc-brief-first Stop check, only on a turn that carries an adhoc brief
+goal without the part: Without it an adhoc brief can tell the BA "code issue" with no requirement read, as at 15:43 on ADHOC-MLPS-2026-5.
+model: claude-opus-5-5 (urgent fix on his order, not held for a model switch)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\f1bd93d17a856462\b0c15c6f-3e06-4e9f-80cf-a1d0ffecaa74\scratchpad\adhoc-req-flow.png
+cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 17 lines
+new parts: 0
+
+CHANGE-CARD (before): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then the route line is read and a CODE-FIX or CR route without a requirement match is sent back, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/, its eval, and two sentences in .claude/skills/adhoc-save/, as shown in change-map-20261111-140632.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): adhoc requirement before a code verdict
+- What: The adhoc brief Stop check of adhoc-brief-first now blocks a brief whose route is CODE-FIX or CR until a REQUIREMENT-MATCH line has been written in this session.
+- Why: On 2026-11-11 (ADHOC-MLPS-2026-5) I told the BA "code issue" at 15:43 and read requirement 218455 only when he asked, and the requirement made it a user step.
+- How: The brief ends, the existing checks run, then a CODE-FIX or CR route without a requirement match is sent back with the load and read commands, as shown in adhoc-req-flow.png .
+- When: At the end of every turn that carries an adhoc brief or starts the adhoc save agent, inside the existing Stop check.
+- Where: One check in domain/adhoc-brief-first/ with 11 new eval fixtures, and two sentences in .claude/skills/adhoc-save/, landed on main as a325f9fa, as shown in change-map-20261111-141051.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): release-prep card + re-open after push
+What: The release script now prints the filled Baseline card after a push and on the card command, and it takes one more ticket fix after the push.
+Why: On 2026-11-11 the 1.9.3 card was typed from memory with Domain and DB missing, and the 287346 fix after the push needed a hand-edited state file.
+How: The push step prints the card and add-ticket accepts a pushed release with no merge request, as the flow picture release-prep-b1-b2-flow.png shows.
+When: It runs when a release is pushed, when the card command is asked for, and when a ticket is added after the push.
+Where: domain/release-mlk-plp/release-prep.js, its README, eval and new diagram, and the release-mlk-plp skill, as the change map shows.
+Where picture = the change map (lib/change-map.js): change-map-20261111-142821.png
+GitHub main: 52ea6814 · main folder: 52ea6814
+
+## Session Recap (2026-11-06 to 10, auto-start: 08:30 sweep by the clock, WhatsApp fast lane, watcher health)
+
+STEP-3: patch tickets: note generated, every SET column reasoned (288974)
+- session: jovial-kepler-a07ba6 (subagent of the 288974 session)
+- his words: "straight away built this so that in the future, the types of patching will always include these datas, the things we've patched. It should cover all of the patching tickets." (order)
+- fix or report: fix
+- who pays: on-demand: 1 node call per patch note, under 1 s; per-turn: CHECK 8 runs inside the existing patch-script-gate Stop hook, no new registration
+- goal without the part: the note is typed from memory and a column copied from a precedent ships with no reason, as on 288974
+- cause step: (A) quest 6c handover, the patch-done note had no generator; (B) script-check / Stage-Match step 3, no reason asked per SET column
+- change lines: ticket-close-block.js +189 (`--patch`) · patch-script-gate hook +38 (CHECK 8) · script-check rule 9 · quest 6c + step 3 · prefill Step 4
+- new parts: 0 (3 eval fixture files)
+- model: claude-fable-5-2
+- shown: domain/ticket-close-block/diagram.png
+
+CHANGE-CARD (after): patch note generated
+- What: The patch-done note for Redmine is now printed by `ticket-close-block --patch` from the patch script and the replaced files, and script-check rule 9 asks one reason for every column a script sets and every row it deletes.
+- Why: On 2026-11-11 the 288974 script set Batal and removed a link that the BA never asked for, and the typed note then said the linked permohonan was not changed.
+- How: The generator reads each UPDATE, DELETE and INSERT into one line per thing changed under its ID Permohonan as in `domain/ticket-close-block/diagram.png`, and the patch-script-gate blocks a reply whose script has a column with no reason line.
+- When: The note is generated at the handover step of a patch ticket, and the reason check runs when a reply hands over a patch script.
+- Where: The change sits in `domain/ticket-close-block/`, `domain/patch-script-gate/`, the script-check, quest and redmine-phase1-prefill skills and one memory file, shown in `C:\Users\Ridhwan\AppData\Local\Temp\claude\75ad8d85f2656ad6\c845be62-69e0-4694-8a3c-0eb7b43eb78f\scratchpad\change-map-20261111-064555.png`.
+Where picture = the change map (lib/change-map.js).
+
+## system-change step 3 (2026-11-11, session 275d3684) — gate fix, his nod: "both"
+
+STEP-3: build-turn rider reads the STEP-3 block
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I've asked before why do we need this token in the first place?" (question)
+fix or report: fix
+who pays: per-tool: the rider runs on every Edit or Write of a hook, skill, Feature, rule or memory file; one more read of current-session.md
+goal without the part: Without it an edit he ordered is denied every time my reply text is not in the transcript, and only his skip token gets it through.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\gate-flow.png
+cause step: domain/design-consult-gate/step3-check.js:riderCheck · change: 5 lines
+new parts: 0
+
+CHANGE-CARD (before): build-turn rider reads the STEP-3 block
+- What: The build-turn rider of design-consult-gate also accepts its three lines (his words, cause step, new parts) from this session's STEP-3 block in `main/current-session.md`, not only from my reply text.
+- Why: On 2026-11-11 the rider denied one build he had ordered six times because my reply text written before an Edit was not in the session transcript, and only his skip token could pass it.
+- How: An edit he ordered reaches the rider, which reads my reply of this turn plus this session's STEP-3 block and then allows or denies as before, as shown in gate-flow.png .
+- When: On every Edit or Write of a hook, skill, Feature, rule or memory file, inside the existing hook call, with one more file read and no new process.
+- Where: One function in `domain/design-consult-gate/` (step3-check.js riderCheck) and eight new fixtures in its eval, as shown in change-map-20261111-072932.png .
+Where picture = the change map (lib/change-map.js).
+
+## system-change step 4 (2026-11-11, session 275d3684) — 242553 rule change build
+
+STEP-3: 242553 next-tugasan rule (bpmn-check J12, explain-diagram row, quest pointer)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I want to build but please take note on this first" (order)
+fix or report: fix
+who pays: on-demand: no process; about 110 more words when bpmn-check loads, 50 for explain-diagram, 20 per ticket for quest
+goal without the part: Without J12 a next-tugasan answer depends on remembering to open the called sub-flow, which failed on 242553.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\1c6170c08830080a\275d3684-1025-4c82-ab86-333702e98345\scratchpad\242553\change-flow.png
+cause step: .claude/skills/bpmn-check/SKILL.md:Step 1 judgment table (no row for naming the next tugasan) · change: 9 lines
+new parts: 0
+
+CHANGE-CARD (before): 242553 next tugasan after a step
+- What: The bpmn-check skill gains one row (J12) that makes me open every called sub-flow and list its tugasan and parallel branches before I name what comes after a step, the quest BPMN row gains one sentence that sends a flow question there, and the explain-diagram skill gains one row that puts the words "not verified" on any box or arrow I did not check.
+- Why: On 2026-11-11 (ticket 242553) I told the BA that one tugasan follows 29.1 when the called sub-flow MLK_PLP_SUB_UPN holds 9 tugasan and 3 parallel gateways, I read the flows with my own pattern that dropped every flow carrying a condition, and I drew a never-run step as fact.
+- How: A flow question goes from the quest BPMN row to the bpmn-check skill, whose validator parser reads every flow, then the changed step lists each called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask only, each time a reply names the tugasan that follow a step or draws a picture that states facts, with no process and no hook.
+- Where: Three skill folders (.claude/skills/bpmn-check/, .claude/skills/explain-diagram/, .claude/skills/quest/) and one new test in domain/bpmn-check/, as shown in change-map-20261111-061832.png .
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): 242553 rule change + step-3 gate fix
+- What: The bpmn-check skill now has row J12, the quest BPMN row points a next-tugasan answer to it, the explain-diagram skill marks any unchecked fact on a picture, and the step-3 gate also reads this session's STEP-3 block.
+- Why: On 2026-11-11 (ticket 242553) I named one tugasan after 29.1 when the called sub-flow holds 9, drew a never-run step as fact, and the step-3 gate then blocked his ordered build six times.
+- How: A flow question goes from the quest row to bpmn-check J12, which opens every called sub-flow before the picture is drawn, as shown in change-flow.png .
+- When: On ask for the skills, and inside the existing gate call on every edit of a hook, skill, Feature, rule or memory file.
+- Where: Three skill folders and two Feature folders, landed on main as f669e735, as shown in change-map-20261111-073840.png .
+Where picture = the change map (lib/change-map.js).
+
+
+STEP-3: adhoc intake ask-infra-first (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "OF COURSE ADD THAT STEP ON ASKING FOR INFRA" (order)
+cause step: domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:buildMessage (intake text, FIX LADDER) · change: 5 lines + 1 skill row · new parts: 0
+fix or report: fix
+who pays: always-on text: once per adhoc intake prompt
+goal without the part: the first adhoc reply sends the infra file or log ask before any trace
+model: claude-opus-5-5 (Fable 5.2 audit running in the background)
+shown: none (order, urgent fix)
+
+
+STEP-3: patch-mlk-doc infra replace box by env (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "please fix this behaviour" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Replace document box (hardcoded MLK PROD, no staging line, #<num> required) · change: 3 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads
+goal without the part: a staging infra replace is the same box with MLK STAG and the same lokasi_fail, sent before PROD
+model: claude-opus-5-5
+shown: none (order)
+
+
+STEP-3: patch-mlk-doc test scenario names its type (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "I already said you have to be upfront abotu this" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Staging first line · change: 1 line · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads
+goal without the part: the test scenario's first line says upload test or infra replace test, and whether a script runs first
+model: claude-opus-5-5
+shown: none (order)
+
+
+STEP-3: revert wrong MLK STAG rule (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words (said in anger): "Are you going to keep of butchering my system" (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:Staging first line + domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:ASK INFRA FIRST · change: 2 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads; per adhoc intake
+goal without the part: staging test of an uploaded file = upload through the screen; STAG infra box only when the same id_dok exists in the staging DMS
+model: claude-opus-5-5
+shown: none (order)
+
+## 2026-11-11 — ADHOC-PRBB-2026-24 (PRBB slaid bergaris)
+Cause found: the BA's slide PDF was made with Microsoft Print to PDF, so photos are stored as thin strips and the pdf.js viewer draws the seams. Fixed PDF (one image per page, 6.75 MB) is ready in the Task folder 2. Fix. Open: stg1 upload test (PTMLK/02/L/PRBB/2026/19), then PROD infra replace of LAIN-37579215_1.main, no script. Twelve own mistakes are recorded in the qa_doc: late infra download ask, asking miya to fetch the file, an unrendered side test, a premature "not our module", a ticket ID on a no-ticket infra box, a drawn-out staging answer, a wrong MLK STAG rule written into two places without audit, a test scenario without its type, missing step name, partial paths, no upfront script statement, and four unaudited system edits in one day. The two wrong MLK STAG lines still need a highest-model audit through /system-change.
+
+Update 2026-11-11 (ADHOC-PRBB-2026-24): saved, audit 31/31. Main mistake M0: never said upfront that the staging test was only a screen upload of the fixed file (no infra, no DB or DMS patch); every test plan now opens with the test type and any script needed. Original PROD slide was already moved or gone from the uploads folder; the Task folder 1. Brief holds it as 2. Original slide dari PROD.pdf.
+
+
+STEP-3: stored-file adhoc fix by Fable 5.2 audit (ADHOC-PRBB-2026-24)
+session: 275d3684-1025-4c82-ab86-333702e98345
+his words: "now go through proper Fable 5.2 audit and them proper system-upgrade to see what, where, why, how you're going to fix this." (order)
+cause step: .claude/skills/patch-mlk-doc/SKILL.md:85-86 + domain/adhoc-paste-detector/adhoc-paste-detector.check.hook.js:134-135 · change: 3 lines · new parts: 0
+fix or report: fix
+who pays: on-demand: when patch-mlk-doc loads; text: once per adhoc intake prompt
+goal without the part: a stored-file adhoc gets the infra ask first, the staging test picked by file origin, and a test plan whose first line says what the test needs
+model: claude-fable-5-2 (audit), claude-opus-5-5 (build)
+shown: prbb24-plan.png
+
+CHANGE-CARD (before): stored-file adhoc test and staging handoff
+- What: The patch-mlk-doc skill replaces its wrong staging line with a rule that picks the staging test by the file's origin and makes the test plan's first line say what the test needs, and the adhoc intake text tells me never to ask miya or the BA for the file and points to that skill instead of repeating the wrong rule.
+- Why: On 2026-11-11 (ADHOC-PRBB-2026-24) I never said the staging test was just a screen upload of the fixed file, and I wrote a rule into two places that sends a PROD file path to infra for staging, where no staging record exists, as the Fable 5.2 audit confirmed.
+- How: An adhoc about a stored file gets the infra download ask in the first reply, the fixed file goes through the patch-mlk-doc staging line that checks whether the file was uploaded or generated, and the test plan opens with the upload line, as shown in prbb24-plan.png .
+- When: On demand, each time an adhoc or patch involves a stored file, with no new process and the intake text read once per adhoc prompt.
+- Where: The patch-mlk-doc skill and its eval in domain/patch-mlk-doc/, and the adhoc intake text and its eval in domain/adhoc-paste-detector/, as shown in change-map-20261111-111559.png .
+Where picture = the change map (lib/change-map.js).
+
 ## Session Recap (2026-11-08, Masterline look modes, delegated)
 - Asked (orchestrator, his rulings row 44 and 2026-10-20): a Look switch with 1 Operations console, 2 Service ledger, 3 Dispatch board, 4 Mix on every screen; remove the Claude look from the base; impeccable-checked; prove with flows, click walk, screenshots; never stop to ask.
 - Done: `app-samples\prototype\` v2 in the main-checkout project folder (app.css neutral token base, new looks.css, look switch + `?look=` `?layout=`, PRODUCT.md); COMPARE.md v2; DECISIONS rows 46 to 54; VERSIONS row; START.md Main app row; report `reports\look-modes.md`. Proof: 40/40 flows per look desk + phone; walk 14,928 clicks 0 errors; impeccable detector 0 over 272 pages; taste-skill 0 FAIL at 1366/768/375; impeccable critique dual-agent (A about 21/40).
@@ -9912,6 +10137,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
+
 
 
 

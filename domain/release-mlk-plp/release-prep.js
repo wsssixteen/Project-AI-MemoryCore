@@ -16,7 +16,9 @@
  *   verify  git rev-list origin/<src> --not HEAD --count == 0 per ticket -> emits check-table,
  *           records HEAD sha (push refuses if HEAD moves after verify)
  *   push    ONLY when phase=verified AND HEAD unchanged AND branch matches
- *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>
+ *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>, then prints the hand-off card
+ *   card    re-prints the card of a pushed release; --domain --db --flowable-date --flowable --sql fill it
+ *   add-ticket  also after push (no merge request yet): re-opens the release on top of the pushed tip
  *   merge-to-master  Phase F after BA pass. mlk/master is protected (2026-10-29): --ba-approved prints the
  *           GitLab merge-request form spec (never pushes) · --record-mr <url> --reviewer <name> · --abandon-mr ·
  *           --check confirms origin/mlk/master holds the release tip (exit 3 = not merged yet).
@@ -352,10 +354,13 @@ function cmdSetTickets(a) {
 // mlk/internal/274094v3 had been deleted). Two sources: --branch <origin branch> OR --sha <commit>
 // (sha must be reachable from some origin ref — never an unpublished local commit). Phase drops back
 // to `merging` so `merge` runs only the new entry; verify (and any bump) must then re-run.
+// 2026-11-11 (1.9.3, #287346 b273c6b63a): also allowed at phase=pushed while no merge request is open;
+// the re-merge goes on top of the pushed tip, so the next push is a normal fast-forward.
 function cmdAddTicket(a) {
   const st = loadState(a.release);
-  const ok = ['branched', 'merging', 'merged', 'verified', 'bumped'];
-  if (!ok.includes(st.phase)) die(`ADD-TICKET REFUSED — phase is ${st.phase}; allowed before push only (${ok.join('/')})`, 2);
+  const ok = ['branched', 'merging', 'merged', 'verified', 'bumped', 'pushed'];
+  if (!ok.includes(st.phase)) die(`ADD-TICKET REFUSED — phase is ${st.phase}; allowed before the merge request only (${ok.join('/')})`, 2);
+  if (st.phase === 'pushed' && st.mr) die('ADD-TICKET REFUSED — a merge request is recorded for this release; abandon it first (merge-to-master --abandon-mr)', 2);
   if (st.conflict) die(`ADD-TICKET REFUSED — a conflict on #${st.conflict.ticket} is still open; run merge-continue first`, 2);
   if (!a.ticket) die('--ticket <label> required (e.g. 274094v3)');
   if (!a.branch && !a.sha) die('one of --branch <origin branch> or --sha <commit> required');
@@ -373,6 +378,11 @@ function cmdAddTicket(a) {
     entry = { ticket: String(a.ticket), src: `sha:${sha.slice(0, 10)} (on ${holders[0]})`, sha, merged: false };
   }
   st.tickets.push(entry);
+  if (st.phase === 'pushed') {
+    ensureOnBranch(st.repo, st.branch);
+    if (gitOut(st.repo, ['rev-parse', 'HEAD']) !== st.headSha) die(`ADD-TICKET REFUSED — local ${st.branch} is not at the pushed tip ${String(st.headSha).slice(0, 10)}`, 2);
+    (st.reopened = st.reopened || []).push({ at: new Date().toISOString(), ticket: entry.ticket, fromSha: st.headSha });
+  }
   if (st.phase !== 'branched') { st.phase = 'merging'; st.headSha = null; }
   saveState(st);
   log('add-ticket', st.release, 'ok', entry);
@@ -765,15 +775,67 @@ function cmdPush(a) {
   git(st.repo, ['push', '-u', 'origin', st.branch]);
   if (!remoteBranchExists(st.repo, st.branch)) die('push reported success but branch not visible on origin — investigate');
   st.phase = 'pushed';
+  takeCardFlags(st, a);
   saveState(st);
   log('push', st.release, 'ok', head);
   console.log(`✅ ${st.branch} pushed to origin (${head.slice(0, 10)}) · phase=pushed · next: BUILD (V4)`);
+  printCard(st);
+}
+
+// The hand-off card (skill §Phases C-E), printed by the script so it is never typed from memory
+// (2026-11-11, 1.9.3: a card typed by hand came out in the wrong order with Domain and DB missing).
+// Values the script cannot know come from flags, kept in state: --domain --db --flowable-date
+// --flowable "<a.bpmn20.xml,...>|none" --sql "#<n>, <file>.sql;...|none". A value never given prints as a FILL line.
+const CARD_FLAGS = { domain: 'domain', db: 'db', 'flowable-date': 'flowableDate', flowable: 'flowable', sql: 'sql' };
+function takeCardFlags(st, a) {
+  st.card = st.card || {};
+  for (const [flag, key] of Object.entries(CARD_FLAGS)) if (typeof a[flag] === 'string') st.card[key] = a[flag];
+}
+function printCard(st) {
+  const c = st.card || {};
+  const fill = flag => `<FILL: --${flag}>`;
+  const ref = git(st.repo, ['rev-parse', '--verify', `origin/${st.branch}`], true).status === 0 ? `origin/${st.branch}` : st.branch;
+  const pom = git(st.repo, ['show', `${ref}:pom.xml`], true).stdout || '';
+  const cm = pom.match(/<etanah\.common\.version>([^<]+)<\/etanah\.common\.version>/);
+  const merges = (git(st.repo, ['rev-list', '--merges', '--count', `origin/mlk/master..${ref}`], true).stdout || '').trim() || '?';
+  const flow = c.flowable === undefined ? null : c.flowable.trim().toLowerCase() === 'none' ? [] : c.flowable.split(',').map(s => s.trim()).filter(Boolean);
+  const sql = c.sql === undefined ? null : c.sql.trim().toLowerCase() === 'none' ? [] : c.sql.split(';').map(s => s.trim()).filter(Boolean);
+  const lines = [
+    `Baseline ${st.release} - branch ready, pushed (${String(st.headSha).slice(0, 10)})`, '',
+    `B2 - CONFIRM THE MERGES (expect ${merges} lines)`,
+    `git -C ${String(st.repo).replace(/\//g, '\\')} log --oneline --merges mlk/master..${st.branch}`, '',
+    'C - BUILD + DEPLOY (UI), target stag', st.branch, '',
+    'E - SHEET',
+    'DEV Name: Ridhwan',
+    `Domain Version : ${c.domain || fill('domain')}`,
+    `DB Version : ${c.db || fill('db')}`,
+    `Common Version : ${cm ? cm[1].trim() : '<FILL: common not found in pom.xml>'}`,
+    `Module Version : ${st.release}`,
+    `Branch Name: ${st.branch}`,
+    'Dependency pendaftaran:',
+    `Flowable Diagram: ${flow === null ? fill('flowable') : flow.length ? `/home/ftpuser/files/flowable-diagrams/Melaka/${c.flowableDate || fill('flowable-date')}/Pelupusan/` : ''}`,
+    ...(flow || []),
+    'SQL name with ticket number:',
+    ...(sql === null ? [fill('sql')] : sql),
+  ];
+  console.log('\n----- CARD (paste as the last message) -----');
+  console.log(lines.join('\n'));
+  const missing = lines.filter(l => l.includes('<FILL:')).length;
+  console.log(`----- END CARD${missing ? ` · ${missing} FILL line(s): re-run \`card --release ${st.release}\` with the missing flags` : ''} -----`);
+}
+function cmdCard(a) {
+  const st = loadState(a.release);
+  if (!['pushed', 'mr-pending', 'merged-to-master'].includes(st.phase)) die(`CARD REFUSED — phase is ${st.phase}; the card is for a pushed release`, 2);
+  ensureRepo(st.repo);
+  takeCardFlags(st, a);
+  saveState(st);
+  printCard(st);
 }
 
 // Phase F — land the release on mlk/master AFTER BAQA baseline testing passes (V8).
 // PLP-ONLY. Since 2026-10-29 mlk/master is a protected branch on GitLab ("You are not allowed to push
 // code to protected branches"): the release reaches it ONLY through a merge request that one of the
-// configured reviewers (Aaron or Alex) approves and merges. So this command NEVER checks out, merges,
+// configured reviewers (servers.local.json gitlab.reviewers) approves and merges. So this command NEVER checks out, merges,
 // tags or pushes. Four modes, one state machine (phase pushed → mr-pending → merged-to-master):
 //   --ba-approved              prepare: measure on origin, print the exact merge-request form spec
 //   --record-mr <url> --reviewer <name>   store the created MR (read back from GitLab by the skill)
@@ -1043,8 +1105,8 @@ const commands = {
   init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'defer-carry': cmdDeferCarry, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
-  push: cmdPush, 'merge-to-master': cmdMergeToMaster, 'stag-catchup': cmdStagCatchup, status: cmdStatus,
+  push: cmdPush, card: cmdCard, 'merge-to-master': cmdMergeToMaster, 'stag-catchup': cmdStagCatchup, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|stag-catchup|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|card|merge-to-master|stag-catchup|status> --release <ver> [...]`);
 if (cmd !== 'init' && cmd !== 'stag-catchup' && !a.release) die('--release required');
 commands[cmd](a);
