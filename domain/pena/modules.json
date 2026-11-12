@@ -201,13 +201,15 @@
       "A picture carries red boxes on exactly the part that proves the point.",
       "A sentence that the boxed picture already proves is cut.",
       "Point to it with what it shows: \"Attachment 2: the 5 common langkah boxed in the sidebar\", never only \"Refer attachment 2\".",
-      "Attachment files are saved in the cycle folder as <n>. <what it shows>.<ext> and uploaded from there."
+      "Attachment files are saved in the cycle folder as <n>. <what it shows>.<ext> and uploaded from there.",
+      "A note that reports work done or progress (a script sent to infra, a patch, a fix, a check result) is staged WITH that script or result attached in the same edit, from the cycle folder. Never post it bare and attach later. (miya 2026-11-12, 283905: remember to attach next time as well for any tickets when evidences is needed)"
     ],
     "banned": [
       "Refer attachment N with no word on what it shows",
-      "a paragraph that explains what a held screenshot could show"
+      "a paragraph that explains what a held screenshot could show",
+      "a progress note posted with no attachment of the script or result it reports"
     ],
     "check": "manual",
-    "ask": "Which sentences could a screenshot, video frame, log line or DB grid we hold show instead? Make that picture (red boxes on the proof), cut those sentences, and name what each attachment shows."
+    "ask": "Which sentences could a screenshot, video frame, log line or DB grid we hold show instead? Make that picture (red boxes on the proof), cut those sentences, and name what each attachment shows. Does this note report work done (script sent, patch, fix, check)? Then that file is attached in the same edit."
   }
 }
