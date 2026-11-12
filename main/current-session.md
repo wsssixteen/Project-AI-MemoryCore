@@ -6,6 +6,14 @@
 - Open: Izz to read e.getMessage() at PostgresUpdateService:656 (or the server.log line before the NPE) to confirm the real GIS error; whether etgis_dev has Penang schemas not checked; fix belongs to common/GIS (add 07 branch), not pelupusan.
 - Mistakes: none recorded by miya this session; four Stop-hook deltas (attempt-before-blocked, session name, ownership input check, db-claim proof) and one pena 4-sentence paragraph.
 - Assessment: A1 branch-guard blocks reading a non-trunk etanah repo even for read-only (read via git show). A2 no quest; help for a colleague. A3 interface dispatch to a jar explained by line, breakpoints placed at the four values. A4 common DBUtil state gap now known for Penang 07. A5 ⏭ no sweep.
+**Last Activity (Surat Ulangan JT lookup)**: 2026-11-12 17:45 — worktree `template-surat-ulangan-jabatan-teknikal-e8ac53`. Read-only question: which ticket for TemplateSuratUlanganJabatanTeknikal + how common calls pelupusan. Answer corrected at DE: the ticket that moved it to pelupusan is 255170 (faizudin, efed7b1e0a + 02f9689142); 280029 is the later populator/font fix. Fact written to etanah-knowledge FLOW-TRACES.md.
+
+## Session Recap (2026-11-12, Surat Ulangan JT ticket + common to pelupusan call chain)
+- Asked: which ticket was TemplateSuratUlanganJabatanTeknikal; how common calls the pelupusan one; then DE.
+- Done: chain traced (CommonPenyediaanSuratForm:222 -> PenyediaanSuratService:401 bean by modul -> MlkPelupusanPenyediaanSuratStrategy -> MlkPelupusanSuratStrategy/PelupusanSuratStrategy :178 kategori, :60 populateTemplate); 4 common kods only; common's own ulangan docx unused in Melaka.
+- Mistake: answered 280029 from a quest-archive note; never read etanah-knowledge first (FLOW-TRACES.md already had the strategy history) and never ran git log on the Melaka strategy file, which names 255170. Corrected in the DE reply.
+- Open: none.
+- Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
 **Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
 
 ## Session Recap (2026-11-11 to 12, ADHOC-PRBB-2026-24 slaid bergaris + knowledge-first fix)
