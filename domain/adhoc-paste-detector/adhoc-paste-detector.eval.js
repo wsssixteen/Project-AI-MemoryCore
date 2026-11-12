@@ -59,7 +59,7 @@ check('P7 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.sta
 
 const cases = [
   { id: 'P1 real PPTPB paste fires + injects scaffold + echoes urusan', prompt: PASTE,
-    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PPTPB', 'active-cli.js start', 'FIX LADDER', '1. User side', 'rung 1 out', 'ASK INFRA FIRST', 'Retrieve-only ask', 'MLK STAG first, MLK PROD after'], notWant: [] },
+    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PPTPB', 'active-cli.js start', 'FIX LADDER', '1. User side', 'rung 1 out', 'ASK INFRA FIRST', 'Retrieve-only ask', 'no infra, no DB patch, no script', 'KNOWLEDGE FIRST', 'Never ask miya or the BA', 'answer the BA\'s questions first'], notWant: ['MLK STAG first', '0. LOAD CONTEXT FIRST'] },
   { id: 'P2 same shape WITH a Redmine number is SILENT', prompt: PASTE + '\nESOKONGAN #275999',
     want: [], notWant: ['adhoc-paste-detector'] },
   { id: 'P3 ordinary prose is SILENT', prompt: 'can you check why the surat looks wrong',
@@ -115,25 +115,25 @@ const cases = [
       'PTG', 'nurul@terengganu.gov.my', 'urusan: PLPS', 'tugasan semasa: Semakan Permohonan',
       'id permohonan: PTTRG/07/01/L/PLPS/2026/135', 'Isu: ralat bila buka tugasan',
     ].join('\n'),
-    want: ['adhoc-paste-detector', '(from PTG)', '"1. Tasks\\Terengganu\\<N+1>. ADHOC - <ENV> - PLPS', 'read etanah-knowledge/terengganu/ADHOC-TRIAGE.md', 'ADHOC-PLPS'],
+    want: ['adhoc-paste-detector', '(from PTG)', '"1. Tasks\\Terengganu\\<N+1>. ADHOC - <ENV> - PLPS', 'etanah-knowledge/terengganu/index.md', 'ADHOC-PLPS'],
     notWant: ['Tasks\\Melaka', 'etanah-knowledge/melaka'] },
   { id: 'P17 Terengganu 6-segment id (no sub block) resolves the same', prompt: 'PDTKT tanya kenapa PTTRG/02/L/OPLPS/2026/47 tak boleh proceed, ralat keluar',
     want: ['(from PDTKT)', '1. Tasks\\Terengganu\\', 'etanah-knowledge/terengganu/', 'ADHOC-OPLPS'], notWant: ['Tasks\\Melaka', 'etanah-knowledge/melaka'] },
   { id: 'P18 urusan kod with "_" (UPS_PLP) is an anchor + echoed whole', prompt: 'PTTRG/02/L/UPS_PLP/2026/4 papar ralat',
     want: ['ADHOC-UPS_PLP', '1. Tasks\\Terengganu\\'], notWant: ['Tasks\\Melaka'] },
   { id: 'P19 Melaka paste text UNCHANGED (folder, knowledge dir, office)', prompt: PASTE,
-    want: ['BA-relayed issue (from PDTAG) with a permohonan-id', '     0. LOAD CONTEXT FIRST — read etanah-knowledge/melaka/ADHOC-TRIAGE.md and CLASSIFY each ask',
+    want: ['BA-relayed issue (from PDTAG) with a permohonan-id', 'KNOWLEDGE FIRST (miya 2026-11-12', '     read etanah-knowledge/melaka/index.md, then every file whose',
       '     1. Task folder: "1. Tasks\\Melaka\\<N+1>. ADHOC - <ENV> - PPTPB - <short desc>"'], notWant: ['Terengganu', 'terengganu'] },
   { id: 'P20 Melaka paste naming PTG gets NO new office label', prompt: 'PTG mohon semak PTMLK/03/L/MCL/2026/12 ralat keluar',
     want: ['BA-relayed issue with a permohonan-id', '1. Tasks\\Melaka\\'], notWant: ['(from PTG)'] },
   { id: 'P21 paste naming no state (AWAM hakmilik relay) keeps the reference text', prompt: [
       'PDTMT', 'Portal Awam', 'Urusan : PLTP', 'ID hakmilik : 040210PM00001265', 'Isu', 'papar ralat',
     ].join('\n'),
-    want: ['1. Tasks\\Melaka\\', 'etanah-knowledge/melaka/ADHOC-TRIAGE.md'], notWant: ['Terengganu'] },
+    want: ['1. Tasks\\Melaka\\', 'etanah-knowledge/melaka/index.md'], notWant: ['Terengganu'] },
   { id: 'P22 unregistered prefix keeps the reference text', prompt: 'PTXYZ/01/L/PT/2026/1 papar ralat',
     want: ['1. Tasks\\Melaka\\', 'etanah-knowledge/melaka/'], notWant: [] },
   { id: 'P23 Perak paste goes to the Perak folder + knowledge', prompt: 'PTPK/02/L/PT/2026/3 papar ralat',
-    want: ['1. Tasks\\Perak\\', 'etanah-knowledge/perak/ADHOC-TRIAGE.md'], notWant: ['Tasks\\Melaka', 'etanah-knowledge/melaka'] },
+    want: ['1. Tasks\\Perak\\', 'etanah-knowledge/perak/index.md'], notWant: ['Tasks\\Melaka', 'etanah-knowledge/melaka'] },
   { id: 'P24 state with no Task folder says so (never the Melaka folder)', prompt: 'PTSGR/01/L/PT/2026/1 papar ralat',
     want: ['no Task folder registered for selangor', 'etanah-knowledge/selangor/'], notWant: ['Tasks\\Melaka'] },
   { id: 'P25 Terengganu paste WITH an owning ticket number stays SILENT', prompt: 'eSOKONGAN #283001\nPTTRG/07/01/L/PT/2024/116 ralat',
@@ -145,6 +145,13 @@ for (const c of cases) {
   const miss = c.want.filter(w => !out.includes(w));
   const leak = c.notWant.filter(w => out.includes(w));
   check(c.id, !miss.length && !leak.length, 'missing=[' + miss.join(', ') + '] leaked=[' + leak.join(', ') + ']');
+}
+
+// Order: knowledge index named before the ORDER block
+{
+  const { out } = run(root, PASTE);
+  const a = out.indexOf('index.md'), b = out.indexOf('ORDER (miya 2026-10-13)');
+  check('P26 index.md appears before ORDER (miya 2026-10-13)', a >= 0 && b >= 0 && a < b, 'index=' + a + ' order=' + b);
 }
 
 let failed = 0;

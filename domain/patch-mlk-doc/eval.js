@@ -13,8 +13,8 @@ const SKILL = path.join(__dirname, '..', '..', '.claude', 'skills', 'patch-mlk-d
 
 const MUST_CONTAIN = [
   ['replace document for MLK <ENV>', 'replace box is env-generic (ADHOC-PRBB-2026-24)'],
-  ['same box with `MLK STAG`, the same PROD `lokasi_fail`', 'staging replace = same box, env word only'],
-  ['`Upload test: no infra, no script`', 'test scenario first line names the test type'],
+  ['**The staging test depends on how the document is made**', 'staging test by file origin (ADHOC-PRBB-2026-24)'],
+  ['`Upload test: no infra, no DB patch, no script`', 'test scenario first line names the upload test'],
   // the two tables + link spine
   ['et_dms.dokumen_revision', 'revision table'],
   ['et_dms.dokumen', 'dokumen table'],
@@ -45,6 +45,9 @@ if (!fs.existsSync(SKILL)) {
 const body = fs.readFileSync(SKILL, 'utf8');
 for (const [needle, label] of MUST_CONTAIN) {
   if (!body.includes(needle)) { console.error(`FAIL: missing ${label} ("${needle}")`); fail++; }
+}
+for (const bad of ['the same PROD `lokasi_fail`', 'Infra replace test']) {
+  if (body.includes(bad)) { console.error(`FAIL: wrong MLK STAG rule returned ("${bad}")`); fail++; }
 }
 // frontmatter trigger sanity
 if (!/description:.*patch/i.test(body)) { console.error('FAIL: description lost the patch trigger'); fail++; }

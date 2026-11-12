@@ -82,8 +82,7 @@ Hi infra, please help to replace document for MLK <ENV>. Thank you.
 
 <lokasi_fail>
 ```
-**Staging first, by the env word only** (2026-11-11 per みや, ADHOC-PRBB-2026-24): to test the fixed file on staging, send this same box with `MLK STAG`, the same PROD `lokasi_fail` and the same attachment, then `MLK PROD` after it shows right. Never search the staging DB for a path. No ticket (an adhoc): leave the `#<num>` line out.
-**The test scenario's FIRST line names the test type** (same day, per みや: "you have to be upfront"): `Upload test: no infra, no script` when the file is one a user uploads on a screen (the tester uploads the fixed file there and opens it), or `Infra replace test` when the tester opens a file infra replaced. Also say whether a script must run before opening (a `.docx` needs the PDF reset; a PDF whose `lokasi_fail_pdf` = `lokasi_fail` needs none).
+**The staging test depends on how the document is made** (2026-11-12 per みや, ADHOC-PRBB-2026-24). The test scenario's FIRST line says which. A file a user uploaded on a screen (`lokasi_fail` under `SISTEM-FAIL/KEMASUKAN/`): `Upload test: no infra, no DB patch, no script`; the tester uploads the fixed file on that screen on staging and opens it. A document the system generates (`KELUARAN`): decide by how that document is made. Also say whether a script must run before opening (a `.docx` needs the PDF reset; a PDF whose `lokasi_fail_pdf` = `lokasi_fail` needs none). No ticket (an adhoc): leave the `#<num>` line out.
 
 Reset PDF:
 ```

@@ -727,6 +727,7 @@ SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
 | `dokumen_revision` | `versi`, `saiz_fail_byte`, `mime_type`, `hash_code` | version · size · type · integrity |
 
 **Path shape on the server** — `/home/app/etanah/files/dms/SISTEM-FAIL/<KELUARAN|KEMASUKAN>/<kategori>/<YYYY>/<MM>/<id_dokumen>_<versi>.main`
+> `KEMASUKAN` = a file a user uploaded on a screen (it reaches DMS on Save, FLOW-TRACES.md §File upload → DMS). `KELUARAN` = a document the system generated. So the staging test of an uploaded file is: upload the fixed file on that screen.
 > When every `skg_dok`/`dok_id` link is NULL on PROD (it happens — §21), get the `LAIN-…` id from outside the DB instead (BA's executor.log) and query DMS forwards.
 
 > **Senarai Dokumen row shown but Fail column = "Tiada rekod yang dijumpai"** (2026-10-20, ADHOC-PLP-2026-3 report 2): the row exists, so `umm_a_dok_keluaran` + `skg_dok` are fine. The Fail list is empty because etanah-common `BaseDocumentService.populateDocumentList():134-298` drops a file without a message when the DMS call (`getAsPDF` / `get` / `getWithoutData`) returns null or throws (catch at :172 and :253-258). Check the DMS side first: `dokumen_revision.lokasi_fail` set means the file itself is missing on the DMS server (MLIT: files made before the 2026-10-12 server move). On the DB side only `skg_dok.flag_aktif = N` drops a file. Row builder: `DocumentService.java:1101-1159`.

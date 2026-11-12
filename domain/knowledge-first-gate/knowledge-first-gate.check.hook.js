@@ -40,6 +40,7 @@ const LOG = path.join(__dirname, 'log.jsonl');
 // before reading its CODE.
 const ETANAH_SRC = /[\\/]etanah-(pelupusan|common|awam|teknikal)[\\/].+\.(java|xhtml|jrxml)$/i;
 const KNOWLEDGE_READ = states.knowledgeReadRegex();
+const ETANAH_DB_QUERY = /^mcp__(postgres|oracle)-[a-z0-9-]+__query_database$/;
 const BYPASS = /\[skip-knowledge-first:\s*[^\]]+\]/i;
 function stateDirLabel(fp) {
   const r = states.resolve({ filePath: String(fp || '') });
@@ -112,10 +113,16 @@ runHook({ name: 'knowledge-first-gate', event: 'PreToolUse', log: LOG }, (input)
     return { fired: true, blocked: true, blockReason: freason };
   }
 
-  if (!ETANAH_SRC.test(String(fp))) return { fired: false };
+  // v4 (2026-11-12, ADHOC-PRBB-2026-24, miya): the first etanah DB query also needs a knowledge read first.
+  const isDbQuery = ETANAH_DB_QUERY.test(toolName);
+  if (!isDbQuery && !ETANAH_SRC.test(String(fp))) return { fired: false };
 
   let text = '';
   try { text = fs.readFileSync(data.transcript_path, 'utf8'); } catch (_) { text = ''; }
+  if (isDbQuery && !BYPASS.test(text) && !KNOWLEDGE_READ.test(text)) {
+    return { fired: true, blocked: true, blockReason: `⛔ knowledge-first-gate: etanah DB query (${toolName}) with ZERO etanah-knowledge file read this session.\n\n   Read projects/coding-projects/active/etanah-knowledge/${states.get(states.reference()).knowledge_dir}/index.md FIRST (it routes to DATABASE.md and the rest), then retry.\n\n   Genuinely uncovered by the knowledge base? [skip-knowledge-first: <reason>]` };
+  }
+  if (isDbQuery) return { fired: true, blocked: false, contextOut: 'knowledge-first-gate: knowledge read this session (db query)\n' };
 
   if (BYPASS.test(text)) return { fired: true, blocked: false, contextOut: 'knowledge-first-gate: bypassed\n' };
   if (KNOWLEDGE_READ.test(text)) return { fired: true, blocked: false, contextOut: 'knowledge-first-gate: knowledge read this session\n' };
