@@ -39,6 +39,7 @@ Run every command from the MemoryCore root. A session folder works too: the log 
 - Show before write: a line he has not seen is never written. Exception: a `--live` run he asked for, and the scheduled runs.
 - One drawing per reply, never a long table of lines.
 - `WRITTEN and read back` is the only proof. Without it, say it is not written.
+- **API refused (login limit `protime-budget`, login failed, no answer) → do it in the browser at once, never wait it out** (2026-11-12 per みや: "If Protime API rejects, always use the browser as the fallback, that just means I am already logged in"). Claude in Chrome → `http://172.16.90.169/protime/dashboard-ess`: an adhoc line = Plan panel → **Adhoc** → type the line → Submit; plan and resolve = Working Plan → Weekly Planning → My Weekly Plan. Proof = reload the page and find the line on it.
 - An entry he typed or edited is renamed or removed only on his word for that one entry.
 - ProTime's create-or-update call replaces a whole day: never call it. Adds go through the script.
 
