@@ -1,3 +1,12 @@
+**Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
+## Session Recap (2026-11-11 to 12, ADHOC-PRBB-2026-24 slaid bergaris + knowledge-first fix)
+- Asked: /quest adhoc PROD PRBB PTMLK/02/L/PRBB/2026/9 slide lines and not HD; fix the PDF and ask infra; test scenario; save the adhoc with my mistakes; Fable 5.2 audit then proper system change; answer BA Mira on Print to PDF; settle the fix by step-by-step popup questions (wayfinder method); then DE.
+- Done: cause = PDF made with Microsoft Print to PDF (photos as strips, pdf.js seams); fixed PDF + .main in Task folder 2. Fix; BA reply on Print to PDF; qa_doc saved with M0-M12; Q1-Q12 agreed by popup; Fable audit found adhoc flow reads knowledge last and the knowledge gate ignores DB queries; build landed b7f17eaa (evals 27/27, 20/20, patch-mlk-doc PASS).
+- Open: miya's stg1 upload test on PTMLK/02/L/PRBB/2026/19 (no infra, no DB patch, no script); MLK PROD infra replace of LAIN-37579215_1.main (no script); reply to BA after the test; knowledge-first-gate live fire not seen yet (watch row); knowledge-first-gate has no README (old gap).
+- Mistakes: 0 etanah-knowledge files read on the adhoc; test type not said upfront; asked miya to fetch the file; wrote a wrong MLK STAG rule without audit; stretched his "answer BA first" into a rule about the first output; step-3 rider took a popup quote as his words.
+- Assessment: A1 step-3 rider cannot pass a turn that quoted a popup answer (blocker logged). A2 adhoc flow now loads knowledge first. A3 a DB-first trace is now stopped before knowledge. A4 KEMASUKAN/KELUARAN meaning now in DATABASE.md. A5 ⏭ no sweep this session.
+
 **Last Activity (Baseline 1.9.3 + 288625 session)**: 2026-11-11 22:30 — worktree `redmine-issue-288622-19563d`. Release 1.9.3 pushed twice (f29b747ef1 with 287346 b273c6b63a), BA passed, MR !19 (reviewer Yih Kit) open, stag-env caught up a1e3464244; 288625 PROD alter route tested on stg1; release script B1-B3 landed (52ea6814); Domain Expansion.
 
 ## Session Recap (2026-11-11, Baseline 1.9.3 + 288625 alter route + release script)
@@ -16,12 +25,3 @@
 - Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
 - Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
 **Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
-
-## Session Recap (2026-11-11, 287346 MCL Kertas Pertimbangan rework 2)
-- Asked: rework 2 fixes; Redmine prefill; MLIT test data; then the BA's blank page on stg1 PTMLK/02/L/MCL/2026/41; test with doc-sim; commit, push, tell the Baseline 1.9.3 session; DE.
-- Done: cause = 2 empty BodyText paragraphs after the sign table before the KEPUTUSAN heading (pageBreakBefore) spill to a new page. Removed in TemplateKertasPertimbanganPentadbirTanah_MCL.docx, commit b273c6b63a on mlk/esokongan/287346; merged into mlk/release/1.9.3 (f29b747ef1), pushed. doc-sim /41: 4 pages, no blank; stress test old = blank page 4, new = none.
-- Open: int-env deploy 60e19e2be2 (his password; b273c6b63a not on int-env); staged Redmine 287346 form; MLIT test /4 (norzaida) and /9 (sabrina); BA retests /41 on staging after the 1.9.3 build.
-- Mistakes: template layout not checked before hand-over (slip quest/template-layout-not-checked).
-- Assessment: A1 cross-session message to the Baseline session worked in one round. A2 Phase 1 template fixes have no layout check step. A3 doc-sim + Word render reproduced the BA page fast. A4 empty paragraph before a page break is a template class. A5 ⏭ no sweep.
-
-**Last Activity (ADHOC-MLPS-2026-5 session)**: 2026-11-11 21:34 — worktree `quest-resume-ticket-239386-642586` (branch claude/melaka-prod-issue-a26366). PROD MLPS 4Ae adhoc answered, BA SME confirmed, archived; Domain Expansion.
