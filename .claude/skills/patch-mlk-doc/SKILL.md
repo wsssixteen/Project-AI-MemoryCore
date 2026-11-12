@@ -57,7 +57,7 @@ Pick the row that matches the BA's document type (kod/nama) AND is the **latest 
 Hand みや ONE copy-paste box, exactly this shape (added 2026-09-29 per みや, #282198). `<STATE>` `<ENV>` come from the ticket, e.g. `MLK PROD`:
 ```
 Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank you.
-<lokasi_fail>
+"<lokasi_fail>"
 ```
 More than one file = ONE box: "these files", then every `lokasi_fail` on its own line (2026-10-19 per みや, ADHOC-PRBB-2026-16). **Banned**: one box per file.
 
@@ -80,8 +80,9 @@ Replace document (he attaches the edited file). The word is "replace" when the f
 Hi infra, please help to replace document for MLK <ENV>. Thank you.
 #<num>
 
-<lokasi_fail>
+"<lokasi_fail>"
 ```
+**Every path in double quotes, one per line, in every infra box (replace and retrieve-only)** (2026-11-12 per みや, 289265: "your other sessions failed because of it. Each one of it needs quotations" · "make sure it can be ran in cmd or something they ran"). Infra pastes the path into a shell; a space (`4A - LMS`) splits it unquoted. A double-quoted path stays ONE argument in bash, sh, cmd and PowerShell (tested 2026-11-12 on the 289265 paths). A path holding `$`, a backtick, `!`, `%` or `"` is not safe in double quotes: test it in bash and cmd before sending. **Banned**: an unquoted path in any infra box · telling him quotes are not needed.
 **The staging test depends on how the document is made** (2026-11-12 per みや, ADHOC-PRBB-2026-24). The test scenario's FIRST line says which. A file a user uploaded on a screen (`lokasi_fail` under `SISTEM-FAIL/KEMASUKAN/`): `Upload test: no infra, no DB patch, no script`; the tester uploads the fixed file on that screen on staging and opens it. A document the system generates (`KELUARAN`): decide by how that document is made. Also say whether a script must run before opening (a `.docx` needs the PDF reset; a PDF whose `lokasi_fail_pdf` = `lokasi_fail` needs none). No ticket (an adhoc): leave the `#<num>` line out.
 
 Reset PDF:
