@@ -77,6 +77,8 @@ const SAVE_AGENT = { description: 'Save adhoc', prompt: '[skip-brief-first: back
 expectBlock('G1 the adhoc save agent started BEFORE any brief', run('Agent', SAVE_AGENT, [ASK, QUERY]));
 expectPass('G2 the adhoc save agent started after the brief (stop feedback in between)', run('Agent', SAVE_AGENT, [ASK, QUERY, AT(BRIEF), UM('Stop hook feedback:\n▶ adhoc-brief-first: the brief is delivered')]));
 expectPass('G3 an Agent that is not a save agent is not touched', run('Agent', { description: 'Explore', prompt: 'find callers of insertGITP in etanah-common' }, [ASK, QUERY]));
+expectPass('G6 the 2026-11-12 replay: a read-only audit agent naming ADHOC id + ADHOC-REGISTER.md + active-cli is not a save agent', run('Agent', { description: 'Fable audit', model: 'fable', prompt: 'READ-ONLY auditor. Sources: ADHOC-REGISTER.md, quest/active-cli.js, projects/coding-projects/archive/ADHOC-PLP-2026-7/ADHOC-PLP-2026-7.md. Edit nothing.' }, [ASK, QUERY]));
+expectBlock('G7 a save agent naming the ADHOC id + adhoc-save-audit with no waiver line is still held before the brief', run('Agent', { description: 'Save', prompt: 'write the save-set for ADHOC-MLPS-2026-4 and run adhoc-save-audit until green' }, [ASK, QUERY]));
 expectBlock('G4 the waiver line inside the agent prompt does not let the PARENT start it early', run('Agent', SAVE_AGENT, [ASK]));
 expectPass('G5 seen from the agent: its own prompt opens the turn and carries the waiver line', run('PowerShell', START, [U(SAVE_AGENT.prompt)]));
 

@@ -13,6 +13,124 @@
 - Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
 **Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
 
+CHANGE-CARD (after): done-alter note wording and files (288625)
+- What: The note generator now ends every done-alter note with "Can proceed to verify." and the alter playbook sends the Redmine fill through the prefill skill.
+- Why: On 2026-11-12 the 288625 note went out saying "Please help to verify." with his screenshot missing.
+- How: The alter branch of the generator prints one closing line for all alters, and playbook row A6 names redmine-phase1-prefill, which uploads the cycle folder. Picture: C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\claude\\75ad8d85f2656ad6\\a932bc8b-3bbc-4d45-9fa0-46ae3b4b2ffc\\scratchpad\\288625-alter.png
+- When: Every time a done-alter note is generated and filled on Redmine.
+- Where: ticket-close-block.js in domain/ticket-close-block and ALTER-TICKET-PLAYBOOK.md in etanah-knowledge. Picture: C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\claude\\75ad8d85f2656ad6\\a932bc8b-3bbc-4d45-9fa0-46ae3b4b2ffc\\scratchpad\\change-map-20261112-030522.png
+Where picture = the change map (lib/change-map.js).
+
+## Session Recap (2026-11-12 to 13, ADHOC-PLP-2026-7 Map GIS service to tugasan)
+- Asked: fill Pelupusan MLK rows of the Teknikal GIS sheet (due 13/11 10am, via Alex), 100% verified with proofs; no extra words, no red, multi-line cells, wide columns; Fable 5.2 audit twice; audit the hook re-prompts and fix them properly; evidence file per statement, guide pictures, a prompt so other states can do the same; DE only if all passed.
+- Done: sheet D81:G89 final (GITP/GUTP via Tandatangan PB4AE/PB4CE/PB4DE + "Tandatangan dan Papar" at SB; GBR via Hantar at BPRZ MW; GBTP/GRITP/GIR/GUR/GIPTR Belum diintegrasi; GBRM Bukan skop). Corrections from audits: MLPS and BPRZ Perserahan (records, not ind_ursn flags), GIR (Hantar only on the last langkah; PDWSMPTD step 5 has no GIR), Utiliti button label, GUTP Perserahan PRU/MLPS = Kaunter (noPermitLesen written only by spoc-hasil). 2. Fix: evidence.ps1 (reads origin/mlk/master), ADHOC-PLP-2026-7-check.sql (stamped mlkprod + mlkstg1), 1-6 PNG, Handover-prompt-other-states.md. Save audit 31/31. Gate fix: save agent = agent that writes the save-set; every missing brief part in ONE block (evals 39/39, 68/68).
+- Open: miya sends the sheet to Alex. Monitoring/self-fix reader + DE step proposed, not built. Main folder behind GitHub main (other sessions' dirty files).
+- Mistakes: unrequested words + red text in the sheet; Perserahan from ind_ursn flags; claimed GIR "verified" without the last-langkah check (verify-claim); first evidence lines read from a local branch one release behind.
+- Assessment: A1 adhoc-brief-first fired 3 re-prompts for one turn and held a read-only agent; fixed. A2 adhoc save via background agent held 31/31 three rounds. A3 Hantar last-langkah rule and remote-branch rule now in knowledge and the handover prompt. A4 GUTP channel rule (noPermitLesen writers) in OTHER-MODULES. A5 ⏭ no sweep.**Last Activity (Penang GIS null int + Izz help session)**: 2026-11-12 17:38 — worktree `gis-null-int-issue-227fee` (branch claude/gis-null-int-issue-227fee). Found the old "null null null int" GIS issue (282442 / ADHOC-PRBB-2026-6); traced the same NPE on Penang P2e Tandatangan and Pembatalan to common DBUtil having no KOD_NEGERI 07 branch; class chain picture, line numbers, breakpoints and Izz message drafted. Domain Expansion.
+
+## Session Recap (2026-11-12, Penang P2e GIS NPE for Izz)
+- Asked: what triggered the old GIS "null null null int" error and which ticket; how P2e Tandatangan hits it (Penang, PngLaporanP2eForm); pull first, Izz needs help; why insertGITP cannot be traced in Eclipse; draft message to Izz; class chain picture; line numbers; is PRU affected; what is 07; where to put breakpoints; show the code; DE.
+- Done: 282442 = MLK PRBB empty kodPejabat, GIS wrote to et_ptg with no log_service, common masked it as NPE (the text is IGisRequestService.serviceResultUpdate(String,String,String,int)). Penang: PngLaporanP2eForm.signLaporanP2e:130 > BasePelupusanForm.saveReportAndSignOTP:628 > saveToInduk:665 > PelupusanService.saveMaklumatPermitToInduk:2306 > PelupusanIntegrateGISService.insertNoLesenPermit:143 > common GisRequestService.insertGITP:268 > logServiceRequest:2043 > DBUtil.GetSchemaByKodPejabat:129 (only 04 and 02; Penang KOD_NEGERI 07 gives schema "") > PostgresUpdateService:638 login "et_" fails > catch :657 NPE. PRU and PRBB both in URUSAN_PERMIT_LIST, so both hit it; Pembatalan via updateGTB too. Running jar common 0.0.180-KDH (cd5a4a15b0); kdh/beta c8358f2866 (#287472) removes the NPE mask, not the 07 gap. Izz message + swimlane picture in scratchpad. DB proof on pgit: KOD_NEGERI 07, GIS_DB_IP 10.16.56.54 etgis_dev, 5 pt_application_ex_entity rows.
+- Ticket: Redmine 287348 (PNG_03 UPL Utiliti Pembatalan Lesen/Permit); Izz noted 'kod negeri 07 is not ready yet' and passed it to Amirul Ariff 2026-11-12; ProTime adhoc '287348 - Assist' (login budget retry).
+- Open: Izz to read e.getMessage() at PostgresUpdateService:656 (or the server.log line before the NPE) to confirm the real GIS error; whether etgis_dev has Penang schemas not checked; fix belongs to common/GIS (add 07 branch), not pelupusan.
+- Mistakes: none recorded by miya this session; four Stop-hook deltas (attempt-before-blocked, session name, ownership input check, db-claim proof) and one pena 4-sentence paragraph.
+- Assessment: A1 branch-guard blocks reading a non-trunk etanah repo even for read-only (read via git show). A2 no quest; help for a colleague. A3 interface dispatch to a jar explained by line, breakpoints placed at the four values. A4 common DBUtil state gap now known for Penang 07. A5 ⏭ no sweep.
+**Last Activity (Surat Ulangan JT lookup)**: 2026-11-12 17:45 — worktree `template-surat-ulangan-jabatan-teknikal-e8ac53`. Read-only question: which ticket for TemplateSuratUlanganJabatanTeknikal + how common calls pelupusan. Answer corrected at DE: the ticket that moved it to pelupusan is 255170 (faizudin, efed7b1e0a + 02f9689142); 280029 is the later populator/font fix. Fact written to etanah-knowledge FLOW-TRACES.md.
+
+## Session Recap (2026-11-12, Surat Ulangan JT ticket + common to pelupusan call chain)
+- Asked: which ticket was TemplateSuratUlanganJabatanTeknikal; how common calls the pelupusan one; then DE.
+- Done: chain traced (CommonPenyediaanSuratForm:222 -> PenyediaanSuratService:401 bean by modul -> MlkPelupusanPenyediaanSuratStrategy -> MlkPelupusanSuratStrategy/PelupusanSuratStrategy :178 kategori, :60 populateTemplate); 4 common kods only; common's own ulangan docx unused in Melaka.
+- Mistake: answered 280029 from a quest-archive note; never read etanah-knowledge first (FLOW-TRACES.md already had the strategy history) and never ran git log on the Melaka strategy file, which names 255170. Corrected in the DE reply.
+- Open: none.
+- Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
+**Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
+STEP-3: /handover (2026-11-13, 289337)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "built it" (order)
+his earlier words: "I need you to universally remember & invoke a /handover skill to make it more deterministic"
+fix or report: fix
+who pays: on-demand skill text (a few hand-overs a week) + per-turn rider inside the existing stop-claim-integrity node process, one regex, no new process
+goal without the part: fixing the three contradicting lines gives a fix file, but nothing forces the proof split or the pre-staging audit, and he named the skill
+model: claude-fable-5-2
+fable verdict: go-with-changes (skill v1 = other team only, rider only when a note or file is staged, handoff-load repointed, none: data/config/env only)
+cause step: .claude/skills/cross-module-check/SKILL.md verdict row THEIRS · change: 3 lines
+new parts: 1 · replaces: the procedure copy in feedback_cross_module_handoff_artifact.md and handoff-load's injected memory body
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\handover-plan.png
+audit model (popup 2026-11-13, his words): "Fix this rule since it goes against what I requested and had in mind." → the pre-hand-over audit runs on `node lib/models.js highest`; the sweep's "Never Fable" stays for its bulk waves only
+
+CHANGE-CARD (before): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team or module runs before the note is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the step 2 flow picture handover-plan.png shows the hand-over check placed between diagnosis and staging.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover, domain/ownership-input-check, cross-module-check, domain/handoff-load, domain/pena and two memories, as the change map shows.
+  change map: change-map-20261113-034302.png
+Where picture = the change map (lib/change-map.js).
+
+- 2026-11-13 289337 passed to Common (Amirul) with fix file + screenshot; /handover skill built (system-change): procedure moved from quest §Hand-over to ANOTHER TEAM + handoff memory, Stop rider in ownership-input-check (eval 37/37), handoff-load loads the skill (17/17), Pena separate rule (57/57), sweep 'Never Fable' scoped to waves per miya's popup answer.
+
+CHANGE-CARD (after): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team runs, and a Stop check that needs its Handover line when a note or file is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the flow picture handover-plan.png shows the hand-over check between diagnosis and staging, now the skill's own diagram.png.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
+  change map: change-map-20261113-040810.png
+Where picture = the change map (lib/change-map.js).
+
+## Session Recap (2026-11-12, Surat Ulangan JT ticket + common to pelupusan call chain)
+- Asked: which ticket was TemplateSuratUlanganJabatanTeknikal; how common calls the pelupusan one; then DE.
+- Done: chain traced (CommonPenyediaanSuratForm:222 -> PenyediaanSuratService:401 bean by modul -> MlkPelupusanPenyediaanSuratStrategy -> MlkPelupusanSuratStrategy/PelupusanSuratStrategy :178 kategori, :60 populateTemplate); 4 common kods only; common's own ulangan docx unused in Melaka.
+- Mistake: answered 280029 from a quest-archive note; never read etanah-knowledge first (FLOW-TRACES.md already had the strategy history) and never ran git log on the Melaka strategy file, which names 255170. Corrected in the DE reply.
+- Open: none.
+- Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
+**Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
+## Session Recap (2026-11-11 to 12, ADHOC-PRBB-2026-24 slaid bergaris + knowledge-first fix)
+- Asked: /quest adhoc PROD PRBB PTMLK/02/L/PRBB/2026/9 slide lines and not HD; fix the PDF and ask infra; test scenario; save the adhoc with my mistakes; Fable 5.2 audit then proper system change; answer BA Mira on Print to PDF; settle the fix by step-by-step popup questions (wayfinder method); then DE.
+- Done: cause = PDF made with Microsoft Print to PDF (photos as strips, pdf.js seams); fixed PDF + .main in Task folder 2. Fix; BA reply on Print to PDF; qa_doc saved with M0-M12; Q1-Q12 agreed by popup; Fable audit found adhoc flow reads knowledge last and the knowledge gate ignores DB queries; build landed b7f17eaa (evals 27/27, 20/20, patch-mlk-doc PASS).
+- Open: miya's stg1 upload test on PTMLK/02/L/PRBB/2026/19 (no infra, no DB patch, no script); MLK PROD infra replace of LAIN-37579215_1.main (no script); reply to BA after the test; knowledge-first-gate live fire not seen yet (watch row); knowledge-first-gate has no README (old gap).
+- Mistakes: 0 etanah-knowledge files read on the adhoc; test type not said upfront; asked miya to fetch the file; wrote a wrong MLK STAG rule without audit; stretched his "answer BA first" into a rule about the first output; step-3 rider took a popup quote as his words.
+- Assessment: A1 step-3 rider cannot pass a turn that quoted a popup answer (blocker logged). A2 adhoc flow now loads knowledge first. A3 a DB-first trace is now stopped before knowledge. A4 KEMASUKAN/KELUARAN meaning now in DATABASE.md. A5 ⏭ no sweep this session.
+
+**Last Activity (Baseline 1.9.3 + 288625 session)**: 2026-11-11 22:30 — worktree `redmine-issue-288622-19563d`. Release 1.9.3 pushed twice (f29b747ef1 with 287346 b273c6b63a), BA passed, MR !19 (reviewer Yih Kit) open, stag-env caught up a1e3464244; 288625 PROD alter route tested on stg1; release script B1-B3 landed (52ea6814); Domain Expansion.
+
+## Session Recap (2026-11-11, Baseline 1.9.3 + 288625 alter route + release script)
+- Asked: deploy Pelupusan 1.9.3; then why the card was wrong and a fix; answer Fizah on 288625 (alter, re-sign, keep dates, which user); add 287346 b273 to the release; MR after BA pass; add Yih Kit; build B1-B3; DE.
+- Done: 1.9.3 pushed (5b6d89d20e, then f29b747ef1 with b273), compiled, flowable listed, BA passed; MR !19 created, read back, reviewer Yih Kit (@cheowyihkit, Developer on GitLab); stag-env a1e3464244. 288625: stg1 Initiate & Alter straight to 41.0 Endosan > INTEGRASI > SPIL with pejabatKod=00 + pejabatHakmilik=00 PASS (no Pengesahan, no new Borang, no re-sign). Release script: push prints the card, card command, add-ticket after push, reviewers from config; eval 40/40; landed 52ea6814.
+- Open: 288625 PROD Initiate & Alter tomorrow, after the 1.9.3 flowable is on PROD and 288625.sql ran: same three targets and two variables as the stg1 run, assignee norhaslinda.r@melaka.gov.my, dry run first, then his approval code. MR !19 waits for Yih Kit (merge rights on mlk/master not verified); then merge-to-master check.
+- Mistakes: card typed from memory (wrong order, Domain/DB missing); answered "which date changes" instead of a way to keep the date; stg1 default assignee picked a PUU officer; hand-edited release state (now a script path).
+- Assessment: A1 release card + post-push re-merge are now script steps. A2 the alter answer reached the right route only after his push. A3 stg1 rehearsal of the PROD alter found the assignee gap before PROD. A4 PPTPB endorsement routing by title category is now fixed in code and model. A5 ⏭ no sweep.
+**Last Activity (PROD patching tickets session)**: 2026-11-11 21:34 — worktree `jovial-kepler-a07ba6` (branch claude/prod-patching-tickets-11e7ee). Three Melaka PROD patch tickets done and Resolved to Fizah: 288962 alter OPLPS/2026/2 to Borang 4Ae/L1e, 288963 MLPS/2026/12 Tempat PT 2 to SEK II + pelan L1e swap, 288974 UPS_PLP/2026/15 tamatkan. Quests closed; Phase 2 waits for Redmine Closed. Domain Expansion.
+
+
+STEP-3: adhoc-brief-first, save-agent detection and one block for all missing items
+session: bd30fbfa-5cae-4924-bf32-668fd7c105b8
+his words: "If yes, then proceed while we wait for Fable" (order)
+cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 30 lines · new parts: 0
+fix or report: fix
+model: claude-opus-5-5
+shown: abf-fix-flow.png
+
+## Session Recap (2026-11-11, three PROD patch tickets + patch-note generator)
+- Asked: /quest the 3 PROD patch tickets; never ask Resolved again; every PROD patch note must list exactly what was patched (all patch types, built with Fable 5.2); fix the wrong 288974 note; keep "Can proceed to verify."
+- Done: 288962 alter run with his approval; 288963 + 288974 patched by infra, PROD re-read and verified; all three Resolved to Nurhafizah 100% (read back). redmine-write-gate: standing Resolved rule now fires for a JS status write and when his message says submit (e3dfaa4a, eval 171/171). ticket-close-block --patch prints the note from the .sql itself; script-check rule 9 + patch-script-gate CHECK 8 need a reason per SET column and DELETE (1a99bf39, evals 27/27 + 42/42). Greeting restored (0c46d9ad). 288974 note corrected on Redmine (journal 2588114).
+- Found: the 288974 script copied status_keputusan='Batal' and hubungan_aplikasi_id=NULL from 283980 with no reason; the hand-written note then described them wrong. PPTPB/2026/9 link is now null on PROD.
+- Open: none. 288974 decided by miya 2026-11-11: link to PPTPB/2026/9 stays removed (PelupusanSuratStrategy reuses a linked UPS_PLP letter, this one was cancelled), Batal kept (15 of 15 ended UPS_PLP on PROD). All three archived at Phase 2 (Redmine Ready in PROD).
+- Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
+- Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
+**Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
+
+## Session Recap (2026-11-11, three PROD patch tickets + patch-note generator)
+- Asked: /quest the 3 PROD patch tickets; never ask Resolved again; every PROD patch note must list exactly what was patched (all patch types, built with Fable 5.2); fix the wrong 288974 note; keep "Can proceed to verify."
+- Done: 288962 alter run with his approval; 288963 + 288974 patched by infra, PROD re-read and verified; all three Resolved to Nurhafizah 100% (read back). redmine-write-gate: standing Resolved rule now fires for a JS status write and when his message says submit (e3dfaa4a, eval 171/171). ticket-close-block --patch prints the note from the .sql itself; script-check rule 9 + patch-script-gate CHECK 8 need a reason per SET column and DELETE (1a99bf39, evals 27/27 + 42/42). Greeting restored (0c46d9ad). 288974 note corrected on Redmine (journal 2588114).
+- Found: the 288974 script copied status_keputusan='Batal' and hubungan_aplikasi_id=NULL from 283980 with no reason; the hand-written note then described them wrong. PPTPB/2026/9 link is now null on PROD.
+- Open: none. 288974 decided by miya 2026-11-11: link to PPTPB/2026/9 stays removed (PelupusanSuratStrategy reuses a linked UPS_PLP letter, this one was cancelled), Batal kept (15 of 15 ended UPS_PLP on PROD). All three archived at Phase 2 (Redmine Ready in PROD).
+- Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
+- Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
+**Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
+
 ## Session Recap (2026-11-11, 287346 MCL Kertas Pertimbangan rework 2)
 - Asked: rework 2 fixes; Redmine prefill; MLIT test data; then the BA's blank page on stg1 PTMLK/02/L/MCL/2026/41; test with doc-sim; commit, push, tell the Baseline 1.9.3 session; DE.
 - Done: cause = 2 empty BodyText paragraphs after the sign table before the KEPUTUSAN heading (pageBreakBefore) spill to a new page. Removed in TemplateKertasPertimbanganPentadbirTanah_MCL.docx, commit b273c6b63a on mlk/esokongan/287346; merged into mlk/release/1.9.3 (f29b747ef1), pushed. doc-sim /41: 4 pages, no blank; stress test old = blank page 4, new = none.
@@ -10282,6 +10400,10 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
+
+
+
 
 
 

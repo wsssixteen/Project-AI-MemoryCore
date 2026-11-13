@@ -34,6 +34,7 @@ The step that drafts text in miya's name, and the turn he changes a sentence. No
 | Caller | Profile |
 |---|---|
 | `.claude/skills/quest/SKILL.md` § Hand-over to BA | `redmine-ba-pass` · `redmine-dev-mapping` · `redmine-rootcause` |
+| `.claude/skills/handover/SKILL.md` step 4 (note to another team's developer) | `redmine-dev-mapping` |
 
 Owed (not wired this session): `.claude/skills/deploy/SKILL.md` 6b · `.claude/skills/redmine-phase1-prefill/SKILL.md` · the infra hand-off memory · `.claude/skills/adhoc-save/SKILL.md`.
 

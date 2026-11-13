@@ -296,28 +296,9 @@ Rules:
 
 Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "pass to X", in any wording, for EVERY ticket type (code fix, data patch, document patch, alter), carries the **Root cause** and **Solution** rows FIRST, above the field table and the Notes. Format per `feedback_redmine_rootcause_format` (plain Malay, max 2 sentences each, no dashes, no semicolons, no code names, no blame). A patch ticket is not exempt: its cause is why the data or document was wrong, its solution is what was patched. Enforced by `domain/rootcause-format` (Stop, BLOCKS a Redmine close-field reply without both rows; bypass `[skip-rootcause-format: <reason>]`).
 
-### 📤 Hand-over to ANOTHER TEAM (reports · common · SPOC) — file + Redmine tab, in the SAME turn as the note (added 2026-10-27 per みや, 286462)
+### 📤 Hand-over to ANOTHER TEAM (reports · common · SPOC) → run `/handover` (moved there 2026-11-13, 289337)
 
-The moment the Rubric says the fix belongs to another team, the hand-over reply ships THREE things together, unasked:
-
-| # | Deliverable | Where |
-|---|---|---|
-| 1 | The note (Pena, sentences grouped in pairs, a blank line between groups) + Root cause + Solution rows. Solution = the fix we suggest to them | chat |
-| 2 | The bare hand-off file: file-name header + `Line N (BEFORE)` / `Line N (AFTER)` markers + code only, per `feedback_cross_module_handoff_artifact` | Task folder `2. Fix\` (or the latest `N. Rework\`), full path in the reply |
-| 3 | The Redmine tab: the ticket's edit form opened in Edge (Claude in Chrome), Assignee + Notes + Root Cause (DEV) + Solutions filled, **% Done = 50 ONLY when the ticket's Module is Pelupusan or Awam AND the BA journal asks us to fix it; any other Module (Pendaftaran, Hasil, Teknikal …) → % left untouched** (2026-10-27 per みや, 286650: I set 50 on a Pendaftaran ticket), file attached, **stopped before Submit** so he approves it | browser, then one line naming the tab |
-
-**🚨 Reports team (any `.jrxml` fix) = Assignee Nurhayati Abdul Razak, note opens "Salam kak Yati," (2026-10-27 per みや).** She is the Reports TL: she reviews every ticket first, then passes it to the PIC (Fatin and others). **Banned**: assigning a Reports ticket to the PIC directly; kak Yati had already warned about this before 286462. People list: `etanah-knowledge/<state>/STATE-FACTS.md` § 8.
-
-**Before the note is shown: `node lib/handover-check.js --brief "<Task folder>\1. Brief" --draft <note.txt>` MUST exit 0 (2026-10-27 per みや, 286462).** Paste its `EXPECTED SOURCE` line and its `HANDOVER-CHECK:` line under the draft. The check names who wrote the Expected (BA, or a TSO or QA report) and flags:
-- every expected row the ticket's Expected does not ask for;
-- every line number given without its file and branch.
-
-A flagged row is never "fixed" by guessing. Keep today's output for that row, or put it to the BA as a question. **Banned**: an Expected/Sepatutnya row built from my own reading · calling a TSO or QA Description "the requirement" · bare line numbers. **Why**: 286462, the note promised Lot and PT changes nobody asked for (the only Expected was a TSO report: "Papar Plot 3 pada dokumen"), so Fatin had to ask which requirement and where the line numbers came from.
-
-**🔎 Claim audit, AUTOMATIC, before the draft is shown (2026-10-27 per みや, 286650).** After `handover-check` and the Pena check (→ Pena line below; shape Salam → "We have checked …" → the flow → proof → Thank you), one familiar on the HIGHEST model the Agent tool offers (reason stated in its prompt) gets the draft + the evidence paths only, never my conclusion, and marks each claim `PROVEN (file/row)` · `NOT PROVEN` · `WRONG`. A claim that is not proven is cut or turned into a question. Paste `CLAIM-AUDIT: <n> claims · <n> proven · <cut/reworded>` under the draft. **Banned**: showing a hand-over draft without its `PENA:` and `CLAIM-AUDIT:` lines. **Why**: 286650, he caught a wrong cause, a pushback sentence and repeated photo details, one draft at a time.
-
-**Every file attached to Redmine is first saved in the cycle folder** (`2. Fix\` or the latest `N. Rework\` root), named `<n>. <what it shows>.<ext>`, and uploaded from there, BA screenshots included, so people can fact-check what was uploaded (2026-10-27 per みや; enforced by `domain/redmine-upload-path`, PreToolUse BLOCK on the browser upload).
-**Banned**: a hand-over note with no file and no prefilled tab · asking him to "copy this into Redmine" · uploading a file from `1. Brief\` or any folder outside the cycle folder. **Why**: 286462, he had to ask "Where is the handover tab for me to approve and the file?"
+The moment the Rubric says the fix belongs to another team, run the `/handover` skill before anything is staged: proof split, bare fix file + screenshot in the cycle folder, note + Root cause/Solution, `lib/handover-check.js`, one highest-model audit with its `CLAIM-AUDIT:` line, the prefilled Redmine tab (% Done rule, Reports to kak Yati), stop before Submit. Its `Handover:` line is checked at Stop by `domain/ownership-input-check`. **Banned**: a hand-over note with no file and no prefilled tab.
 
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 

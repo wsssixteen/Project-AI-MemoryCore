@@ -14,6 +14,11 @@ const VERDICT_RX = /\bOWNED-ELSEWHERE\b|\bnot our (?:issue|bug|side|problem)\b|\
 const PROOF_RX = /^[ \t>*_|-]*\**Input check\**\s*:\**\s*[^\s<][^\n]{8,}/im;
 // first reason char may not be '<' so the help text '[skip-ownership-input: <reason>]' never disarms the gate
 const BYPASS_RX = /\[skip-ownership-input:\s*[^\]\s<][^\]]*\]/i;
+// Handover rider (2026-11-13, 289337): a turn that also STAGES a note or fix file for the other team needs the /handover line.
+const STAGE_RX = /issue_notes|[\\/]2\. Fix[\\/]|[\\/]\d+\. Rework[\\/]/i;
+// each of proof / fix / audit must carry a real value, never the '<placeholder>' of the help text
+const HANDOVER_RX = /^[ \t>*_|-]*\**Handover\**\s*:\**\s*proof\s+[^\s<][^\n]*\bfix\s+[^\s<][^\n]*\baudit\s+[^\s<][^\n]*$/im;
+const FIX_NONE_RX = /\bfix\s+none\s*:\s*(\S+)/i;
 const LOG = process.env.OIC_LOG || path.join(__dirname, 'log.jsonl');
 function log(row) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...row }) + '\n'); } catch (_) {} }
 
@@ -41,12 +46,36 @@ function currentTurnText(lines) {
   return text;
 }
 
-function decide(text) {
+// Pure: transcript lines → true when the current turn staged a note or fix file (tool input names the Redmine notes box,
+// a file upload, or a path under 2. Fix\ or N. Rework\).
+function currentTurnStaged(lines) {
+  for (let i = lines.length - 1; i >= 0; i--) {
+    let o; try { o = JSON.parse(lines[i]); } catch (_) { continue; }
+    if (isUserPrompt(o)) break;
+    const c = o.type === 'assistant' && (o.message || {}).content;
+    if (!Array.isArray(c)) continue;
+    for (const b of c) {
+      if (!b || b.type !== 'tool_use') continue;
+      if (/file_upload$/.test(b.name || '')) return true;
+      let inp = ''; try { inp = JSON.stringify(b.input || {}); } catch (_) {}
+      if (STAGE_RX.test(inp.replace(/\\\\/g, '\\'))) return true;
+    }
+  }
+  return false;
+}
+
+function decide(text, staged) {
   const s = String(text || '');
   if (!s.trim() || !VERDICT_RX.test(s)) return { fire: false };
   if (BYPASS_RX.test(s)) return { fire: true, block: false, bypass: true };
-  if (PROOF_RX.test(s)) return { fire: true, block: false };
-  return { fire: true, block: true, verdict: (s.match(VERDICT_RX) || [''])[0] };
+  const verdict = (s.match(VERDICT_RX) || [''])[0];
+  if (!PROOF_RX.test(s)) return { fire: true, block: true, verdict };
+  if (!staged) return { fire: true, block: false };
+  const h = s.match(HANDOVER_RX);
+  if (!h) return { fire: true, block: true, verdict, handover: 'missing' };
+  const none = h[0].match(FIX_NONE_RX);
+  if (none && !/^(data|config|env)\b/i.test(none[1])) return { fire: true, block: true, verdict, handover: 'bad-none' };
+  return { fire: true, block: false, handover: 'ok' };
 }
 
 if (require.main === module) {
@@ -56,11 +85,20 @@ if (require.main === module) {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
     if (data.stop_hook_active) return { fired: false }; // re-entry: never loop
     let raw; try { raw = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { return { fired: false }; }
-    const d = decide(currentTurnText(raw.split(/\r?\n/).filter(Boolean)));
+    const tl = raw.split(/\r?\n/).filter(Boolean);
+    const d = decide(currentTurnText(tl), currentTurnStaged(tl));
     if (!d.fire) return { fired: false };
-    log({ outcome: d.bypass ? 'bypassed' : d.block ? 'blocked' : 'pass', verdict: d.verdict || '' });
+    log({ outcome: d.bypass ? 'bypassed' : d.block ? 'blocked' : 'pass', verdict: d.verdict || '', handover: d.handover || '' });
     if (d.bypass) return { fired: true, blocked: false, bypassed: true, bypassToken: 'skip-ownership-input' };
     if (!d.block) return { fired: true, blocked: false };
+    if (d.handover) return {
+      fired: true, blocked: true,
+      blockReason: '⛔ ownership-input-check (handover): this turn staged a note or fix file for another team ("' + d.verdict + '") ' +
+        (d.handover === 'bad-none' ? 'with "fix none:" outside data / config / env.\n' : 'without the Handover line.\n') +
+        '   Run the /handover skill: proof split, fix file in the cycle folder, highest-model audit, focused note.\n' +
+        '   Add one line:  Handover: proof <n% or proven> · fix <file in 2. Fix | none: data|config|env> · audit <model> <verdict>\n' +
+        '   ⚡ DELTA ONLY — do not re-emit the reply. Bypass: [skip-ownership-input: <why>]',
+    };
     return {
       fired: true, blocked: true,
       blockReason: `⛔ ownership-input-check: the reply hands an error to another team ("${d.verdict}") without an Input check line.\n` +
@@ -73,4 +111,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { currentTurnText, decide, VERDICT_RX, PROOF_RX };
+module.exports = { currentTurnText, currentTurnStaged, decide, VERDICT_RX, PROOF_RX, HANDOVER_RX };

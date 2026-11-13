@@ -15,6 +15,9 @@ const MUST_CONTAIN = [
   ['replace document for MLK <ENV>', 'replace box is env-generic (ADHOC-PRBB-2026-24)'],
   ['**The staging test depends on how the document is made**', 'staging test by file origin (ADHOC-PRBB-2026-24)'],
   ['`Upload test: no infra, no DB patch, no script`', 'test scenario first line names the upload test'],
+  ['#<num>\n\n"<lokasi_fail>"', 'replace box path is double-quoted (289265)'],
+  ['Thank you.\n"<lokasi_fail>"', 'retrieve box path is double-quoted (289265)'],
+  ['**Every path in double quotes, one per line, in every infra box', 'quote rule stated (289265)'],
   // the two tables + link spine
   ['et_dms.dokumen_revision', 'revision table'],
   ['et_dms.dokumen', 'dokumen table'],
@@ -42,7 +45,7 @@ if (!fs.existsSync(SKILL)) {
   console.error('FAIL: SKILL.md not found at ' + SKILL);
   process.exit(1);
 }
-const body = fs.readFileSync(SKILL, 'utf8');
+const body = fs.readFileSync(SKILL, 'utf8').replace(/\r\n/g, '\n');
 for (const [needle, label] of MUST_CONTAIN) {
   if (!body.includes(needle)) { console.error(`FAIL: missing ${label} ("${needle}")`); fail++; }
 }

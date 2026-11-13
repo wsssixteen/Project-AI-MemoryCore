@@ -183,6 +183,14 @@ check('P10 --alter with no patch flags is byte for byte what it was (F1)', r.sta
 const rows3 = fs.readFileSync(path.join(sb, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
 check('P11 each printed --patch note writes a log row (mode patch, its IDs, its warning count)', rows3.filter(x => x.mode === 'patch' && x.outcome === 'printed').length === 10 && rows3.some(x => x.mode === 'patch' && x.ids.length === 2) && rows3.some(x => x.mode === 'patch' && x.warns === 1), JSON.stringify(rows3.filter(x => x.mode === 'patch')));
 
+// 289265: MLPS Maksud Pendudukan in plain words (the cleared officer text and kegunaan print nothing); --file "<ID>|..." per permohonan
+r = run(['--patch', '--ticket', '289265', '--ba', 'Fizah', '--sql', fx('289265.sql'), '--file', 'PTMLK/02/L/MLPS/2026/7|Pelan=Pelan MLPS 7.pdf', '--file', 'PTMLK/02/L/MLPS/2026/14|Pelan=Pelan Baharu MLPS 14.pdf']);
+check('P12 289265: Maksud Pendudukan words, no raw column, no warning, each pelan under its own ID', r.status === 0 && r.err === ''
+  && /ID Permohonan: PTMLK\/02\/L\/MLPS\/2026\/8\nMaksud Pendudukan: Tanaman Jagung Mutiara\n/.test(r.out)
+  && /ID Permohonan: PTMLK\/02\/L\/MLPS\/2026\/14\nTempat: -\nPelan: replaced with Pelan Baharu MLPS 14\.pdf/.test(r.out)
+  && /ID Permohonan: PTMLK\/02\/L\/MLPS\/2026\/7\nPelan: replaced with Pelan MLPS 7\.pdf/.test(r.out)
+  && !/tujuan_permohonan|kegunaan/.test(r.out), r.out + ' | ' + r.err);
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);

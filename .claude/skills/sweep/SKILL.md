@@ -45,7 +45,7 @@ Skipping W3 is not skipping rigour — it is spending the round where the disagr
 
 ## Step 3 — DELEGATION PLAN table BEFORE any fan-out (mandatory)
 
-Emit: stage · #agents · model · effort · output schema · expected token band. W1+W2 and W3 familiars = `sonnet` (Sonnet 5.5), effort `high` (multi-file trace). W4 = one `opus` familiar per ticket, plan row reason `opus-reason: adversarial check of the root cause that decides the fix` (CLAUDE.md §Delegation Economy). Every familiar names its model (CLAUDE.md v1.81). Haiku is not used in a sweep: every wave decides inclusion and stop-point, and no script re-checks its answer (the haiku trial requires one). **Never Fable.**
+Emit: stage · #agents · model · effort · output schema · expected token band. W1+W2 and W3 familiars = `sonnet` (Sonnet 5.5), effort `high` (multi-file trace). W4 = one `opus` familiar per ticket, plan row reason `opus-reason: adversarial check of the root cause that decides the fix` (CLAUDE.md §Delegation Economy). Every familiar names its model (CLAUDE.md v1.81). Haiku is not used in a sweep: every wave decides inclusion and stop-point, and no script re-checks its answer (the haiku trial requires one). **Never Fable for the waves.** A finding that leaves us for another team goes through `/handover`, whose one audit runs on the highest model (miya 2026-11-13: "Fix this rule since it goes against what I requested and had in mind.").
 
 Before the launch, the controller runs `git fetch origin` once in each etanah repo the tickets touch, so `origin/mlk/master` is current.
 
