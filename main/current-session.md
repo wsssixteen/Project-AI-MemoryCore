@@ -102,3 +102,23 @@ CHANGE-CARD (after): /handover
 - Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
   change map: change-map-20261113-040810.png
 Where picture = the change map (lib/change-map.js).
+
+STEP-3: redmine-phase1-prefill Step 3 fill method (2026-11-13, 289233/289306)
+session: fa7d8874-98b2-4eb4-b7e8-65934894e923
+his words: "Yes, add it" (order)
+his earlier words: "Why are you still asking to set the status as resolved? Why have you not removed this disease of you keeping on asking something that was already working"
+fix or report: fix
+who pays: on-demand skill text, read once per Redmine prefill, no process
+goal without the part: the skill already says form_input for each field, but nothing says why a script fill makes the gate ask him
+model: claude-opus-5-5 (slip fix, not held for a model switch)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 3 · change: 1 line
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\prefill-fill-flow.png
+
+CHANGE-CARD (before): redmine-phase1-prefill Step 3 fill method
+- What: one line in the prefill skill Step 3 says Assignee and Status are filled only with form_input and never by a page script.
+- Why: on 2026-11-13 a script fill of 289233 and 289306 hid the status from the Redmine gate, so his standing Resolved rule never ran and I asked him.
+- How: the step 2 flow picture prefill-fill-flow.png shows the fill step feeding the gate that runs his rule.
+- When: the line is read each time the prefill skill fills a Redmine form.
+- Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
+Where picture = the change map (lib/change-map.js).
