@@ -100,3 +100,4 @@ Token cost is the reason: a knowledge lookup is a few hundred tokens; a code tra
 |---|---|---|
 | [../UNBLOCK-PLAYBOOK.md](../UNBLOCK-PLAYBOOK.md) | the 12 quick-fix routes (U1 data patch · U2 Flowable admin variable edit · U3 alter · U4 initiate · U5 migrate · U6 agihan · U7 regenerate doc · U8 DMS replace · U9 utiliti screen · U10 reference row · U11 hotfix deploy · U12 relay) with WHERE / WHAT / steps / who / reversible; mandatory UNBLOCK table for PROD or High-priority hand-backs | `ticket-gate` row 1e + `quest-phase-gate` (planned 2026-09-09) |
 | FLOWABLE-KNOWLEDGE.md §6d (Melaka) · FLOWABLE-ALTER.md §2.3 (Perak) | Flowable admin app Variables tab = in-place unblock (add/update the gateway variable before Hantar; `nextUser` wiped, set `pejabatKod`) | via U2 |
+- FLOWABLE-KNOWLEDGE.md § PPTPB 41.0 Endosan alter into the Pendaftaran task (2026-11-11, #288625)

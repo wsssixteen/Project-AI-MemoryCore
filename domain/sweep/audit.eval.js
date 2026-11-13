@@ -50,6 +50,9 @@ fam('no meta file 111111', { meta: false });
 fs.writeFileSync(path.join(SUB, 'agent-broken.jsonl'), '{{{\n');
 bank('111111', ['QA-111111.md', 'QA-111111-wave3.md', 'QA-111111-audit.md']);
 bank('222222', ['QA-222222.md']);
+// board: 111111 has an active.txt block, 222222 has none (the 2026-11-13 08:30 run: 4 of 4 had none)
+fs.mkdirSync(path.join(MAIN, 'quest'), { recursive: true });
+fs.writeFileSync(path.join(MAIN, 'quest', 'active.txt'), 'qa=QA-111111\nstatus=hold\nphase=Rubric\n\nqa=QA-2222220\nstatus=hold\n');
 const hook = path.join(MAIN, 'system', 'telemetry', 'hook-fires.jsonl');
 fs.writeFileSync(hook, [
   { ts: at(2), hook: 'show-gate', mode: 'orch-suppressed' }, { ts: at(3), hook: 'predicate-box', mode: 'orch-suppressed' },
@@ -87,6 +90,8 @@ check('local etanah read without origin = baseline-not-pinned', has('baseline-no
 check('run_in_background = background-job', has('background-job'));
 check('fable familiar flagged', has('fable-familiar'));
 check('garbage transcript lines do not crash', r.out.includes('SWEEP AUDIT'));
+check('no active.txt block = no-board-entry (QA-2222220 is not QA-222222)', row.defects.some(d => d === 'no-board-entry: QA-222222 has no block in quest/active.txt'), row.defects.join(' ; '));
+check('no-board-entry fix line names the active-cli start command', (row.refinements.find(x => x.class === 'no-board-entry') || {}).fix_now.includes('active-cli.js start QA-'));
 check('missing wave files = not-banked (wave3 + audit)', row.defects.filter(d => d.startsWith('not-banked')).length === 2, row.defects.join(' ; '));
 check('every defect class has a refinement line', row.defect_classes.every(c => row.refinements.find(x => x.class === c)));
 const w = row.refinements.find(x => x.class === 'write-outside-scratch');
