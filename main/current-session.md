@@ -1,14 +1,23 @@
+**Last Activity (TRG 289233 + 289306, Laporan Siasatan Tanah no active file)**: 2026-11-13 17:20 — worktree `sheet-tugasan-mapping-7b0b01` (branch claude/trg-tickets-289233-289306-18fcb0). Both PROD patches run by infra and read back; Redmine Resolved to Nurul Amani with scripts; both quests archived; prefill skill Step 3 fix landed; Domain Expansion.
+
+## Session Recap (2026-11-13, TRG 289233 + 289306)
+- Asked: quest two TRG tickets Alex handed over, fix now; stage both Redmine to BA; then why I still asked for Resolved; DE.
+- Done: cause = `skg_dok` of `umm_a_dok_keluaran` LPRN_SST_TNH had no active version (v1 off final, v2 off draft); pelupusan tab reads active only. PROD patch v1 flag_aktif Y (LAIN-33656988, LAIN-33011451) by infra, read back. Redmine both Resolved → Nurul Amani, Root Cause (DEV), generated note, .sql + -check.sql. Quests archived (QA docs in projects/coding-projects/archive). Bestiary pattern added. Prefill skill Step 3 form_input only (GitHub d6fcf522 / main folder 0a1cb429).
+- Open: 190 other PROD reports in the same state; code fix owner etanah-teknikal (283050 deactivation); hand-over not drafted, he said not now.
+- Mistakes: PROD read refused at first (auto mode); filled Assignee/Status by page script so the gate never ran his Resolved rule and I asked him; did not say plainly at first that both tickets were the same issue.
+- Assessment: A1 the system-change route for a 1-line skill line took ~15 calls (step-3 rider wording, design-consult, land-on-main dirty file). A2 save-quest + archive-quest + harvest gate closed both cleanly. A3 one active-flag SELECT found the cause before any deep code trace. A4 skg_dok medan_pk_id is shared across medan, filter medan_id. A5 ⏭ no sweep.
+
 **Last Activity (288625 rework: PROD alter + rework audit; ADHOC-PLBP-2026-2 MLIT permit date)**: 2026-11-13 14:50 — worktree `jovial-kepler-a07ba6` (branch claude/rework-ticket-288625-197057). PROD Initiate & Alter of PTMLK/02/L/PPTPB/2026/5 to SPIL at PTG (norhaslinda.r); done-alter note posted; Redmine now Pending User (TSO, PTG user away on PRN); F1+F2 note-wording fix landed; MLIT permit B01/2026/1 Tarikh Tamat 11/11/2026; Domain Expansion.
-system-change step 4 (release-mlk-plp-ask state check) — nod given 2026-11-13: "Yes, build it"
+system-change done (release-mlk-plp-ask state check) 2026-11-13: GitHub main = main folder 9d3707e0
 
 STEP-3: release-mlk-plp-ask reads the state first
 session: a0909b1a-576d-463c-b44c-625d579441fb
-his words: "I saw you summon mlk's /mlk-release-... but still managed to do it correctly, I am worried this will be an issue in the future, can you audit and check." (order)
+his words: "Yes, build it" (order)
 fix or report: fix
 who pays: every prompt: one extra read of system/states.json only when the release words already matched
 goal without the part: a Perak or Selangor release message would still be steered to the Melaka pipeline and mlk/master
 model: claude-opus-5-5
-shown: domain/release-mlk-plp-ask/diagram.png
+shown: C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\.claude\worktrees\pelupusan-1-75-7-merge-defdf7\domain\release-mlk-plp-ask\diagram.png
 
 CHANGE-CARD (before): release-mlk-plp-ask reads the state first
 What: The release-ask hook checks which state a release message names before it suggests the Melaka release pipeline.
@@ -102,3 +111,81 @@ CHANGE-CARD (after): /handover
 - Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
   change map: change-map-20261113-040810.png
 Where picture = the change map (lib/change-map.js).
+
+STEP-3: sweep board gap (2026-11-13)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "Yes, build it" (order)
+fix or report: fix
+who pays: on-demand: one extra active.txt read per sweep close, no new process
+goal without the part: no new part; two existing steps change
+model: claude-opus-5-5
+cause step: .claude/skills/sweep/SKILL.md Step 7.2 + domain/sweep/audit.js run() · change: 12 lines
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\board-gap-plan.png
+
+
+## Session Recap (2026-11-13, ADHOC-PRBB-2026-25 Ganti Hari + etanah-teach Feature)
+
+- ADHOC-PRBB-2026-25 saved (A107, hold, route CR): PROD PRBB/2026/25 Ganti Hari 4 Hari from 04/12 ends 07/12 per the #285532 rule; user wants Sat/Sun skipped; BA's 08/12 matches only the pre-#285532 count.
+- system-change step 4: building Feature etanah-teach (layered lessons).
+
+STEP-3: etanah-teach
+session: 8c965136-1d47-4e10-8679-0809e99a7cdc
+cause step: .claude/skills/etanah-teach/SKILL.md (new procedure, no existing step teaches etanah) · change: 0 lines in existing parts
+new parts: 2 · replaces: none: miya asked for a new Feature, "please create a new Feature for our system"
+his words: "please create a new Feature for our system to explain as in someone that doesn't understand anything about etanah system" (order)
+fix or report: fix
+who pays: on-demand: one node call per lesson audit, nothing at boot or per prompt
+goal without the part: none; no existing part explains etanah business from zero in layers (brief = ticket start, kowalski = code architecture, explain-diagram = drawing only)
+model: claude-opus-5-5 (highest = claude-fable-5-2; on-demand part, not highest-order, so no Fable block needed per change route step 3)
+shown: C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/.claude/worktrees/mlk-template-surat-ulangan-0122a3/domain/etanah-teach/diagram.png
+appraise: A = etanah-knowledge already holds most business facts (verified: glossary, SPOC-COUNTER §4, BPMN, requirement index) · S = scope is explain only, never edits code or data · C = missing piece was a saved per-urusan lesson so the next ask is cheap; added as learn/<URUSAN>.md
+nod: "Please proceed." (/goal, 2026-11-13)
+
+CHANGE-CARD (before): etanah-teach
+What: A new Feature, etanah-teach, explains any etanah urusan, tugasan, rule or ticket issue to someone who knows nothing, from the overview down to the layer the question needs.
+Why: On 2026-11-13 miya asked to learn etanah from zero, layer by layer, with the business logic taken from etanah-knowledge and the requirements.
+How: The flow picture domain/etanah-teach/diagram.png shows the question, the stop layer, the layers filled top down from knowledge files, the self-audit, and the reply.
+When: It runs on ask, when miya says teach me, explain to me or I want to understand, and costs one node call per lesson audit.
+Where: The Feature lives in domain/etanah-teach/ with its skill in .claude/skills/etanah-teach/ and each saved lesson in etanah-knowledge/<state>/learn/.
+  change map: C:/Users/Ridhwan/AppData/Local/Temp/claude/6068f4a69bb11f75/8c965136-1d47-4e10-8679-0809e99a7cdc/scratchpad/changemap/change-map-20261113-071327.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): etanah-teach
+What: The Feature etanah-teach now explains an etanah urusan, tugasan, rule or ticket issue from zero, layer by layer from L0 eTanah down to the layer the question needs, and saves each lesson per urusan.
+Why: On 2026-11-13 miya asked to learn etanah from zero in layers, with the business logic taken from etanah-knowledge and the requirements.
+How: The flow picture domain/etanah-teach/diagram.png shows the question, the stop layer, the layers filled top down from knowledge files, the teach.js self-audit, and the reply.
+When: It runs on ask through the etanah-teach skill, and costs one node call per lesson audit, nothing at boot or per prompt.
+Where: The Feature is in domain/etanah-teach/ with its skill in .claude/skills/etanah-teach/, and the first lesson is etanah-knowledge/melaka/learn/PRBB.md.
+  change map: C:/Users/Ridhwan/AppData/Local/Temp/claude/6068f4a69bb11f75/8c965136-1d47-4e10-8679-0809e99a7cdc/scratchpad/changemap-after/change-map-20261113-072734.png
+Where picture = the change map (lib/change-map.js).
+GitHub main: 85c956d0 · main folder: 9badf5e9
+
+STEP-3: redmine-phase1-prefill Step 3 fill method (2026-11-13, 289233/289306)
+session: fa7d8874-98b2-4eb4-b7e8-65934894e923
+his words: "Yes, add it" (order)
+his earlier words: "Why are you still asking to set the status as resolved? Why have you not removed this disease of you keeping on asking something that was already working"
+fix or report: fix
+who pays: on-demand skill text, read once per Redmine prefill, no process
+goal without the part: the skill already says form_input for each field, but nothing says why a script fill makes the gate ask him
+model: claude-opus-5-5 (slip fix, not held for a model switch)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 3 · change: 1 line
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\prefill-fill-flow.png
+
+CHANGE-CARD (before): redmine-phase1-prefill Step 3 fill method
+- What: one line in the prefill skill Step 3 says Assignee and Status are filled only with form_input and never by a page script.
+- Why: on 2026-11-13 a script fill of 289233 and 289306 hid the status from the Redmine gate, so his standing Resolved rule never ran and I asked him.
+- How: the step 2 flow picture prefill-fill-flow.png shows the fill step feeding the gate that runs his rule.
+- When: the line is read each time the prefill skill fills a Redmine form.
+- Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): redmine-phase1-prefill Step 3 fill method
+- What: Step 3 of the prefill skill now says Assignee and Status are filled only with form_input, Assignee first, never by a page script.
+- Why: on 2026-11-13 a script fill of 289233 and 289306 hid the status from the Redmine gate, so his standing Resolved rule never ran and I asked him.
+- How: the step 2 flow picture prefill-fill-flow.png shows the fill step feeding the gate that runs his rule.
+- When: the line is read each time the prefill skill fills a Redmine form.
+- Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
+Where picture = the change map (lib/change-map.js).
+system-change landed: GitHub main d6fcf522 · main folder 0a1cb429
