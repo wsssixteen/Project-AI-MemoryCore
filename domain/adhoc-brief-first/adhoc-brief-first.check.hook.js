@@ -31,7 +31,9 @@ const CMD_RE = [
   /(?:New-Item|mkdir)[^|;\n]*\d+\. AH - /i,
 ];
 const BYPASS_RE = /\[skip-brief-first:\s*[^\]\s][^\]]*\]/i;
-const SAVE_AGENT_RE = /ADHOC-[A-Z0-9]+-\d{4}-\d+[\s\S]*(?:save-set|adhoc-save-audit|active-cli|ADHOC-REGISTER)|(?:save-set|adhoc-save-audit|active-cli|ADHOC-REGISTER)[\s\S]*ADHOC-[A-Z0-9]+-\d{4}-\d+/i;
+// A save agent writes the save-set and runs the audit. Naming active-cli or ADHOC-REGISTER only as a source to read
+// is not a save (2026-11-12: a read-only audit agent was held as a save and drew 3 brief re-prompts).
+const SAVE_AGENT_RE = /ADHOC-[A-Z0-9]+-\d{4}-\d+[\s\S]*(?:save-set|adhoc-save-audit)|(?:save-set|adhoc-save-audit)[\s\S]*ADHOC-[A-Z0-9]+-\d{4}-\d+/i;
 
 function isSaveAgent(tool, input) {
   return tool === 'Agent' && input && typeof input === 'object' && SAVE_AGENT_RE.test(String(input.prompt || ''));
@@ -126,88 +128,74 @@ function stopCheck(data) {
     first = agent - 1;
   }
   const said = ev.filter(e => e.kind === 'text').map(e => e.text).join('\n');
+  // Every missing part goes into ONE block (2026-11-12: one part per block made 3 re-prompts in one turn).
+  const missing = [];
   if (!hasBaReply(said)) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the brief for ' + id + ' has no reply to the BA.',
-        '   Every adhoc brief carries "## Reply to BA" with two versions, Short then Full,',
-        '   drafted with Pena (profile whatsapp-dev + module plain), placed just above Next steps (miya 2026-10-22).',
-        '   Nothing to tell the BA this round? One line instead: BA reply: none (<reason>).',
-        '   ⚡ DELTA ONLY: send just the Reply to BA section, then start the save agent.',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the brief for ' + id + ' has no reply to the BA.',
+      '   Every adhoc brief carries "## Reply to BA" with two versions, Short then Full,',
+      '   drafted with Pena (profile whatsapp-dev + module plain), placed just above Next steps (miya 2026-10-22).',
+      '   Nothing to tell the BA this round? One line instead: BA reply: none (<reason>).',
+    ]);
   }
   // The finding is also drawn as ONE picture (explain-diagram skill) and sent, so the BA gets it with the reply
   // (miya 2026-10-28, ADHOC-MCL-2026-1). A round with nothing to draw says so: "Diagram: none (<reason>)".
   const sentPicture = ev.some(e => e.kind === 'tool' && e.name === 'SendUserFile' && /\.(?:png|jpe?g|svg)\b/i.test(e.input));
   if (!sentPicture && !DIAGRAM_NONE_RE.test(said)) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the brief for ' + id + ' has no picture of the finding.',
-        '   Draw the cause as ONE picture with the explain-diagram skill (render: node lib/diagram-render.js),',
-        '   look at the PNG, then send it with SendUserFile, placed with the Reply to BA (miya 2026-10-28).',
-        '   Nothing to draw this round? One line instead: Diagram: none (<reason>).',
-        '   ⚡ DELTA ONLY: send just the picture.',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the brief for ' + id + ' has no picture of the finding.',
+      '   Draw the cause as ONE picture with the explain-diagram skill (render: node lib/diagram-render.js),',
+      '   look at the PNG, then send it with SendUserFile, placed with the Reply to BA (miya 2026-10-28).',
+      '   Nothing to draw this round? One line instead: Diagram: none (<reason>).',
+    ]);
   }
   // Fix ladder rung 2: a data patch in the brief carries the code's own read run on the after-state
   // (ADHOC-MLMS-2026-1: two area rows with different units would have made the fee ~RM0.04).
   if (/\b(?:UPDATE\s+[\w.]+\s+SET|DELETE\s+FROM|INSERT\s+INTO)\b/i.test(said) && !/^[ \t>*`|-]*After-state:/im.test(said)) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the brief for ' + id + ' offers a data patch with no After-state line.',
-        '   Run the code\'s own read on the rows as they will be AFTER the patch and write one line:',
-        '   After-state: <code read, file:line> on <rows after patch> → <what the screen/fee/flow gets> · checked: <SELECT|code trace>',
-        '   ⚡ DELTA ONLY: send just the After-state line.',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the brief for ' + id + ' offers a data patch with no After-state line.',
+      '   Run the code\'s own read on the rows as they will be AFTER the patch and write one line:',
+      '   After-state: <code read, file:line> on <rows after patch> → <what the screen/fee/flow gets> · checked: <SELECT|code trace>',
+    ]);
   }
   if (!BA_NONE_RE.test(said) && ACTION_RE.test(baSection(said)) && !USER_STEP_RE.test(said)) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the reply to the BA for ' + id + ' tells the user to act on a screen, with no User-step trace.',
-        '   For each field or button named: the xhtml disabled=/rendered= on it, the flag it reads, that flag\'s value',
-        '   for THIS record, the analog\'s value, and how it was tested. One line each:',
-        '   User-step: <field/button> · gate <xhtml:line> <expr> · flag <col>=<this> (analog <that>) · ENABLED|DISABLED · tested: <code trace|DB|photo|not tested>',
-        '   A DISABLED step is not sent to the BA (miya 2026-10-22, ADHOC-MLMS-2026-1).',
-        '   ⚡ DELTA ONLY: send just the User-step lines (and a corrected Reply to BA if a step is DISABLED).',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the reply to the BA for ' + id + ' tells the user to act on a screen, with no User-step trace.',
+      '   For each field or button named: the xhtml disabled=/rendered= on it, the flag it reads, that flag\'s value',
+      '   for THIS record, the analog\'s value, and how it was tested. One line each:',
+      '   User-step: <field/button> · gate <xhtml:line> <expr> · flag <col>=<this> (analog <that>) · ENABLED|DISABLED · tested: <code trace|DB|photo|not tested>',
+      '   A DISABLED step is not sent to the BA (miya 2026-10-22, ADHOC-MLMS-2026-1); send a corrected Reply to BA.',
+    ]);
   }
   // The brief ends with ONE route line: what the BA/TSO does next for this finding (miya 2026-10-29, ADHOC-MCL-2026-2).
   // Names and pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route".
   if (!ROUTE_RE.test(said)) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the brief for ' + id + ' has no route line.',
-        '   One line: Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>',
-        '   (PATCH or ALTER may add "+ CODE-FIX" when the code keeps making bad records; show the sweep count).',
-        '   No finding yet this round? Adhoc route: none (<reason>). The Reply to BA ends with the matching ask.',
-        '   Pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route" (miya 2026-10-29).',
-        '   ⚡ DELTA ONLY: send just the route line.',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the brief for ' + id + ' has no route line.',
+      '   One line: Adhoc route: <ANSWER | USER-STEP | PATCH | ALTER | CODE-FIX | OWNED-ELSEWHERE | CR> — <evidence>',
+      '   (PATCH or ALTER may add "+ CODE-FIX" when the code keeps making bad records; show the sweep count).',
+      '   No finding yet this round? Adhoc route: none (<reason>). The Reply to BA ends with the matching ask.',
+      '   Pick rules: .claude/skills/adhoc-save/SKILL.md section "Adhoc route" (miya 2026-10-29).',
+    ]);
   }
   // A code verdict needs the requirement read first (miya 2026-11-11, ADHOC-MLPS-2026-5: "code issue" told to the BA
   // at 15:43, requirement 218455 rule 2 made it a user step). A REQUIREMENT-MATCH line anywhere this session counts.
   if (CODE_ROUTE_RE.test(said) && !all.some(t => t.events.some(e => e.kind === 'text' && REQ_MATCH_RE.test(e.text)))) {
-    return {
-      fired: true, blocked: true,
-      blockReason: [
-        '⛔ adhoc-brief-first: the brief for ' + id + ' routes to CODE-FIX or CR with no requirement read this session.',
-        '   Load and read the requirement first: node quest/requirement-index.js --load --urusan <code> --tugasan <kod> --words "<value>" --cheap,',
-        '   then ONE --read of its top row, then one line:',
-        '   REQUIREMENT-MATCH: <ADHOC-ID> → #<req> "<subject>" — aligned | extends | contradicts — read: "<quoted rule>"  (or — none found, reads named)',
-        '   A rule that makes it a user step or data entry changes the route (miya 2026-11-11).',
-        '   ⚡ DELTA ONLY: send just the REQUIREMENT-MATCH line and the route line again.',
-      ].join('\n') + '\n',
-    };
+    missing.push([
+      'the brief for ' + id + ' routes to CODE-FIX or CR with no requirement read this session.',
+      '   Load and read the requirement first: node quest/requirement-index.js --load --urusan <code> --tugasan <kod> --words "<value>" --cheap,',
+      '   then ONE --read of its top row, then one line:',
+      '   REQUIREMENT-MATCH: <ADHOC-ID> → #<req> "<subject>" — aligned | extends | contradicts — read: "<quoted rule>"  (or — none found, reads named)',
+      '   A rule that makes it a user step or data entry changes the route (miya 2026-11-11). Send the route line again.',
+    ]);
+  }
+  if (missing.length) {
+    const lines = missing.length === 1
+      ? ['⛔ adhoc-brief-first: ' + missing[0][0], ...missing[0].slice(1)]
+      : ['⛔ adhoc-brief-first: ' + missing.length + ' parts missing from the brief for ' + id + ':',
+         ...missing.flatMap((m, i) => [(i + 1) + '. ' + m[0], ...m.slice(1)])];
+    lines.push('   ⚡ DELTA ONLY: send ' + (missing.length === 1 ? 'just that part' : 'all ' + missing.length + ' parts in ONE reply') + ', then start the save agent.');
+    return { fired: true, blocked: true, blockReason: lines.join('\n') + '\n' };
   }
   const started = ev.slice(first + 1).some(e => e.kind === 'tool' && e.name === 'Agent' && e.input.includes(id));
   if (started) return { fired: true, blocked: false };

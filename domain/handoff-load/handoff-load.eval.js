@@ -13,7 +13,7 @@ function run(stdin, env) {
   return { status: r.status, out: (r.stdout || '') + (r.stderr || '') };
 }
 const P = (prompt) => JSON.stringify({ prompt });
-const loadedBoth = (o) => o.includes('handoff-load') && o.includes('the 4 deliverables') && o.includes('Never restate what the ticket already holds') && o.includes('HANDOFF-LOADED');
+const loadedBoth = (o) => o.includes('handoff-load') && o.includes('NO NOTE TO ANOTHER TEAM IS STAGED') && o.includes('Never restate what the ticket already holds') && o.includes('Run the /handover skill');
 
 // F1: clean input → no block, silent
 let r = run('{}');
@@ -45,9 +45,9 @@ for (const p of [
 r = run('not json at all');
 check('A malformed stdin exits 0 silent', r.status === 0 && !r.out.includes('handoff-load'), 'exit=' + r.status);
 r = run(P('handoff-load: hand-off request detected ("handover"). The procedure below'.replace(/^/, '[') ));
-check('A own output pasted back does not re-fire', r.status === 0 && !r.out.includes('HANDOFF-LOADED'), r.out.slice(0, 120));
+check('A own output pasted back does not re-fire', r.status === 0 && !r.out.includes('Run the /handover skill'), r.out.slice(0, 120));
 r = run(P('handover ' + 'x'.repeat(25000)));
-check('A huge prompt skipped, exit 0', r.status === 0 && !r.out.includes('HANDOFF-LOADED'), 'exit=' + r.status);
+check('A huge prompt skipped, exit 0', r.status === 0 && !r.out.includes('Run the /handover skill'), 'exit=' + r.status);
 r = run(JSON.stringify({ user_message: 'please prepare the handover' }));
 check('A user_message field also handled', r.status === 0 && loadedBoth(r.out), r.out.slice(0, 120));
 const env2 = Object.assign({}, process.env, { CLAUDE_PROJECT_DIR: path.resolve(__dirname, '..', '..') });

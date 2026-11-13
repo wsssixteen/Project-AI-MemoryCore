@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-12/13 (ADHOC-PLBP-2026-3 — "explaining to me as someone that doesn't know what pejabat tanah even do")
+
+- **"Verify it 100% from what you can check" is answered with every reachable source, then one plain sentence.** Two traces plus the live BPMN, and he wanted only "is our patch ok or not".
+- **Once a ticket is done he asks to learn the domain.** Pictures for a layman, then short follow-ups ("only in short sentences or even just an answer"). The answer shrinks as his questions shrink.
+
 ## Relationship reinforcement — 2026-11-11/12 (ADHOC-PRBB-2026-24 — "THE TEST WAS SIMPLY UPLOADING THE FILE")
 
 - **Say the test type before anything else.** An uploaded file is tested by uploading the fixed file on staging; he lost an afternoon because I never said it.

@@ -34,7 +34,7 @@ A failing frame in another module proves **where it broke**, never **who caused 
 | Verdict | When | Our output |
 |---|---|---|
 | **OURS** | any step-2 row is `wrong`, or step 4 shows our derivation differs from a working sibling | fix in etanah-pelupusan / etanah-awam; no message to the other team |
-| **THEIRS** | every step-2 row `correct`, every step-3 name traces to their own constants/config, step 5 shows it on their side | one message: not our issue + the error line ([[feedback_other_team_message_not_our_issue]]); artifact only when miya asks ([[feedback_cross_module_handoff_artifact]]) |
+| **THEIRS** | every step-2 row `correct`, every step-3 name traces to their own constants/config, step 5 shows it on their side | run `/handover` before anything is staged: proof split, fix file, highest-model audit, focused note (tone: [[feedback_other_team_message_not_our_issue]]) |
 | **BOTH** | our input wrong AND their side has its own defect (e.g. an error mask) | fix ours; their defect → LATENT-BUGS row or a one-line note, never blocks our fix |
 | **CATER** | theirs, but the module is never-edit (SPOC) and the bug bites our screen | work around from our tugasan/screen ([[feedback_module_edit_boundary]]) |
 
@@ -42,7 +42,7 @@ After the verdict: write any new boundary fact (entry point, derived name, trap)
 
 ## Step 8 — Impact card (2026-11-10 per みや, from Alex the manager: "when it involves different modules, please share like an impact analysis as evidence it might take a long time since last month we've breached our SLA")
 
-When the verdict is THEIRS, BOTH or CATER, or the fix touches more than one module, the Phase 0 hand-back carries one **Impact card** for the ticket, and it goes on the Redmine ticket as evidence on his "post it". Shape (first version; he said the columns will change on Alex's feedback, so change them here, never in a second copy):
+When the verdict is THEIRS, BOTH or CATER, or the fix touches more than one module, the Phase 0 hand-back carries one **Impact card** for the ticket, and it goes in its own note for the manager on his "post it", never inside the note to the other team's developer (289337, 2026-11-13: a section carries only what it discusses). Shape (first version; he said the columns will change on Alex's feedback, so change them here, never in a second copy):
 
 | Module touched | Owner | What changes there | Who tests it | Days (ours / waiting on them) |
 |---|---|---|---|---|
