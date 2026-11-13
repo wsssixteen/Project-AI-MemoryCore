@@ -34,15 +34,16 @@ runHook({ name: 'handoff-load', event: 'UserPromptSubmit' }, (input) => {
   const m = prompt.match(TRIGGER);
   if (!m) return { fired: false };
 
-  const handoff = readMemory('feedback_cross_module_handoff_artifact.md');
+  // 2026-11-13 (289337): the procedure's one home is the /handover skill; this hook loads it, never a second copy.
+  let handoff = null;
+  for (const r of [ROOT, MAIN_ROOT]) { try { handoff = fs.readFileSync(path.join(r, '.claude', 'skills', 'handover', 'SKILL.md'), 'utf8'); break; } catch (_) {} }
   const style = readMemory('feedback_ticket_writing_style.md');
   const loaded = [];
-  let out = 'handoff-load: hand-off request detected ("' + m[0] + '"). The procedure below is now LOADED. Follow it exactly.\n'
-    + '   First line of the reply: HANDOFF-LOADED: cross-module-handoff ✓ · ticket-writing-style ✓\n';
+  let out = 'handoff-load: hand-off request detected ("' + m[0] + '"). Run the /handover skill below before anything is staged.\n';
 
   if (handoff) {
-    loaded.push('cross-module-handoff');
-    out += '\n═══ feedback_cross_module_handoff_artifact.md (full) ═══\n' + body(handoff) + '\n';
+    loaded.push('handover-skill');
+    out += '\n═══ .claude/skills/handover/SKILL.md ═══\n' + body(handoff) + '\n';
   }
   if (style) {
     loaded.push('ticket-writing-style');

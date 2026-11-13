@@ -55,7 +55,13 @@ const CLASSES = {
   'flag-left':          { sev: 'run', fix: 'node domain/sweep/audit.js flag off', refine: 'Step 7 runs flag off before the audit', accuracy: 'none' },
   'flag-never-on':      { sev: 'warn', fix: 'none for this run', refine: 'Step 0 runs flag on (main folder) before the first launch', accuracy: 'none; costs extra Stop-hook turns' },
   'fable-familiar':     { sev: 'run', fix: 're-run the cell on sonnet or opus', refine: 'name the model in every Agent call', accuracy: 'none' },
+  'no-board-entry':     { sev: 'run', fix: 'node quest/active-cli.js start QA-<n> status=hold phase="<sweep verdict>" qa_doc=projects/coding-projects/active/QA-<n>/QA-<n>.md', refine: 'Step 7.2 creates the block when active-cli read finds none', accuracy: 'none; the board shows the sweep instead of "Not drafted"' },
 };
+const ACTIVE = path.join(MAIN, 'quest', 'active.txt');
+// A swept ticket with no active.txt block shows "Not drafted" on the board (quest/redmine-board.js).
+function hasBoardEntry(ticket) {
+  try { return new RegExp('^qa=QA-' + ticket + '\\s*$', 'm').test(fs.readFileSync(ACTIVE, 'utf8')); } catch { return false; }
+}
 
 function projectTranscriptDir() {
   const slug = process.cwd().replace(/[^A-Za-z0-9]/g, '-');
@@ -346,6 +352,7 @@ async function run() {
     for (const f of expectedFiles(t, wavesRun)) {
       if (!fs.existsSync(path.join(QUESTS, `QA-${t}`, f))) runDefects.push({ class: 'not-banked', detail: `QA-${t}/${f}` });
     }
+    if (!hasBoardEntry(t)) runDefects.push({ class: 'no-board-entry', detail: `QA-${t} has no block in quest/active.txt` });
   }
   const all = fams.flatMap(f => f.defects.map(d => ({ ...d, familiar: f.desc }))).concat(runDefects);
   const classes = [...new Set(all.map(d => d.class))];
