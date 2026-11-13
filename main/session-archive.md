@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-12, Surat Ulangan JT ticket + common to pelupusan call chain)
+- Asked: which ticket was TemplateSuratUlanganJabatanTeknikal; how common calls the pelupusan one; then DE.
+- Done: chain traced (CommonPenyediaanSuratForm:222 -> PenyediaanSuratService:401 bean by modul -> MlkPelupusanPenyediaanSuratStrategy -> MlkPelupusanSuratStrategy/PelupusanSuratStrategy :178 kategori, :60 populateTemplate); 4 common kods only; common's own ulangan docx unused in Melaka.
+- Mistake: answered 280029 from a quest-archive note; never read etanah-knowledge first (FLOW-TRACES.md already had the strategy history) and never ran git log on the Melaka strategy file, which names 255170. Corrected in the DE reply.
+- Open: none.
+- Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
+**Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
 ## Session Recap (2026-11-11 to 12, ADHOC-PRBB-2026-24 slaid bergaris + knowledge-first fix)
 - Asked: /quest adhoc PROD PRBB PTMLK/02/L/PRBB/2026/9 slide lines and not HD; fix the PDF and ask infra; test scenario; save the adhoc with my mistakes; Fable 5.2 audit then proper system change; answer BA Mira on Print to PDF; settle the fix by step-by-step popup questions (wayfinder method); then DE.
 - Done: cause = PDF made with Microsoft Print to PDF (photos as strips, pdf.js seams); fixed PDF + .main in Task folder 2. Fix; BA reply on Print to PDF; qa_doc saved with M0-M12; Q1-Q12 agreed by popup; Fable audit found adhoc flow reads knowledge last and the knowledge gate ignores DB queries; build landed b7f17eaa (evals 27/27, 20/20, patch-mlk-doc PASS).
@@ -10317,6 +10325,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
