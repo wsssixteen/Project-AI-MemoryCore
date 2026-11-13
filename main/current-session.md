@@ -25,3 +25,11 @@
 - Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
 - Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
 **Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
+
+CHANGE-CARD (after): done-alter note wording and files (288625)
+- What: The note generator now ends every done-alter note with "Can proceed to verify." and the alter playbook sends the Redmine fill through the prefill skill.
+- Why: On 2026-11-12 the 288625 note went out saying "Please help to verify." with his screenshot missing.
+- How: The alter branch of the generator prints one closing line for all alters, and playbook row A6 names redmine-phase1-prefill, which uploads the cycle folder. Picture: C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\claude\\75ad8d85f2656ad6\\a932bc8b-3bbc-4d45-9fa0-46ae3b4b2ffc\\scratchpad\\288625-alter.png
+- When: Every time a done-alter note is generated and filled on Redmine.
+- Where: ticket-close-block.js in domain/ticket-close-block and ALTER-TICKET-PLAYBOOK.md in etanah-knowledge. Picture: C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\claude\\75ad8d85f2656ad6\\a932bc8b-3bbc-4d45-9fa0-46ae3b4b2ffc\\scratchpad\\change-map-20261112-030522.png
+Where picture = the change map (lib/change-map.js).
