@@ -448,3 +448,5 @@ Audit 2026-10-29 of the plan's 81 items: 47 built, 4 dropped, 30 open. The open 
 - [ ] 2026-11-11 ON HOLD (miya): ADHOC-PRBB-2026-24 slide lines: BA ticket ask for the viewer code fix + Fable 5.2 adhoc-steps audit result; review at session end.
 
 - [ ] (2026-11-11, parked by miya for end of session) Build: release-prep.js push prints the filled Baseline card (SKILL.md card format), so the card is never retyped. Picture: scratchpad release-card-before-after.png. Open: how the script gets Domain + DB versions. Runs via /system-change.
+
+- [ ] 2026-11-13 AUDIT (after 289329 pass-back, per miya): why the dynamic-decimals format (D) was not recommended first for 289329; A (separator off) was marked recommended with an unverified 1000.0000 claim. Find the step that ranks fix options and fix it there.

@@ -333,3 +333,7 @@
 {"ts":"2026-11-13T06:52:35.585Z","qa":"QA-288625","kind":"wrong-fix","n":1,"verdict":"none: script-check rule 4 now assesses every wrong row (unlink before delete), memory patch-script-rules; no further change"}
 {"ts":"2026-11-13T06:52:35.755Z","qa":"QA-288625","kind":"wrong-fix","n":2,"verdict":"knowledge:ALTER-TICKET-PLAYBOOK.md §8 alter owed after a code fix (written 2026-11-13)"}
 {"ts":"2026-11-13T06:52:55.968Z","qa":"QA-288625","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"9ba63354a7","branch":null}
+{"ts":"2026-11-13T08:51:31.666Z","qa":"QA-289233","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-13T08:51:34.252Z","qa":"QA-289306","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-13T08:52:11.323Z","qa":"QA-289233","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-13T08:52:13.408Z","qa":"QA-289306","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
