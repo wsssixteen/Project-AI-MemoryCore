@@ -16,6 +16,14 @@ runHook({ name: 'release-mlk-plp-ask', event: 'UserPromptSubmit' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
   const prompt = data.prompt || '';
   if (!TRIGGER.test(prompt) || NEGATIVE.test(prompt)) return { fired: false };
+  // 2026-11-13: the pipeline is Melaka-only (states.json state_only_tools); a release message naming another state gets that state's main branch.
+  const states = require(path.join(ROOT, 'lib', 'states.js'));
+  const named = (s) => (s.aliases || []).some(a => new RegExp('\\b' + a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', a.length <= 3 ? '' : 'i').test(prompt));
+  const others = Object.values(states.all()).filter(s => s.key !== 'melaka' && named(s));
+  if (others.length && !named(states.get('melaka'))) {
+    return { fired: true, blocked: false, contextOut: others.map(s =>
+      `⚙️  release-mlk-plp-ask: this release is ${s.key} — the Melaka release pipeline (release-mlk-plp, mlk/master) does NOT apply. ${s.key} main branch = ${states.trunk(s.key, 'etanah-pelupusan')}.`).join('\n') + '\n' };
+  }
   return {
     fired: true, blocked: false,
     contextOut: [
