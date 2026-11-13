@@ -322,3 +322,14 @@
 {"ts":"2026-11-11T13:37:33.519Z","qa":"QA-288962","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-11-11T13:37:35.361Z","qa":"QA-288963","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-11-11T13:37:36.933Z","qa":"QA-288974","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-12T02:07:44.556Z","qa":"QA-288625","kind":"wrong-fix","n":2,"was":"Handed over the code fix + unlink script as the whole fix; the alter of the ticket's own PROD permohonan (already past PJ) was planned only in the quest doc","why":"After release 1.9.3 PTMLK/02/L/PPTPB/2026/5 was still at PDT Jasin (SPIL 2866525 active, pejabat 3); TSO set Rework 2026-11-12 01:05Z","learned":"A fix that fires at a step the reporter's permohonan already passed needs a named after-release PROD action (alter or patch) in the BA note; Issue Checklist rows may not stay open at hand-over"}
+{"ts":"2026-11-12T03:15:48.814Z","qa":"QA-288963","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-12T09:20:38.863Z","qa":"ADHOC-PLBP-2026-2","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-12T09:20:45.428Z","qa":"ADHOC-PLBP-2026-2","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc data patch, no reusable knowledge beyond ADHOC-PLBP-2026-1"}
+{"ts":"2026-11-12T14:05:40.989Z","qa":"ADHOC-PLP-2026-7","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-12T14:05:50.641Z","qa":"ADHOC-PLP-2026-7","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-11-13T06:22:24.302Z","qa":"ADHOC-PLBP-2026-3","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-13T06:22:31.911Z","qa":"ADHOC-PLBP-2026-3","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc closing round; findings recorded in qa_doc Closing round + register A105; no ticket, no separate knowledge file"}
+{"ts":"2026-11-13T06:52:35.585Z","qa":"QA-288625","kind":"wrong-fix","n":1,"verdict":"none: script-check rule 4 now assesses every wrong row (unlink before delete), memory patch-script-rules; no further change"}
+{"ts":"2026-11-13T06:52:35.755Z","qa":"QA-288625","kind":"wrong-fix","n":2,"verdict":"knowledge:ALTER-TICKET-PLAYBOOK.md §8 alter owed after a code fix (written 2026-11-13)"}
+{"ts":"2026-11-13T06:52:55.968Z","qa":"QA-288625","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"9ba63354a7","branch":null}
