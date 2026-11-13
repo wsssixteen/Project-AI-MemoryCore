@@ -56,3 +56,12 @@ CHANGE-CARD (before): /handover
 Where picture = the change map (lib/change-map.js).
 
 - 2026-11-13 289337 passed to Common (Amirul) with fix file + screenshot; /handover skill built (system-change): procedure moved from quest §Hand-over to ANOTHER TEAM + handoff memory, Stop rider in ownership-input-check (eval 37/37), handoff-load loads the skill (17/17), Pena separate rule (57/57), sweep 'Never Fable' scoped to waves per miya's popup answer.
+
+CHANGE-CARD (after): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team runs, and a Stop check that needs its Handover line when a note or file is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the flow picture handover-plan.png shows the hand-over check between diagnosis and staging, now the skill's own diagram.png.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
+  change map: change-map-20261113-040810.png
+Where picture = the change map (lib/change-map.js).
