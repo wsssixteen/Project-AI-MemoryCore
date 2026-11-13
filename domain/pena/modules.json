@@ -80,10 +80,12 @@
     "means": "Each kind of content has its own section: the explanation, the mapping tables, the scripts. Never a script inside the mapping, never a note inside the script.",
     "rules": [
       "Order: opener, short explanation, tables, then Scripts as its own section.",
-      "A script block never sits between two mapping tables."
+      "A script block never sits between two mapping tables.",
+      "A section holds only what it discusses. Content meant for another reader (an SLA impact card for the manager) never sits in it. (miya 2026-11-13, 289337: \"Each section shouldn't have more than the info it is discussing. This should be a rule as well in writing redmine messages.\")"
     ],
     "banned": [
-      "a SQL block before the last mapping table"
+      "a SQL block before the last mapping table",
+      "a section carrying content for a different reader than the note is written to"
     ],
     "check": "separate"
   },
