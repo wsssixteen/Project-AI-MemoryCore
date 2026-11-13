@@ -23,3 +23,28 @@
 - Open: none.
 - Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
 **Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
+STEP-3: /handover (2026-11-13, 289337)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "built it" (order)
+his earlier words: "I need you to universally remember & invoke a /handover skill to make it more deterministic"
+fix or report: fix
+who pays: on-demand skill text (a few hand-overs a week) + per-turn rider inside the existing stop-claim-integrity node process, one regex, no new process
+goal without the part: fixing the three contradicting lines gives a fix file, but nothing forces the proof split or the pre-staging audit, and he named the skill
+model: claude-fable-5-2
+fable verdict: go-with-changes (skill v1 = other team only, rider only when a note or file is staged, handoff-load repointed, none: data/config/env only)
+cause step: .claude/skills/cross-module-check/SKILL.md verdict row THEIRS · change: 3 lines
+new parts: 1 · replaces: the procedure copy in feedback_cross_module_handoff_artifact.md and handoff-load's injected memory body
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\handover-plan.png
+audit model (popup 2026-11-13, his words): "Fix this rule since it goes against what I requested and had in mind." → the pre-hand-over audit runs on `node lib/models.js highest`; the sweep's "Never Fable" stays for its bulk waves only
+
+CHANGE-CARD (before): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team or module runs before the note is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the step 2 flow picture handover-plan.png shows the hand-over check placed between diagnosis and staging.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover, domain/ownership-input-check, cross-module-check, domain/handoff-load, domain/pena and two memories, as the change map shows.
+  change map: change-map-20261113-034302.png
+Where picture = the change map (lib/change-map.js).
+
+- 2026-11-13 289337 passed to Common (Amirul) with fix file + screenshot; /handover skill built (system-change): procedure moved from quest §Hand-over to ANOTHER TEAM + handoff memory, Stop rider in ownership-input-check (eval 37/37), handoff-load loads the skill (17/17), Pena separate rule (57/57), sweep 'Never Fable' scoped to waves per miya's popup answer.

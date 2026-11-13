@@ -10,7 +10,9 @@ metadata:
 
 **🚨 EVIDENCE/PROOF QUERIES GO IN CHAT, NEVER THE TASK FOLDER (added 2026-08-21, #276436).** A proof SELECT is shown in chat for miya to run and screenshot. It is NOT a deliverable. Do NOT save it into `2. Fix/` — that folder holds only the real fix (the `.java`/`.docx`/patch). A ticket is not a data patch just because it has a query. The Task folder is for what gets attached to the ticket as the fix; a screenshot of the query result is the evidence, the query itself lives in chat. Slip: `evidence-query-in-task-folder`.
 
-**🚫🚫 MARKDOWN (.md) HANDOVER IS FOREVER BANNED (2026-08-27, per みや, deterministic).** NEVER write a `.md` write-up / `HANDOVER-*.md` for a cross-module fix — みや hates it. The hand-off is a BARE source file only (see shape below). ⚠️ AUDIT 2026-10-02: `domain/cross-module-handoff-gate/` does NOT exist (no folder, no git history, not registered). This was never enforced; a `244600 - common handoff WordEditorService.txt` with prose was written into the Task folder unblocked. Treat this rule as prose-only until a gate is actually built.
+**The procedure lives in the `/handover` skill (since 2026-11-13, 289337); this memory keeps the FILE SHAPE only.** The `Handover:` line of that skill is checked at Stop by `domain/ownership-input-check`.
+
+**🚫🚫 MARKDOWN (.md) HANDOVER IS FOREVER BANNED (2026-08-27, per みや).** NEVER write a `.md` write-up / `HANDOVER-*.md` for a cross-module fix — みや hates it. The hand-off is a BARE source file only (see shape below). No gate blocks a prose hand-off file yet (`domain/cross-module-handoff-gate/` never existed); the 2026-11-13 Stop check forces the fix file to exist, not its shape.
 
 **When a fix belongs to a module that is NOT ours to commit (etanah-common is the usual one; also any non-pelupusan/non-awam module) OR みや signals a hand-off — produce a HANDOFF ARTIFACT, not just a chat diff.**
 
