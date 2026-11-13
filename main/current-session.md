@@ -23,3 +23,10 @@
 - Open: none.
 - Assessment: A1 knowledge-first hook named WORD-TEMPLATE-RENDERING.md but a lookup question still went grep-first. A2 ⏭ no quest. A3 a "which ticket" answer needs git log on the deciding file, not a ledger note. A4 FLOW-TRACES now holds the Ulangan JT chain with tickets. A5 ⏭ no sweep.
 **Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
+
+STEP-3: redmine-phase1-prefill Step 5 attachments (281324)
+session: d2a90df8-1bc0-4e84-b5e5-ede6d65a2283
+his words: "why did you not upload all the things needed just now when you prepare the redmine stage?" (order)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 5 · change: 2 lines
+new parts: 0
+fix or report: fix
