@@ -1,7 +1,8 @@
 {
   "title": "Release ask reads the state first",
-  "subtitle": "planned: a non-Melaka release message no longer points at the Melaka pipeline",
+  "subtitle": "landed: a non-Melaka release message no longer points at the Melaka pipeline",
   "parts": [
     { "kind": "feature", "tag": "changed", "name": "release-mlk-plp-ask", "dir": "domain/release-mlk-plp-ask/", "what": "names the state; another state gets its own main branch, not the Melaka pipeline" }
   ]
 }
+
