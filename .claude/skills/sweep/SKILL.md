@@ -104,7 +104,7 @@ Clause 5 exists because on 2026-07-24 three DB verifies stranded — familiars h
 ## Step 7 — close-out
 
 1. `node domain/sweep/audit.js flag off`.
-2. Update every swept quest's `phase=` in active.txt (`node quest/active-cli.js update QA-<n> phase="..."`) so the next session's boot board reflects the sweep — the qa_doc alone is not the board.
+2. Update every swept quest's `phase=` in active.txt (`node quest/active-cli.js update QA-<n> phase="..."`) so the next session's boot board reflects the sweep — the qa_doc alone is not the board. A ticket with no block (`active-cli read` says not found) gets one first: `node quest/active-cli.js start QA-<n> status=hold phase="..." qa_doc=projects/coding-projects/active/QA-<n>/QA-<n>.md` (block only: no Task folder, no Redmine write; `status=hold` never starts the Redmine claim). Step 7.3 flags a swept ticket still without a block as `no-board-entry` (2026-11-13: all 4 tickets of the 08:30 run stayed "Not drafted").
 3. Write the run ledger row with the audit Tool: `node domain/sweep/audit.js run --tickets <t,t> --since <Step 0 ISO> --scratch <scratchpad>\sweep --verified <n> --w4-changed <tickets whose fix W4 changed> --controller-caught <tickets where the controller caught a familiar error> --run-id <id> --write`. It reads every familiar transcript and the main hook log, writes ONE row to `domain/sweep/log.jsonl` (tokens · minutes · models · accuracy · suppressions · defects · refinements) and reads the row back (self-audit). Exit 1 = a run defect is open.
 
 ## Step 8 — audit and refine (every run, 2026-10-29 per miya)

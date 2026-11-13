@@ -65,3 +65,15 @@ CHANGE-CARD (after): /handover
 - Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
   change map: change-map-20261113-040810.png
 Where picture = the change map (lib/change-map.js).
+
+STEP-3: sweep board gap (2026-11-13)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "Yes, build it" (order)
+fix or report: fix
+who pays: on-demand: one extra active.txt read per sweep close, no new process
+goal without the part: no new part; two existing steps change
+model: claude-opus-5-5
+cause step: .claude/skills/sweep/SKILL.md Step 7.2 + domain/sweep/audit.js run() · change: 12 lines
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\board-gap-plan.png
+
