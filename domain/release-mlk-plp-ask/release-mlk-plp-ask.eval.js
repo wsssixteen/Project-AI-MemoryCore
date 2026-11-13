@@ -35,6 +35,30 @@ check('F5 release-notes chatter silent', r.status === 0 && r.stdout.trim() === '
 r = run('let us start the Baseline for 1.0.10');
 check('F6 "baseline" fires', /release-mlk-plp/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 60));
 
+// F7 REPLAY 2026-11-12: Perak BAQA release message → no Melaka pipeline, Perak main branch = master
+r = run('Planned Release PERAK : 12/11/2026\nTask : Deploy Pelupusan 1.75.7\nBaseline Pelupusan');
+check('F7 Perak release: no Melaka pipeline, main branch master', /perak/.test(r.stdout) && /does NOT apply/.test(r.stdout) && /= master\b/.test(r.stdout) && !/Invoke the `release-mlk-plp` skill/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
+// F8: Selangor release → sgr/master
+r = run('prepare the Selangor release branch for 1.75.0');
+check('F8 Selangor release: main branch sgr/master', /selangor/.test(r.stdout) && /sgr\/master/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
+// F9: Melaka named → unchanged Melaka advisory
+r = run('Planned Release Melaka: deploy pelupusan 1.9.4');
+check('F9 Melaka release keeps the pipeline advisory', /Invoke the `release-mlk-plp` skill/.test(r.stdout) && !/does NOT apply/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
+// F10: lowercase Perak branch code → Perak line
+r = run('create the release branch from prk/esokongan/288276');
+check('F10 lowercase prk branch reads as Perak', /perak/.test(r.stdout) && /= master\b/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
+// F11: Melaka and Perak both named → Melaka advisory stays (no wrong redirect)
+r = run('Planned Release Melaka, after the Perak one: deploy pelupusan 1.9.4');
+check('F11 both states named keeps the Melaka advisory', /Invoke the `release-mlk-plp` skill/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
+// F12: lowercase "kl" inside a word or sentence does not read as WP
+r = run('prepare the release branch, check the klinik urusan');
+check('F12 lowercase kl is not WP', !/this release is wp/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 160));
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nrelease-mlk-plp-ask.eval: ' + (results.length - failed) + '/' + results.length + ' green');
