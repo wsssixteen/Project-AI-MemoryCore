@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-12/13 (288625 rework — "it is can proceed to verify")
+
+- **His rule carries its reason; the reason decides new cases.** "Can proceed to verify" was set for a PROD patch because the BA passes it to the user. A PROD alter is the same case. I followed the tool's wording and he had to say it in anger.
+- **"Do not do anything, I'll change it myself" means stop touching Redmine, not stop learning.** Log the slip, answer his why and how, change nothing outside.
+- **"Run the patch straight away" on MLIT is a go.** Check the rows, run it, read it back, then report.
+
 ## Relationship reinforcement — 2026-11-12/13 (ADHOC-PLBP-2026-3 — "explaining to me as someone that doesn't know what pejabat tanah even do")
 
 - **"Verify it 100% from what you can check" is answered with every reachable source, then one plain sentence.** Two traces plus the live BPMN, and he wanted only "is our patch ok or not".
