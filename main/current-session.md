@@ -122,3 +122,14 @@ CHANGE-CARD (before): redmine-phase1-prefill Step 3 fill method
 - When: the line is read each time the prefill skill fills a Redmine form.
 - Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
 Where picture = the change map (lib/change-map.js).
+STEP-3: sweep board gap (2026-11-13)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "Yes, build it" (order)
+fix or report: fix
+who pays: on-demand: one extra active.txt read per sweep close, no new process
+goal without the part: no new part; two existing steps change
+model: claude-opus-5-5
+cause step: .claude/skills/sweep/SKILL.md Step 7.2 + domain/sweep/audit.js run() · change: 12 lines
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\board-gap-plan.png
+
