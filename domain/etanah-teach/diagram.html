@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>etanah-teach · layered lessons</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520; --font-sans: 'Segoe UI', Arial, sans-serif; --font-mono: Consolas, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Feature · etanah-teach · runs on ask ("teach me", "I want to understand")</p>
+    <h1>One question becomes a lesson: overview first, one layer at a time, down to the depth the question needs</h1>
+    <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">etanah-teach flow and layer ladder</title>
+      <desc id="d">Left: five steps from the question to the lesson reply. Right: the six layers L0 to L5, each with its source files; the lesson stops at the layer the question needs.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#2d3142">
+        <text x="20" y="22" font-weight="600" fill="#4f5d75">THE FLOW</text>
+        <rect x="20" y="34" width="380" height="58" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="34" y="58" font-weight="600">1 The question</text>
+        <text x="34" y="78" font-size="12" fill="#4f5d75">urusan · tugasan · rule · or a ticket issue</text>
+        <line x1="210" y1="92" x2="210" y2="110" stroke="#4f5d75" marker-end="url(#arrow)"/>
+        <rect x="20" y="112" width="380" height="58" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="34" y="136" font-weight="600">2 Pick the stop layer + read the saved lesson</text>
+        <text x="34" y="156" font-size="12" fill="#4f5d75">teach.js sources &lt;URUSAN&gt;: learn/&lt;URUSAN&gt;.md first</text>
+        <line x1="210" y1="170" x2="210" y2="188" stroke="#4f5d75" marker-end="url(#arrow)"/>
+        <rect x="20" y="190" width="380" height="58" rx="6" fill="#fbeee8" stroke="#bf4520" stroke-width="2"/>
+        <text x="34" y="214" font-weight="600">3 Fill each missing layer, top down</text>
+        <text x="34" y="234" font-size="12" fill="#bf4520">knowledge file first · read-only DB or code to verify</text>
+        <line x1="210" y1="248" x2="210" y2="266" stroke="#4f5d75" marker-end="url(#arrow)"/>
+        <rect x="20" y="268" width="380" height="58" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="34" y="292" font-weight="600">4 Save + self-audit</text>
+        <text x="34" y="312" font-size="12" fill="#4f5d75">teach.js audit → TEACH: PASS, else fix and re-run</text>
+        <line x1="210" y1="326" x2="210" y2="344" stroke="#4f5d75" marker-end="url(#arrow)"/>
+        <rect x="20" y="346" width="380" height="58" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="34" y="370" font-weight="600">5 Reply: layers L0 → stop layer</text>
+        <text x="34" y="390" font-size="12" fill="#4f5d75">ends with the next layer he can ask for</text>
+
+        <text x="460" y="22" font-weight="600" fill="#4f5d75">THE LAYER LADDER (each: one plain sentence + one table or picture + source)</text>
+        <rect x="460" y="34" width="520" height="52" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="474" y="56" font-weight="600">L0 eTanah and the module</text>
+        <text x="474" y="74" font-size="12" fill="#4f5d75">MODULE-ARCHITECTURE.md · DOMAIN-GLOSSARY.md</text>
+        <rect x="460" y="94" width="520" height="52" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="474" y="116" font-weight="600">L1 The urusan: who applies, for what, what they get</text>
+        <text x="474" y="134" font-size="12" fill="#4f5d75">DOMAIN-GLOSSARY.md · urusan/&lt;KOD&gt;-TICKETS.md · requirement index</text>
+        <rect x="460" y="154" width="520" height="52" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="474" y="176" font-weight="600">L2 The journey: tugasan in order, who does each</text>
+        <text x="474" y="194" font-size="12" fill="#4f5d75">flowables-bpmn/MLK_PLP_&lt;KOD&gt;.bpmn20.xml · PERANAN-MAP.md · URUSAN-FLOW.md</text>
+        <rect x="460" y="214" width="520" height="52" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="474" y="236" font-weight="600">L3 The tugasan: the screen and what the officer does</text>
+        <text x="474" y="254" font-size="12" fill="#4f5d75">FLOW-TRACES.md · qa_docs · screenshots in the ticket</text>
+        <rect x="460" y="274" width="520" height="52" rx="6" fill="#fbeee8" stroke="#bf4520" stroke-width="2"/>
+        <text x="474" y="296" font-weight="600">L4 The rule or feature: what decides the value</text>
+        <text x="474" y="314" font-size="12" fill="#bf4520">requirement ticket (requirement-index.js --read) · qa_docs · bug fixes</text>
+        <rect x="460" y="334" width="520" height="52" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="474" y="356" font-weight="600">L5 Code and data: where it lives (only when asked)</text>
+        <text x="474" y="374" font-size="12" fill="#4f5d75">DATABASE.md · codemap · read-only SELECT</text>
+        <text x="460" y="420" font-size="12" fill="#4f5d75">The lesson stops at the layer the question needs: "what is PRBB" stops at L1;</text>
+        <text x="460" y="438" font-size="12" fill="#4f5d75">"why 07/12 and not 08/12" goes to L4. Every saved layer is reused next time.</text>
+        <text x="20" y="470" font-size="12" fill="#4f5d75">Saved lesson: projects/coding-projects/active/etanah-knowledge/&lt;state&gt;/learn/&lt;URUSAN&gt;.md · log: domain/etanah-teach/log.jsonl</text>
+      </g>
+    </svg>
+  </div>
+</body>
+</html>
