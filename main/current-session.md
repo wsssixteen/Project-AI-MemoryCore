@@ -6,6 +6,25 @@
 - Open: 289425 waits BA verify, then Phase 2; local-clean Tool and format-B gate/skill change to build (both in todo Q1); main folder has 2 local commits not on GitHub (976d1924 landed by land-on-main) to reconcile.
 - Mistakes: fix applied uncommitted in miya's repo and left there (local-leftover); test scenario format guessed twice (reply-shape); Redmine staging not done right after the test pass, and the Edge Alter page tried before the runner (workflow-skip); MLIT alter half-failed (data-broken).
 
+**Last Activity (Melaka manager sheet adhoc + Pena system change)**: 2026-11-16 15:40 — worktree `sheet-update-process-5e3ba0`. Melaka tab of the manager's Google Sheet written (5 incident rows, 14 strong tickets after a Fable 5.2 audit, elaboration); preview xlsx in Task folder 408. Audit (Fable 5.2 + own): Pena never loaded for report text, correction hook matched 0 of 19 prompts, "we/our" correction never stored. System change: Pena report profile + plain banned check + correction-hook phrasings (evals: pena 62/62, auto-skill-trigger 19/19). Follow-ups in todo Q1 (Pena ids, hook misses, step-3 rider, quest gates in adhoc).
+
+STEP-3: Pena loads for report text, his corrections are caught (Melaka sheet adhoc)
+session: e719659a-3170-48f5-994d-182ac1e911b8
+his words: "this falls under category of general adhoc but it should still point to OR load my style of writing" (order)
+cause step: .claude/skills/pena/SKILL.md:description · change: 14 lines
+new parts: 0
+fix or report: fix
+model: claude-opus-5-5 (fix decided by the Fable 5.2 audit)
+shown: domain/pena/diagram.png
+
+CHANGE-CARD (before): Pena loads for report text, his corrections are caught
+What: Pena, his writing-style tool, now loads for any text another person reads in his name, including a report or a sheet for his manager.
+Why: On 2026-11-16 the Melaka manager sheet was drafted without Pena, and his "met the ticket" and "we/our" corrections were not caught by any check.
+How: Report text picks a new report profile, the plain check flags the banned phrases he corrected, and the correction hook knows his real phrasings. ![flow](../domain/pena/diagram.png)
+When: Pena runs on demand before a draft in his name, and the correction hook runs on every prompt.
+Where: The Pena skill, its data in `domain/pena/`, `lib/pena.js` and `.claude/hooks/auto-skill-trigger.js` change. ![map](../domain/pena/change-map-20261116-152718.png)
+Where picture = the change map (lib/change-map.js).
+
 **Previous Last Activity (sweep + 289337 to Common + /handover + 289329 4 decimals)**: 2026-11-16 11:25 — worktree `redmine-sweep-audit-371861` (branch claude/redmine-sweep-audit-371861). 289329 Resolved to Mira (393a3fac33, int-env 1592cb0efd, MLIT 1.2345 both screens); 289337 Common fix returned 10:46 (common 1.13.0-MLK.beta.patch, test pending); /handover + sweep board-gap fix landed; Domain Expansion.
 
 ## Session Recap (2026-11-13 to 16, sweep + 289337 + 289329)

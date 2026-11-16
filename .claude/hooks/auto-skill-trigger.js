@@ -50,6 +50,11 @@ const TRIGGERS = [
   /\bunacceptable\b/i,
   /\bI thought I(?:'ve| have)? asked you\b/i,
   /\bwhy (?:is|are) .{0,40} not loaded\b/i,
+
+  // His phrases of 2026-11-16 (Melaka sheet adhoc, Fable 5.2 audit: 0 of 19 prompts matched)
+  /\bI (?:\w+ ){0,2}(?:asked for|said)\b/i,   // "I ASKED FOR A SINGLE COLUMN", "I CLEARLY (swear) SAID"
+  /\bwho (?:the \w+ )?asks? you\b/i,           // "WHO (swear) ASKS YOU TO COMPLICATE IT"
+  /\banother (?:refinement|correction)\b/i,    // "Another refinement, normal humans don't use ..."
 ];
 
 let input = '';

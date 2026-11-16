@@ -1,0 +1,10 @@
+{
+  "title": "Pena loads for report text, and his corrections are caught",
+  "subtitle": "2026-11-16, Melaka manager-sheet adhoc audit (Fable 5.2 + own)",
+  "parts": [
+    { "kind": "feature", "tag": "changed", "name": "pena SKILL.md", "dir": ".claude/skills/pena/", "what": "loads for any text another person reads in his name, + report profile row" },
+    { "kind": "feature", "tag": "changed", "name": "profiles.json + modules.json", "dir": "domain/pena/", "what": "new report profile; plain gains everyday-words and third-person rules" },
+    { "kind": "tool", "tag": "changed", "name": "pena.js", "dir": "lib/", "what": "plain check flags the module's banned phrases" },
+    { "kind": "feature", "tag": "changed", "name": "auto-skill-trigger.js", "dir": ".claude/hooks/", "what": "knows his real correction phrasings" }
+  ]
+}
