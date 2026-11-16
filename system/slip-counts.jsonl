@@ -2199,3 +2199,10 @@
 {"ts":"2026-11-16T03:24:54.367Z","category":"A3"}
 {"ts":"2026-11-16T03:24:55.410Z","category":"A4"}
 {"ts":"2026-11-16T03:24:56.437Z","category":"A5"}
+{"ts":"2026-11-16T03:39:54.261Z","category":"blocker"}
+{"ts":"2026-11-16T03:52:08.643Z","category":"blocker"}
+{"ts":"2026-11-16T04:08:11.075Z","category":"blocker"}
+{"ts":"2026-11-16T04:21:17.233Z","category":"reask/verbose"}
+{"ts":"2026-11-16T04:32:13.305Z","category":"quest-phase0"}
+{"ts":"2026-11-16T04:59:18.382Z","category":"local-leftover"}
+{"ts":"2026-11-16T04:59:19.472Z","category":"data-broken"}

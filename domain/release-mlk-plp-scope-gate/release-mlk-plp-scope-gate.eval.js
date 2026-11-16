@@ -11,7 +11,7 @@ const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
 const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-scope-eval-'));
-const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir };
+const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, RELEASE_SCOPE_BRANCH: 'mlk/release/1.0.9' };
 function run(payload) {
   return spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, env });
 }
@@ -88,6 +88,21 @@ r = spawnSync(process.execPath, [HOOK], {
   encoding: 'utf8', timeout: 30000, env,
 });
 check('F11 Read never blocked', r.status === 0, 'exit=' + r.status);
+
+// F12 REPLAY 289425: release in flight, but the edited repo is on mlk/master (another session's quest) → pass
+setPhase('1.0.9', 'verified');
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(edit(JAVA)), encoding: 'utf8', timeout: 30000, env: { ...env, RELEASE_SCOPE_BRANCH: 'mlk/master' } });
+check('F12 replay 289425: quest edit on mlk/master passes mid-release', r.status === 0, 'exit=' + r.status);
+
+// F13: state names its own branch; a repo on that branch blocks, on another passes
+fs.writeFileSync(path.join(stateDir, 'release-1.0.9.json'), JSON.stringify({ release: '1.0.9', phase: 'merged', branch: 'mlk/release/1.0.9' }));
+r = run(edit(JAVA));
+check('F13 repo on the state branch blocks', r.status === 2, 'exit=' + r.status);
+
+// F14: branch unreadable (no git repo at the path) → fail-open, passes
+const env2 = { ...env }; delete env2.RELEASE_SCOPE_BRANCH;
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(edit(path.join(os.tmpdir(), 'no-repo', 'etanah-pelupusan', 'X.java'))), encoding: 'utf8', timeout: 30000, env: env2 });
+check('F14 unreadable branch fails open', r.status === 0, 'exit=' + r.status);
 
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
 

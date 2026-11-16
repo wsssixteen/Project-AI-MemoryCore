@@ -39,6 +39,12 @@ function inFlightRelease() {
   return null;
 }
 
+function releaseRepoBranch(filePath) {
+  if (process.env.RELEASE_SCOPE_BRANCH !== undefined) return process.env.RELEASE_SCOPE_BRANCH; // eval seam
+  const m = filePath.match(/^(.*?etanah-pelupusan)[\\/]/i);
+  try { return require('child_process').execFileSync('git', ['-C', m[1], 'branch', '--show-current'], { encoding: 'utf8', timeout: 5000 }).trim(); } catch (_) { return ''; }
+}
+
 runHook({ name: 'release-mlk-plp-scope-gate', event: 'PreToolUse' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
   const tool = data.tool_name || '';
@@ -48,6 +54,8 @@ runHook({ name: 'release-mlk-plp-scope-gate', event: 'PreToolUse' }, (input) => 
 
   const st = inFlightRelease();
   if (!st) return { fired: false }; // no release in flight → normal quest work, not our business
+  // Only the repo checked out on the release branch is the release's (289425: a quest edit on mlk/master was blocked).
+  if (releaseRepoBranch(filePath) !== (st.branch || `mlk/release/${st.release}`)) return { fired: false };
 
   if (BYPASS.test(JSON.stringify(data.tool_input || {}))) {
     return { fired: true, blocked: false, bypassed: true, bypassToken: 'skip-release-scope' };
