@@ -77,6 +77,10 @@ r = run(['check', '--module', 'greet', '--text', 'Hi Nurhafizah, fix sudah di de
 check('18 wrong greeting and missing closing both caught', r.status === 1 && (r.stdout.match(/\[greet\] line/g) || []).length === 2, r.stdout);
 r = run(['check', '--module', 'lean', '--text', 'The fix is DB-proven on staging.']);
 check('19 verdict word caught by lean', r.status === 1 && has(r, 'lean'), r.stdout);
+r = run(['check', '--module', 'lean', '--text', 'Only the Lulus letter is changed. The eDoket and Tolak letters are not.']);
+check('19b unasked scope line caught by lean (289378)', r.status === 1 && has(r, 'lean') && r.stdout.includes('scope line'), r.stdout);
+r = run(['check', '--module', 'lean', '--text', '1. Page 1 shows the PTG logo.']);
+check('19c a BA item line passes lean', r.status === 0, r.stdout);
 
 // --- out-of-spec inputs ---
 r = run(['check', '--profile', 'nope', '--text', 'x y z']);
