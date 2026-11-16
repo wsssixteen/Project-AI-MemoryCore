@@ -195,3 +195,43 @@ CHANGE-CARD (after): redmine-phase1-prefill Step 3 fill method
 - Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
 Where picture = the change map (lib/change-map.js).
 system-change landed: GitHub main d6fcf522 · main folder 0a1cb429
+
+STEP-3: close-phase Phase 1 step 5 clean his repo after the push (2026-11-16, 289378 audit)
+session: 8518d2ea-6b80-40ef-bca3-bdeaff045e7d
+his words: "Yes, both" (order)
+his earlier words: "Can you audit why you kept leaving uncommitted files? Are you the one that does that? It kept on disturbing me when I want to checkout other branches."
+fix or report: fix
+who pays: on-demand skill text, read once per Phase 1 close, no process
+goal without the part: the fix is put in his repo uncommitted for the local test and no step takes it out after the push, so files and stashes pile up
+model: claude-opus-5-5 (fix he ordered, not held for a model switch; highest is claude-fable-5-2)
+cause step: .claude/skills/close-phase/SKILL.md Phase 1 step 5 · change: 1 line
+new parts: 0
+shown: cleanup-flow.png
+
+CHANGE-CARD (before): clean his repo after the Phase 1 push
+What: close-phase Phase 1 step 5 also restores the ticket's fix files in his repo and drops the ticket's stash, so his repo is clean after the push.
+Why: on 2026-11-16 he could not switch branches because 39 stashes and 2 changed common files were left behind by my local-test steps.
+How: the step 2 flow picture cleanup-flow.png, with the one new step after the push marked.
+When: at every Phase 1 close, right after the ticket branch is pushed.
+Where: .claude/skills/close-phase/ in the Workflows box of change-map-20261116-031030.png.
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: quest step 2b every variant + Pena lean no unasked scope line (2026-11-16, 289378)
+session: 8518d2ea-6b80-40ef-bca3-bdeaff045e7d
+his words: "your requirement check during quest still fucking fails since you skipped the Tolak letter" (order)
+his earlier words: "Why do you need to mention something the BA and ticket does not mention except you've confirmed it is safe? Do not fucking give unnecessary fucking ideas"
+fix or report: fix
+who pays: on-demand skill and module text, read once per quest Phase 0 and once per note drafted, no process
+goal without the part: step 2b reads the requirement but never says to check every letter or screen variant it names, and Pena lean never bans a scope line the BA did not raise
+model: claude-opus-5-5 (fix he ordered, not held for a model switch)
+cause step: .claude/skills/quest/SKILL.md step 2b · lib/pena.js lean · change: 4 lines
+new parts: 0
+shown: variant-note-flow.png
+
+CHANGE-CARD (before): quest step 2b every variant + Pena lean no unasked scope line
+What: quest step 2b checks every letter or screen variant the requirement names against the ticket's items, and the Pena lean module bans a note line about anything the BA or ticket did not raise.
+Why: on 2026-11-16 ticket 289378 fixed only the Lulus letter though requirement 221014 names Tolak too, and the BA note added a line about the Tolak and eDoket letters.
+How: the step 2 flow picture variant-note-flow.png, with the new variant check and the changed BA note marked.
+When: at every quest Phase 0 requirement read, and every time a note in his name is drafted.
+Where: .claude/skills/quest/ in the Workflows box and domain/pena/ in the Features box of change-map-20261116-052757.png.
+Where picture = the change map (lib/change-map.js).

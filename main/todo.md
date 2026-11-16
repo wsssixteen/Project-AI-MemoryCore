@@ -450,3 +450,16 @@ Audit 2026-10-29 of the plan's 81 items: 47 built, 4 dropped, 30 open. The open 
 - [ ] (2026-11-11, parked by miya for end of session) Build: release-prep.js push prints the filled Baseline card (SKILL.md card format), so the card is never retyped. Picture: scratchpad release-card-before-after.png. Open: how the script gets Domain + DB versions. Runs via /system-change.
 
 - [ ] 2026-11-13 AUDIT (after 289329 pass-back, per miya): why the dynamic-decimals format (D) was not recommended first for 289329; A (separator off) was marked recommended with an unverified 1000.0000 claim. Find the step that ranks fix options and fix it there.
+
+## TODO (2026-11-16, per miya: "audit your current mistakes ... we will do after handing over this ticket") — after the 289378 handover
+
+Each item: the mistake, then the one step that makes it and needs the fix (Disposition rule 11: fix that step, add nothing around it). All have a `core/slips.js` row of 2026-11-16.
+
+- [ ] **Fix files and stashes left in his repo after the push** (39 stashes + 2 common files found; the 289378 fix files left on mlk/master after the int-env merge). Step: close-phase Phase 1 step 5. Change card already PASS in current-session.md; blocked only by the design-consult-gate step-3 rider. His bypass in his own message: `[skip-step3: miya ordered the clean-up step]`.
+- [ ] **His repo did not show the fix while he verified** (fix built only in the work clone). Step: quest Apply, the "restore fixes so I can run locally" line. Same edit pass as the item above: put in at Apply, take out at step 5.
+- [ ] **Said "checked offline" when the letter was never generated.** Step: quest Apply hand-back. A test that did not run is said "not tested" in the first line; doc-sim output (the PDF) is sent with SendUserFile, or the line says it does not exist.
+- [ ] **doc-sim ran on stg1 first, MLIT never tried until he said so.** Step: doc-sim test-data pick. MLIT (`E:\Dev\doc-sim-mlit` home) first, stg1 only when MLIT has no row. Also feedback memory `staging-and-db-access` gets the MLIT-first line.
+- [ ] **Ticket branch name guessed** (mlk/internal/289378 → mlk/internal-issues/289378). Step: close-phase Phase 1 branch step: the shape comes from `git ls-remote` of a sibling ticket of the same tracker, printed before the branch is made.
+- [ ] **Column guessed on MLIT** (p.id_pengguna). Step: the task-state query in the quest skill: copy the canonical query, never write the join by hand.
+- [ ] **Stale release state files blocked a ticket edit** (release-*.json left at phase=bumped after a newer release). Step: release-prep.js: when a release reaches merged-to-master, mark the older bumped ones superseded. Not my edit mistake, a tool gap.
+- [ ] **doc-sim compile failed: WAR older than master** (had to pass 2 extra Java files by hand). Step: doc-sim override compile: compile the changed file's sibling sources from the work clone when the WAR class is older. Tool gap.
