@@ -29,7 +29,8 @@
       "No pushback lines to another team (miya 2026-10-14, #282303): never say what we will not do, never compare their version or work against ours to refuse, never tell them to raise a ticket. State the finding only; they decide the next step.",
       "Every draft reply to another person comes in 2 versions: SHORT first (1-2 lines, the answer only, e.g. \"Bukan id ni je... Isu ni akan jadi untuk semua permohonan yang isi tanah dimiliki.\"), then FULL. He picks one.",
       "A chat reply answers ONLY the question in the last message, in about 3 short fragments. No background on how it works today and no process line (change request, please confirm) unless that message asks for it (ADHOC-UPP-PDTJ: 5 lines cut to \"Sepatutnya waktu dijana. Waktu ADO sign tu ke. Jana semula load balik tarikh ADO sign.\").",
-      "A Flowable Description names the change in the team's own words, then where it goes (287773: \"Tambah Agihan PT selepas Keputusan Pentadbir Tanah, hantar ke 12.0 ...\"). No flow-model word such as laluan or gateway, and no condition in brackets; the diagram already shows both."
+      "A Flowable Description names the change in the team's own words, then where it goes (287773: \"Tambah Agihan PT selepas Keputusan Pentadbir Tanah, hantar ke 12.0 ...\"). No flow-model word such as laluan or gateway, and no condition in brackets; the diagram already shows both.",
+      "A note names only what the BA or the ticket raised (2026-11-16 per miya, 289378: \"Why do you need to mention something the BA and ticket does not mention except you have confirmed it is safe? ... it will only invite scrutiny\"). No line about other letters, files, variants or what was not changed, and no new point outside their list. A finding outside their list goes to miya in chat, never into the note."
     ],
     "banned": [
       "Everything ...",
@@ -39,7 +40,9 @@
       "verified",
       "We will not",
       "raise a separate ticket",
-      "is also older than"
+      "is also older than",
+      "not changed",
+      "Only the"
     ],
     "check": "lean"
   },
