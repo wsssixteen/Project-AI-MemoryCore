@@ -35,6 +35,10 @@
  * for a "Proses To-Be" BPMN PDF page. Why: requirement 248531 held the PPTPB endosan office rule and was
  * never ranked (it says "PD / PT", the snippet held no SPIL kod for most rows, `--find SPIL` said `none`).
  *
+ * 2026-11-16 (289376, PRBB): each row keeps its full description as `desc`, and --load T5 lists first the urusan's
+ * children whose description lines hold every value word, with those lines printed. Why: the Bayaran Royalti rule
+ * sits in #219625 (the first tugasan that shows the panel) past the 400-char snippet; the index never held it.
+ *
  * CLI:
  *   node quest/requirement-index.js --read <req> --for <ticket> [--section "<words>"]   read the requirement in full (prints REQUIREMENT-READ #<req>);
  *                                                                    --section cuts .docx/.pdf text to the lines that hold a word (or its synonym), ±30 lines;
@@ -128,6 +132,7 @@ function rowFromIssue(i) {
     closed: i.closed_on ? String(i.closed_on).slice(0, 10) : '',
     snippet: desc.length > SNIPPET ? desc.slice(0, SNIPPET) + ' …' : desc,
     kods: kodsOf(i.description),
+    desc, // the full description: --load T5 reads its lines (289376: the rule sat past the snippet)
   };
 }
 
@@ -545,13 +550,22 @@ function loadTiers(rows, o) {
     tiers.T4 = tiers.T4.slice(0, TIER_CAP);
   } else notes.push(`no module read for ${u}, T4 skipped`);
   // T5 value words: the words of the ask with synonyms, no urusan bonus (the rule can sit in another urusan).
-  tiers.T5 = o.words ? search(rows, o.words, { prep, synonyms: true, noUrusan: true, top: TIER_CAP }).filter(h => h.match !== 'none').map(h => ({ row: h.row, label: lbl(h) })) : [];
+  // First, the urusan's own children by the lines of their FULL description that hold every value word, most lines
+  // first: a panel's rules are written once, in the requirement of the first tugasan that shows it; the later
+  // tugasan only name the panel (289376: #219625 holds the Bayaran Royalti rule, #219686 lists the panel by name).
+  const vw = tokenize(o.words);
+  const wordLines = r => String(r.desc || '').split('\n').filter(l => { const s = new Set(tokenize(l)); return vw.length && vw.every(w => s.has(w)); });
+  const byLines = children.map(r => ({ row: r, lines: wordLines(r) })).filter(x => x.lines.length)
+    .sort((a, b) => b.lines.length - a.lines.length || a.row.id - b.row.id).slice(0, TIER_CAP)
+    .map(x => ({ row: x.row, label: `value words in ${x.lines.length} line${x.lines.length === 1 ? '' : 's'}`, lines: x.lines.slice(0, 5) }));
+  if (vw.length && master && !rows.some(r => r.desc)) notes.push('this index holds no full descriptions, T5 cannot read rule lines: run node quest/requirement-index.js --build');
+  tiers.T5 = [...byLines, ...(o.words ? search(rows, o.words, { prep, synonyms: true, noUrusan: true, top: TIER_CAP }).filter(h => h.match !== 'none').map(h => ({ row: h.row, label: lbl(h) })) : [])];
   // Union in tier order; a row found by several tiers is listed once, with every tier named.
   const placed = [];
   const at = new Map();
   for (const t of TIER_ORDER) for (const x of tiers[t]) {
     if (at.has(x.row.id)) { at.get(x.row.id).tiers.push(t); continue; }
-    const p = { tiers: [t], row: x.row, label: x.label };
+    const p = { tiers: [t], row: x.row, label: x.label, lines: x.lines };
     at.set(x.row.id, p); placed.push(p);
   }
   return { master, children, tiers, placed, module: mod, notes };
@@ -559,7 +573,7 @@ function loadTiers(rows, o) {
 
 function fmtLoad(p) {
   const r = p.row;
-  return `  ${p.tiers.join('+')} #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · ${p.label}`;
+  return `  ${p.tiers.join('+')} #${r.id} ${r.status} · ${r.module || '(no module)'} · "${r.subject}" · ${p.label}` + (p.lines || []).map(l => `\n      | ${l.trim().slice(0, 220)}`).join('');
 }
 
 // The reads a load names: the master by --section (its BRS is long), then the first <cap> other rows in full.
@@ -610,6 +624,9 @@ function idxLine(idx) {
   const age = idx.missing ? 'missing' : `built ${String(idx.built).slice(0, 10)}${idx.rebuilt ? ' (rebuilt now)' : idx.refreshing ? ' (older than a week, refreshing in the background)' : ''}`;
   return `index ${idx.rows.length} rows, ${age}${idx.rebuildError ? ` ⚠ rebuild failed: ${idx.rebuildError} (using the old index)` : ''}`;
 }
+
+// --json prints a row without its full description (it is for --load T5, not for the reader).
+const noDesc = (k, v) => (k === 'desc' ? undefined : v);
 
 // ---- CLI ----
 async function main(argv, log) {
@@ -663,7 +680,7 @@ async function main(argv, log) {
     Object.assign(log, { mode: 'load', query: `${head} ${called || ''} ${words}`.trim(), outcome: res.placed.length ? 'hits' : 'none', top: res.placed[0] ? res.placed[0].row.id : null, rows: res.placed.length });
     if (json) {
       console.log(JSON.stringify({ urusan, tugasan, called, calledFile: cf.file, calledKods: cf.kods, words, module: res.module, remarks: res.notes, // named remarks on purpose: redmine-write-gate reads a key named after the Redmine note field as a post (2026-11-05)
-        rows: res.placed.map(p => ({ tiers: p.tiers, id: p.row.id, status: p.row.status, module: p.row.module, subject: p.row.subject, label: p.label })),
+        rows: res.placed.map(p => ({ tiers: p.tiers, id: p.row.id, status: p.row.status, module: p.row.module, subject: p.row.subject, label: p.label, lines: p.lines })),
         tree: has('tree') && res.master ? res.children.map(r => ({ id: r.id, status: r.status, subject: r.subject })) : undefined, next }, null, 1));
       return 0;
     }
@@ -683,7 +700,7 @@ async function main(argv, log) {
   if (findQ != null) {
     const hits = search(idx.rows, findQ, { module: flag('module'), top, synonyms: true });
     Object.assign(log, { mode: 'find', query: findQ, outcome: hits.length ? 'hits' : 'none', top: hits[0] ? hits[0].row.id : null });
-    if (json) { console.log(JSON.stringify({ query: findQ, hits }, null, 1)); return 0; }
+    if (json) { console.log(JSON.stringify({ query: findQ, hits }, noDesc, 1)); return 0; }
     console.log(`REQUIREMENT-FIND "${findQ}" — ${idxLine(idx)}`);
     hits.forEach((h, n) => console.log(fmtHit(h, n + 1, stateKey)));
     if (!hits.length) console.log('  no match — try the urusan code, the tab name or the screen title');
@@ -713,7 +730,7 @@ async function main(argv, log) {
   const hits = search(idx.rows, query, { module, top, exclude: [issue.id, ...chain.map(r => r.id)] });
   const kind = requestKind(issue.subject);
   Object.assign(log, { mode: 'ticket', ticket: Number(ticket), source: issue.source, outcome: kind ? 'request' : self ? 'self' : hits.length || chain.length ? 'hits' : 'none', top: chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null, rebuilt: !!idx.rebuilt });
-  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, kind, self, parents: chain, hits }, null, 1)); return 0; }
+  if (json) { console.log(JSON.stringify({ ticket: issue.id, subject: issue.subject, module, kind, self, parents: chain, hits }, noDesc, 1)); return 0; }
   console.log(`REQUIREMENT-MATCH #${issue.id} (${module || 'module not read'}) "${issue.subject}" [read from ${issue.source}] — ${idxLine(idx)}`);
   if (kind) {
     console.log(`  ⓘ this is a ${kind} request (moves data or a flow, not a feature change): write REQUIREMENT-MATCH: not needed — ${kind} request.`);
