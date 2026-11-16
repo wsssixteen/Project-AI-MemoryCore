@@ -58,3 +58,13 @@ his words: "Yes, fix it & proceed what I asked you to do." (order)
 cause step: domain/release-mlk-plp-scope-gate/release-mlk-plp-scope-gate.check.hook.js runHook in-flight check ignores the edited repo's branch · change: 8 lines
 new parts: 0
 fix or report: fix
+
+STEP-3: release-prep.js prints the reviewer message after the MR is created or recorded (1.10.0)
+session: 9a2c82f0-c631-4161-a9c9-87f477e7ce52
+his words: "Please use this format moving forward and include in the steps." (order)
+cause step: domain/release-mlk-plp/release-prep.js mrCreate + mrRecord print only the link, no message · change: 8 lines
+new parts: 0
+fix or report: fix
+who pays: on-demand: once per release
+goal without the part: the reviewer message in his format prints with the MR link, no extra ask
+model: claude-opus-5-5

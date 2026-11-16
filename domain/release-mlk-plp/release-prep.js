@@ -940,6 +940,12 @@ function mrPrepare(st, a) {
   mrSelfAudit(st);
 }
 
+// miya's message to the reviewer, his format (2026-11-16, 1.10.0); the link uses the host colleagues open
+function reviewerMessage(st, rv, url) {
+  const link = String(url).replace(/^https?:\/\/[^/]+\/gitlab/, 'https://etanah-internal.puncaktegap.com.my/gitlab');
+  return `message to ${rv.name}, copy and send:\nHi ${rv.name}, need help to merge MLK Release ${st.release} to mlk/master. Thank you. 🙏\n${link}`;
+}
+
 function mrRecord(st, a) {
   if (st.phase !== 'mr-pending') die(`RECORD-MR REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
   const gl = gitlabConfig();
@@ -952,7 +958,7 @@ function mrRecord(st, a) {
   st.mr.url = url; st.mr.iid = Number(m[1]); st.mr.reviewer = { name: rv.name, username: rv.username }; st.mr.recordedAt = new Date().toISOString();
   saveState(st);
   log('merge-to-master', st.release, 'mr-recorded', { url, reviewer: rv.name });
-  console.log(`✅ recorded MR !${m[1]} for ${st.branch} · reviewer ${rv.name} (@${rv.username})\n   ${url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  console.log(`✅ recorded MR !${m[1]} for ${st.branch} · reviewer ${rv.name} (@${rv.username})\n   ${url}\n${reviewerMessage(st, rv, url)}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
   mrSelfAudit(st);
 }
 
@@ -1000,7 +1006,7 @@ async function mrCreate(st, a) {
   saveState(st);
   log('merge-to-master', st.release, bad.length ? 'mr-created-mismatch' : 'mr-created', { url: back.web_url, reviewer: rv.name, mismatch: bad.map(b => b[0]) });
   if (bad.length) die(`MR created but ${bad.length} field(s) differ — fix them on ${back.web_url} before the reviewer merges`, 2);
-  console.log(`✅ MR !${back.iid} created and read back · reviewer ${rv.name}\n   ${back.web_url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  console.log(`✅ MR !${back.iid} created and read back · reviewer ${rv.name}\n   ${back.web_url}\n${reviewerMessage(st, rv, back.web_url)}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
   mrSelfAudit(st);
 }
 
