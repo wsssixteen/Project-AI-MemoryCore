@@ -136,3 +136,21 @@ fix or report: fix
 model: claude-opus-5-5
 shown: adhoc-fix-plan.png
 
+
+STEP-3: 289378 audit, six quest steps
+session: 8518d2ea redmine-ticket-recommendations-69038f
+his words: "shall we do an audit of this session and then system change now?" (question)
+fix or report: fix
+who pays: on-demand: read once per quest at the step that runs
+goal without the part: each step that made a 289378 mistake carries one line so the next quest does not repeat it
+model: claude-opus-5-5
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\49b830161f995f72\8518d2ea-6b80-40ef-bca3-bdeaff045e7d\scratchpad\audit-plan.png
+
+CHANGE-CARD (before): 289378 audit, six quest steps
+What: One line is added to each of the six quest, doc-sim and close-phase steps that made a mistake on 289378.
+Why: On 2026-11-16 the 289378 quest guessed columns and a branch name, tested on stg1 before MLIT, called an unrun test checked, and left fix files in his repo.
+How: The quest flow picture audit-plan.png marks the six steps, each with its one added line.
+When: Each line is read at its own step of the next quest, with no new process.
+Where: The quest, close-phase and doc-sim skills plus section 6.3 of the Melaka DATABASE.md.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\49b830161f995f72\8518d2ea-6b80-40ef-bca3-bdeaff045e7d\scratchpad\change-map-20261117-025049.png
+Where picture = the change map (lib/change-map.js).
