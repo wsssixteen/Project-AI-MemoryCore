@@ -10,6 +10,10 @@
 
 ---
 
+## v2.10 (2026-11-17)
+
+§System map: "Every system change runs `/system-change`" → `/system-build`. His words (2026-11-17): "perform system upgrade (we should really change the name to be system-build or something" and "Yes, rename it". Paired in the same commit: `.claude/skills/system-change/` → `.claude/skills/system-build/` (old name and "system upgrade" kept as triggers), `domain/system-change/` → `domain/system-build/`, `design-consult-gate` accepts either name, `step3-check` highest-order list, `system/INDEX.md` route pointers and the paused-route marker `system-build step N`. Step 3 by Fable 5.2. Spec preservation: the route, its 8 steps and their owner (INDEX ruling 13) are unchanged; only the command's name changed. The concept "a system change" and `domain/system-change-title/` keep their names. History lines (the v1.97 entry below, session archives) keep the old name.
+
 ## v2.09 (2026-11-17)
 
 §Disposition rule 0 test-scenario pointer: "table (login·screen·do·expect)" → Permohonan and Login copy boxes, a Tugasan line, then a where·do·expect table; the shape's one home is `.claude/skills/stop-point-summary/SKILL.md` Test Scenario variant. His words (2026-11-16, 289376 + 274323): "use a better formatting for test scenario please. Also maybe replace that first column with "where", like what langkah or panel." and "Just use 1 permohonan test scenario to avoid confusion." Paired: `domain/test-scenario-login-gate` v2 v3 v5 v6 read the Where table and the copy box (eval 29/29; the old Login table still passes). Spec preservation: the login stays mandatory (v1) and the full id_pengenalan stays mandatory and copyable (v5); dropped and named: the Screen column (now Where) and the v5 ban on a separate copy box (2026-11-05), which no longer breaks the table because the login and permohonan sit above it, one per scenario.
