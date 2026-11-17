@@ -13,7 +13,7 @@ let CARD = null; try { CARD = require(path.join(__dirname, '..', 'change-card', 
 // The highest order: system/INDEX.md §The change route, "Highest order" paragraph.
 const HIGHEST_ORDER = [
   /[\\/]system[\\/]INDEX\.md$/i,
-  /[\\/]\.claude[\\/]skills[\\/](system-rules|system-design|system-change|appraise)[\\/]SKILL\.md$/i,
+  /[\\/]\.claude[\\/]skills[\\/](system-rules|system-design|system-build|appraise)[\\/]SKILL\.md$/i,
   /[\\/]domain[\\/](design-consult-gate|component-birth-gate|system-change-title)[\\/][^\\/]+$/i,
   /[\\/]\.claude[\\/]hooks[\\/]system-edit-gate\.js$/i,
   /[\\/]core[\\/]forge\.js$/i,

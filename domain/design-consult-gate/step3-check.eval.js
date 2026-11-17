@@ -18,7 +18,7 @@ fs.writeFileSync(PNG, 'png');
 const CONSULT = [
   { role: 'assistant', text: 'Launching skill: system-rules' },
   { role: 'assistant', text: 'Launching skill: system-design' },
-  { role: 'assistant', text: 'Launching skill: system-change' },
+  { role: 'assistant', text: 'Launching skill: system-build' },
 ];
 const FABLE_CALL = { raw: { type: 'assistant', message: { role: 'assistant', model: 'claude-opus-5-5', content: [{ type: 'tool_use', name: 'Agent', input: { model: 'fable', prompt: 'assess' } }] } } };
 
