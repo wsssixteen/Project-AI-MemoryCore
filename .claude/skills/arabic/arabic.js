@@ -344,22 +344,14 @@ function cmdFocus(lessonArg, partArg, date) {
 }
 // One ayat, word by word. Every reason text comes from the closed `sebab` table of sentences.json (class-cited or marked belum).
 function renderSentence(S2, s, i, n, round) {
-  // Layout per みや 2026-11-17 (his drawing): the ayat read across, first word in the RIGHTMOST column; role on top, Arabic under it.
-  const rows = []; const cites = new Set(); const peranan = w => w.peranan.replace(/ · /g, ' + ');
-  s.words.forEach((w, j) => {
-    const texts = w.sebab.map(k => { const r = S2.sebab[k]; if (!r) throw new Error(`unknown sebab "${k}" in ${s.id}`); if (r.cite) cites.add(r.cite); return r.t; });
-    rows.push(`| ${j + 1} | ${peranan(w)} | ${w.apa} | ${w.baris} | ${texts.join(' · ')} |`);
-  });
+  // ONE table per ayat, per みや 2026-11-17 (his drawing): the ayat read across, first word in the RIGHTMOST column; role on top, then Arabic, jenis + makna, baris akhir. No second table (bloat over many exercise sentences).
+  const cites = new Set(); const peranan = w => w.peranan.replace(/ · /g, ' + ');
+  const sebab = w => w.sebab.map(k => { const r = S2.sebab[k]; if (!r) throw new Error(`unknown sebab "${k}" in ${s.id}`); if (r.cite) cites.add(r.cite); return r.t; }).join(' · ');
   const rtl = [...s.words].reverse(); const line = f => `| ${rtl.map(f).join(' | ')} |`;
-  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(w => w.baris), line((w, j) => String(s.words.length - j))];
-  const rec = [...cites].filter(c => /\.ms$/.test(c)).map(c => c.slice(0, 2)).sort();
-  const doc = [...cites].filter(c => /^doc:/.test(c)).map(c => c.slice(4)).sort((a, b) => a - b);
-  const sumber = [rec.length ? 'rakaman ' + rec.join(' · ') : '', doc.length ? 'nota guru baris ' + doc.join(' · ') : ''].filter(Boolean).join(' | ');
-  return [`Ayat ${i + 1}/${n} · Lesson ${s.lesson}${s.part ? ' ' + s.part : ''} · hlm. ${s.page} · ${s.src}${round > 1 ? ' · pusingan ' + round : ''}`, '',
-    ...across, '', s.ms, '',
-    '| # | Peranan | Jenis | Baris akhir | Sebab (dari kelas) |', '|---|---|---|---|---|', ...rows, '',
-    `Binaan: ${s.binaan}`, '',
-    `Sumber kelas: ${sumber || 'tiada (semua belum dipelajari)'}`].join('\n');
+  s.words.forEach(sebab); // validates every reason key (clean error on an unknown one); reasons are not printed: role + baris carry them, concise per みや 2026-11-17
+  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(w => w.apa), line(w => w.baris)];
+  return [`Ayat ${i + 1}/${n} · Lesson ${s.lesson}${s.part ? ' ' + s.part : ''}${round > 1 ? ' · pusingan ' + round : ''}`, '',
+    ...across, '', s.ms].join('\n');
 }
 function cmdSentence(arg, date) {
   const S2 = loadSentences(); if (!S2) return 'No sentences.json yet.';
