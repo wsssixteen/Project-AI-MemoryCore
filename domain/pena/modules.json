@@ -128,16 +128,20 @@
     "ask": "For each sentence that states system behaviour: name the query or code line and the count behind it. Then the self-audit: does every how-often word match that count, and is every cause named in words the reader knows?"
   },
   "plain": {
-    "title": "Plain words for BA",
-    "means": "A BA reads it. No file names, line numbers, class names or code words. Say what the user now sees.",
+    "title": "Plain words for BA or manager",
+    "means": "A BA, a manager or another team reads it. No file names, line numbers, class names or code words. Everyday words. Say what the user now sees.",
     "rules": [
       "No file:line, no .java / .xhtml names, no method names.",
       "No capital letters for emphasis.",
-      "One fix per line, in the words of the screen."
+      "One fix per line, in the words of the screen.",
+      "Everyday words, no figure of speech: the fix did what the ticket asked, never the fix met the ticket; QA took 3 days to pass it, never held by QA.",
+      "A report shared with a manager or other teams is third person (the developer, the team, QA), never we, our or us."
     ],
     "banned": [
       "File.java:123",
-      "ClassName.method()"
+      "ClassName.method()",
+      "met the ticket",
+      "held by QA"
     ],
     "check": "plain"
   },

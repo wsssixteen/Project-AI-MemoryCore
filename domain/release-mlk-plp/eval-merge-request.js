@@ -93,6 +93,7 @@ try {
   check('M12 record-mr with a reviewer not in the list → refused', r.status === 2 && /must be one of/.test(all(r)), all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--record-mr', `${WEB}/${PROJECT}/-/merge_requests/5`, '--reviewer', 'aaron']);
   check('M13 record-mr ok (name case-insensitive) → url + reviewer stored', r.status === 0 && state('9.9.20').mr.url.endsWith('/5') && state('9.9.20').mr.reviewer.name === 'Aaron', all(r));
+  check('M13b record-mr prints miya\'s reviewer message (his format, colleague host link)', /Hi Aaron, need help to merge MLK Release 9\.9\.20 to mlk\/master\. Thank you\. 🙏\nhttps:\/\/etanah-internal\.puncaktegap\.com\.my\/gitlab\/etanah\/etanah-pelupusan\/-\/merge_requests\/5/.test(all(r)), all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--record-mr', `${WEB}/${PROJECT}/-/merge_requests/5`, '--reviewer', '@alexk']);
   check('M14 reviewer unavailable → re-record with the other one', r.status === 0 && state('9.9.20').mr.reviewer.name === 'Alex', all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--ba-approved']);

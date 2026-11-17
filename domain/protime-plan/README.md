@@ -38,6 +38,8 @@ Settle a day = make it say what was really worked:
 | Worked ticket that was never assigned to him, missing | added as an ADHOC entry `<number> - Assist` (or the block's `title=`) |
 | Adhoc started or worked that day, missing | added as an ADHOC entry in his wording (`protimeLine`) |
 | PLAN entry this script placed, still PENDING, still the bare number, not worked | removed |
+| Ticket finished that day (passed on in Redmine, or RESOLVED on the day) and placed by this script on a LATER day of the week, still PENDING and the bare number (miya 2026-11-17: "Our 11PM should clear up if we end up doing more tickets that day") | removed from the later day; the next morning does not plan it again |
+| A `mlk/release/<version>` branch of etanah-pelupusan was created, merged into or bumped that day (its own reflog; usually Monday and Wednesday, some weeks not) | added as ADHOC `MLK PLP Baseline <version>`, unless a line of his with "Baseline" and that version is already on the day |
 | Entry he typed, entry he edited, RESOLVED entry, any ADHOC entry | never touched |
 | Public holiday, approved leave, weekend | day left alone |
 | Redmine unreachable | nothing removed |

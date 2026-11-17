@@ -26,7 +26,9 @@ function decide(paths, turnText) {
   if (/\[skip-upload-path:/.test(String(turnText || ''))) return { block: false, bypass: true };
   const list = Array.isArray(paths) ? paths : [];
   const bad = list.filter(p => !allowed(p));
-  return bad.length ? { block: true, bad } : { block: false };
+  // 2026-11-17 (281324): a file that leaves us never carries our internal ADHOC id; it is named by the Redmine number.
+  const internal = list.filter(p => /ADHOC-/i.test(path.win32.basename(String(p || '').replace(/\//g, '\\'))));
+  return bad.length || internal.length ? { block: true, bad: [...new Set([...bad, ...internal])], internal } : { block: false };
 }
 
 function lastAssistantText(tp) {
@@ -58,6 +60,7 @@ if (require.main === module) {
       ...d.bad.map(b => '   ' + b),
       '   Copy each one into the cycle folder first (`2. Fix\\` or the latest `N. Rework\\`), named `<n>. <what it shows>.<ext>`,',
       '   then upload from there, so what reaches Redmine can be fact-checked in the Task folder.',
+      ...(d.internal && d.internal.length ? ['   A name with ADHOC- is our internal id: rename it to the Redmine number (e.g. 281324-PROD.sql).'] : []),
       '   Bypass only with a reason: [skip-upload-path: <reason>].',
     ].join('\n') };
   });

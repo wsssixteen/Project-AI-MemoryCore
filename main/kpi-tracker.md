@@ -11,7 +11,7 @@
 | B3 | Delivery & Planning | 0 | - |
 | B4 | Ownership & Initiative | 4 | 2026-10-29 |
 | B5 | Communication | 0 | - |
-| B6 | Teamwork & Collaboration | 1 | 2026-10-23 |
+| B6 | Teamwork & Collaboration | 2 | 2026-11-16 |
 | C1 | Code Quality & Engineering Practice | 0 | - |
 | C2 | Problem Solving & Production Support | 5 | 2026-11-04 |
 
@@ -57,6 +57,7 @@ _No rows yet._
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-11-16 | #288264 | Gave the teknikal team the rule for Individu vs Syarikat in Laporan Tanah, proving with PROD rows that their #281423 jns_no_id filter drops the company section for PRZ and MCL applicants. | etanah-teknikal MLKLaporanTanah_Sub4.jrxml WHERE jns_no_id in (JNKP_BARU,JNSYKT) from commit 2026-10-01 #281423; PROD PRZ/2026/2 17086/753, MCL/2026/18 4136/751, MCL/2026/26 4134/751 |
 | 2026-10-23 | #265109 | Reviewed a colleague's rework fix on the shared branch and took it over to finish the fix. | branch mlk/qa/265109-rework tip c162244010 · mlkKeputusanJKKTForm.xhtml:663 |
 
 ## C1 — Code Quality & Engineering Practice

@@ -12,6 +12,11 @@ const cases = [
   ['fire', 'I thought I asked you to load the format'],
   ['fire', 'why is the quest skill not loaded for this ticket?'],
   ['fire', 'why are the alter rules not loaded'],
+  // his phrases of 2026-11-16 (swear words removed)
+  ['fire', 'I ASKED FOR A SINGLE COLUMN!!!'],
+  ['fire', 'THAT IS WHY I SAY YOU DO NOT NEED THE DETAILS AND I CLEARLY SAID GROUP THEM'],
+  ['fire', 'WHO THE HELL ASKS YOU TO COMPLICATE IT'],
+  ['fire', 'Another refinement, normal humans do not use the wordings like that'],
   // older patterns still fire
   ['fire', 'you forgot the User ID line'],
   ['fire', 'I already told you to generate it'],
@@ -20,6 +25,9 @@ const cases = [
   ['silent', 'the note looks good, post it after I check'],
   ['silent', 'is the quest skill loaded?'],
   ['silent', 'acceptable, go ahead'],
+  ['silent', 'Yes, copy it'],
+  ['silent', 'Try creating a new tab and add that table please, thank you.'],
+  ['silent', 'who is assigned to this ticket now?'],
 ];
 let pass = 0;
 for (const [want, prompt] of cases) {

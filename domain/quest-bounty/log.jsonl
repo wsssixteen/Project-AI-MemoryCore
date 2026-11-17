@@ -337,3 +337,7 @@
 {"ts":"2026-11-13T08:51:34.252Z","qa":"QA-289306","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-11-13T08:52:11.323Z","qa":"QA-289233","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-11-13T08:52:13.408Z","qa":"QA-289306","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-11-16T02:48:25.696Z","qa":"ADHOC-PLP-2026-8","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-16T02:48:33.857Z","qa":"ADHOC-PLP-2026-8","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc data patch on MLIT, no reusable knowledge beyond the register row"}
+{"ts":"2026-11-17T02:55:26.282Z","qa":"ADHOC-RPT-2026-1","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-11-17T02:55:41.732Z","qa":"ADHOC-RPT-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"manager-sheet report adhoc: no code, table or etanah knowledge produced"}

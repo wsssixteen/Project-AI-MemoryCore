@@ -111,5 +111,18 @@
       ".claude/auto-memory/feedback_ticket_writing_style.md (entry 7)",
       ".claude/auto-memory/feedback_template_work_junior_builds.md"
     ]
+  },
+  "report": {
+    "for": "Report, sheet, email or document for a manager or another team; any general adhoc text in his name",
+    "modules": [
+      "lean",
+      "line",
+      "plain",
+      "table",
+      "proven"
+    ],
+    "pointers": [
+      ".claude/auto-memory/feedback_ticket_writing_style.md (plain words, normal human tone)"
+    ]
   }
 }
