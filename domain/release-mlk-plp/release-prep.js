@@ -254,6 +254,7 @@ function cmdInit(a) {
   assertStagHoldsMaster(repo, a);   // ── post-baseline catch-up guard: the previous release must be on stag-env ──
 
   const st = { release, branch, repo, tickets, phase: 'planned', conflict: null, headSha: null, created: new Date().toISOString() };
+  takeCardFlags(st, a);   // --baqa / --target-version from the BAQA message, kept for the card
   saveState(st);
   log('init', release, 'ok');
   console.log(`\n✅ PREFLIGHT PASSED — plan for ${branch} (repo: ${repo})`);
@@ -786,7 +787,12 @@ function cmdPush(a) {
 // (2026-11-11, 1.9.3: a card typed by hand came out in the wrong order with Domain and DB missing).
 // Values the script cannot know come from flags, kept in state: --domain --db --flowable-date
 // --flowable "<a.bpmn20.xml,...>|none" --sql "#<n>, <file>.sql;...|none". A value never given prints as a FILL line.
-const CARD_FLAGS = { domain: 'domain', db: 'db', 'flowable-date': 'flowableDate', flowable: 'flowable', sql: 'sql' };
+// 2026-11-16 per miya (1.10.0): the card's sheet block is his FULL template (BAQA · Version Details · Developer);
+// --baqa and --target-version come from the BAQA message; footer-only lines stay empty for him.
+const CARD_FLAGS = { domain: 'domain', db: 'db', 'flowable-date': 'flowableDate', flowable: 'flowable', sql: 'sql', baqa: 'baqa', 'target-version': 'targetVersion' };
+function stagingDbUser() {
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'system', 'melaka-env-state.json'), 'utf8')).schema_user || ''; } catch (_) { return ''; }
+}
 function takeCardFlags(st, a) {
   st.card = st.card || {};
   for (const [flag, key] of Object.entries(CARD_FLAGS)) if (typeof a[flag] === 'string') st.card[key] = a[flag];
@@ -806,13 +812,29 @@ function printCard(st) {
     `git -C ${String(st.repo).replace(/\//g, '\\')} log --oneline --merges mlk/master..${st.branch}`, '',
     'C - BUILD + DEPLOY (UI), target stag', st.branch, '',
     'E - SHEET',
+    'BAQA section:',
+    `BAQA Name:  ${c.baqa || fill('baqa')}`,
+    `Task: Deploy Pelupusan ${st.release}`,
+    'Link Target Version: ',
+    c.targetVersion || fill('target-version'), '',
+    'Version Details:',
+    'Tarikh Kemaskini : ',
+    `Domain Version : ${c.domain || fill('domain')}`,
+    `DB Version : ${c.db || fill('db')}`,
+    `Common Version : ${cm ? cm[1].trim() : '<FILL: common not found in pom.xml>'}`,
+    `Module Version : ${st.release}`,
+    'Session Id : ',
+    'Instance Id : ',
+    `DB Username : ${stagingDbUser()}`,
+    `Git Branch : ${st.branch}`, '',
+    'Developer section:',
     'DEV Name: Ridhwan',
     `Domain Version : ${c.domain || fill('domain')}`,
     `DB Version : ${c.db || fill('db')}`,
     `Common Version : ${cm ? cm[1].trim() : '<FILL: common not found in pom.xml>'}`,
     `Module Version : ${st.release}`,
     `Branch Name: ${st.branch}`,
-    'Dependency pendaftaran:',
+    'Dependency pendaftaran: (for Tukarganti & Pendaftaran only)',
     `Flowable Diagram: ${flow === null ? fill('flowable') : flow.length ? `/home/ftpuser/files/flowable-diagrams/Melaka/${c.flowableDate || fill('flowable-date')}/Pelupusan/` : ''}`,
     ...(flow || []),
     'SQL name with ticket number:',
@@ -918,6 +940,12 @@ function mrPrepare(st, a) {
   mrSelfAudit(st);
 }
 
+// miya's message to the reviewer, his format (2026-11-16, 1.10.0); the link uses the host colleagues open
+function reviewerMessage(st, rv, url) {
+  const link = String(url).replace(/^https?:\/\/[^/]+\/gitlab/, 'https://etanah-internal.puncaktegap.com.my/gitlab');
+  return `message to ${rv.name}, copy and send:\nHi ${rv.name}, need help to merge MLK Release ${st.release} to mlk/master. Thank you. 🙏\n${link}`;
+}
+
 function mrRecord(st, a) {
   if (st.phase !== 'mr-pending') die(`RECORD-MR REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
   const gl = gitlabConfig();
@@ -930,7 +958,7 @@ function mrRecord(st, a) {
   st.mr.url = url; st.mr.iid = Number(m[1]); st.mr.reviewer = { name: rv.name, username: rv.username }; st.mr.recordedAt = new Date().toISOString();
   saveState(st);
   log('merge-to-master', st.release, 'mr-recorded', { url, reviewer: rv.name });
-  console.log(`✅ recorded MR !${m[1]} for ${st.branch} · reviewer ${rv.name} (@${rv.username})\n   ${url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  console.log(`✅ recorded MR !${m[1]} for ${st.branch} · reviewer ${rv.name} (@${rv.username})\n   ${url}\n${reviewerMessage(st, rv, url)}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
   mrSelfAudit(st);
 }
 
@@ -978,7 +1006,7 @@ async function mrCreate(st, a) {
   saveState(st);
   log('merge-to-master', st.release, bad.length ? 'mr-created-mismatch' : 'mr-created', { url: back.web_url, reviewer: rv.name, mismatch: bad.map(b => b[0]) });
   if (bad.length) die(`MR created but ${bad.length} field(s) differ — fix them on ${back.web_url} before the reviewer merges`, 2);
-  console.log(`✅ MR !${back.iid} created and read back · reviewer ${rv.name}\n   ${back.web_url}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
+  console.log(`✅ MR !${back.iid} created and read back · reviewer ${rv.name}\n   ${back.web_url}\n${reviewerMessage(st, rv, back.web_url)}\nwhen it is merged: merge-to-master --release ${st.release} --check`);
   mrSelfAudit(st);
 }
 

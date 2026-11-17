@@ -152,7 +152,7 @@ function sameTitle(a, b) {
 //   A title in the older env-first form (2026-10-14: "Internal (PNG) - ...", "Staging (MLK) - ...", "PROD - TRG - ...") is rewritten state first.
 const STATES = 'MLK|TRG|PNG|PRK|SGR|KDH|WP';
 const STATE_LINE = new RegExp(`^(${STATES}) \\((PROD|Internal)\\) - \\S`);
-const OWN_LINE = /^(BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
+const OWN_LINE = /^(BA|Assist|Baseline|MLK Baseline|MLK PLP Baseline)\b|^\d{6}\b/i;
 const OLD_ENV_LINE = new RegExp(`^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG)(?: \\(([A-Z]+)\\))?(?: - (${STATES}))? - (\\S.*)$`, 'i');
 function envWord(env) {
   const e = String(env || '');
@@ -192,7 +192,7 @@ const SHAPES = [
   STATE_LINE,                                                          // his format, given 2026-10-29
 ];
 // an env-first line, a state line in another shape, or a made-up word in the env brackets is refused
-const ENV_LEAD = new RegExp(`^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM)\\b|^(${STATES})\\b(?! Baseline)|^[A-Z]{2,5} \\((PROD|Internal|Staging|STG|MLIT)\\)`, 'i');
+const ENV_LEAD = new RegExp(`^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM)\\b|^(${STATES})\\b(?! (PLP )?Baseline)|^[A-Z]{2,5} \\((PROD|Internal|Staging|STG|MLIT)\\)`, 'i');
 function lintLine(line) {
   const s = String(line || '').trim(), out = [];
   if (!s) return ['empty'];
@@ -236,6 +236,37 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     ? plan.filter(e => mine(e) && e.status === 'PENDING' && /^\d{6}$/.test(e.name) && !workedIds.has(e.name)).map(e => ({ id: e.id, name: e.name }))
     : [];
   return { addPlan, addAdhoc, remove };
+}
+
+// Tickets finished on a settled day leave the later days of the week (miya 2026-11-17: "Our 11PM should clear up if we
+// end up doing more tickets that day"). done = tickets passed on in Redmine that day or RESOLVED on that day's plan.
+// Removes only a later PLAN entry this script placed, still PENDING, still the bare number.
+function doneOn({ existing, worked = [] }) {
+  const resolved = [...((existing && existing.plan) || []), ...((existing && existing.adhoc) || [])].filter(e => e.status === 'RESOLVED').flatMap(e => ticketsIn(e.name));
+  return new Set([...worked.filter(w => w.done).map(w => String(w.id)), ...resolved]);
+}
+function clearAhead({ day, byDate, done, mine = () => false }) {
+  const out = [];
+  for (const [d, e] of Object.entries(byDate || {})) {
+    if (d <= day) continue;
+    for (const p of (e && e.plan) || []) if (done.has(p.name) && p.status === 'PENDING' && /^\d{6}$/.test(p.name) && mine(p, d)) out.push({ id: p.id, name: p.name, date: d });
+  }
+  return out;
+}
+
+// "MLK PLP Baseline <version>" on a day a Melaka Pelupusan release branch was worked (miya 2026-11-17: "you kept forgetting
+// to add MLK PLP Baseline <number> ... The routine is Monday and Wednesday, but there will be rare days we won't do it").
+// The day is read from the branch's own reflog (created, merged into, version commit), never from the weekday.
+const BASELINE_REPO = process.env.PROTIME_PLAN_BASELINE_REPO || 'E:\\Projects\\Melaka\\etanah-pelupusan';
+function baselineLines(reflog, day) {
+  const vers = new Set();
+  for (const l of String(reflog || '').split('\n')) { const m = /^mlk\/release\/(\d+(?:\.\d+)+)@\{(\d{4}-\d{2}-\d{2})\}/.exec(l.trim()); if (m && m[2] === day) vers.add(m[1]); }
+  return [...vers].map(v => `MLK PLP Baseline ${v}`);
+}
+function baselineOnDay(day) {
+  const git = a => String(spawnSync('git', ['-C', BASELINE_REPO, ...a], { encoding: 'utf8', windowsHide: true, timeout: 30000 }).stdout || '');
+  const branches = git(['for-each-ref', '--sort=-creatordate', '--count=6', '--format=%(refname:short)', 'refs/heads/mlk/release/']).split('\n').filter(Boolean);
+  return baselineLines(branches.map(b => git(['reflog', 'show', '--date=short', '--format=%gd', 'refs/heads/' + b])).join('\n'), day);
 }
 
 // PLAN or ADHOC for a worked ticket (miya 2026-10-14: "283345 ... we only assisted. It should be under adhoc. Unless when we
@@ -347,7 +378,7 @@ function rulesText() {
     `Runs: Mon-Fri ${times}. Before ${NIGHT_FROM_HOUR}:00 = morning run, from ${NIGHT_FROM_HOUR}:00 = night run.`,
     `Morning: settle the previous working day, top up today to ${KPI}, plan the rest of the week ${KPI} a day (his KPI).`,
     `Night: settle today.`,
-    `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked.`,
+    `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked; remove from the later days of the week the tickets finished that day (placed there by this script); add "MLK PLP Baseline <version>" when a mlk/release branch was worked that day.`,
     `Worked: ${LEDGER_MIN_TURNS}+ turns in the turn ledger, or a Redmine note of his that day.`,
     `Never touched: an entry he typed, edited or resolved; any adhoc entry; a day off.`,
     `Adhoc line: ${protimeLine({ env: 'PROD', state: 'melaka', title: '<title>' })} - title wording: .claude/skills/adhoc-save/SKILL.md "Adhoc title".`,
@@ -616,11 +647,14 @@ async function main() {
   const mine = mineOf(readLog());
   // a day he approved line by line keeps his own resolve marks and wording: the run adds no adhoc and resolves nothing there
   const approvedDays = new Set(readLog().filter(r => r.run === 'manual:approved-day' && r.mode === 'live').map(r => r.day));
-  const settled = {}, notes = [], workedByDay = {}, waitingByDay = {};
+  const settled = {}, notes = [], workedByDay = {}, waitingByDay = {}, doneAll = new Set();
   for (const d of settleDays) {
     if (isOff(d)) { console.log(`${d}: day off - left alone`); continue; }
     if (approvedDays.has(d)) { console.log(`${d}: approved by him line by line - left alone`); continue; }
     const ad = adhocsOfDay(d, ledger[d].adhocIds, blocks);
+    // his own baseline line in any wording ("Baseline Pelupusan 1.9.0 preparation") already covers the day
+    const dayEntries = [...((before[d] || {}).plan || []), ...((before[d] || {}).adhoc || [])];
+    for (const b of baselineOnDay(d)) if (!dayEntries.some(e => /baseline/i.test(e.name) && e.name.includes(b.split(' ').pop()))) ad.lines.push(b);
     if (ad.untitled.length) notes.push(`${d}: adhoc with no title, not written: ${ad.untitled.join(', ')}`);
     const titleOf = id => { const b = blocks.find(x => x.qa === 'QA-' + id && x.title); return b ? protimeLine(b) : null; };
     const worked = red.ok ? red.worked[d].map(w => { const own = !!w.showedWork || ownerOfDay({ commits: ticketCommits(w.id), delegatedTo: (blocks.find(x => x.qa === 'QA-' + w.id) || {}).delegated_to, patchToday: patchOnDay(w.id, d), day: d }) === 'PLAN'; return { ...w, own, title: own ? null : titleOf(w.id) }; }) : [];
@@ -628,7 +662,12 @@ async function main() {
     waitingByDay[d] = adhocsOfDay(d, ledger[d].adhocIds, blocks.filter(b => /^(hold|blocked|delegated)$/i.test(b.status || '') || /\b(owner infra|waiting|awaiting|menunggu)\b/i.test(b.issue_one_liner || ''))).lines;
     const approvedDay = approvedDays.has(d);
     const s = settle({ existing: before[d] || { plan: [], adhoc: [] }, worked, adhocs: ad.lines, mine: e => mine(e, d), canRemove: red.ok, approvedDay });
+    // finished that day -> off the later days of the week (only with Redmine read, like every other removal)
+    const done = doneOn({ existing: before[d], worked });
+    s.ahead = red.ok ? clearAhead({ day: d, byDate: before, done, mine }) : [];
+    for (const t of done) doneAll.add(t);
     settled[d] = s;
+    for (const r of s.ahead) console.log(`  - remove ${r.date} ${r.name} (finished on ${d}, placed ahead by this script)`);
     console.log(`${d} settle - worked: ${worked.map(w => w.id + (w.own ? '' : ' (not his)')).join(', ') || 'none found'}${red.ok ? '' : ' (Redmine unreachable: nothing added or removed from tickets)'}`);
     for (const n of s.addPlan) console.log(`  + plan   ${n}`);
     for (const n of s.addAdhoc) console.log(`  + adhoc  ${n}`);
@@ -639,8 +678,10 @@ async function main() {
   // plan (morning only)
   let plan = { placed: {}, unplaced: [], skipped: [], perDay: PER_DAY_MAX };
   if (run === 'morning') {
-    const existing = Object.fromEntries(week.map(d => [d, ((before[d] || {}).plan || []).map(e => e.name)]));
-    plan = decide({ today, board: board.ids, existing, holidays: off.holidays, leave: off.leave, topUp: true });
+    const goingIds = new Set(Object.values(settled).flatMap(s => s.ahead || []).map(r => r.id));
+    const existing = Object.fromEntries(week.map(d => [d, ((before[d] || {}).plan || []).filter(e => !goingIds.has(e.id)).map(e => e.name)]));
+    // a ticket finished on the settled day is not planned again the next morning
+    plan = decide({ today, board: board.ids.filter(t => !doneAll.has(String(t))), existing, holidays: off.holidays, leave: off.leave, topUp: true });
     console.log(`Week of ${monday} - ${board.ids.length} open ticket(s), ${plan.perDay} a day`);
     const lines = Object.entries(plan.placed).map(([d, t]) => `  ${d}: ${t.join(', ')}${d === todayIso && plan.toppedUp.length ? ' (top-up)' : ''}`);
     console.log(lines.length ? lines.join('\n') : '  (no empty day to fill)');
@@ -653,7 +694,7 @@ async function main() {
     ...Object.entries(settled).flatMap(([d, s]) => [...s.addPlan.map(n => ({ date: d, name: n, cat: 'PLAN' })), ...s.addAdhoc.map(n => ({ date: d, name: n, cat: 'ADHOC' }))]),
     ...Object.entries(plan.placed).flatMap(([d, t]) => t.map(n => ({ date: d, name: n, cat: 'PLAN' }))),
   ];
-  const removes = Object.entries(settled).flatMap(([d, s]) => s.remove.map(r => ({ ...r, date: d })));
+  const removes = Object.entries(settled).flatMap(([d, s]) => [...s.remove.map(r => ({ ...r, date: d })), ...(s.ahead || [])]);
   const base = { day: todayIso, week: monday, run, placed: plan.placed, unplaced: plan.unplaced, skipped: plan.skipped, notes };
 
   if (!live) { logRow({ ...base, mode: 'dry', result: 'ok', would_add: adds, would_remove: removes }); console.log('DRY RUN - nothing written. Add --live to write.'); return; }
@@ -700,4 +741,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { logRow({ mode: 'error', result: 'crash', detail: String(e && e.stack || e).slice(0, 400) }); console.error(e); process.exit(1); });
-module.exports = { weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine, ownerOfDay, toResolve };
+module.exports = { doneOn, clearAhead, baselineLines, weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine, ownerOfDay, toResolve };

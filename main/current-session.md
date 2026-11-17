@@ -1,3 +1,53 @@
+**Last Activity (289425 PRBB Rencana JKBB JT details lost: fix, MLIT test PASS, Resolved to Anis)**: 2026-11-16 13:44 — worktree `melaka-tickets-review-d7524d` (branch claude/melaka-tickets-review-d7524d). Board brief (all Melaka tickets) → 289425 started (New → In Progress 20%) → fix in MlkKertasTemplateForm.java (save JT rows before Jana Semula and before the Selesai reload; +17 lines) → commit 8365043e36 on mlk/internal-issues/289425, int-env baa4c4431d → miya deployed MLIT, test PASS on PTMLK/01/L/PRBB/2026/42 (SaffuanH) → Redmine Resolved to Anis 13:42 (journal #2, PDF + 2 screenshots). System: release-mlk-plp-scope-gate now blocks only the repo on the release branch (55d56a0a, eval 14/14, live in main folder 976d1924). Test scenario standard = format B (Fable 5.2, his pick); build of the gate/skill change queued in todo.
+
+## Session Recap (2026-11-16, 289425)
+- Asked: brief all Melaka tickets, start 289425, apply the swept fix, test on server, Redmine handover; fix the release guard clash; local cleanup audit (build after close); pick a test scenario format.
+- Done: 289425 fixed, tested (MLIT PASS), Resolved to Anis; MLIT 2026/42 altered for the test (alter half-failed on a DB drop 12:52, repaired via Alter page) and altered back to PYRJKBBPTG (hazizi); release guard fix landed; todo rows: local-clean audit (A1-A4, P1-P4) and test scenario format B.
+- Open: 289425 waits BA verify, then Phase 2; local-clean Tool and format-B gate/skill change to build (both in todo Q1); main folder has 2 local commits not on GitHub (976d1924 landed by land-on-main) to reconcile.
+- Mistakes: fix applied uncommitted in miya's repo and left there (local-leftover); test scenario format guessed twice (reply-shape); Redmine staging not done right after the test pass, and the Edge Alter page tried before the runner (workflow-skip); MLIT alter half-failed (data-broken).
+
+**Last Activity (Melaka manager sheet adhoc + Pena system change)**: 2026-11-16 15:40 — worktree `sheet-update-process-5e3ba0`. Melaka tab of the manager's Google Sheet written (5 incident rows, 14 strong tickets after a Fable 5.2 audit, elaboration); preview xlsx in Task folder 408. Audit (Fable 5.2 + own): Pena never loaded for report text, correction hook matched 0 of 19 prompts, "we/our" correction never stored. System change: Pena report profile + plain banned check + correction-hook phrasings (evals: pena 62/62, auto-skill-trigger 19/19). Follow-ups in todo Q1 (Pena ids, hook misses, step-3 rider, quest gates in adhoc). Domain Expansion 2026-11-17 10:43.
+
+## Session Recap (2026-11-16 to 17, Melaka manager sheet + Pena system change)
+- Asked: Melaka tab of the manager's sheet (plain table, ticket-number lists, one count column, third person, everyday words); then audit the adhoc with Fable 5.2 + own audit, system-change, DE.
+- Done: sheet written + preview xlsx in Task folder 408; Pena `report` profile, plain banned-phrase check, 3 correction-hook phrasings (GitHub main = main folder 67ee4407); corpus rows c79, c80.
+- Open: todo Q1 "Pena follow-ups from the Melaka sheet audit" (4 items, build only on his ask).
+
+STEP-3: Pena loads for report text, his corrections are caught (Melaka sheet adhoc)
+session: e719659a-3170-48f5-994d-182ac1e911b8
+his words: "this falls under category of general adhoc but it should still point to OR load my style of writing" (order)
+cause step: .claude/skills/pena/SKILL.md:description · change: 14 lines
+new parts: 0
+fix or report: fix
+model: claude-opus-5-5 (fix decided by the Fable 5.2 audit)
+shown: domain/pena/diagram.png
+
+CHANGE-CARD (before): Pena loads for report text, his corrections are caught
+What: Pena, his writing-style tool, now loads for any text another person reads in his name, including a report or a sheet for his manager.
+Why: On 2026-11-16 the Melaka manager sheet was drafted without Pena, and his "met the ticket" and "we/our" corrections were not caught by any check.
+How: Report text picks a new report profile, the plain check flags the banned phrases he corrected, and the correction hook knows his real phrasings. ![flow](../domain/pena/diagram.png)
+When: Pena runs on demand before a draft in his name, and the correction hook runs on every prompt.
+Where: The Pena skill, its data in `domain/pena/`, `lib/pena.js` and `.claude/hooks/auto-skill-trigger.js` change. ![map](../domain/pena/change-map-20261116-152718.png)
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): Pena loads for report text, his corrections are caught
+What: Pena now loads for any text another person reads in his name, a report, sheet, email or general adhoc included, through a new report profile.
+Why: On 2026-11-16 the Melaka manager sheet was drafted without Pena, and the correction hook matched 0 of his 19 prompts that day.
+How: The plain check flags the phrases he corrected ("met the ticket", "held by QA"), and the correction hook now catches 5 of those 19 prompts with no false fire. ![flow](../domain/pena/diagram.png)
+When: Pena runs on demand before a draft in his name, and the correction hook runs on every prompt.
+Where: The Pena skill, `domain/pena/` (profiles, modules, README, eval), `lib/pena.js` and `.claude/hooks/auto-skill-trigger.js` changed, landed as 67ee4407. ![map](../domain/pena/change-map-20261116-153618.png)
+Where picture = the change map (lib/change-map.js).
+system-change done (Pena report profile) 2026-11-16: GitHub main = main folder 67ee4407
+
+**Previous Last Activity (sweep + 289337 to Common + /handover + 289329 4 decimals)**: 2026-11-16 11:25 — worktree `redmine-sweep-audit-371861` (branch claude/redmine-sweep-audit-371861). 289329 Resolved to Mira (393a3fac33, int-env 1592cb0efd, MLIT 1.2345 both screens); 289337 Common fix returned 10:46 (common 1.13.0-MLK.beta.patch, test pending); /handover + sweep board-gap fix landed; Domain Expansion.
+**Last Activity (sweep + 289337 to Common + /handover + 289329 4 decimals)**: 2026-11-16 11:25 — worktree `redmine-sweep-audit-371861` (branch claude/redmine-sweep-audit-371861). 289329 Resolved to Mira (393a3fac33, int-env 1592cb0efd, MLIT 1.2345 both screens); 289337 Common fix returned 10:46 (common 1.13.0-MLK.beta.patch, test pending); /handover + sweep board-gap fix landed; Domain Expansion.
+
+## Session Recap (2026-11-13 to 16, sweep + 289337 + 289329)
+- Asked: sweep unswept tickets; stage 289337 to Common; build /handover (fix file + highest-model audit before any hand-over); Redmine sections hold only their own topic; board-gap fix; run 289329 (dynamic decimals D), deploy internal, test data, alter, Redmine stage + submit; DE, save every quest.
+- Done: 289337 passed to Common with `2. Fix\DokumenRahsiaService.java`; Amirul returned it 2026-11-16 10:46. /handover skill + ownership-input-check rider (GitHub cc06e23b / main folder 2977c750). Sweep step 7.2 + audit no-board-entry (GitHub e3ba3c91 / main folder 66b6b239). 289329 fix D + h:panelGroup id for the formField label; squashed 393a3fac33; int-env 1592cb0efd; /55 altered SKMMKN and back to PYSK; Redmine journal #3 Resolved to Mira with 2 photos.
+- Open: 289337 test with common 1.13.0-MLK.beta.patch on MLIT; 289329 planned-release list; audit why dynamic was not recommended first (after Mira's pass); 289376 / 289378 / 274323 await his pick.
+- Mistakes: unproven OTP cause stated as fact; "junior" invented; "1000.0000" stated unverified; fix handed over before rendering (blank page); gate misfires logged.
+- Assessment: A1 /handover makes the hand-over audit a step, not a memory. A2 save-quest found 289337 back with us, which the board did not show. A3 the blank page was found by the MLIT error store in one query. A4 et:formField label `for` needs the id in both modes. A5 sweep step 7.2 closes the "Not drafted" board gap.
 **Last Activity (TRG 289233 + 289306, Laporan Siasatan Tanah no active file)**: 2026-11-13 17:20 — worktree `sheet-tugasan-mapping-7b0b01` (branch claude/trg-tickets-289233-289306-18fcb0). Both PROD patches run by infra and read back; Redmine Resolved to Nurul Amani with scripts; both quests archived; prefill skill Step 3 fix landed; Domain Expansion.
 
 ## Session Recap (2026-11-13, TRG 289233 + 289306)
@@ -35,6 +85,28 @@ his words: "why did you not upload all the things needed just now when you prepa
 cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 5 · change: 2 lines
 new parts: 0
 fix or report: fix
+
+STEP-3: release-mlk-plp-scope-gate checks the branch (289425)
+session: 845f0ec9-60aa-4877-b082-7e710ca508f2
+his words: "Yes, fix it & proceed what I asked you to do." (order)
+cause step: domain/release-mlk-plp-scope-gate/release-mlk-plp-scope-gate.check.hook.js runHook in-flight check ignores the edited repo's branch · change: 8 lines
+new parts: 0
+fix or report: fix
+
+STEP-3: release-prep.js prints the reviewer message after the MR is created or recorded (1.10.0)
+session: 9a2c82f0-c631-4161-a9c9-87f477e7ce52
+his words: "Please use this format moving forward and include in the steps." (order)
+cause step: domain/release-mlk-plp/release-prep.js mrCreate + mrRecord print only the link, no message · change: 8 lines
+new parts: 0
+fix or report: fix
+
+STEP-3: release-mlk-plp-scope-gate checks the branch (289425)
+session: 845f0ec9-60aa-4877-b082-7e710ca508f2
+his words: "Yes, fix it & proceed what I asked you to do." (order)
+cause step: domain/release-mlk-plp-scope-gate/release-mlk-plp-scope-gate.check.hook.js runHook in-flight check ignores the edited repo's branch · change: 8 lines
+new parts: 0
+fix or report: fix
+
 ## Session Recap (2026-11-12 to 13, 288625 rework + ADHOC-PLBP-2026-2)
 - Asked: resume 288625 rework, solve and close first, audit why it came back, log for session end; then a MLIT patch of permit B01/2026/1 Tarikh Tamat to 11/11/2026; save the adhoc; DE.
 - Done: PROD alter (code 1E0F-4C45, his approval): new SPIL a_tgsn 2932270 pejabat_id 1 norhaslinda.r, old SPIL 2866525 Selesai N, header Tamat unchanged (no status patch). Done-alter note posted 12/11 02:33Z; Fizah → Ready in PROD 02:40Z; TSO → Pending User 02:44Z. Rework audit (Fable 5.2): cause = the 06/11 BA note never named the after-release PROD alter (the fix runs at PJ, 2026/5 had passed PJ); wrong-fix row 2 + slip handover-gap. F1 ticket-close-block --alter always ends "Can proceed to verify." (2deb73b8 / main 7e0ece2d, eval 27/27); F2 ALTER-TICKET-PLAYBOOK A6 fill via redmine-phase1-prefill (main folder, untracked). MLIT: umm_a_permit_lesen 16045 trkh_akhir and ind_versi_permit_lesen 6701 trkh_tamat → 2026-11-11 (JDBC, read back); ADHOC-PLBP-2026-2 saved 31/31, A104, archived.
@@ -43,45 +115,26 @@ fix or report: fix
 - Assessment: A1 gates made the 2-line F1/F2 change take ~15 calls (step-3 rider wording, worktree guard on untracked knowledge). A2 rework audit by one Fable agent found the cause in ~2 min. A3 PROD dry run + approval code + AFTER read worked first time. A4 a fix that runs at a step the permohonan already passed needs a named PROD action. A5 ⏭ no sweep.
 **Last Activity (ADHOC-PLBP-2026-3, PLBP permit dates one year back for CR 263307 Langkau Tahun)**: 2026-11-13 14:20 — worktree `ba-request-feasibility-906063`. MLIT permit B01/2026/6 (PTMLK/01/L/PLBP/2026/8) patched one year back (3 rows + 2 JSON keys, read back), verified by two code traces + live BPMN; BA proceeded; ProTime adhoc `263307 - Assist patch permit dates for testing`; 4 learning pictures in the Task folder; Domain Expansion.
 
-## Session Recap (2026-11-12 to 13, ADHOC-PLBP-2026-3 Langkau Tahun test data)
-- Asked: is the BA's "patch setahun awal" possible so the permohonan can proceed for testing; move the photo to Brief; find the CR the BA tests and add to ProTime; patch it; verify 100% code and DB; add ProTime adhoc; layman pictures of the urusan and tugasan; what the 3 months mean; when Langkau Tahun can be applied; DE.
-- Done: CR 263307 (CR - After Go Live, Anis Nabilah); AWAM gate `validateLangkauTahunPLBPMelaka()` needs the latest versi Tarikh Tamat before today; patch run via gateway backend login (psycopg2) 1+1+1 rows; sonnet traces AWAM + Pelupusan both CAN PROCEED; live MLK_PLP_PLBP v2 routes Langkau Tahun to 48.0; ProTime adhoc 41525; pictures 1-4 sent and copied to Task folder 398 `1. Brief`.
-- Open: ADHOC-PLBP-2026-3 closing save + archive runs in a background agent after this turn (adhoc-brief-first gate); late Langkau Tahun refusal is a BA business question; the payment step on the Langkau Tahun path is not verified.
-- Mistakes: ProTime run blocked by the 2-logins-per-15-min limit and first queued as a plan line before he asked for an adhoc line; the first diagram-render failed the SVG self-check (HTML-only picture).
-- Assessment: A1 DE has no step that saves quest pictures (proposal). A2 the adhoc close needs a turn end before the save agent may start, even inside DE. A3 two parallel sonnet traces + one live BPMN read closed the "100%" ask in ~10 min. A4 year-end cap rule now in knowledge. A5 ⏭ no sweep.
 
-**Last Activity (Penang Surat Ulangan JT: common page vs Pelupusan, Papar empty)**: 2026-11-13 10:47 — worktree `mlk-template-surat-ulangan-0122a3`. Penang PRZ/2026/12 Utiliti Penyediaan Surat Papar empty: Papar (`onPaparDoc`) needs a letter status (`s IS NOT NULL`, common 2018); the letter list (`initParentAplikasiDocumentList`) does not. Same code in Melaka and Penang. Domain Expansion.
-
-## Session Recap (2026-11-12 to 13, Penang Surat Ulangan JT)
-- Asked: how Melaka gets TemplateSuratUlanganJabatanTeknikal vs Penang (common page); check Penang runtime; PTPNG/01/L/PRZ/2026/12; why onPaparDoc returns nothing; trace; Kedah + Melaka way; patch to test (miya patched himself); does Melaka set status or have a fallback; by requirement should Papar return something; DE.
-- Done: Melaka and Penang Pelupusan = same path (UPS_PLP/UPS_PS, pelupusan template, SRTJK_ULGN left out of the common list); Penang's only Ulangan letter came from the Pembangunan utility (UPS_BGN, PSST), which maps SRTJK_ULGN to common surat-SuratJabatanTeknikal.docx. PRZ/2026/12: 4 UPS_PLP attempts 11/11, no letter; letter 4930 SRTJK status_id empty, skg_dok 15435 v1 present. Papar query `findDokumenByAplikasiAndSenaraiJenisDokumenKod` has `s IS NOT NULL`; picker list `findByAplikasiAndJenisDokumenList` has none; Melaka/Kedah/Penang most SRTJK letters have no status; no fallback or status writer in the Ulangan path. Test script (status PERAKU on 4930 + revert) handed; miya runs it.
-- Open: miya's test result on UPS_PLP/2026/26; Papar fix belongs to common (load the selected row's letter); note to Pembangunan team not drafted (declined/not asked).
-- Mistakes: claimed "status stopped on 21/09" from a partial read (June/July were all null) and corrected; traced Papar for an hour before reading the xhtml binding that shows the list is a different query (read the page binding first).
-- Assessment: A1 branch-guard blocks read-only Read on a non-trunk etanah repo (git show used). A2 no quest; adhoc not registered. A3 page binding first, before the backing method. A4 Ulangan list vs Papar fact written to penang WORD-TEMPLATE-RENDERING. A5 ⏭ no sweep.
-**Last Activity (ADHOC-PLP-2026-7 GIS service map for Teknikal)**: 2026-11-13 00:51 — worktree `sheet-tugasan-mapping-7b0b01`. Melaka Pelupusan rows 81-89 of the Teknikal sheet "Integrasi Servis Modul" filled, audited twice by Fable 5.2, every cell proven; evidence script, check.sql, 6 guide pictures and a handover prompt for other states in Task folder 399 2. Fix; adhoc-brief-first gate fixed (827f93f2). Domain Expansion.
-## Session Recap (2026-11-11, three PROD patch tickets + patch-note generator)
-- Asked: /quest the 3 PROD patch tickets; never ask Resolved again; every PROD patch note must list exactly what was patched (all patch types, built with Fable 5.2); fix the wrong 288974 note; keep "Can proceed to verify."
-- Done: 288962 alter run with his approval; 288963 + 288974 patched by infra, PROD re-read and verified; all three Resolved to Nurhafizah 100% (read back). redmine-write-gate: standing Resolved rule now fires for a JS status write and when his message says submit (e3dfaa4a, eval 171/171). ticket-close-block --patch prints the note from the .sql itself; script-check rule 9 + patch-script-gate CHECK 8 need a reason per SET column and DELETE (1a99bf39, evals 27/27 + 42/42). Greeting restored (0c46d9ad). 288974 note corrected on Redmine (journal 2588114).
-- Found: the 288974 script copied status_keputusan='Batal' and hubungan_aplikasi_id=NULL from 283980 with no reason; the hand-written note then described them wrong. PPTPB/2026/9 link is now null on PROD.
-- Open: none. 288974 decided by miya 2026-11-11: link to PPTPB/2026/9 stays removed (PelupusanSuratStrategy reuses a linked UPS_PLP letter, this one was cancelled), Batal kept (15 of 15 ended UPS_PLP on PROD). All three archived at Phase 2 (Redmine Ready in PROD).
-- Mistakes: asked for Resolved three times despite his standing rule; hand-wrote the 288974 note from memory; Fable build retired "Can proceed to verify" against his 4 Nov rule.
-- Assessment: A1 gate fixes landed same turn, but the step-3 rider blocked edits again (logged, repeat). A2 patch path now generates its handover from the patch. A3 PROD re-read after infra ran caught nothing wrong. A4 copied columns from an analog script without a reason is the root slip. A5 ⏭ no sweep.
-**Last Activity (287346 rework 2 session)**: 2026-11-11 21:35 — worktree `hakmilik-pejabat-awareness-32c5c1` (branch claude/ticket-287346-audit-95b5e8). ESOKONGAN 287346 MCL Kertas Pertimbangan PT rework 2: blank page fix pushed and in release 1.9.3; Domain Expansion.
-
-STEP-3: 289265 note generator plain words for MLPS Maksud Pendudukan + per-ID file lines
-session: 63893f02-091e-478a-8724-b56060ec0dea
-his words: "Please just submit the redmine ticket, infra will run it later anyways. I'll bear the responsibility if infra looked over it. stage redmine please."
-cause step: domain/ticket-close-block/ticket-close-block.js:patchGroups · change: 9 lines
+STEP-3: release-prep.js prints the reviewer message after the MR is created or recorded (1.10.0)
+session: 9a2c82f0-c631-4161-a9c9-87f477e7ce52
+his words: "Please use this format moving forward and include in the steps." (order)
+cause step: domain/release-mlk-plp/release-prep.js mrCreate + mrRecord print only the link, no message · change: 8 lines
 new parts: 0
+fix or report: fix
+who pays: on-demand: once per release
+goal without the part: the reviewer message in his format prints with the MR link, no extra ask
+model: claude-opus-5-5
 
 
-STEP-3: adhoc-brief-first, save-agent detection and one block for all missing items
-session: bd30fbfa-5cae-4924-bf32-668fd7c105b8
-his words: "If yes, then proceed while we wait for Fable" (order)
-cause step: domain/adhoc-brief-first/adhoc-brief-first.check.hook.js:stopCheck · change: 30 lines · new parts: 0
+STEP-3: adhoc workflow fix after the ADHOC-PPJK-2026-2 audit (281324)
+session: b5a36295-b0b9-4355-a42c-8d9a82fc9e69
+his words: "approve, build it" (order)
+cause step: .claude/skills/adhoc-save/SKILL.md Daily row 1 + Brief-first step 1 + Adhoc-route bullets; script-check rules 6-7 + master-data; redmine-upload-path decide() · change: 14 lines
+new parts: 0
 fix or report: fix
 model: claude-opus-5-5
-shown: abf-fix-flow.png
+shown: adhoc-fix-plan.png
 
 
 STEP-3: /handover (2026-11-13, 289337)

@@ -5,6 +5,9 @@ goal_signal_regex: PENA: (profile|modules)=
 retention: keep
 footprint: on-demand: 1 node process under 1 second per show, add or check; nothing at boot, per prompt or per session
 state-scoped: no, state-agnostic (his writing style is the same for every state; a profile names a kind of text, not a state)
+boundary: covers drafts of text another person reads in his name (Redmine, BA, infra, WhatsApp, junior, report, sheet, email, general adhoc), domain/pena data and lib/pena.js · never sends or posts the text, never rewrites a stored corpus row's his-words · stops at the PENA line under the draft; the content is his to approve
+self_audit: every check run ends with the PENA line; plain flags any phrase he already corrected (modules.json banned list); a change to Pena runs node domain/pena/eval.js
+diagram: domain/pena/diagram.html
 
 # Pena — miya's writing style, as named modules
 

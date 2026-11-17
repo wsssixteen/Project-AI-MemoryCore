@@ -1,6 +1,6 @@
 ---
 name: pena
-description: Pena — miya's writing style, as named modules. ALWAYS invoke before drafting ANY text that goes out in miya's name (Redmine note, BA pass, reply to another team's developer, Root cause and Solution, infra message, WhatsApp reply, junior handover), and whenever miya changes a sentence of mine or uses a style word. Triggers — "/pena", "pena", "my writing style", "my style", "write it like me", "in my voice", "redmine reply", "reply the redmine", "draft the note", "handover note", "I changed it to", "I used:", "another correction", "concise", "brief", "straight-forward", "too long", "jam", "separation of concern".
+description: Pena — miya's writing style, as named modules. ALWAYS invoke before drafting ANY text that goes out in miya's name (Redmine note, BA pass, reply to another team's developer, Root cause and Solution, infra message, WhatsApp reply, junior handover, and any report, sheet, email or document another person reads, a general adhoc included), and whenever miya changes a sentence of mine or uses a style word. Triggers — "/pena", "pena", "my writing style", "my style", "write it like me", "in my voice", "redmine reply", "reply the redmine", "draft the note", "handover note", "I changed it to", "I used:", "another correction", "concise", "brief", "straight-forward", "too long", "jam", "separation of concern".
 ---
 
 # Pena — how miya writes
@@ -26,7 +26,7 @@ footprint: on-demand: 1 node process under 1 second per show, add or check; noth
 | `separate` | One kind of content per section: explanation, tables, scripts. |
 | `script` | Scripts for another developer: one clause per line, mapped columns only, no JOIN, no schema prefix. |
 | `proven` | A sentence about how the system behaves is counted or read in code first. Checked by hand. |
-| `plain` | BA text: no file names, line numbers or code words. |
+| `plain` | BA or manager text: no file names, line numbers or code words; everyday words; a report for other teams is third person. |
 | `rojak` | Malay notes in his rojak. Dev words and connectors stay English. |
 | `hint` | Junior handover: where to look, never the cause or the fix. Checked by hand. |
 | `topdown` | Issue or topic in one line > overview (1 to 3 short sentences or one table) > details layer by layer > what the reader checks. Checked by hand. |
@@ -46,6 +46,7 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 | `infra-handoff` | message to infra | lean · line · proven |
 | `whatsapp-dev` | WhatsApp reply | lean · line · rojak · proven |
 | `junior-handover` | guide note for a junior | greet · lean · line · rojak · hint |
+| `report` | report, sheet, email or document for a manager or another team; any general adhoc text in his name | lean · line · plain · table · proven |
 
 ## Steps — every draft in his name
 

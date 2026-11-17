@@ -398,6 +398,24 @@ t('L7 loadTiers on fixture rows: T1 master under the parent + tugasan child, T3 
   const next = R.loadNext(res, { tugasan: ['SPIL'], words: 'endosan', cap: 2 });
   return (ok && next.length === 3 && /--read 218317 --section "SPIL endosan"/.test(next[0]) && /--read 248531$/.test(next[1])) || seq.join(' ') + ' | ' + next.join(' ; ');
 });
+// 289376 (PRBB): the panel's rule lines sit in the first tugasan's requirement, past the snippet; the later tugasan only name the panel.
+t('L9 --load T5 lists the urusan child whose full description holds the value words in the most lines first, with the lines; a row with no desc is not listed', () => {
+  const rows = [
+    row(215975, 'Pelupusan - Parent Ticket All Urusan', 'Pelupusan'),
+    row(212115, 'PRBB - Permohonan Permit Bahan Batuan (4C)', 'Pelupusan', { parent: 215975 }),
+    row(219625, 'PRBB - Tugasan Penyediaan Rencana Pentadbir Tanah', 'Pelupusan', { parent: 212115, desc: '*Panel terlibat:*\n3. Maklumat Bayaran Royalti\nh3. Rules\n3. Medan pada bayaran royalti adalah berdasarkan kiraan Kadar Permit x Kuantiti yang Disyor.\n4. Medan pada bayaran wang cagaran adalah berdasaran 20% x Bayaran Royalti yang disyor' }),
+    row(219686, 'PRBB - Tugasan Penyediaan Rencana - PDT (Kelulusan PTG)', 'Pelupusan', { parent: 212115, desc: '*Panel terlibat:*\n3. Maklumat Bayaran Royalti\n4. Maklumat Bayaran Wang Cagaran' }),
+    row(219696, 'PRBB - Tugasan Semakan Rencana - PDT (Kelulusan PTG)', 'Pelupusan', { parent: 212115, snippet: 'Maklumat Bayaran Royalti' }),
+  ];
+  const res = R.loadTiers(rows, { urusan: 'PRBB', tugasan: ['PRPDT'], words: 'bayaran royalti', parentId: 215975 });
+  const t5 = res.tiers.T5;
+  const next = R.loadNext(res, { tugasan: ['PRPDT'], words: 'bayaran royalti', cap: 3, for: 289376 });
+  const old = R.loadTiers(rows.map(r => ({ ...r, desc: undefined })), { urusan: 'PRBB', tugasan: ['PRPDT'], words: 'bayaran royalti', parentId: 215975 });
+  return (t5.map(x => x.row.id).join(',') === '219625,219686' && t5[0].label === 'value words in 3 lines' && t5[1].label === 'value words in 1 line'
+    && t5[0].lines.some(l => /Kadar Permit x Kuantiti yang Disyor/.test(l)) && /--read 219625 --for 289376$/.test(next[1])
+    && !old.tiers.T5.length && old.notes.some(n => /no full descriptions.*--build/.test(n)))
+    || JSON.stringify({ t5: t5.map(x => [x.row.id, x.label]), next, oldNotes: old.notes });
+});
 t('L8 --load with no --urusan says so and exits 2 (no index read)', () => { const r = cli(['--load', '--no-refresh']); return (r.status === 2 && /--urusan <code> is required/.test(r.stdout)) || `${r.status} ${r.stdout}`; });
 // Live index cases: need the index rebuilt with `kods` (2026-11-05) and the Melaka flowables-bpmn folder.
 const KODS = REAL && realIdx.rows.some(r => Array.isArray(r.kods));

@@ -93,6 +93,7 @@ try {
   check('M12 record-mr with a reviewer not in the list → refused', r.status === 2 && /must be one of/.test(all(r)), all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--record-mr', `${WEB}/${PROJECT}/-/merge_requests/5`, '--reviewer', 'aaron']);
   check('M13 record-mr ok (name case-insensitive) → url + reviewer stored', r.status === 0 && state('9.9.20').mr.url.endsWith('/5') && state('9.9.20').mr.reviewer.name === 'Aaron', all(r));
+  check('M13b record-mr prints miya\'s reviewer message (his format, colleague host link)', /Hi Aaron, need help to merge MLK Release 9\.9\.20 to mlk\/master\. Thank you\. 🙏\nhttps:\/\/etanah-internal\.puncaktegap\.com\.my\/gitlab\/etanah\/etanah-pelupusan\/-\/merge_requests\/5/.test(all(r)), all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--record-mr', `${WEB}/${PROJECT}/-/merge_requests/5`, '--reviewer', '@alexk']);
   check('M14 reviewer unavailable → re-record with the other one', r.status === 0 && state('9.9.20').mr.reviewer.name === 'Alex', all(r));
   r = prep(['merge-to-master', '--release', '9.9.20', '--ba-approved']);
@@ -200,9 +201,10 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   // the hand-off card and the re-open after push (2026-11-11, Baseline 1.9.3)
   const relC = newRelease('9.9.30', [['c1.txt', 'c1\n']]);
   r = prep(['card', '--release', '9.9.30']);
-  check('M36 card with no values → each unknown line is a FILL line (domain, db, common, flowable, sql)', r.status === 0 && /Module Version : 9\.9\.30/.test(all(r)) && (all(r).match(/<FILL:/g) || []).length === 5 && /FILL line\(s\)/.test(all(r)), all(r));
-  r = prep(['card', '--release', '9.9.30', '--domain', '1.0.15-MLK', '--db', '1.0.16-MLK', '--flowable-date', '2026-11-11', '--flowable', 'A.bpmn20.xml,B.bpmn20.xml', '--sql', '#1, 1.sql;#2, 2.sql']);
-  check('M37 card with values → folder once, one file per line, one SQL per line, kept in state', r.status === 0 && /Domain Version : 1\.0\.15-MLK/.test(all(r)) && /Melaka\/2026-11-11\/Pelupusan\/\r?\nA\.bpmn20\.xml\r?\nB\.bpmn20\.xml\r?\n/.test(all(r)) && /#1, 1\.sql\r?\n#2, 2\.sql/.test(all(r)) && state('9.9.30').card.db === '1.0.16-MLK', all(r));
+  // full BAQA template (2026-11-16): baqa · target-version · domain, db, common in both sections · flowable · sql = 10 FILL lines
+  check('M36 card with no values → full BAQA template, each unknown line is a FILL line', r.status === 0 && /Module Version : 9\.9\.30/.test(all(r)) && /BAQA section:[\s\S]*Version Details:[\s\S]*Developer section:/.test(all(r)) && (all(r).match(/<FILL:/g) || []).length === 10 && /FILL line\(s\)/.test(all(r)), all(r));
+  r = prep(['card', '--release', '9.9.30', '--domain', '1.0.15-MLK', '--db', '1.0.16-MLK', '--flowable-date', '2026-11-11', '--flowable', 'A.bpmn20.xml,B.bpmn20.xml', '--sql', '#1, 1.sql;#2, 2.sql', '--baqa', 'Mira/Fizah/Anis', '--target-version', 'http://host/versions/1']);
+  check('M37 card with values → folder once, one file per line, one SQL per line, kept in state', r.status === 0 && /Domain Version : 1\.0\.15-MLK/.test(all(r)) && /BAQA Name:  Mira\/Fizah\/Anis/.test(all(r)) && /Link Target Version: \r?\nhttp:\/\/host\/versions\/1/.test(all(r)) && !/<FILL: --(baqa|target-version)>/.test(all(r)) && /Melaka\/2026-11-11\/Pelupusan\/\r?\nA\.bpmn20\.xml\r?\nB\.bpmn20\.xml\r?\n/.test(all(r)) && /#1, 1\.sql\r?\n#2, 2\.sql/.test(all(r)) && state('9.9.30').card.db === '1.0.16-MLK', all(r));
   commitOn('mlk/master', 't555.txt', 't\n', 'Ref #555 - late fix', 'mlk/esokongan/555');
   sh(repo, ['checkout', '-q', '-B', 'mlk/release/9.9.30', 'origin/mlk/release/9.9.30']);
   r = prep(['add-ticket', '--release', '9.9.30', '--ticket', '555', '--branch', 'mlk/esokongan/555']);

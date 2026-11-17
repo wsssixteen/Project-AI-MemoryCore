@@ -77,6 +77,10 @@ r = run(['check', '--module', 'greet', '--text', 'Hi Nurhafizah, fix sudah di de
 check('18 wrong greeting and missing closing both caught', r.status === 1 && (r.stdout.match(/\[greet\] line/g) || []).length === 2, r.stdout);
 r = run(['check', '--module', 'lean', '--text', 'The fix is DB-proven on staging.']);
 check('19 verdict word caught by lean', r.status === 1 && has(r, 'lean'), r.stdout);
+r = run(['check', '--module', 'lean', '--text', 'Only the Lulus letter is changed. The eDoket and Tolak letters are not.']);
+check('19b unasked scope line caught by lean (289378)', r.status === 1 && has(r, 'lean') && r.stdout.includes('scope line'), r.stdout);
+r = run(['check', '--module', 'lean', '--text', '1. Page 1 shows the PTG logo.']);
+check('19c a BA item line passes lean', r.status === 0, r.stdout);
 
 // --- out-of-spec inputs ---
 r = run(['check', '--profile', 'nope', '--text', 'x y z']);
@@ -166,6 +170,13 @@ check('55 one permohonan number is not read as 3 ids', !/3 or more ids/.test(r.s
 r = run(['check', '--module', 'table', '--file', draft('p4.txt', 'Salam Amirul,\n\nMLPS: query did not return a unique result.\nPRBB: query did not return a unique result.\nPT: NullPointerException.\n\nThank you.\n')]);
 check('56 three label: value lines are told to become a table', /put them in a table/.test(r.stdout), r.stdout);
 check('57 attach sits in the three Redmine note profiles and table in fixlist and BA pass', ['redmine-dev-mapping', 'redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('attach')) && ['redmine-ba-pass', 'redmine-dev-fixlist'].every((p) => profiles[p].modules.includes('table')));
+// 2026-11-16 Melaka manager sheet: report profile, plain flags the phrases he corrected
+r = run(['check', '--profile', 'report', '--text', 'The fix met the ticket. Then the BA asked for something new.']);
+check('58 report profile: "met the ticket" is flagged by plain', /^PENA: profile=report/.test(r.stdout) && /\[plain\][^\n]*met the ticket/.test(r.stdout), r.stdout);
+r = run(['check', '--profile', 'report', '--text', 'QA took 3 to 7 days to pass the ticket to the developer.']);
+check('59 report profile: his own wording passes plain', !/\[plain\]/.test(r.stdout), r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--text', 'Salam Aina,\n\nThe ticket was held by QA for 3 days.\n\nThank you.\n']);
+check('60 BA pass profile also flags "held by QA"', /\[plain\][^\n]*held by QA/i.test(r.stdout), r.stdout);
 
 const failed = results.filter((x) => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 400)));
