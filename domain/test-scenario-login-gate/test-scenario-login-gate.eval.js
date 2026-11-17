@@ -14,7 +14,8 @@ check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.sta
 
 // v6 fixtures read qa_docs from a temp root, so no real ticket's ISSUE rows leak into older cases.
 const fs = require('fs'); const os = require('os');
-const QROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'login-gate-qadoc-'));
+const QBASE = fs.mkdtempSync(path.join(os.tmpdir(), 'login-gate-qadoc-'));
+const QROOT = path.join(QBASE, 'active'); fs.mkdirSync(QROOT);
 const ENV = Object.assign({}, process.env, { LOGIN_GATE_QADOC_ROOT: QROOT });
 const fire = (text) => spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ last_assistant_message: text }), encoding: 'utf8', timeout: 30000, env: ENV });
 const pad = ' Env stg2. File MlkPenyediaanBorang4AeL1eForm.java:421. Step 1 open Utiliti. Step 2 key No LPS and Tahun, click Simpan, then Borang 4Ae.'.repeat(2);
@@ -99,7 +100,12 @@ r = fire('## Test scenario — internal' + WSCEN('```text\nPTMLK/01/L/PSBS/2026/
 check('W3 new shape, 1 Where row for 2 ISSUE rows → exit 2 v6 (Where rows counted)', r.status === 2 && /288059: 2 ISSUE rows, 1 test rows/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
 r = fire('ssh mlit then sh deploy-plp.sh\n' + '## Test scenario — internal' + WSCEN('```text\nPTMLK/01/L/PSBS/2026/12\n```', WROW + WROW) + '\n## Redmine handover\nRoot cause: x\nSolution: y\n' + SKIP + pad);
 check('W4 deploy card + new-shape scenario + handover → exit 0 (v2 and v4 accept the Where table)', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 200));
-fs.rmSync(QROOT, { recursive: true, force: true });
+// G1 (2026-11-17, 261986): a qa_doc that sits only under archive/ still counts its ISSUE rows.
+fs.mkdirSync(path.join(QBASE, 'archive', 'QA-261986'), { recursive: true });
+fs.writeFileSync(path.join(QBASE, 'archive', 'QA-261986', 'QA-261986.md'), '# QA-261986\nISSUE|1|a|x\nISSUE|2|b|y\n');
+r = fire('## Test scenario — internal' + WSCEN('```text\nPTMLK/01/L/PSBS/2026/12\n```', WROW).replace(/288059/g, '261986') + NEXT.replace('288059', '261986') + SKIP + pad);
+check('G1 qa_doc only under archive/ → ISSUE row count applies (2 ISSUE rows, 1 test row → exit 2 v6)', r.status === 2 && /261986: 2 ISSUE rows, 1 test rows/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+fs.rmSync(QBASE, { recursive: true, force: true });
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

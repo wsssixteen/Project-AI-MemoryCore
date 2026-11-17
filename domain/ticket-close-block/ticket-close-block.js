@@ -22,6 +22,8 @@ function git(repo, args) {
 function logRow(row) {
   try { fs.appendFileSync(LOG, JSON.stringify(row) + '\n'); } catch (_) {}
 }
+// --closing "<line>" replaces the closing line of every note (default Thank you.; pena `greet` lists his five).
+const CLOSING = arg('closing') && arg('closing') !== true ? String(arg('closing')) : 'Thank you.';
 
 // --patch (2026-11-11 per miya, 288974: "the types of patching will always include these datas, the things we've
 // patched"): the patch-done note is read off the patch itself, so every thing the script changed is one line and
@@ -206,7 +208,7 @@ if (arg('patch') === true) {
   if (!key) console.error(`warn: no short name for "${baArg}" in ba-names.json — check how miya greets this BA`);
   warns.forEach(w => console.error('warn: ' + w));
   const body = [...groups].map(([id, lines]) => [...(id ? [`ID Permohonan: ${id}`] : []), ...lines].join('\n')).join('\n\n');
-  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', 'Thank you.'].join('\n'));
+  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', CLOSING].join('\n'));
   logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'patch', ids: [...groups.keys()].filter(Boolean), warns: warns.length, outcome: 'printed' });
   process.exit(0);
 }
@@ -246,7 +248,7 @@ if (arg('alter') === true) {
     '</pre>',
     '',
     ...(script && script !== true ? [`Attached is the script for PROD (${path.basename(String(script))}).`, ''] : []),
-    'Thank you.',
+    CLOSING,
   ];
   console.log(out.join('\n'));
   logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'alter', patched, outcome: 'printed' });
@@ -291,7 +293,9 @@ if (branch) branch = branch.replace(/^origin\//, '');
 let intenv = arg('intenv-sha');
 const cherrypick = arg('cherrypick') === true;
 if (!isAwam && !intenv) {
-  try { intenv = git(repo, ['log', '-1', '--format=%h', 'mlk/int-env', `--grep=#${ticket}`]) || null; } catch (_) { intenv = null; }
+  // newest merge commit on int-env that merged THIS branch (its message names the branch); else the newest commit naming the ticket
+  const ie = ['origin/mlk/int-env', 'mlk/int-env'].find(r => { try { git(repo, ['rev-parse', '--verify', '-q', r]); return true; } catch (_) { return false; } }) || 'mlk/int-env';
+  try { intenv = (branch && git(repo, ['log', '-1', '--merges', '-F', '--format=%h', ie, `--grep=${branch}' into mlk/int-env`])) || git(repo, ['log', '-1', '--format=%h', ie, `--grep=#${ticket}`]) || null; } catch (_) { intenv = null; }
 }
 
 const lines = ['<pre>'];
@@ -350,10 +354,10 @@ if (ba && ba !== true && commit && !foreign) {
       const baseRef = ['origin/mlk/master', 'mlk/master'].find(r => { try { git(repo, ['rev-parse', '--verify', '-q', r]); return true; } catch (_) { return false; } });
       if (baseRef) {
         const base = git(repo, ['merge-base', baseRef, branch]);
-        const n = parseInt(git(repo, ['rev-list', '--no-merges', '--count', `${base}..${branch}`]), 10);
+        const n = parseInt(git(repo, ['rev-list', '--no-merges', '--count', '-i', `--author=${OURS.source}`, `${base}..${branch}`]), 10); // ours only: a colleague's commits that came in by merge are not ours to squash
         let blk = '';
         try { blk = execFileSync('node', [path.resolve(__dirname, '../../quest/active-cli.js'), 'read', `QA-${ticket}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch (_) {}
-        const cycles = 1 + (blk.match(/^closed(_cycle\d+)?=/mg) || []).length;
+        const cycles = Math.max(1 + (blk.match(/^closed(_cycle\d+)?=/mg) || []).length, parseInt((blk.match(/^rework=cycle-(\d+)/m) || [])[1], 10) || 1); // the block's rework=cycle-N when it is higher
         if (n > cycles) {
           console.error(`BA pass note refused for QA-${ticket}: ${n} non-merge commits on ${branch} since ${baseRef}, ${cycles} cycle(s). One commit per cycle: git reset --soft <master merge>; git commit; then push through lib/origin-rewrite.js (his clone follows). His order to keep them: --multi-ok "<his words>".`);
           logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch, commit: commit.hash, outcome: 'refused-multi-commit', n, cycles });
@@ -382,7 +386,7 @@ if (foreign && ba && ba !== true) {
   if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
   if (isAwam || !historyHasBranch) { console.log(''); console.log(`Branch: ${branch || '(not found)'} ${moduleTag}`); }
   console.log('');
-  console.log('Thank you.');
+  console.log(CLOSING);
 } else {
   if (ba && ba !== true) {
     console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
@@ -396,7 +400,7 @@ if (foreign && ba && ba !== true) {
   if (ba && ba !== true) {
     if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
     console.log('');
-    console.log('Thank you.');
+    console.log(CLOSING);
   }
 }
 
