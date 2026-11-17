@@ -146,3 +146,13 @@ When: They run when a quest hands a ticket back, when Pena drafts a Redmine note
 Where: The rules sit in the quest skill, the Pena modules and the alter playbook, as the change map shows.
 C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\change-map-20261117-084308.png
 Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): 289944 hand-back fixes
+What: Three one-line rules now send a pass-back note to whoever gave us the ticket, only after the alter check, with the screen, field and values named.
+Why: On 2026-11-17 during ticket 289944 three Redmine notes were rejected, and the Fable 5.2 audit traced them to skipped steps and two missing rules.
+How: The flow picture shows the alter check, the recipient pick and the Pena draft as the three changed steps of the hand-back.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+When: They run when a quest hands a ticket back, when Pena drafts a Redmine note and when an alter reply is written, and the Pena eval passes 62 of 62.
+Where: The rules sit in the quest skill, the Pena modules and the alter playbook, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\change-map-20261117-084308.png
+Where picture = the change map (lib/change-map.js).
