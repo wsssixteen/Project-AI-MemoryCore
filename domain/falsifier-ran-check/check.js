@@ -153,6 +153,10 @@ function evaluate(text, opts) {
   }
   // Five standing rows in every ledger (2026-11-10, replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-2).
   if (o.standing && L.rows.length) for (const s of STANDING) if (!L.rows.some(r => new RegExp('^[*`\\s]*standing:\\s*' + s + '\\b', 'i').test(r.design || ''))) fails.push({ kind: 'standing-missing', msg: `the ledger has no "standing: ${s}" row (the five: ${STANDING.join(' · ')})` });
+  // A given row answered RAN writes its list first: one ISSUE|n|<item>|<expected> line per BA item and per value on the BA's file,
+  // marked or not; the test table is counted against them (2026-11-17 per miya, 274323: an unmarked Wang Cagaran value was never read).
+  const given = L.rows.find(r => /^[*`\s]*standing:\s*given\b/i.test(r.design || ''));
+  if (given && given.kind === 'ran' && !/RAN:\s*n\/?a\b/i.test(given.status) && !/^ISSUE\|\d+\|/m.test(String(text || ''))) fails.push({ kind: 'given-no-issues', msg: `row ${given.n} standing: given is RAN but the quest doc has no ISSUE|n|<item>|<expected> line: write one per BA item and per value on the BA's file, marked or not` });
   if (o.staged && o.staged.length && !o.merge) {
     if (!L.fixFiles.length) fails.push({ kind: 'no-fix-files', msg: 'the ledger has no "Fix files:" line, so the staged files cannot be compared with the design' });
     else {

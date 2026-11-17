@@ -111,3 +111,4 @@ log: `domain/falsifier-ran-check/log.jsonl` (ts · qa · ctx cli/commit/note · 
 - 2026-07-12 born: Stop advisory for a planted probe never shown firing (narrow).
 - 2026-10-04 ledger check added per miya (#244600). Spec preservation: the Stop advisory is untouched (its eval 7/7).
 - 2026-10-29 the local-test waiver is read through `lib/his-words.js` (his messages, 8 back, until a later hold; app lines never his) per system-rules Rule 8. Fixtures 28 flipped, 28b + 28c added; check.eval 58/58. Diagram added (Rule 17).
+- 2026-11-17 `given-no-issues`: a standing given row answered RAN (not n/a) needs at least one `ISSUE|n|<item>|<expected>` line in the quest doc. Per miya after the 274323 audit (unmarked Wang Cagaran value). check.eval 82/82 (G1 replay, G2 n/a, G3 OPEN).
