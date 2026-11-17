@@ -94,6 +94,144 @@ Where: The parts sit in lib, the .claude folder and three skills, as the change 
 C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-074526.png
 Where picture = the change map (lib/change-map.js).
 
+system-build step 3 (C11): resumed 2026-11-17 on his nod "This is after Fable 5.2 audit is it? If yes, please build it."
+
+CHANGE-CARD (after): DE audits quest workflow and etanah-knowledge
+What: The Domain Expansion close gate now blocks a close that lacks one quest-workflow line and one etanah-knowledge line.
+Why: On 2026-11-17 during ticket 254267 he asked that every Domain Expansion audit both, and Step 7.5 asked for them in prose only.
+How: The flow picture shows the new condition C11 inside de-close-gate at the DE-close banner.
+domain/de-close-gate/diagram.png
+When: It runs at every Domain Expansion close, as a Stop hook condition, and its eval passes 64 of 64.
+Where: The parts sit in domain/de-close-gate and Feature/Domain-Expansion, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-070820.png
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: 289944 hand-back fixes (Fable 5.2 audit)
+session: redmine-issue-289944-c88c64 (ticket 289944)
+his words: "This step is missing in this quest step for whatever reason that needs an audit from Fable 5.2 throughout this session related to this incident." (order)
+fix or report: fix
+who pays: on-demand: three lines of rule text read when the quest hand-back, Pena or the alter playbook loads, no process
+goal without the part: a pass-back note can go to the person who caused the fault, before the alter is checked, without the setting values
+model: claude-fable-5-2 (the audit and the three proposals came from Fable 5.2; Opus 5.5 applied them)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+
+CHANGE-CARD (before): 289944 hand-back fixes
+What: Three one-line rules make a pass-back note go to whoever gave us the ticket, after the alter check, with the screen, field and values named.
+Why: On 2026-11-17 during ticket 289944 three Redmine notes were rejected, and the Fable 5.2 audit traced them to skipped steps and two missing rules.
+How: The flow picture shows the alter check, the recipient pick and the Pena draft as the three changed steps of the hand-back.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+When: They run when a quest hands a ticket back, when Pena drafts a Redmine note and when an alter reply is written.
+Where: The rules sit in the quest skill, the Pena modules and the alter playbook, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\change-map-20261117-084308.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): 289944 hand-back fixes
+What: Three one-line rules now send a pass-back note to whoever gave us the ticket, only after the alter check, with the screen, field and values named.
+Why: On 2026-11-17 during ticket 289944 three Redmine notes were rejected, and the Fable 5.2 audit traced them to skipped steps and two missing rules.
+How: The flow picture shows the alter check, the recipient pick and the Pena draft as the three changed steps of the hand-back.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+When: They run when a quest hands a ticket back, when Pena drafts a Redmine note and when an alter reply is written, and the Pena eval passes 62 of 62.
+Where: The rules sit in the quest skill, the Pena modules and the alter playbook, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\change-map-20261117-084308.png
+Where picture = the change map (lib/change-map.js).
+
+## Session 2026-11-17 (sheet-update-process-5e3ba0) — QA-261986 rework cycle 6 + hand-back gap fix
+Last Activity: 2026-11-17 17:29 · DE run
+- 261986: audited why it came back (5 Nov hand-back Resolved with item 3 open, BA example flattened); Fable 5.2 xhigh audit; checked all 12 PSBS Risalat templates against every BA note on MLIT via doc-sim (separate JBoss config E:\Dev\jboss-mlit-261986 -> et_main_mlit, junctions to his JBoss, his untouched); found item 3 table inside a paragraph (Word refused papers); fixed 10 templates + 2 reference docx + Java; commit dad7634374 on mlk/qa/261986v3, int-env merge 9f8d5bf978; Redmine Resolved to Mira #28/#29 16:34 with 14 files; Phase WAIT (BA verify). Worktree E:\Dev\etanah-work\wt-261986 kept.
+- System: falsifier-ran-check issue:n + BA example lines (d6f05947); manifest PDF notes + full BA notes + 1) lists; legend ban in quest TEMPLATE-SCENARIO (d82f58fb / main a43e8387); 4 gaps: test table reads archive docs, BA note counts our commits only, --closing, newest int-env merge, rework=cycle-N, sweep Step 6 (599ce2d8 / main b69f3ba6).
+- Open: Mira's verify + JPPH answer; staging not deployed; 4 PT Syarikat templates carry the same run-level JT tag (outside 261986); tempoh pajakan asal "-" reaches every urusan; note tool has no draft mode.
+Resume: none for this session; 261986 resumes on Mira's reply (qa_doc projects/coding-projects/archive/QA-261986/QA-261986.md, ## Quest Story).
+
+## Session Recap (2026-11-16, 289425)
+- Asked: brief all Melaka tickets, start 289425, apply the swept fix, test on server, Redmine handover; fix the release guard clash; local cleanup audit (build after close); pick a test scenario format.
+- Done: 289425 fixed, tested (MLIT PASS), Resolved to Anis; MLIT 2026/42 altered for the test (alter half-failed on a DB drop 12:52, repaired via Alter page) and altered back to PYRJKBBPTG (hazizi); release guard fix landed; todo rows: local-clean audit (A1-A4, P1-P4) and test scenario format B.
+- Open: 289425 waits BA verify, then Phase 2; local-clean Tool and format-B gate/skill change to build (both in todo Q1); main folder has 2 local commits not on GitHub (976d1924 landed by land-on-main) to reconcile.
+- Mistakes: fix applied uncommitted in miya's repo and left there (local-leftover); test scenario format guessed twice (reply-shape); Redmine staging not done right after the test pass, and the Edge Alter page tried before the runner (workflow-skip); MLIT alter half-failed (data-broken).
+
+**Last Activity (Melaka manager sheet adhoc + Pena system change)**: 2026-11-16 15:40 — worktree `sheet-update-process-5e3ba0`. Melaka tab of the manager's Google Sheet written (5 incident rows, 14 strong tickets after a Fable 5.2 audit, elaboration); preview xlsx in Task folder 408. Audit (Fable 5.2 + own): Pena never loaded for report text, correction hook matched 0 of 19 prompts, "we/our" correction never stored. System change: Pena report profile + plain banned check + correction-hook phrasings (evals: pena 62/62, auto-skill-trigger 19/19). Follow-ups in todo Q1 (Pena ids, hook misses, step-3 rider, quest gates in adhoc). Domain Expansion 2026-11-17 10:43.
+
+- 2026-11-17 system-build step 2 (QA-261986 hand-back gap): Fable 5.2 xhigh audit running; next = step 3 STEP-3 block + nod, then build in quest lane.
+
+STEP-3: QA-261986 hand-back gap (falsifier-ran-check issue:n + BA example lines; manifest PDF notes, full BA notes, 1) lists)
+session: f058be1f-7965-4dae-a902-a985f8c6d784
+his words: "Can you run system-upgrade system-change to audit built this and eval and verify and eval it again and scrutinize and run through all verifications." (order)
+fix or report: fix
+who pays: on-demand: falsifier check at commit, close-phase step 1 and BA note; manifest at quest start and resume
+goal without the part: no new part; each ISSUE must be named by a ledger row, each line of the BA's example block is its own ISSUE line, and the manifest reads every PDF note and every line of the newest BA notes
+model: claude-fable-5-2 (audit, xhigh) + claude-opus-5-5 (build)
+cause step: domain/falsifier-ran-check/check.js:evaluate · change: 33 lines · quest/pdf-annotations.py:47 1 line · lib/redmine-role.js:39 1 line · quest/ticket-load-verify.js BA notes print
+new parts: 0
+
+CHANGE-CARD (before): hand-back gap fix (261986)
+What: The falsifier check blocks a hand-back while any BA item or any line of her example is unanswered, and the ticket manifest shows every PDF note and every line of her newest note.
+Why: On 2026-11-05 ticket 261986 went back Resolved with item 3 still open, and her two-line example was retyped as one line, so it came back on 2026-11-11.
+How: The flow picture shows the ledger check at the commit, at close-phase step 1 and at the BA note.
+domain/falsifier-ran-check/diagram.png
+When: It runs at the etanah commit gate, at close-phase Phase 1 step 1, at the BA pass note and at every quest start or resume.
+Where: The parts sit in domain/falsifier-ran-check, the quest skill folder, quest/ and lib/, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\563429ed096014e2\f058be1f-7965-4dae-a902-a985f8c6d784\scratchpad\change-map-20261117-045504.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): hand-back gap fix (261986)
+What: The falsifier check now blocks a hand-back when an ISSUE has no issue:n row or a BA example line is not its own ISSUE line, and the manifest prints every PDF note and every line of her newest note.
+Why: On 2026-11-05 ticket 261986 went back Resolved with item 3 still open, and her two-line example was retyped as one line, so it came back on 2026-11-11.
+How: The flow picture shows the ledger check at the commit, at close-phase step 1 and at the BA note.
+domain/falsifier-ran-check/diagram.png
+When: It runs at the etanah commit gate, at close-phase Phase 1 step 1, at the BA pass note and at every quest start or resume.
+Where: The changed parts are domain/falsifier-ran-check, the quest skill and template, quest/ticket-load-verify.js, quest/pdf-annotations.py and lib/redmine-role.js, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\563429ed096014e2\f058be1f-7965-4dae-a902-a985f8c6d784\scratchpad\change-map-20261117-045504.png
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: DE audits quest workflow + etanah-knowledge (254267 goal)
+session: melaka-tickets-review-d7524d (ticket 254267)
+his words: "Make sure these 2 things are also included in the things we audit every time DE (if it is not yet added specifically/clearly so that it is deterministic)" (order)
+fix or report: fix
+who pays: Stop hook: banner test on every Stop, real work only on a DE close (about once per session), regex on the transcript already parsed, no child process
+goal without the part: A2 and A4 stay prose in Step 7.5, so a DE can close with neither audited and nothing stops it.
+model: claude-fable-5-2
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\de-c11-flow.png
+appraise: A: A2/A4 prose only (expansion-protocol.md:200,202); de-knowledge-gate returns silent with no signal (:144). S: scan all assistant text, not the last block (:71-76); none: <reason> passes for a DE with no ticket or another state. C: de-close-gate is the home for close conditions and runs on every close. Verdict BUILD with changes: C11 in de-close-gate, reuse [skip-de-close-gate:], A4 scope = general or one word.
+system-build step 3 (paused, waiting for his nod)
+
+CHANGE-CARD (before): DE audits quest workflow and etanah-knowledge
+What: The Domain Expansion close gate also checks that the close carries one quest-workflow line and one etanah-knowledge line.
+Why: On 2026-11-17 during ticket 254267 he asked that every Domain Expansion audit both, and today Step 7.5 asks for them in prose only.
+How: The flow picture shows the new condition C11 inside de-close-gate at the DE-close banner.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\de-c11-flow.png
+When: It runs at every Domain Expansion close, as a Stop hook condition.
+Where: The parts sit in domain/de-close-gate and Feature/Domain-Expansion, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-070820.png
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: pictures from the diagram-design template only (254267 correction)
+session: melaka-tickets-review-d7524d (ticket 254267)
+his words: "audit why you didn't use the diagram-design properly and fix this in the CLAUDE.md and every single where everywhere you used this in quest workflow or claude.md or anywhere" (order)
+fix or report: fix
+who pays: on-demand: one regex pass over the page per render, no new process
+goal without the part: a failed self-check can still be forced out with a flag, so hand-made pictures with sentences reach him
+model: claude-opus-5-5 (standing nod: his correction; a correction is never held for a model switch)
+shown: lib/diagram-render.diagram.png
+
+CHANGE-CARD (before): pictures from the template only
+What: The picture renderer refuses a page that fails its check and any box text over 60 characters, and every rule that asks for a picture names the template.
+Why: On 2026-11-17 during ticket 254267 three hand-made pictures with sentences in boxes were forced past a failed check, and he could not read them.
+How: The flow picture shows a page passing the self-check and the box-text check before a PNG exists.
+lib/diagram-render.diagram.png
+When: It runs every time a picture is rendered, on demand.
+Where: The parts sit in lib, the .claude folder and three skills, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-074526.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): pictures from the template only
+What: The picture renderer now refuses a page that fails its check, refuses the old bypass flag, and fails any box text over 60 characters.
+Why: On 2026-11-17 during ticket 254267 three hand-made pictures with sentences in boxes were forced past a failed check, and he could not read them.
+How: The flow picture shows a page passing the self-check and the box-text check before a PNG exists.
+lib/diagram-render.diagram.png
+When: It runs every time a picture is rendered, on demand, and the eval passes 12 of 12.
+Where: The parts sit in lib, the .claude folder and three skills, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-074526.png
+Where picture = the change map (lib/change-map.js).
+
 ## Session Recap (2026-11-16 to 17, Melaka manager sheet + Pena system change)
 - Asked: Melaka tab of the manager's sheet (plain table, ticket-number lists, one count column, third person, everyday words); then audit the adhoc with Fable 5.2 + own audit, system-change, DE.
 - Done: sheet written + preview xlsx in Task folder 408; Pena `report` profile, plain banned-phrase check, 3 correction-hook phrasings (GitHub main = main folder 67ee4407); corpus rows c79, c80.
@@ -11334,6 +11472,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 
