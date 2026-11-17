@@ -69,16 +69,16 @@ r = run(GUARDED_PATH, [
 ]);
 check('T6 stale assistant token -> BLOCK', r.deny === true, r.out.slice(0, 60));
 
-// T7/T8 (2026-10-29): consult passed but /system-change not loaded -> allowed WITH the route advisory;
+// T7/T8 (2026-10-29): consult passed but /system-build not loaded -> allowed WITH the route advisory;
 // loaded -> allowed, no advisory. The commit step itself is never gated.
 const CONSULTED = [
   { role: 'assistant', text: 'Launching skill: system-rules' },
   { role: 'assistant', text: 'Launching skill: system-design' },
 ];
 r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED]);
-check('T7 no /system-change -> allowed + route advisory rendered', r.deny === false && /system-change/.test(r.out) && /additionalContext/.test(r.out), r.out.slice(0, 80));
-r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change' }]);
-check('T8 /system-change loaded -> allowed, no advisory', r.deny === false && !/system-change/.test(r.out), r.out.slice(0, 80));
+check('T7 no /system-build -> allowed + route advisory rendered', r.deny === false && /system-build/.test(r.out) && /additionalContext/.test(r.out), r.out.slice(0, 80));
+r = run(EXISTING_GUARDED, [{ role: 'user', text: 'change the rule' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-build' }]);
+check('T8 /system-build loaded -> allowed, no advisory', r.deny === false && !/system-build/.test(r.out), r.out.slice(0, 80));
 
 // ================= Quest-turn rider (2026-11-05, #287811 "who asks you to do all that") =================
 // His last message names an active ticket and asks for no system change -> a system-shape edit is denied.
@@ -127,7 +127,7 @@ const OWN_HOOK = path.join(rdir, 'domain', 'own-gate', 'own-gate.check.hook.js')
 const OWN_CODE = "const lines = tail.split('\\n').filter(l => /\"type\"\\s*:\\s*\"user\"/.test(l));\nif (obj.isMeta) continue;\n";
 const GOOD_CODE = "const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));\nconst last = lastHis(data.transcript_path);\n";
 const MARKED_CODE = "// his-words: not an approval reader — finds the turn boundary for the bypass token\nfor (let i = T.length - 1; i >= 0; i--) if (T[i].role === 'user') { start = i; break; }\n";
-const CONS = [{ role: 'user', text: 'build the gate' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-change [skip-eval-check: fixture folder, the eval rider is not under test here]' }];
+const CONS = [{ role: 'user', text: 'build the gate' }, ...CONSULTED, { role: 'assistant', text: 'Launching skill: system-build [skip-eval-check: fixture folder, the eval rider is not under test here]' }];
 r = runTool('Write', { file_path: OWN_HOOK, content: OWN_CODE }, CONS);
 check('R1 Write of a new hook that parses user lines itself -> DENY, names the line and lib/his-words.js', r.deny && /his-words/.test(r.reason) && /"type"/.test(r.reason), r.reason.slice(0, 120) || r.out.slice(0, 80));
 r = runTool('Write', { file_path: OWN_HOOK, content: GOOD_CODE }, CONS);

@@ -21,6 +21,12 @@ check('F7 mixed list blocks and names only the bad one', (() => { const d = deci
 check('F8 bypass token passes', decide([T + '\\1. Brief\\b.png'], '[skip-upload-path: miya asked to attach the BA original]').block === false);
 check('F9 forward slashes still checked', allowed(T.replace(/\\/g, '/') + '/2. Fix/a.jrxml') === true);
 check('F10 malformed stdin does not block', spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0);
+// 281324 replay (2026-11-17): ADHOC-PPJK-2026-2-TRAINING.sql staged for Redmine from 2. Fix.
+check('F11 replay 281324: ADHOC- named file in 2. Fix blocks', (() => { const d = decide([T + '\\2. Fix\\ADHOC-PPJK-2026-2-TRAINING.sql']); return d.block && d.internal.length === 1; })());
+check('F12 ticket-number name in 2. Fix passes', decide([T + '\\2. Fix\\281324-TRAINING.sql']).block === false);
+check('F13 lower-case adhoc- also blocks', decide([T + '\\2. Fix\\adhoc-ppjk-2026-2.sql']).block === true);
+check('F14 ADHOC in a folder name only does not block', decide(['C:\\x\\1. Tasks\\Melaka\\407. AH - ADHOC-PPJK\\2. Fix\\281324-PROD.sql']).block === false);
+check('F15 bypass also passes an ADHOC- name', decide([T + '\\2. Fix\\ADHOC-X.sql'], '[skip-upload-path: miya asked]').block === false);
 // Adversarial verdicts: own help text in transcript = handled (bypass needs the full token) · malformed stdin = F10 ·
 // worktree vs main = ROOT fallback + require guarded · bundle dispatch = not bundled · empty paths = no fire ·
 // a file in 2. Fix subfolder = blocked on purpose (only the cycle-folder root is the fact-check home).

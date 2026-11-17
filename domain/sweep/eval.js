@@ -46,7 +46,7 @@ check('17 code baseline pinned to origin/mlk/master + fetch before launch', /git
 check('18 familiar writes to scratch, controller banks', /<scratchpad>\\sweep\\QA-<n>-<wave>\.md/.test(s) && /\*\*Bank\*\*/.test(s));
 check('19 W4 reads the commit that introduced each changed line', /read the commit that introduced each line the fix changes/i.test(s));
 check('20 ledger row written by the audit Tool with --write', /audit\.js run --tickets/.test(s) && /--write/.test(s));
-check('21 audit-and-refine step: fix loop, accuracy guard, REFINE NOW via /system-change', /audit and refine/i.test(s) && /fix loop/i.test(s) && /never proposed/.test(s) && /REFINE NOW/.test(s) && /\/system-change/.test(s));
+check('21 audit-and-refine step: fix loop, accuracy guard, REFINE NOW via /system-build', /audit and refine/i.test(s) && /fix loop/i.test(s) && /never proposed/.test(s) && /REFINE NOW/.test(s) && /\/system-build/.test(s));
 check('22 no recursive delete in cleanup', /recursive delete of any folder is banned/i.test(s));
 const ae = require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'audit.eval.js')], { encoding: 'utf8', windowsHide: true });
 check('23 audit Tool fixture eval green', ae.status === 0, (ae.stdout || '').trim().split('\n').pop());

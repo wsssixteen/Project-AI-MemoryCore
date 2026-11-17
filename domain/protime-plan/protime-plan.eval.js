@@ -194,5 +194,36 @@ eq('S116 handed to a BA (our part done) -> plain number', settle({ existing: { p
 eq('S117 a "<n> - 50%" line already on the day is not added twice', settle({ existing: { plan: [E(5, '286462 - 50%')], adhoc: [] }, worked: [{ id: '286462', own: true, touched: true, pct: 50 }] }).addPlan, []);
 eq('S114 a script-placed line with no progress at all is removed', settle({ existing: { plan: [E(9, '261986')], adhoc: [] }, worked: [], mine: () => true }).remove.map(r => r.name), ['261986']);
 eq('S112 assists still go to adhoc on a full day', settle({ existing: FULL, worked: [{ id: '283345', own: false }] }).addAdhoc, ['283345 - Assist']);
+
+// ---- clear ahead + baseline (miya 2026-11-17: Mon finished 289425/289329/289376/289378, Tue and Wed still held them) ----
+const { doneOn, clearAhead, baselineLines } = require('./protime-plan.js');
+const MON = { plan: [E(42404, '289425', 'RESOLVED'), E(42405, '289378', 'RESOLVED'), E(41859, '288264')], adhoc: [] };
+const AHEAD = { '2026-11-16': MON, '2026-11-17': { plan: [E(41862, '289329'), E(41863, '289376'), E(41864, '289378')], adhoc: [] }, '2026-11-18': { plan: [E(41865, '289425')], adhoc: [] }, '2026-11-19': { plan: [E(42434, '288264')], adhoc: [] } };
+const doneMon = doneOn({ existing: MON, worked: [{ id: '289329', done: true }, { id: '289376', done: true }, { id: '288264', done: false }] });
+eq('S120 done = passed on in Redmine or RESOLVED that day; worked but not done is not done', [...doneMon].sort(), ['289329', '289376', '289378', '289425']);
+eq('S121 the 2026-11-17 case: finished Monday tickets leave Tue and Wed', clearAhead({ day: '2026-11-16', byDate: AHEAD, done: doneMon, mine: () => true }).map(r => r.date + ' ' + r.name), ['2026-11-17 289329', '2026-11-17 289376', '2026-11-17 289378', '2026-11-18 289425']);
+eq('S122 an entry he typed is never cleared', clearAhead({ day: '2026-11-16', byDate: AHEAD, done: doneMon, mine: () => false }), []);
+eq('S123 the settled day itself and earlier days are not cleared', clearAhead({ day: '2026-11-18', byDate: AHEAD, done: doneMon, mine: () => true }), []);
+eq('S124 a RESOLVED or edited later entry stays', clearAhead({ day: '2026-11-16', byDate: { '2026-11-17': { plan: [E(1, '289329', 'RESOLVED'), E(2, '289376 - 50%')], adhoc: [] } }, done: doneMon, mine: () => true }), []);
+const REFLOG = 'mlk/release/1.10.0@{2026-11-16}\nmlk/release/1.10.0@{2026-11-16}\nmlk/release/1.9.3@{2026-11-11}\nmlk/release/1.9.2@{2026-11-04}\nmlk/release/1.9.1@{2026-11-04}';
+eq('S125 baseline line on the day the release branch was worked', baselineLines(REFLOG, '2026-11-16'), ['MLK PLP Baseline 1.10.0']);
+eq('S126 no release work that day -> no baseline line (rare skipped Mon/Wed)', baselineLines(REFLOG, '2026-11-18'), []);
+eq('S127 two release branches worked the same day -> one line each', baselineLines(REFLOG, '2026-11-04'), ['MLK PLP Baseline 1.9.2', 'MLK PLP Baseline 1.9.1']);
+eq('S128 the baseline line passes his line check', lintLine('MLK PLP Baseline 1.10.0'), []);
+eq('S129 the baseline line is kept as written', protimeLine({ title: 'MLK PLP Baseline 1.10.0', env: 'PROD' }), 'MLK PLP Baseline 1.10.0');
+// two cycles (miya 2026-11-17): no-number placeholder on Mon + Wed in the morning, swapped or removed at settle
+const { baselineDefault, baselinePlaced, baselineSwap, BASELINE_PLACEHOLDER: PH } = require('./protime-plan.js');
+const WK = ['2026-11-23', '2026-11-24', '2026-11-25', '2026-11-26', '2026-11-27'];
+eq('S130 Monday morning: placeholder on Monday and Wednesday', baselineDefault({ week: WK, todayIso: '2026-11-23' }), ['2026-11-23', '2026-11-25']);
+eq('S131 Tuesday morning: only Wednesday is still ahead', baselineDefault({ week: WK, todayIso: '2026-11-24' }), ['2026-11-25']);
+eq('S132 a day off (holiday, leave) gets none', baselineDefault({ week: WK, todayIso: '2026-11-23', isOff: d => d === '2026-11-25' }), ['2026-11-23']);
+eq('S133 a day that already has a baseline line (his or ours) gets none', baselineDefault({ week: WK, todayIso: '2026-11-23', byDate: { '2026-11-23': { plan: [], adhoc: [E(9, 'Baseline Pelupusan 1.11.0 preparation')] }, '2026-11-25': { plan: [], adhoc: [E(8, PH)] } } }), []);
+eq('S134 a day it placed before is not refilled (he or a night run removed it)', baselineDefault({ week: WK, todayIso: '2026-11-24', placedBefore: baselinePlaced([{ mode: 'live', created: [{ id: 5, name: PH, date: '2026-11-25' }] }, { mode: 'dry', created: [{ id: 6, name: PH, date: '2026-11-27' }] }]) }), []);
+eq('S135 settle removes its own PENDING placeholder', baselineSwap({ entries: [E(5, PH), E(6, 'MLK PLP Baseline 1.11.0')], mine: e => e.id === 5 }), [{ id: 5, name: PH }]);
+eq('S136 a placeholder he typed, resolved or edited stays', baselineSwap({ entries: [E(5, PH), E(7, PH, 'RESOLVED'), E(8, 'MLK PLP Baseline 1.11')], mine: e => e.id !== 5 }), []);
+eq('S137 release repo unreadable -> placeholder kept', baselineSwap({ entries: [E(5, PH)], mine: () => true, repoOk: false }), []);
+eq('S138 the placeholder passes his line check', lintLine(PH), []);
+const SRC = require('fs').readFileSync(require('path').join(__dirname, 'protime-plan.js'), 'utf8');
+eq('S139 the run wires both cycles: morning adds, settle (and an off day) removes', [/\(plan\.baseline \|\| \[\]\)\.map\(d => \(\{ date: d, name: BASELINE_PLACEHOLDER, cat: 'ADHOC' \}\)\)/.test(SRC), /s\.remove\.push\(\.\.\.baselineSwap\(/.test(SRC), /if \(isOff\(d\)\) \{\s*\/\/[^\n]*\n\s*const gone = baselineSwap/.test(SRC)], [true, true, true]);
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

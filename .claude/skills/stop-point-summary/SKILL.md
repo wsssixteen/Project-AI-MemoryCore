@@ -37,18 +37,24 @@ The **Notes** and **Next** lines are mandatory — they are what make it a *summ
 | Blocked | `Blocked — Awaiting <X>` |
 | Non-quest / general | `Where We Are` |
 
-## "Test Scenario" variant (testing hand-back) — required rows
+## "Test Scenario" variant (testing hand-back) — the shape (2026-11-16 per みや)
 
-Reuse `test-data-echo` for the data rows, then add the rest:
+His words: "use a better formatting for test scenario please. Also maybe replace that first column with "where", like what langkah or panel." · "Just use 1 permohonan test scenario to avoid confusion."
+
+One permohonan per scenario; one scenario heading per ticket (deploy skill §5b: never combine tickets). Each scenario, in this order:
+
+    ## <ticket(s)>: <what is tested> (<ENV>)
+    **Permohonan (<ENV>):**      then the full id_pengenalan alone in a ```text box
+    **Login:**                   then the pengguna semasa email alone in a ```text box
+    **Tugasan:** <nama tugasan>  (several in order: "A, then B")
+    | Where | Do | Expect |       Where = the langkah or panel on screen; one row per ISSUE| row and per tugasan the BA named
+
+Enforced by `domain/test-scenario-login-gate` (v2 v3 v5 v6 read this shape; the old `| Login | … |` table still passes). The rows below are what the scenario must also carry:
 
 | Row | Content |
 |---|---|
-| Permohonan ID | `<id>` (+ aplikasi_id) |
-| Login | `<pengguna semasa email>` — ALWAYS paired with the ID (pengguna rule) |
-| Tugasan | `<kod>` — `<nama>` |
-| Role / pejabat | `<peranan>` / `<pejabat>` |
-| What to check | per-item, what to look at |
-| Discriminator | why THIS app — what makes it the right/only one |
+| Role / pejabat | `<peranan>` / `<pejabat>`, only when the login does not make it plain |
+| Discriminator | why THIS permohonan — what makes it the right/only one |
 | **🚨 PRECONDITION — the state the record must be in** | the EXACT state that makes this test meaningful (which tugasan must be ACTIVE, which status, which row must exist and when it was created). **MANDATORY** |
 | **🚨 NOT-A-RESULT — what does NOT disprove the fix** | name the states where the fix is *not exercised*, and say plainly that seeing the old/other value there proves nothing. **MANDATORY** |
 

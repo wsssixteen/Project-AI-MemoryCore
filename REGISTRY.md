@@ -173,7 +173,7 @@ _Health: 0 ghost(s) · 52 unregistered file(s) · 53 hook(s) without eval pins �
 | story-video (eval-only pkg) | — | 🔶 NOT registered | ✓ | 1 ✓ | — | pre-forge |
 | sweep (eval-only pkg) | — | 🔶 NOT registered | ✓ | 2 ✓ | — | pre-forge |
 | system-audit | SessionStart | ✓ wrapped | ✓ | — | 2026-10-02T09:16 | created |
-| system-change (eval-only pkg) | — | 🔶 NOT registered | ✓ | 1 ✓ | — | pre-forge |
+| system-build (eval-only pkg) | — | 🔶 NOT registered | ✓ | 1 ✓ | — | pre-forge |
 | system-change-title | Stop | ✓ bundled(stop-reply-shape) | ✓ | 1 ✓ | — | created |
 | system-check-trigger | — | 🔶 NOT registered | ✓ | — | 2026-10-02T09:16 | pre-forge |
 | system-edit-gate | PreToolUse | ✓ bundled(pretool-editwrite-gates) | ✓ | — | 2026-10-02T09:44 | pre-forge |
@@ -269,7 +269,7 @@ _Health: 0 ghost(s) · 52 unregistered file(s) · 53 hook(s) without eval pins �
 | sweep | — |
 | sycophancy-circuit-breaker | — |
 | system-audit | — |
-| system-change | — |
+| system-build | — |
 | system-check | — |
 | system-design | — |
 | system-rules | — |

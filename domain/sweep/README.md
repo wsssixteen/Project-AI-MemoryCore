@@ -2,7 +2,7 @@
 
 **What fires when**: on purpose, `/sweep`. The Workflow runs W1+W2 and W3 for every ticket together, W4 per ticket, then closes with the audit Tool and the audit-and-refine step.
 
-**Contract**: one ledger row per run in `log.jsonl`, written by `audit.js run --write` (never typed by hand), read back by its own self-audit. Every defect class in the row has a fix-now line and a refinement line with its accuracy effect. A class seen in 3 runs is marked REFINE NOW and is proposed through `/system-change`.
+**Contract**: one ledger row per run in `log.jsonl`, written by `audit.js run --write` (never typed by hand), read back by its own self-audit. Every defect class in the row has a fix-now line and a refinement line with its accuracy effect. A class seen in 3 runs is marked REFINE NOW and is proposed through `/system-build`.
 
 | Part | Path |
 |---|---|

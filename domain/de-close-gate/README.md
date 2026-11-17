@@ -51,11 +51,13 @@ Rule: DE close BLOCKS unless the latest full (non-partial) `action=save-rules-ra
 ## C7 — qa_doc saved this session (added 2026-09-23, #280176 DE audit)
 Every touched ticket whose active.txt block names a `qa_doc=` must have that file modified after the session started. Step 2c (save every quest touched) had no check. A doc absent on disk is skipped; a worktree also looks in the main checkout three levels up. Eval F19–F21.
 
-diagram: domain/de-close-gate/diagram.png (C9 marked)
+diagram: domain/de-close-gate/diagram.png (C11 marked)
 self_audit: the eval replays every condition; each fire writes passed or blocked with the failing conditions to log.jsonl
 
 **C9 SAVE-QUEST (2026-10-30, per みや: "please audit if just saying DE is enough to perform save quest")**: step 2d of Domain Expansion said to run `lib/save-quest.js` for every touched quest, and nothing checked it. C9 blocks the close when a touched QA ticket has no run this session, or its latest verdict is still PHASE-1, PHASE-2 or LEARN-THEN-PHASE-2 with no reply line "Phase 1 not ready: <QA> <what is missing>". An ADHOC id is exempt (adhoc-save owns it). Eval 44/44 (C9-1 to C9-13).
 
 **C10 SESSION FINDINGS ROUTED (2026-10-30, per みや: "audit of an audit")**: `lib/session-audit.js` reads the transcript at the close; each finding class needs one reply line `<class> → <home, or why none>`. boundary: covers the finding classes the audit script returns for this transcript and the reply's `→` lines · never runs the audit outside a close, never fails the close when the audit script throws, never judges whether a named home is the right one · stops at a block listing the unrouted classes; the routing is Ruri's reply, the build-or-drop at 3 repeats is his ruling. Eval C10-1 to C10-4.
+
+**C11 IMPROVEMENT AXES (2026-11-17, per みや on 254267: every DE audits the quest workflow and etanah-knowledge; design audited by claude-fable-5-2)**: the session's replies carry `A2 quest workflow: <finding + proposal row | none: reason>` and `A4 etanah-knowledge (<general|state key>): <finding + file | none: reason>` (DE Step 7.5). Any assistant reply of the session counts, not only the last; text on the same line after the colon is required. boundary: covers the assistant replies of the closing session · never reads his messages as the lines, never judges whether the finding is good · stops at a block naming A2 or A4. Eval C11-1 to C11-10.
 
 **Second stop (2026-10-30)**: on a retry after a block the gate used to stay silent, so a fixed re-close left no row. It now checks and logs `passed-second-stop` or `failed-second-stop`, and still never blocks twice. Spec kept: one block per close. Eval S1 to S4.

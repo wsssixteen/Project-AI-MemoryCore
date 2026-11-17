@@ -50,6 +50,24 @@ const PLAIN_WAIVE_RX = new RegExp([
 ].join('|'), 'gi');
 const PLAIN_NEGATE_RX = /\b(?:don'?t|do not|never|not|cannot|can'?t|won'?t|jangan|tak|before|after|until|unless|if|whether)\b[^.?!\n]{0,30}$/i;
 const TICKET_NUM_RX = /(?<![\d/])\d{5,6}(?![\d/])/g;
+// The BA's example block of the current cycle: each non-empty line of a <pre> under an Expected marker, in a BA note
+// written after our last note (261986, 2026-11-05: a line break in her example was lost when it was retyped as one ISSUE line).
+const sq = s => String(s).replace(/\s+/g, ' ').trim();
+function exampleLines(history) {
+  const J = String(history || '').split(/^(?=--- \S+ by .+ ---\s*$)/m);
+  let from = 0; J.forEach((j, i) => { if (/^\s*\[role\]\s+Dev/mi.test(j) && /^\s*notes:\s*$/m.test(j)) from = i + 1; });
+  const out = [];
+  for (const j of J.slice(from)) {
+    if (!/^\s*\[role\]\s+BA\b/m.test(j)) continue;
+    let exp = false, pre = false;
+    for (const l of j.split(/\r?\n/)) {
+      if (/^\s*[*_+]*\s*(Issue|Session id)\b/i.test(l)) exp = false; else if (/^\s*[*_+]*\s*Expected\b/i.test(l)) exp = true;
+      if (/<\/?pre>/i.test(l)) { pre = /<pre>/i.test(l); continue; }
+      if (exp && pre && l.trim()) out.push(sq(l));
+    }
+  }
+  return [...new Set(out)];
+}
 
 // A worktree session shares the MAIN quest/active.txt and projects/ folder.
 function mainRoot(p) { return String(p).replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]?$/i, ''); }
@@ -153,6 +171,19 @@ function evaluate(text, opts) {
   }
   // Five standing rows in every ledger (2026-11-10, replay of 59 Melaka reworks; Fable 5.2 audit rounds 1-2).
   if (o.standing && L.rows.length) for (const s of STANDING) if (!L.rows.some(r => new RegExp('^[*`\\s]*standing:\\s*' + s + '\\b', 'i').test(r.design || ''))) fails.push({ kind: 'standing-missing', msg: `the ledger has no "standing: ${s}" row (the five: ${STANDING.join(' · ')})` });
+  // A given row answered RAN writes its list first: one ISSUE|n|<item>|<expected> line per BA item and per value on the BA's file,
+  // marked or not; the test table is counted against them (2026-11-17 per miya, 274323: an unmarked Wang Cagaran value was never read).
+  const given = L.rows.find(r => /^[*`\s]*standing:\s*given\b/i.test(r.design || ''));
+  const issueLines = String(text || '').match(/^ISSUE\|\d+\|.*$/mg) || [];
+  if (given && given.kind === 'ran' && !/RAN:\s*n\/?a\b/i.test(given.status)) {
+    if (!issueLines.length) fails.push({ kind: 'given-no-issues', msg: `row ${given.n} standing: given is RAN but the quest doc has no ISSUE|n|<item>|<expected> line: write one per BA item and per value on the BA's file, marked or not` });
+    // Each ISSUE owes a ledger row named issue:n (same shape as arrival:<id>), so a BA item not done is an OPEN row, never a sentence (261986).
+    for (const n of new Set(issueLines.map(s => s.split('|')[1]))) if (!L.rows.some(r => new RegExp('\\bissue:\\s*(?:\\d+\\s*,\\s*)*' + n + '\\b', 'i').test(r.design + ' ' + r.falsifier))) fails.push({ kind: 'issue-unanswered', msg: `ISSUE ${n} has no ledger row named issue:${n} (one row per BA item, several as issue:1,2): RAN with what was run, or miya's ACCEPTED-RISK` });
+    // Each line of the BA's example block is its own ISSUE line, in her words.
+    const exps = new Set(issueLines.map(s => sq(s.split('|').slice(3).join('|'))));
+    const miss = (o.baLines || []).filter(l => !exps.has(l));
+    if (miss.length) fails.push({ kind: 'given-line-missing', msg: `${miss.length} line(s) of the BA's example block are not ISSUE lines of their own, first: "${miss[0]}"` });
+  }
   if (o.staged && o.staged.length && !o.merge) {
     if (!L.fixFiles.length) fails.push({ kind: 'no-fix-files', msg: 'the ledger has no "Fix files:" line, so the staged files cannot be compared with the design' });
     else {
@@ -235,8 +266,10 @@ function check(qa, opts) {
     const doc = docFor(qa, block);
     const codeFix = ctx === 'commit' || !!o.codeFix;
     let res = { fails: [], rows: [], fixFiles: [] };
+    let baLines = [];   // the BA's example lines, from the ticket's own journal; no journal on this machine = no line check
+    try { baLines = exampleLines(fs.readFileSync(path.join(require(path.resolve(__dirname, '..', '..', 'lib', 'task-folder.js')).briefDir(block.task_folder), 'History.txt'), 'utf8')); } catch (_) {}
     if (!doc) { if (codeFix) res.fails.push({ kind: 'no-doc', msg: `no quest doc found for ${qa} (active.txt qa_doc=${block.qa_doc || '(empty)'})` }); }
-    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge, ctx, standing: true });
+    else res = evaluate(fs.readFileSync(doc, 'utf8'), { needLedger: codeFix, staged: o.staged || null, merge: !!o.merge, ctx, standing: true, baLines });
     let override = null;
     if (codeFix || ctx === 'cli') {
       if (String(block.local_test_confirmed || '').toLowerCase() !== 'true') {
@@ -316,4 +349,4 @@ if (require.main === module) {
   process.exit(1);
 }
 
-module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };
+module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, message, exampleLines, ticketOf, mainRoot, readBlock, OVERRIDE_RX };

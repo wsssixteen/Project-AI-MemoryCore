@@ -44,4 +44,4 @@ for p in sys.argv[1:]:
         out.append(read(p))
     except Exception as e:  # reported by the caller as an integrity problem
         out.append({"file": p, "error": "%s: %s" % (type(e).__name__, e)})
-print(json.dumps(out, ensure_ascii=False))
+print(json.dumps(out))  # ASCII escapes: under python -I the console codepage (cp1252) cannot print every note (261986, 2026-11-17)
