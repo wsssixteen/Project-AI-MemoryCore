@@ -57,7 +57,7 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
   // v2 (2026-08-21, per みや): a DEPLOY-STEPS emit must CARRY its test scenario —
   // prepare the scenario right after the deploy card, never leave testing implicit.
   const DEPLOY_RE = /deployment-scripts|sh deploy-|deploy-awam\.sh|deploy-plp\.sh/i;
-  const SCENARIO_TABLE_RE = /\|\s*Login\s*\|/i;
+  const SCENARIO_TABLE_RE = /\|\s*(?:Login|Where)\s*\|/i;
   if (DEPLOY_RE.test(text) && !(SCENARIO_TABLE_RE.test(text) && LOGIN_RE.test(text))) {
     return {
       fired: true,
@@ -65,7 +65,7 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
       blockReason: // runHook prints only blockReason/contextOut to stderr
         
         '⛔ test-scenario-login-gate v2: deploy steps emitted with NO test scenario attached.\n' +
-        '   Append the Test Scenario table (| Login | Screen | Do | Expect |) with a real login,\n' +
+        '   Append the Test Scenario (Permohonan + Login text boxes, Tugasan line, table | Where | Do | Expect |) with a real login,\n' +
         '   directly under the deploy steps, then re-send. Derive the login yourself (umm_a_tgsn\n' +
         '   holder / umm_p_aplikasi.created_by). Bypass: [skip-login-gate: <reason>]\n',
     };
@@ -100,7 +100,7 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
         blockReason:
           '⛔ test-scenario-login-gate v4: the deploy card is not followed by its two sections.\n' +
           '   Missing: ' + missing.join(' · ') + '\n' +
-          '   Shape, right after the deploy steps: "## Test scenario — <env>" (table Login | Screen | Do | Expect)\n' +
+          '   Shape, right after the deploy steps: "## Test scenario — <env>" (Permohonan + Login boxes, Tugasan, table Where | Do | Expect)\n' +
           '   then "## Redmine handover" (Root cause · Solution · BA note from ticket-close-block.js · field set).\n' +
           '   miya named no env? ask him with one popup first. Bypass: [skip-handover-gate: <reason>]\n',
       };
@@ -110,7 +110,7 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
   // by a local-test-prep run that is still true on the machine (local DB = the schema holding
   // the test data, the ticket's fix files on his repo). He may run locally at any moment.
   const PREP_BYPASS_RE = /\[skip-local-prep:\s*[^\]<]+\]/i;
-  const TEST_TABLE_RE = /\|\s*Login\s*\|[\s\S]*\|\s*(?:Do|Expect|Env)\s*\||\|\s*(?:Do|Expect|Env)\s*\|[\s\S]*\|\s*Login\s*\|/i;
+  const TEST_TABLE_RE = /\|\s*(?:Login|Where)\s*\|[\s\S]*\|\s*(?:Do|Expect|Env)\s*\||\|\s*(?:Do|Expect|Env)\s*\|[\s\S]*\|\s*Login\s*\|/i;
   if ((HANDBACK_RE.test(text) || TEST_TABLE_RE.test(text) || DEPLOY_RE.test(text)) && !PREP_BYPASS_RE.test(text)) {
     const prep = require(path.join(ROOT, 'quest', 'local-test-prep.js'));
     const ids = Array.from(new Set(text.match(prep.PERMOHONAN_RE) || []));
@@ -144,8 +144,9 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     const FULL_RE = /PT[A-Z]{2,4}\/\d{2}\/[A-Z]\/[A-Z]{2,6}\/\d{4}\/\d{1,5}/g;
     const shorts = Array.from(new Set((text.match(SHORT_RE) || []).filter(s => !/^PT[A-Z]{2,4}\//.test(s))));
     const fulls = Array.from(new Set(text.match(FULL_RE) || []));
-    // Copyable = inline code in the table cell (`PTMLK/…`), never a separate block that breaks the table (miya 2026-11-05).
-    const notBlocked = fulls.filter(id => !new RegExp('`' + id.replace(/\//g, '\\/') + '`').test(text));
+    // Copyable = its own ```text box above the table (2026-11-16 shape) or inline code in a table cell (2026-11-05 shape).
+    const boxes = (text.match(/```[\s\S]*?```/g) || []).join('\n');
+    const notBlocked = fulls.filter(id => !new RegExp('`' + id.replace(/\//g, '\\/') + '`').test(text) && !boxes.includes(id));
     if (shorts.length || notBlocked.length) {
       return {
         fired: true,
@@ -153,13 +154,13 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
         blockReason:
           '⛔ test-scenario-login-gate v5: a permohonan ID in a test scenario is not copyable.\n' +
           (shorts.length ? '   Short form (ambiguous, three pejabat can share it): ' + shorts.join(', ') + ' → use the full id_pengenalan from umm_aplikasi.\n' : '') +
-          (notBlocked.length ? '   Full ID not in inline code (backticks) inside its table cell: ' + notBlocked.join(', ') + '\n' : '') +
-          '   Shape: the full ID as `PTMLK/02/L/PT/2026/22` in the Permohonan cell of the test table; never a separate block (it breaks the table). Re-send.\n',
+          (notBlocked.length ? '   Full ID not in a copy box: ' + notBlocked.join(', ') + '\n' : '') +
+          '   Shape: **Permohonan (<ENV>):** then the full ID alone in a ```text box, above the Where | Do | Expect table. Re-send.\n',
       };
     }
 
     // v6 (2026-11-05, per みや, #288059: "Didn't BA ask for Semakan & Perakuan tugasan also?"): every ISSUE| row of
-    // the ticket's qa_doc gets at least one test row. Rows are counted in the Login tables only (never Next steps).
+    // the ticket's qa_doc gets at least one test row. Rows are counted in the Where (or old Login) tables only (never Next steps).
     // Several tickets: each ticket's rows are counted from its own heading to the next heading (one table per ticket).
     const ISSUE_BYPASS_RE = /\[skip-issue-rows:\s*[^\]<]+\]/i;
     if (!ISSUE_BYPASS_RE.test(text)) {
@@ -170,7 +171,7 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
       const loginRows = seg => {
         const L = seg.split(/\r?\n/); let n = 0;
         for (let i = 0; i < L.length; i++) {
-          if (!/\|\s*Login\s*\|/i.test(L[i])) continue;
+          if (!/\|\s*(?:Login|Where)\s*\|/i.test(L[i])) continue;
           for (let j = i + 2; j < L.length && /^\s*\|/.test(L[j]); j++) n++;
         }
         return n;

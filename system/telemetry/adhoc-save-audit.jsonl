@@ -680,6 +680,7 @@
 {"ts":"2026-11-13T03:56:02.936Z","id":"ADHOC-PRBB-2026-25","outcome":"pass","fails":[],"dur_ms":102}
 {"ts":"2026-11-13T03:56:26.006Z","id":"ADHOC-PRBB-2026-25","outcome":"pass","fails":[],"dur_ms":81}
 {"ts":"2026-11-13T06:22:32.143Z","id":"ADHOC-PLBP-2026-3","outcome":"pass","fails":[],"dur_ms":45}
+{"ts":"2026-11-16T02:48:57.357Z","id":"ADHOC-PLP-2026-8","outcome":"pass","fails":[],"dur_ms":55}
 {"ts":"2026-11-16T02:48:16.267Z","id":"ADHOC-PLP-2026-8","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":77}
 {"ts":"2026-11-16T02:48:25.943Z","id":"ADHOC-PLP-2026-8","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":77}
 {"ts":"2026-11-16T02:48:34.090Z","id":"ADHOC-PLP-2026-8","outcome":"pass","fails":[],"dur_ms":65}
@@ -688,3 +689,7 @@
 {"ts":"2026-11-16T06:25:25.609Z","id":"ADHOC-PPJK-2026-2","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":47}
 {"ts":"2026-11-16T06:25:32.846Z","id":"ADHOC-PPJK-2026-2","outcome":"pass","fails":[],"dur_ms":38}
 {"ts":"2026-11-16T06:36:02.501Z","id":"ADHOC-PPJK-2026-2","outcome":"pass","fails":[],"dur_ms":66}
+{"ts":"2026-11-17T02:55:12.375Z","id":"ADHOC-RPT-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":83}
+{"ts":"2026-11-17T02:55:26.774Z","id":"ADHOC-RPT-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":84}
+{"ts":"2026-11-17T02:55:42.088Z","id":"ADHOC-RPT-2026-1","outcome":"pass","fails":[],"dur_ms":69}
+{"ts":"2026-11-17T02:56:23.477Z","id":"ADHOC-RPT-2026-1","outcome":"pass","fails":[],"dur_ms":41}
