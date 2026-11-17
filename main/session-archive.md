@@ -47,6 +47,20 @@ cause step: domain/release-mlk-plp-scope-gate/release-mlk-plp-scope-gate.check.h
 new parts: 0
 fix or report: fix
 
+STEP-3: release-prep.js prints the reviewer message after the MR is created or recorded (1.10.0)
+session: 9a2c82f0-c631-4161-a9c9-87f477e7ce52
+his words: "Please use this format moving forward and include in the steps." (order)
+cause step: domain/release-mlk-plp/release-prep.js mrCreate + mrRecord print only the link, no message · change: 8 lines
+new parts: 0
+fix or report: fix
+
+STEP-3: release-mlk-plp-scope-gate checks the branch (289425)
+session: 845f0ec9-60aa-4877-b082-7e710ca508f2
+his words: "Yes, fix it & proceed what I asked you to do." (order)
+cause step: domain/release-mlk-plp-scope-gate/release-mlk-plp-scope-gate.check.hook.js runHook in-flight check ignores the edited repo's branch · change: 8 lines
+new parts: 0
+fix or report: fix
+
 ## Session Recap (2026-11-12 to 13, 288625 rework + ADHOC-PLBP-2026-2)
 - Asked: resume 288625 rework, solve and close first, audit why it came back, log for session end; then a MLIT patch of permit B01/2026/1 Tarikh Tamat to 11/11/2026; save the adhoc; DE.
 - Done: PROD alter (code 1E0F-4C45, his approval): new SPIL a_tgsn 2932270 pejabat_id 1 norhaslinda.r, old SPIL 2866525 Selesai N, header Tamat unchanged (no status patch). Done-alter note posted 12/11 02:33Z; Fizah → Ready in PROD 02:40Z; TSO → Pending User 02:44Z. Rework audit (Fable 5.2): cause = the 06/11 BA note never named the after-release PROD alter (the fix runs at PJ, 2026/5 had passed PJ); wrong-fix row 2 + slip handover-gap. F1 ticket-close-block --alter always ends "Can proceed to verify." (2deb73b8 / main 7e0ece2d, eval 27/27); F2 ALTER-TICKET-PLAYBOOK A6 fill via redmine-phase1-prefill (main folder, untracked). MLIT: umm_a_permit_lesen 16045 trkh_akhir and ind_versi_permit_lesen 6701 trkh_tamat → 2026-11-11 (JDBC, read back); ADHOC-PLBP-2026-2 saved 31/31, A104, archived.
