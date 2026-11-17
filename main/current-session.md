@@ -1,3 +1,11 @@
+**Last Activity (ADHOC-PPJK-2026-2 / #281324 PPJK Bukti Penyampaian + adhoc workflow fix)**: 2026-11-17 11:40 — worktree `adhoc-issues-prep-f5ea9c`. Staging + MLIT patched (5 missing PPJK codes, 3 tables each), PPJK/2026/2 and /3 continued, #281324 updated by miya with 281324-PROD.sql + 281324-TRAINING.sql; MLIT PGSJT dates patched (PT/2026/23 → 2026-11-05 15:50:11, PLPS/2026/7 → 2026-10-30 15:50:11). System: adhoc-save + script-check if/else steps, redmine-upload-path blocks ADHOC- names (d0b6368e, GitHub main 5143e516, eval 15/15). Open: PROD + Training scripts via infra/TSO.
+
+## Session Recap (2026-11-16 to 17, ADHOC-PPJK-2026-2 / #281324)
+- Asked: BA's PPJK/2026/3 ID lost after tugasan 22 Hantar; insert + alter so BA can test; same for /2; verify patch is enough; Redmine scripts for PROD + Training on the existing ticket; Fable 5.2 audit of my slips + system fix; MLIT PGSJT date patch; DE.
+- Done: 5 PPJK codes (BP_SWA_PLP, BP_PBW_PLP, KMPB_PLP, CM_CCSD_PLP, CB_CMN) on stg1/stg2/MLIT; /2 and /3 altered and visible (flag_tgsn_sistem N, as the notis code does after SMPN); no code or Flowable fix needed; scripts in Task folder 407 `2. Fix`; system fix landed (6 if/else steps).
+- Open: PROD + Training run by infra/TSO; alter runner cannot see sub-flow tasks (outside repo); Redmine API key typed inline (should come from config).
+- Mistakes: patched 2 of 5 codes first; said done before the BA's list showed the tugasan (hidden flag); created new Redmine tickets instead of updating 281324; ADHOC- file names and a one-line script sent; long replies to short questions.
+- Assessment: A1 step-3 gate needed the block in the MAIN folder session file, ~6 retries. A2 adhoc Phase 0 never loaded script/Redmine rules (now fixed). A3 visible-list check would have caught the hidden row in one query. A4 sub-flow code inventory per urusan now in FLOWABLE-KNOWLEDGE §16. A5 ⏭ no sweep.
 **Last Activity (Release Pelupusan 1.10.0 COMPLETE + reviewer message in the MR step)**: 2026-11-17 10:46 — worktree `pelupusan-1-10-baseline-4927df`. #274615 new fix merged into mlk/release/1.10.0 (e8f769afb2), miya redeployed staging; BAQA passed (4 tickets + Pelupusan and Awam baseline); MR !22 created (reviewer Yih Kit, then Aaron: only Maintainers merge), Aaron merged → origin/mlk/master 4ac8880349; stag-env already holds it; `merge-to-master --check` = release COMPLETE. System: MR step prints his reviewer message (4496e201 / main folder 487be600, eval 41/41, skill F5, reviewers = Aaron + Alex). Open: #281324 PROD SQL (281324-PROD.sql) via infra / Sheet card.
 
 ## Session Recap (2026-11-16 to 17, Release 1.10.0)
@@ -16,90 +24,3 @@
 - Mistakes: fix applied uncommitted in miya's repo and left there (local-leftover); test scenario format guessed twice (reply-shape); Redmine staging not done right after the test pass, and the Edge Alter page tried before the runner (workflow-skip); MLIT alter half-failed (data-broken).
 
 **Last Activity (Melaka manager sheet adhoc + Pena system change)**: 2026-11-16 15:40 — worktree `sheet-update-process-5e3ba0`. Melaka tab of the manager's Google Sheet written (5 incident rows, 14 strong tickets after a Fable 5.2 audit, elaboration); preview xlsx in Task folder 408. Audit (Fable 5.2 + own): Pena never loaded for report text, correction hook matched 0 of 19 prompts, "we/our" correction never stored. System change: Pena report profile + plain banned check + correction-hook phrasings (evals: pena 62/62, auto-skill-trigger 19/19). Follow-ups in todo Q1 (Pena ids, hook misses, step-3 rider, quest gates in adhoc). Domain Expansion 2026-11-17 10:43.
-
-## Session Recap (2026-11-16 to 17, Melaka manager sheet + Pena system change)
-- Asked: Melaka tab of the manager's sheet (plain table, ticket-number lists, one count column, third person, everyday words); then audit the adhoc with Fable 5.2 + own audit, system-change, DE.
-- Done: sheet written + preview xlsx in Task folder 408; Pena `report` profile, plain banned-phrase check, 3 correction-hook phrasings (GitHub main = main folder 67ee4407); corpus rows c79, c80.
-- Open: todo Q1 "Pena follow-ups from the Melaka sheet audit" (4 items, build only on his ask).
-
-**Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
-
-STEP-3: test scenario shape + status rule Rework sub-status (289376, 274323)
-session: 1879c463-c64a-4782-a882-8e26600129e0
-his words: "use a better formatting for test scenario please" (order)
-cause step: .claude/skills/stop-point-summary/SKILL.md Test Scenario variant · change: 16 lines
-new parts: 0
-fix or report: fix
-
-STEP-3: redmine-phase1-prefill Step 5 attachments (281324)
-session: d2a90df8-1bc0-4e84-b5e5-ede6d65a2283
-his words: "why did you not upload all the things needed just now when you prepare the redmine stage?" (order)
-cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 5 · change: 2 lines
-STEP-3: Pena loads for report text, his corrections are caught (Melaka sheet adhoc)
-session: e719659a-3170-48f5-994d-182ac1e911b8
-his words: "this falls under category of general adhoc but it should still point to OR load my style of writing" (order)
-cause step: .claude/skills/pena/SKILL.md:description · change: 14 lines
-new parts: 0
-fix or report: fix
-model: claude-opus-5-5 (fix decided by the Fable 5.2 audit)
-shown: domain/pena/diagram.png
-
-CHANGE-CARD (before): Pena loads for report text, his corrections are caught
-What: Pena, his writing-style tool, now loads for any text another person reads in his name, including a report or a sheet for his manager.
-Why: On 2026-11-16 the Melaka manager sheet was drafted without Pena, and his "met the ticket" and "we/our" corrections were not caught by any check.
-How: Report text picks a new report profile, the plain check flags the banned phrases he corrected, and the correction hook knows his real phrasings. ![flow](../domain/pena/diagram.png)
-When: Pena runs on demand before a draft in his name, and the correction hook runs on every prompt.
-Where: The Pena skill, its data in `domain/pena/`, `lib/pena.js` and `.claude/hooks/auto-skill-trigger.js` change. ![map](../domain/pena/change-map-20261116-152718.png)
-Where picture = the change map (lib/change-map.js).
-
-CHANGE-CARD (after): Pena loads for report text, his corrections are caught
-What: Pena now loads for any text another person reads in his name, a report, sheet, email or general adhoc included, through a new report profile.
-Why: On 2026-11-16 the Melaka manager sheet was drafted without Pena, and the correction hook matched 0 of his 19 prompts that day.
-How: The plain check flags the phrases he corrected ("met the ticket", "held by QA"), and the correction hook now catches 5 of those 19 prompts with no false fire. ![flow](../domain/pena/diagram.png)
-When: Pena runs on demand before a draft in his name, and the correction hook runs on every prompt.
-Where: The Pena skill, `domain/pena/` (profiles, modules, README, eval), `lib/pena.js` and `.claude/hooks/auto-skill-trigger.js` changed, landed as 67ee4407. ![map](../domain/pena/change-map-20261116-153618.png)
-Where picture = the change map (lib/change-map.js).
-system-change done (Pena report profile) 2026-11-16: GitHub main = main folder 67ee4407
-
-**Previous Last Activity (sweep + 289337 to Common + /handover + 289329 4 decimals)**: 2026-11-16 11:25 — worktree `redmine-sweep-audit-371861` (branch claude/redmine-sweep-audit-371861). 289329 Resolved to Mira (393a3fac33, int-env 1592cb0efd, MLIT 1.2345 both screens); 289337 Common fix returned 10:46 (common 1.13.0-MLK.beta.patch, test pending); /handover + sweep board-gap fix landed; Domain Expansion.
-**Last Activity (sweep + 289337 to Common + /handover + 289329 4 decimals)**: 2026-11-16 11:25 — worktree `redmine-sweep-audit-371861` (branch claude/redmine-sweep-audit-371861). 289329 Resolved to Mira (393a3fac33, int-env 1592cb0efd, MLIT 1.2345 both screens); 289337 Common fix returned 10:46 (common 1.13.0-MLK.beta.patch, test pending); /handover + sweep board-gap fix landed; Domain Expansion.
-
-
-STEP-3: 289378 audit, six quest steps
-session: 8518d2ea redmine-ticket-recommendations-69038f
-his words: "shall we do an audit of this session and then system change now?" (question)
-fix or report: fix
-who pays: on-demand: read once per quest at the step that runs
-goal without the part: each step that made a 289378 mistake carries one line so the next quest does not repeat it
-model: claude-opus-5-5
-shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\49b830161f995f72\8518d2ea-6b80-40ef-bca3-bdeaff045e7d\scratchpad\audit-plan.png
-
-CHANGE-CARD (before): 289378 audit, six quest steps
-What: One line is added to each of the six quest, doc-sim and close-phase steps that made a mistake on 289378.
-Why: On 2026-11-16 the 289378 quest guessed columns and a branch name, tested on stg1 before MLIT, called an unrun test checked, and left fix files in his repo.
-How: The quest flow picture audit-plan.png marks the six steps, each with its one added line.
-When: Each line is read at its own step of the next quest, with no new process.
-Where: The quest, close-phase and doc-sim skills plus section 6.3 of the Melaka DATABASE.md.
-C:\Users\Ridhwan\AppData\Local\Temp\claude\49b830161f995f72\8518d2ea-6b80-40ef-bca3-bdeaff045e7d\scratchpad\change-map-20261117-025049.png
-STEP-3: /handover (2026-11-13, 289337)
-session: 93665573-efe6-464a-8977-11b4d240af45
-his words: "built it" (order)
-his earlier words: "I need you to universally remember & invoke a /handover skill to make it more deterministic"
-fix or report: fix
-who pays: on-demand skill text (a few hand-overs a week) + per-turn rider inside the existing stop-claim-integrity node process, one regex, no new process
-goal without the part: fixing the three contradicting lines gives a fix file, but nothing forces the proof split or the pre-staging audit, and he named the skill
-model: claude-fable-5-2
-fable verdict: go-with-changes (skill v1 = other team only, rider only when a note or file is staged, handoff-load repointed, none: data/config/env only)
-cause step: .claude/skills/cross-module-check/SKILL.md verdict row THEIRS · change: 3 lines
-new parts: 1 · replaces: the procedure copy in feedback_cross_module_handoff_artifact.md and handoff-load's injected memory body
-shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\handover-plan.png
-audit model (popup 2026-11-13, his words): "Fix this rule since it goes against what I requested and had in mind." → the pre-hand-over audit runs on `node lib/models.js highest`; the sweep's "Never Fable" stays for its bulk waves only
-
-CHANGE-CARD (before): /handover
-- What: a /handover skill that every hand-over of a cause or fix to another team or module runs before the note is staged.
-- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
-- How: the step 2 flow picture handover-plan.png shows the hand-over check placed between diagnosis and staging.
-- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
-- Where: .claude/skills/handover, domain/ownership-input-check, cross-module-check, domain/handoff-load, domain/pena and two memories, as the change map shows.
-  change map: change-map-20261113-034302.png
-Where picture = the change map (lib/change-map.js).
