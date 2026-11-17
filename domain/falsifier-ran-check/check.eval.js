@@ -46,7 +46,7 @@ const RUBRIC = [
 const HEAD0 = '## Falsifier ledger\n\nFix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java\n\n| # | design | falsifier | cheapest test | status |\n|---|---|---|---|---|\n';
 const STAND = ['path', 'siblings', 'render', 'given', 'env'].map((k, i) => `| ${91 + i} | standing: ${k} | ${k} gap | ${k} run | RAN: ${k} checked on the BA ID, nothing found |\n`).join('');
 const HEAD = HEAD0 + STAND; // every ledger carries the five standing rows (2026-11-10)
-const row = (n, status, f) => `| ${n} | same-content compare | ${f || 'Word no-change save changes body XML beyond rsid/paraId'} | Word COM re-save of a template + compare | ${status} |\n`;
+const row = (n, status, f) => `| ${n} | issue:1 same-content compare | ${f || 'Word no-change save changes body XML beyond rsid/paraId'} | Word COM re-save of a template + compare | ${status} |\n`;
 const doc = body => fs.writeFileSync(DOC, RUBRIC + body);
 const cli = args => spawnSync(process.execPath, [CHECK, ...args], { encoding: 'utf8', env: { ...process.env, ...ENV }, timeout: 30000 });
 function transcript(name, entries) {
@@ -244,6 +244,48 @@ r = ev(GOOD0 + FIVE(RAN5, 'OPEN — after the deploy'), { needLedger: true, stan
 ok('S17 "OPEN — after the deploy" spelling waits too', r.fails.length === 0, kinds(r));
 active('true'); doc((HEAD + row(1, 'RAN: 2026-10-04 re-save run, compare unchanged')).replace('RAN: env checked on the BA ID, nothing found', 'OPEN: after deploy')); r = cli(['QA-244600']);
 ok('S18 cli clear line names the rows waiting after deploy', r.status === 0 && /1 waiting after deploy/.test(r.stdout), r.status + ' ' + r.stdout.slice(0, 160));
+
+// ── G4-G11 + X1-X5 (2026-11-17, 261986): each ISSUE named by a ledger row; each line of the BA's example block its own ISSUE line ──
+const R261 = '# QA-261986\n\nISSUE|1|item 3 format|JT row layout as BA example\nISSUE|2|item 6 at Penyediaan PTG|items 1-6 on first open\n\n';
+const ITEM6 = '| 1 | issue:2 regenerate on PTG first open | PSBS never meets the guard | read guard + MLIT ind_tgsn | RAN: guard needs PRMMKNPTG, present on MLIT PSBS |\n';
+const ev2 = (body, o) => C.evaluate(R261 + HEAD0 + body, Object.assign({ needLedger: true, standing: true, ctx: 'commit' }, o || {}));
+const GIVEN_SENT = 'RAN: ISSUE 2 fixed and tested; ISSUE 1 is still being checked';
+const FIVE2 = g => st(2, 'path', RAN5) + st(3, 'siblings', RAN5) + st(4, 'render', RAN5) + st(5, 'given', g || RAN5) + st(6, 'env', RAN5);
+r = ev2(ITEM6 + FIVE2(GIVEN_SENT));
+ok('G4 REPLAY 261986 (5 Nov): ISSUE 1 has no row, given says "still being checked" → issue-unanswered', kinds(r) === 'issue-unanswered' && /ISSUE 1 /.test(r.fails[0].msg), kinds(r));
+r = ev2(ITEM6 + '| 7 | issue:1 JT row layout | line break lost | doc-sim + PDF compare | OPEN |\n' + FIVE2());
+ok('G5 ISSUE 1 named by an OPEN row → open at the commit', kinds(r) === 'open', kinds(r));
+r = ev2(ITEM6 + '| 7 | issue:1 JT row layout | line break lost | doc-sim + PDF compare | OPEN |\n' + FIVE2(), { ctx: 'note' });
+ok('G5n same at the BA note → open', kinds(r) === 'open', kinds(r));
+r = ev2(ITEM6 + '| 7 | issue:1 JT row layout | line break lost | doc-sim | ACCEPTED-RISK: "pass item 6 first, item 3 next round" miya 2026-11-05 |\n' + FIVE2());
+ok('G5a ISSUE 1 row ACCEPTED-RISK with his words → passes', r.fails.length === 0, kinds(r));
+r = ev2('| 1 | issue:1,2 both items | gap | run | RAN: doc-sim both items on BA ID |\n' + FIVE2());
+ok('G6 clean: one row names issue:1,2 → passes', r.fails.length === 0, kinds(r));
+r = ev2('| 1 | issue:11 other | gap | run | RAN: doc-sim on the BA ID, output matched her example |\n| 2 | issue:2 x | gap | run | RAN: doc-sim on the BA ID, output matched her example |\n' + FIVE2());
+ok('G7 issue:11 does not answer ISSUE 1 → issue-unanswered ×1', kinds(r) === 'issue-unanswered', kinds(r));
+r = ev2(ITEM6 + FIVE2('RAN: n/a — no BA list on this ticket'));
+ok('G7b given RAN: n/a with a reason → no issue check', r.fails.length === 0, kinds(r));
+r = ev2(ITEM6 + FIVE2('OPEN'));
+ok('G7c given OPEN → only open, no issue-unanswered', kinds(r) === 'open', kinds(r));
+const BA6 = ['3.1 Majlis Bandaraya Melaka Bersejarah', '(Ruj. Surat : <No. Rujukan Surat> bertarikh <Tarikh Surat>)', '<Jabatan Teknikal> memaklumkan bahawa <Keputusan> terhadap permohonan ini.', 'Ulasan jabatan adalah seperti berikut:', 'JABATAN INI MENYOKONG DENGAN SYARAT. TEST 1'];
+const GOOD6 = '| 1 | issue:1,2 both | gap | run | RAN: doc-sim on the BA ID, output matched her example |\n' + FIVE2();
+r = ev2(GOOD6, { baLines: BA6 });
+ok('G8 REPLAY 261986: BA example lines, ISSUE 1 retyped as one line → given-line-missing (5)', kinds(r) === 'given-line-missing' && /5 line\(s\)/.test(r.fails[0].msg) && /3\.1 Majlis/.test(r.fails[0].msg), kinds(r) + ' ' + (r.fails[0] || {}).msg);
+const R6 = R261 + BA6.map((l, i) => `ISSUE|${i + 3}|item 3 example line ${i + 1}|${l}`).join('\n') + '\n\n';
+r = C.evaluate(R6 + HEAD0 + '| 1 | issue:1,2,3,4,5,6,7 all | gap | run | RAN: doc-sim on the BA ID, output matched her example |\n' + FIVE2(), { needLedger: true, standing: true, ctx: 'commit', baLines: BA6 });
+ok('G9 each example line is its own ISSUE line, named by a row → passes', r.fails.length === 0, kinds(r));
+const RJOIN = R261 + `ISSUE|3|l1|${BA6[0]}\nISSUE|4|l2+3|${BA6[1]} ${BA6[2]}\nISSUE|5|l4|${BA6[3]}\nISSUE|6|l5|${BA6[4]}\n\n`;
+r = C.evaluate(RJOIN + HEAD0 + '| 1 | issue:1,2,3,4,5,6 all | gap | run | RAN: doc-sim on the BA ID, output matched her example |\n' + FIVE2(), { needLedger: true, standing: true, ctx: 'commit', baLines: BA6 });
+ok('G10 lines 2 and 3 joined (the 5 Nov flattening) → given-line-missing (2)', kinds(r) === 'given-line-missing' && /2 line\(s\)/.test(r.fails[0].msg), kinds(r) + ' ' + (r.fails[0] || {}).msg);
+r = ev2(GOOD6, { baLines: [] });
+ok('G11 clean: no example block → passes', r.fails.length === 0, kinds(r));
+const J = (ts, who, role, notes) => `--- ${ts} by ${who} ---\n  [role] ${role}\n  notes:\n${notes.map(l => '    ' + l).join('\n')}\n\n`;
+const EXP = ['*Issue:*', '1) item 3 salah', '*Expected:*', '1) betul seperti contoh', '<pre>', '3.1 Majlis Bandaraya', '(Ruj. Surat : X bertarikh Y)', '<JT> memaklumkan bahawa Z', '</pre>', 'Session id:', '<pre>', 'not example', '</pre>'];
+ok('X1 <pre> under Expected → its 3 lines', C.exampleLines(J('2026-11-11T03:14:08Z', 'Nurul', 'BA', EXP)).length === 3, C.exampleLines(J('t', 'N', 'BA', EXP)));
+ok('X2 <pre> under Issue only → none', C.exampleLines(J('t', 'N', 'BA', ['*Issue:*', '<pre>', 'a line', '</pre>', '*Expected:*', 'words'])).length === 0);
+ok('X3 BA example older than our last note → none', C.exampleLines(J('t1', 'N', 'BA', EXP) + J('t2', 'Ridhwan', 'Developer', ['Salam, deployed'])).length === 0);
+ok('X4 <pre> in a Developer note → none', C.exampleLines(J('t', 'Ridhwan', 'Developer', EXP)).length === 0);
+ok('X5 <pre> after Session id → not counted (only the 3 under Expected)', C.exampleLines(J('t', 'N', 'BA', EXP)).every(l => l !== 'not example'));
 
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 let failed = 0;

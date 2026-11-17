@@ -306,6 +306,19 @@ const baList = { ts: '2026-11-04T09:01:34Z', by: 'Eval BA', lines: ['  [role] BA
     check('(22) B3 no BA list yet → no ⚠, said in the line; --json carries patchScope', /0 ⚠ · no BA list naming a permohonan yet$/.test(scopeOut(r.out)) && j.patchScope && j.patchScope.warn === 0 && j.patchScope.rows.length === 4, scopeOut(r.out));
 }
 
+// (23) 261986 (2026-11-17): a note written after our last note prints every line, older notes keep one line
+{
+    const note = (...l) => ['  notes:', ...l.map(x => '    ' + x)];
+    const root = fixture({ status: 'Rework', cycles: [], entries: [
+        { ts: '2026-11-03T07:00:25Z', by: 'Nurul Amirah Nadiah', lines: note('Salam Ridhwan,', 'old ask second line') },
+        { ts: '2026-11-05T07:23:35Z', by: 'Ahmad Ridhwan Anuar (Dev PLP)', lines: note('Salam Mira, deployed.', 'Item 3 still being checked') },
+        { ts: '2026-11-11T03:14:08Z', by: 'Nurul Amirah Nadiah', lines: note('Salam Ridhwan,', '*Expected:*', '<pre>', '3.1 Majlis Bandaraya', '</pre>', '+*NOTE*+', 'Pending test for item 6') },
+    ] });
+    const r = run(root);
+    check('(23) newest BA note after our last note prints in full', /\| \*Expected:\*/.test(r.out) && /\| 3\.1 Majlis Bandaraya/.test(r.out) && /\| Pending test for item 6/.test(r.out), r.out.slice(0, 600));
+    check('(23b) notes before our last note keep their one line', !/old ask second line/.test(r.out) && !/\| Item 3 still being checked/.test(r.out), r.out.slice(0, 600));
+}
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.name + (x.pass ? '' : ' → ' + x.detail)); }
 console.log('\nticket-load-verify.eval: ' + (results.length - failed) + '/' + results.length + ' green');

@@ -24,3 +24,35 @@
 - Mistakes: fix applied uncommitted in miya's repo and left there (local-leftover); test scenario format guessed twice (reply-shape); Redmine staging not done right after the test pass, and the Edge Alter page tried before the runner (workflow-skip); MLIT alter half-failed (data-broken).
 
 **Last Activity (Melaka manager sheet adhoc + Pena system change)**: 2026-11-16 15:40 — worktree `sheet-update-process-5e3ba0`. Melaka tab of the manager's Google Sheet written (5 incident rows, 14 strong tickets after a Fable 5.2 audit, elaboration); preview xlsx in Task folder 408. Audit (Fable 5.2 + own): Pena never loaded for report text, correction hook matched 0 of 19 prompts, "we/our" correction never stored. System change: Pena report profile + plain banned check + correction-hook phrasings (evals: pena 62/62, auto-skill-trigger 19/19). Follow-ups in todo Q1 (Pena ids, hook misses, step-3 rider, quest gates in adhoc). Domain Expansion 2026-11-17 10:43.
+
+- 2026-11-17 system-build step 2 (QA-261986 hand-back gap): Fable 5.2 xhigh audit running; next = step 3 STEP-3 block + nod, then build in quest lane.
+
+STEP-3: QA-261986 hand-back gap (falsifier-ran-check issue:n + BA example lines; manifest PDF notes, full BA notes, 1) lists)
+session: f058be1f-7965-4dae-a902-a985f8c6d784
+his words: "Can you run system-upgrade system-change to audit built this and eval and verify and eval it again and scrutinize and run through all verifications." (order)
+fix or report: fix
+who pays: on-demand: falsifier check at commit, close-phase step 1 and BA note; manifest at quest start and resume
+goal without the part: no new part; each ISSUE must be named by a ledger row, each line of the BA's example block is its own ISSUE line, and the manifest reads every PDF note and every line of the newest BA notes
+model: claude-fable-5-2 (audit, xhigh) + claude-opus-5-5 (build)
+cause step: domain/falsifier-ran-check/check.js:evaluate · change: 33 lines · quest/pdf-annotations.py:47 1 line · lib/redmine-role.js:39 1 line · quest/ticket-load-verify.js BA notes print
+new parts: 0
+
+CHANGE-CARD (before): hand-back gap fix (261986)
+What: The falsifier check blocks a hand-back while any BA item or any line of her example is unanswered, and the ticket manifest shows every PDF note and every line of her newest note.
+Why: On 2026-11-05 ticket 261986 went back Resolved with item 3 still open, and her two-line example was retyped as one line, so it came back on 2026-11-11.
+How: The flow picture shows the ledger check at the commit, at close-phase step 1 and at the BA note.
+domain/falsifier-ran-check/diagram.png
+When: It runs at the etanah commit gate, at close-phase Phase 1 step 1, at the BA pass note and at every quest start or resume.
+Where: The parts sit in domain/falsifier-ran-check, the quest skill folder, quest/ and lib/, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\563429ed096014e2\f058be1f-7965-4dae-a902-a985f8c6d784\scratchpad\change-map-20261117-045504.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): hand-back gap fix (261986)
+What: The falsifier check now blocks a hand-back when an ISSUE has no issue:n row or a BA example line is not its own ISSUE line, and the manifest prints every PDF note and every line of her newest note.
+Why: On 2026-11-05 ticket 261986 went back Resolved with item 3 still open, and her two-line example was retyped as one line, so it came back on 2026-11-11.
+How: The flow picture shows the ledger check at the commit, at close-phase step 1 and at the BA note.
+domain/falsifier-ran-check/diagram.png
+When: It runs at the etanah commit gate, at close-phase Phase 1 step 1, at the BA pass note and at every quest start or resume.
+Where: The changed parts are domain/falsifier-ran-check, the quest skill and template, quest/ticket-load-verify.js, quest/pdf-annotations.py and lib/redmine-role.js, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\563429ed096014e2\f058be1f-7965-4dae-a902-a985f8c6d784\scratchpad\change-map-20261117-045504.png
+Where picture = the change map (lib/change-map.js).
