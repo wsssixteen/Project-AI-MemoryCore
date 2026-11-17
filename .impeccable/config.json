@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-11-05T11:34:17.126Z",
         "reason": "Ruri: SVG viewBox 1000 wide rendered to a 2328 px PNG, so font-size 9 renders about 21 px; the file is only ever seen as that PNG"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "domain/redmine-upload-path/diagram.html"
+        ],
+        "createdAt": "2026-11-17T02:59:01.557Z",
+        "reason": "Claude decided: static SVG diagram rendered to a 2.3x PNG by lib/diagram-render.js, no interactive text; 9px labels render at about 21px"
       }
     ]
   }
