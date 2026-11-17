@@ -211,5 +211,19 @@ eq('S126 no release work that day -> no baseline line (rare skipped Mon/Wed)', b
 eq('S127 two release branches worked the same day -> one line each', baselineLines(REFLOG, '2026-11-04'), ['MLK PLP Baseline 1.9.2', 'MLK PLP Baseline 1.9.1']);
 eq('S128 the baseline line passes his line check', lintLine('MLK PLP Baseline 1.10.0'), []);
 eq('S129 the baseline line is kept as written', protimeLine({ title: 'MLK PLP Baseline 1.10.0', env: 'PROD' }), 'MLK PLP Baseline 1.10.0');
+// two cycles (miya 2026-11-17): no-number placeholder on Mon + Wed in the morning, swapped or removed at settle
+const { baselineDefault, baselinePlaced, baselineSwap, BASELINE_PLACEHOLDER: PH } = require('./protime-plan.js');
+const WK = ['2026-11-23', '2026-11-24', '2026-11-25', '2026-11-26', '2026-11-27'];
+eq('S130 Monday morning: placeholder on Monday and Wednesday', baselineDefault({ week: WK, todayIso: '2026-11-23' }), ['2026-11-23', '2026-11-25']);
+eq('S131 Tuesday morning: only Wednesday is still ahead', baselineDefault({ week: WK, todayIso: '2026-11-24' }), ['2026-11-25']);
+eq('S132 a day off (holiday, leave) gets none', baselineDefault({ week: WK, todayIso: '2026-11-23', isOff: d => d === '2026-11-25' }), ['2026-11-23']);
+eq('S133 a day that already has a baseline line (his or ours) gets none', baselineDefault({ week: WK, todayIso: '2026-11-23', byDate: { '2026-11-23': { plan: [], adhoc: [E(9, 'Baseline Pelupusan 1.11.0 preparation')] }, '2026-11-25': { plan: [], adhoc: [E(8, PH)] } } }), []);
+eq('S134 a day it placed before is not refilled (he or a night run removed it)', baselineDefault({ week: WK, todayIso: '2026-11-24', placedBefore: baselinePlaced([{ mode: 'live', created: [{ id: 5, name: PH, date: '2026-11-25' }] }, { mode: 'dry', created: [{ id: 6, name: PH, date: '2026-11-27' }] }]) }), []);
+eq('S135 settle removes its own PENDING placeholder', baselineSwap({ entries: [E(5, PH), E(6, 'MLK PLP Baseline 1.11.0')], mine: e => e.id === 5 }), [{ id: 5, name: PH }]);
+eq('S136 a placeholder he typed, resolved or edited stays', baselineSwap({ entries: [E(5, PH), E(7, PH, 'RESOLVED'), E(8, 'MLK PLP Baseline 1.11')], mine: e => e.id !== 5 }), []);
+eq('S137 release repo unreadable -> placeholder kept', baselineSwap({ entries: [E(5, PH)], mine: () => true, repoOk: false }), []);
+eq('S138 the placeholder passes his line check', lintLine(PH), []);
+const SRC = require('fs').readFileSync(require('path').join(__dirname, 'protime-plan.js'), 'utf8');
+eq('S139 the run wires both cycles: morning adds, settle (and an off day) removes', [/\(plan\.baseline \|\| \[\]\)\.map\(d => \(\{ date: d, name: BASELINE_PLACEHOLDER, cat: 'ADHOC' \}\)\)/.test(SRC), /s\.remove\.push\(\.\.\.baselineSwap\(/.test(SRC), /if \(isOff\(d\)\) \{\s*\/\/[^\n]*\n\s*const gone = baselineSwap/.test(SRC)], [true, true, true]);
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);
