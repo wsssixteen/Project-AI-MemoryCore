@@ -41,7 +41,7 @@ NO NOTE TO ANOTHER TEAM IS STAGED UNTIL STEPS 1-5 ARE DONE AND THE Handover: LIN
 Handover: proof <proven % or "proven"> · fix <cycle-folder file name | none: data|config|env> · audit <model> <verdict>
 ```
 
-Self-audit: before the reply, read back the staged form (note text, assignee, attached file names) and check each against steps 2-5; a miss is fixed and read back again.
+Self-audit: before the reply, read back the staged form (note text, assignee, attached file names) and check each against steps 2-5; a miss is fixed and read back again. After any reload or re-fill of the form (a 422, an expired token, a new tab), every step-6 field is filled again and read back before Submit; a note that greets someone other than the form's Assignee is not submitted (288264: the re-fill after a 422 posted the note to Syakir with the ticket still on miya).
 
 ## Red Flags — STOP
 
