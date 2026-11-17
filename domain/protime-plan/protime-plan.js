@@ -268,6 +268,22 @@ function baselineOnDay(day) {
   const branches = git(['for-each-ref', '--sort=-creatordate', '--count=6', '--format=%(refname:short)', 'refs/heads/mlk/release/']).split('\n').filter(Boolean);
   return baselineLines(branches.map(b => git(['reflog', 'show', '--date=short', '--format=%gd', 'refs/heads/' + b])).join('\n'), day);
 }
+// Two cycles (miya 2026-11-17: "just add MLK PLP Baseline without version number until it is known ... we do need a 2 cycle
+// update"): the morning run places the line with no number on Monday and Wednesday; the settle run of that day removes
+// it, and the line with the number is added when a release branch was worked. Never a day off, never a day that already
+// has a baseline line, never a day this script placed it before (he or a night run removed it).
+const BASELINE_PLACEHOLDER = 'MLK PLP Baseline';
+function baselineDefault({ week, todayIso, byDate = {}, isOff = () => false, placedBefore = new Set() }) {
+  return [week[0], week[2]].filter(d => d && d >= todayIso && !isOff(d) && !placedBefore.has(d)
+    && ![...((byDate[d] || {}).plan || []), ...((byDate[d] || {}).adhoc || [])].some(e => /baseline/i.test(e.name)));
+}
+function baselinePlaced(rows) {
+  return new Set(rows.filter(r => r.mode === 'live').flatMap(r => r.created || []).filter(c => c.name === BASELINE_PLACEHOLDER).map(c => c.date));
+}
+// the placeholder this script placed, still PENDING and not edited, leaves at settle (repoOk: the release repo was readable)
+function baselineSwap({ entries = [], mine = () => false, repoOk = true }) {
+  return repoOk ? entries.filter(e => e.name === BASELINE_PLACEHOLDER && e.status === 'PENDING' && mine(e)).map(e => ({ id: e.id, name: e.name })) : [];
+}
 
 // PLAN or ADHOC for a worked ticket (miya 2026-10-14: "283345 ... we only assisted. It should be under adhoc. Unless when we
 // audit we added something a fix a patch"). commits = non-merge commits naming the ticket, oldest first: [{date, mine, subject}].
@@ -376,11 +392,11 @@ function rulesText() {
   } catch (_) {}
   return [
     `Runs: Mon-Fri ${times}. Before ${NIGHT_FROM_HOUR}:00 = morning run, from ${NIGHT_FROM_HOUR}:00 = night run.`,
-    `Morning: settle the previous working day, top up today to ${KPI}, plan the rest of the week ${KPI} a day (his KPI).`,
+    `Morning: settle the previous working day, top up today to ${KPI}, plan the rest of the week ${KPI} a day (his KPI); place "${BASELINE_PLACEHOLDER}" with no number on Monday and Wednesday unless the day is off or already has a baseline line.`,
     `Night: settle today.`,
-    `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked; remove from the later days of the week the tickets finished that day (placed there by this script); add "MLK PLP Baseline <version>" when a mlk/release branch was worked that day.`,
+    `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked; remove from the later days of the week the tickets finished that day (placed there by this script); add "MLK PLP Baseline <version>" when a mlk/release branch was worked that day; remove the no-number "${BASELINE_PLACEHOLDER}" it placed.`,
     `Worked: ${LEDGER_MIN_TURNS}+ turns in the turn ledger, or a Redmine note of his that day.`,
-    `Never touched: an entry he typed, edited or resolved; any adhoc entry; a day off.`,
+    `Never touched: an entry he typed, edited or resolved; any adhoc entry except its own no-number "${BASELINE_PLACEHOLDER}"; a day off.`,
     `Adhoc line: ${protimeLine({ env: 'PROD', state: 'melaka', title: '<title>' })} - title wording: .claude/skills/adhoc-save/SKILL.md "Adhoc title".`,
   ].join('\n');
 }
@@ -649,7 +665,12 @@ async function main() {
   const approvedDays = new Set(readLog().filter(r => r.run === 'manual:approved-day' && r.mode === 'live').map(r => r.day));
   const settled = {}, notes = [], workedByDay = {}, waitingByDay = {}, doneAll = new Set();
   for (const d of settleDays) {
-    if (isOff(d)) { console.log(`${d}: day off - left alone`); continue; }
+    if (isOff(d)) {
+      // leave approved after the morning placed the line: its own no-number baseline line still leaves
+      const gone = baselineSwap({ entries: [...((before[d] || {}).plan || []), ...((before[d] || {}).adhoc || [])], mine: e => mine(e, d) });
+      if (gone.length) settled[d] = { addPlan: [], addAdhoc: [], remove: gone, ahead: [] };
+      console.log(`${d}: day off - left alone${gone.length ? ` (its own ${BASELINE_PLACEHOLDER} removed)` : ''}`); continue;
+    }
     if (approvedDays.has(d)) { console.log(`${d}: approved by him line by line - left alone`); continue; }
     const ad = adhocsOfDay(d, ledger[d].adhocIds, blocks);
     // his own baseline line in any wording ("Baseline Pelupusan 1.9.0 preparation") already covers the day
@@ -665,13 +686,14 @@ async function main() {
     // finished that day -> off the later days of the week (only with Redmine read, like every other removal)
     const done = doneOn({ existing: before[d], worked });
     s.ahead = red.ok ? clearAhead({ day: d, byDate: before, done, mine }) : [];
+    s.remove.push(...baselineSwap({ entries: dayEntries, mine: e => mine(e, d), repoOk: fs.existsSync(BASELINE_REPO) }));
     for (const t of done) doneAll.add(t);
     settled[d] = s;
     for (const r of s.ahead) console.log(`  - remove ${r.date} ${r.name} (finished on ${d}, placed ahead by this script)`);
     console.log(`${d} settle - worked: ${worked.map(w => w.id + (w.own ? '' : ' (not his)')).join(', ') || 'none found'}${red.ok ? '' : ' (Redmine unreachable: nothing added or removed from tickets)'}`);
     for (const n of s.addPlan) console.log(`  + plan   ${n}`);
     for (const n of s.addAdhoc) console.log(`  + adhoc  ${n}`);
-    for (const r of s.remove) console.log(`  - remove ${r.name} (placed by this script, not worked)`);
+    for (const r of s.remove) console.log(`  - remove ${r.name} (placed by this script, ${r.name === BASELINE_PLACEHOLDER ? 'the number is known or no release branch was worked' : 'not worked'})`);
     if (!s.addPlan.length && !s.addAdhoc.length && !s.remove.length) console.log('  (already true)');
   }
 
@@ -687,12 +709,15 @@ async function main() {
     console.log(lines.length ? lines.join('\n') : '  (no empty day to fill)');
     for (const s of plan.skipped) console.log(`  ${s.date}: left alone (${s.why})`);
     if (plan.unplaced.length) console.log(`  not placed (rule: ${plan.perDay} a day): ${plan.unplaced.join(', ')}`);
+    plan.baseline = baselineDefault({ week, todayIso, byDate: before, isOff, placedBefore: baselinePlaced(readLog()) });
+    for (const d of plan.baseline) console.log(`  + adhoc  ${d} ${BASELINE_PLACEHOLDER} (number added the night it is known)`);
   }
   for (const n of notes) console.log('NOTE ' + n);
 
   const adds = [
     ...Object.entries(settled).flatMap(([d, s]) => [...s.addPlan.map(n => ({ date: d, name: n, cat: 'PLAN' })), ...s.addAdhoc.map(n => ({ date: d, name: n, cat: 'ADHOC' }))]),
     ...Object.entries(plan.placed).flatMap(([d, t]) => t.map(n => ({ date: d, name: n, cat: 'PLAN' }))),
+    ...(plan.baseline || []).map(d => ({ date: d, name: BASELINE_PLACEHOLDER, cat: 'ADHOC' })),
   ];
   const removes = Object.entries(settled).flatMap(([d, s]) => [...s.remove.map(r => ({ ...r, date: d })), ...(s.ahead || [])]);
   const base = { day: todayIso, week: monday, run, placed: plan.placed, unplaced: plan.unplaced, skipped: plan.skipped, notes };
@@ -720,7 +745,7 @@ async function main() {
     const e = ((((after || {})[a.date] || {})[a.cat === 'ADHOC' ? 'adhoc' : 'plan']) || []).find(x => x.name === a.name && !idsBefore.has(x.id) && !created.some(c => c.id === x.id));
     if (e) created.push({ id: e.id, name: a.name, cat: a.cat, date: a.date });
   }
-  const still = removed.filter(r => (((after || {})[r.date] || {}).plan || []).some(e => e.id === r.id)).map(r => `${r.date} ${r.name} still there`);
+  const still = removed.filter(r => [...(((after || {})[r.date] || {}).plan || []), ...(((after || {})[r.date] || {}).adhoc || [])].some(e => e.id === r.id)).map(r => `${r.date} ${r.name} still there`);
   // ids are logged even on a mismatch, so a later run still knows which entries are its own
   if (!after || missing.length || still.length) { logRow({ ...base, mode: 'live', result: 'ok-partial', created, removed }); return fail(2, 'read-back-mismatch', [...missing, ...still].join('; ') || 'plan unreadable after write'); }
 
@@ -728,7 +753,7 @@ async function main() {
   const resolved = [];
   const createdIds = new Set(created.map(c => c.id));
   for (const d of Object.keys(settled)) {
-    if (approvedDays.has(d) || !red.ok) continue;
+    if (approvedDays.has(d) || !red.ok || isOff(d)) continue;
     const rs = toResolve({ existing: (after || {})[d], worked: workedByDay[d] || [], waiting: waitingByDay[d] || [], mine: e => createdIds.has(e.id) || mine(e, d) });
     if (!rs.length) continue;
     const r = await api.request(apiBase, '/staff-plan/bulk/create-resolved', { method: 'POST', token: lg.token, body: rs.map(e => ({ parentId: e.id, resolvedDate: d })) });
@@ -741,4 +766,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { logRow({ mode: 'error', result: 'crash', detail: String(e && e.stack || e).slice(0, 400) }); console.error(e); process.exit(1); });
-module.exports = { doneOn, clearAhead, baselineLines, weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine, ownerOfDay, toResolve };
+module.exports = { doneOn, clearAhead, baselineLines, baselineDefault, baselinePlaced, baselineSwap, BASELINE_PLACEHOLDER, weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine, ownerOfDay, toResolve };

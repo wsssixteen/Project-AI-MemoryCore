@@ -41,7 +41,7 @@ For explaining a change to an existing part, the four rows + flow with the one c
 | Which box to highlight | the box where the value starts wrong and the box where it shows wrong, nothing else | a highlighted step that does not hold the value |
 | Which values to show | the value of concern only, written as the screen shows it (`MOHD TAUFIK 1/2`) | every field of the row |
 | The action beside the value | the urusan that made each row, beside it, small and grey (`MOHD TAUFIK 1/2   Pindahmilik 2012`), so two rows that look the same are told apart | identical rows with no source |
-| Text | labels and values only, short; a now ✗ / expected ✓ pair at the end | sentences inside boxes |
+| Text | labels and values only, short (the renderer FAILs a box text over 60 characters); a now ✗ / expected ✓ pair at the end | sentences inside boxes |
 
 Example: the MCL simulation picture (Pendaftaran lane: Asal · Pindahmilik 2012 → Pindahmilik baru → owner rows, each with its urusan; Portal lane: Carian Rasmi → MCL Tab 2 → now ✗ / expected ✓).
 
@@ -51,7 +51,7 @@ Example: the MCL simulation picture (Pendaftaran lane: Asal · Pindahmilik 2012 
 2. Type: the skill's §3 table (swimlane = who does what with handoffs · flowchart = decisions · sequence = messages in time). Copy its `assets/example-<type>.html`.
 3. Style: default colours, unless the work is inside a `/project` with its own brand (`.claude/skills/project/SKILL.md` section 7). **Fonts: `'Segoe UI', Arial` for text, `Consolas` for code labels; delete the example's Google Fonts `<link>` and every `Instrument Serif` / `Geist` reference** (2026-10-27 per みや: a picture that goes to another team must not look made by Claude). **Padding inside `.frame`** (about 28px 32px, `box-sizing: content-box`): the renderer crops at `.frame`, so with no padding the drawing touches the PNG edge.
 4. Write the file to the scratchpad, never into the repo or a Task folder unless he asks. One exception: a part's own diagram (system-design Rule 17) goes beside the part in the repo, e.g. `quest/requirement-index.diagram.html` + `.png`, then `node lib/diagram-census.js --check <part>` must exit 0.
-5. Check + render in one call: `node lib/diagram-render.js <file.html>` (self-check, then a PNG from headless Edge; prints `DIAGRAM-RENDER: OK <png>` or `FAIL <why>`). Fix every FAIL and re-run. Then Read the PNG and LOOK at it: no overlaps, no text on lines, nothing cut off.
+5. Check + render in one call: `node lib/diagram-render.js <file.html>` (self-check, then a PNG from headless Edge; prints `DIAGRAM-RENDER: OK <png>` or `FAIL <why>`). Fix every FAIL and re-run. **There is no way past a FAIL** (2026-11-17 per みや, 254267: three pictures were hand-made `<div>` boxes holding sentences, forced out with the old bypass flag; he could not read them or approve from them): the page is always a copy of the type's `example-<type>.html`, never written from scratch; any box text over 60 characters FAILs. Then Read the PNG and LOOK at it: no overlaps, no text on lines, nothing cut off.
 6. Send the PNG with `SendUserFile` (display `render`); the HTML only if he asks.
 
 ## 4. The reply

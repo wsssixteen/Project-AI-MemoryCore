@@ -2261,3 +2261,14 @@
 {"ts":"2026-11-17T03:41:51.520Z","category":"A3"}
 {"ts":"2026-11-17T03:41:53.723Z","category":"A4"}
 {"ts":"2026-11-17T03:41:58.277Z","category":"A2"}
+{"ts":"2026-11-17T06:43:48.821Z","category":"blocker"}
+{"ts":"2026-11-17T06:48:07.717Z","category":"reask/redundant"}
+{"ts":"2026-11-17T07:06:14.298Z","category":"reply-shape"}
+{"ts":"2026-11-17T07:06:18.626Z","category":"stale-repo"}
+{"ts":"2026-11-17T07:07:44.455Z","category":"blocker"}
+{"ts":"2026-11-17T07:18:23.261Z","category":"reask/redundant"}
+{"ts":"2026-11-17T07:25:02.296Z","category":"reply-shape"}
+{"ts":"2026-11-17T07:54:49.596Z","category":"A1"}
+{"ts":"2026-11-17T07:54:54.101Z","category":"A2"}
+{"ts":"2026-11-17T07:54:56.938Z","category":"A3"}
+{"ts":"2026-11-17T07:54:58.515Z","category":"A4"}

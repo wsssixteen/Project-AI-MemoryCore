@@ -40,6 +40,9 @@ Settle a day = make it say what was really worked:
 | PLAN entry this script placed, still PENDING, still the bare number, not worked | removed |
 | Ticket finished that day (passed on in Redmine, or RESOLVED on the day) and placed by this script on a LATER day of the week, still PENDING and the bare number (miya 2026-11-17: "Our 11PM should clear up if we end up doing more tickets that day") | removed from the later day; the next morning does not plan it again |
 | A `mlk/release/<version>` branch of etanah-pelupusan was created, merged into or bumped that day (its own reflog; usually Monday and Wednesday, some weeks not) | added as ADHOC `MLK PLP Baseline <version>`, unless a line of his with "Baseline" and that version is already on the day |
+| The no-number `MLK PLP Baseline` this script placed on that day, still PENDING and unedited (miya 2026-11-17: "just add MLK PLP Baseline without version number until it is known ... we do need a 2 cycle update") | removed: the line with the number replaces it, or no release branch was worked (MC, sudden holiday, skipped week); also removed on a day that became a day off |
+
+Morning, Baseline default (same day): `MLK PLP Baseline` with no number is placed as ADHOC on Monday and Wednesday of the week, today or later, unless the day is off, already has any baseline line, or this script placed it there before.
 | Entry he typed, entry he edited, RESOLVED entry, any ADHOC entry | never touched |
 | Public holiday, approved leave, weekend | day left alone |
 | Redmine unreachable | nothing removed |

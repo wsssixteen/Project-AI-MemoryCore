@@ -19,6 +19,8 @@
 //   C8 SAVE RULES RAN: the latest full action=save-rules-ran row (12h) carries fail=0 (lib/save-rules.js, DE step 12.7).
 //   C9 SAVE-QUEST DONE: every touched QA ticket has a lib/save-quest.js run this session and its stage was done (DE step 2d).
 //   C10 SESSION FINDINGS ROUTED: each class lib/session-audit.js finds in this transcript has a reply line "<class> → <home>" (DE step 7.4).
+//   C11 IMPROVEMENT AXES (2026-11-17 per miya, 254267, design audited by claude-fable-5-2): the session's replies carry
+//       "A2 quest workflow: <finding + proposal | none: reason>" and "A4 etanah-knowledge (<general|state>): <finding + file | none: reason>" (DE step 7.5).
 // PASS (silent): not-DE-close · bypass · all conditions hold
 // BYPASS: [skip-de-close-gate: <reason>] in the last assistant text
 // TEST HOOK: input JSON `_testEvents` overrides transcript parse; `_testActiveText`,
@@ -250,6 +252,16 @@ function checkC10(events, findings) {
   return { pass: unrouted.length === 0, unrouted };
 }
 
+// C11 — IMPROVEMENT AXES (2026-11-17, per miya on 254267: every DE audits the quest workflow and etanah-knowledge).
+// Step 7.5 asked for them in prose only. Any assistant text of the session counts, not only the last block (Fable audit).
+const A2_LINE = /\bA2 quest workflow:[ \t]*[^\s|]/i;
+const A4_LINE = /\bA4 etanah[- ]knowledge \([ \t]*[\w-]+[ \t]*\):[ \t]*[^\s|]/i;
+function checkC11(events) {
+  const text = events.filter(e => e.kind === 'text' && e.role === 'assistant').map(e => String(e.text)).join('\n');
+  const missing = [!A2_LINE.test(text) && 'A2', !A4_LINE.test(text) && 'A4'].filter(Boolean);
+  return { pass: missing.length === 0, missing };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -264,8 +276,9 @@ function evaluate(events, disk) {
   const c8 = checkC8(disk.gateLogLines, disk.now);
   const c9 = checkC9(events, disk.saveQuestLines || [], disk.sessionStartMs || 0, disk.now);
   const c10 = checkC10(events, disk.findings);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass && c9.pass && c10.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10 };
-  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10 };
+  const c11 = checkC11(events);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass && c9.pass && c10.pass && c11.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11 };
 }
 
 function readDisk() {
@@ -312,6 +325,8 @@ function buildBlockReason(r) {
     '   Fix: node lib/save-quest.js <QA> per ticket, do its stage (close-phase skill), re-run it; an unfinished quest gets a reply line "Phase 1 not ready: <QA> <what is missing>".');
   if (r.c10 && !r.c10.pass) rows.push('C10 SESSION FINDINGS NOT ROUTED (DE step 7.4): ' + r.c10.unrouted.join(', '),
     '   Fix: node lib/session-audit.js, then one reply line per class: <class> → <home: knowledge/tool/gate/workflow/memory file, or why none>, then re-close.');
+  if (r.c11 && !r.c11.pass) rows.push('C11 IMPROVEMENT AXES MISSING (DE step 7.5): ' + r.c11.missing.join(', '),
+    '   Fix: add "A2 quest workflow: <finding + proposal row | none: reason>" and "A4 etanah-knowledge (<general|state>): <finding + file | none: reason>", then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -349,7 +364,7 @@ if (require.main === module) {
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length)), r.c10 && !r.c10.pass && ('C10:' + r.c10.unrouted.length)].filter(Boolean).join(' '));
+      logFire(secondStop ? 'failed-second-stop' : 'blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run')), r.c9 && !r.c9.pass && ('C9:' + (r.c9.missing.length + r.c9.undone.length)), r.c10 && !r.c10.pass && ('C10:' + r.c10.unrouted.length), r.c11 && !r.c11.pass && ('C11:' + r.c11.missing.join('/'))].filter(Boolean).join(' '));
       if (secondStop) return { fired: true, blocked: false };
       return { fired: true, blocked: true, blockReason: text };
     }
@@ -358,4 +373,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, checkC10, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, checkC10, checkC11, editedSystemFiles };
