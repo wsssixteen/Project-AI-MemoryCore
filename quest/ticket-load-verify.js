@@ -379,13 +379,16 @@ L.push(`\u2550\u2550\u2550 TICKET LOAD MANIFEST \u2014 #${num} \u2550\u2550\u255
 L.push(`folder : ${folder}${archived ? '   [ARCHIVED]' : ''}`);
 L.push(`synced : ${syncedAt || 'unknown'}   ·   ticket last updated: ${lastUpdated || 'unknown'}`);
 L.push('');
-L.push(`A. CONVERSATIONS \u2014 ${journals.length} journal entr${journals.length === 1 ? 'y' : 'ies'} (oldest first). Echo one line each.`);
+L.push(`A. CONVERSATIONS \u2014 ${journals.length} journal entr${journals.length === 1 ? 'y' : 'ies'} (oldest first). Echo one line each; a note after our last note prints in full ("| " lines).`);
+const lastDevNote = journals.reduce((k, j, i) => (j.hasNotes && /^Dev/i.test(roleTagOf(j.author)) ? i : k), -1);
 journals.forEach((j, i) => {
     const tags = [];
     if (j.hasNotes) tags.push('notes');
     if (j.attachments.length) tags.push(`attach:${j.attachments.join(', ')}`);
     L.push(`   A${i + 1}. ${j.ts}  ${j.author} [${roleTagOf(j.author)}]  [${tags.join(' · ') || 'attr-only'}]`);
-    L.push(`        ${firstNote(j)}`);
+    // A note written after our last note is the live ask: every line of it, never the first line only (261986: Expected, example, REMARK unseen).
+    if (i > lastDevNote && j.hasNotes && !/^Dev/i.test(roleTagOf(j.author))) j.body.slice(j.body.findIndex(l => /^\s*notes:\s*$/.test(l)) + 1).filter(l => l.trim()).forEach(l => L.push(`        | ${l.trim()}`));
+    else L.push(`        ${firstNote(j)}`);
 });
 L.push('');
 L.push(`B. DESCRIPTION \u2014 ${fs.existsSync(descPath) ? `${fs.statSync(descPath).size} bytes` : 'MISSING'}. Echo its Isu + Expected verbatim, WITH the author and role below.`);
