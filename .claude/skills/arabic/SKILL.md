@@ -78,7 +78,7 @@ Trigger: みや says he is in class / learning along the class and loads `/arabi
 
    | Kind of section | Table |
    |---|---|
-   | Dialogue, jawab soalan, baca dan tulis | One breakdown table per sentence (the answer of jawab soalan gets its own) |
+   | Dialogue, jawab soalan, baca dan tulis | One breakdown table per numbered item: a question and its answer on the same line stay in ONE table (per みや 2026-11-17) |
    | Change a sentence (feminine, other pronoun, plural) | One table per item: the original and the answer as two Arabic rows, word under word, then role and Malay |
    | Fill in the blank | One table for the whole exercise (`#` · soalan · jawapan · Melayu); only the `Eg` row gets a breakdown table |
 
