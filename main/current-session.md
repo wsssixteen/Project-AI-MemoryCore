@@ -127,3 +127,22 @@ When: It runs at every Domain Expansion close, as a Stop hook condition, and its
 Where: The parts sit in domain/de-close-gate and Feature/Domain-Expansion, as the change map shows.
 C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-070820.png
 Where picture = the change map (lib/change-map.js).
+
+STEP-3: 289944 hand-back fixes (Fable 5.2 audit)
+session: redmine-issue-289944-c88c64 (ticket 289944)
+his words: "This step is missing in this quest step for whatever reason that needs an audit from Fable 5.2 throughout this session related to this incident." (order)
+fix or report: fix
+who pays: on-demand: three lines of rule text read when the quest hand-back, Pena or the alter playbook loads, no process
+goal without the part: a pass-back note can go to the person who caused the fault, before the alter is checked, without the setting values
+model: claude-fable-5-2 (the audit and the three proposals came from Fable 5.2; Opus 5.5 applied them)
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+
+CHANGE-CARD (before): 289944 hand-back fixes
+What: Three one-line rules make a pass-back note go to whoever gave us the ticket, after the alter check, with the screen, field and values named.
+Why: On 2026-11-17 during ticket 289944 three Redmine notes were rejected, and the Fable 5.2 audit traced them to skipped steps and two missing rules.
+How: The flow picture shows the alter check, the recipient pick and the Pena draft as the three changed steps of the hand-back.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\handback-flow.png
+When: They run when a quest hands a ticket back, when Pena drafts a Redmine note and when an alter reply is written.
+Where: The rules sit in the quest skill, the Pena modules and the alter playbook, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\e02d8ff3c075a130\d971c600-20ad-4c68-b817-7608032fd4e8\scratchpad\change-map-20261117-084308.png
+Where picture = the change map (lib/change-map.js).
