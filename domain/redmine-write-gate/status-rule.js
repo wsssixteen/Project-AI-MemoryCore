@@ -70,7 +70,7 @@ function verdict(s) {
   if (!status) return { allow: false, row: 0, why: 'the live status is not known' };
   if (frozen.includes(norm(status))) return { allow: false, row: 4, why: `the ticket is ${status}: at or past Resolved, never set back` };
   if (norm(to) !== norm(r.handback_status)) return { allow: false, row: 0, why: `the rule covers a hand-back to ${r.handback_status} only; "${to}" needs his named order` };
-  if (!lower.includes(norm(status))) return { allow: false, row: 0, why: `status "${status}" is not in the rule` };
+  if (!lower.includes(norm(status)) && !lower.includes(norm(status).replace(/\s*\(.*\)$/, ''))) return { allow: false, row: 0, why: `status "${status}" is not in the rule` };
   const mine = isOwner(s.assignee, s.assigneeId);
   if (mine) return { allow: true, row: norm(status) === 'new' || norm(status) === 'in progress' ? 2 : 1, why: `under ${r.owner.name}, status ${status}` };
   if (norm(status) !== 'new') return { allow: false, row: 3, why: `under ${s.assignee || 'nobody'} and ${status}: someone else's work (row 3 covers New only)` };
