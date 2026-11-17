@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-16 (289425 — angry that the system blocked its own work: he wants a smooth journey)
+
+- **He opens sessions to work in parallel; a block from another session is a system fault, not his to wait on.** The release guard blocked every session's edit; he wanted it fixed at once and explained by picture.
+- **"Test on server" after a passed test means the Redmine form is staged next, unasked.** He had to shout for a step my own deploy skill already owns.
+- **A format he already gave me is read from where I stored it, never guessed.** Two guessed test scenario formats made him angrier than the bug; when he wants a new standard he asks for candidates side by side and picks.
+- **His local repo is his; nothing of mine stays in it.** The uncommitted fix in his Sourcetree is the same fault as the abandoned worktrees.
+
 ## Relationship reinforcement — 2026-11-12/13 (288625 rework — "it is can proceed to verify")
 
 - **His rule carries its reason; the reason decides new cases.** "Can proceed to verify" was set for a PROD patch because the BA passes it to the user. A PROD alter is the same case. I followed the tool's wording and he had to say it in anger.
