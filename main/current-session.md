@@ -111,3 +111,14 @@ fix or report: fix
 who pays: on-demand: once per release
 goal without the part: the reviewer message in his format prints with the MR link, no extra ask
 model: claude-opus-5-5
+
+
+STEP-3: adhoc workflow fix after the ADHOC-PPJK-2026-2 audit (281324)
+session: b5a36295-b0b9-4355-a42c-8d9a82fc9e69
+his words: "approve, build it" (order)
+cause step: .claude/skills/adhoc-save/SKILL.md Daily row 1 + Brief-first step 1 + Adhoc-route bullets; script-check rules 6-7 + master-data; redmine-upload-path decide() · change: 14 lines
+new parts: 0
+fix or report: fix
+model: claude-opus-5-5
+shown: adhoc-fix-plan.png
+
