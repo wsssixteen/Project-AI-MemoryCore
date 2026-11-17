@@ -348,8 +348,9 @@ function renderSentence(S2, s, i, n, round) {
   const cites = new Set(); const peranan = w => w.peranan.replace(/ · /g, ' + ');
   const sebab = w => w.sebab.map(k => { const r = S2.sebab[k]; if (!r) throw new Error(`unknown sebab "${k}" in ${s.id}`); if (r.cite) cites.add(r.cite); return r.t; }).join(' · ');
   const rtl = [...s.words].reverse(); const line = f => `| ${rtl.map(f).join(' | ')} |`;
-  s.words.forEach(sebab); // validates every reason key (clean error on an unknown one); reasons are not printed: role + baris carry them, concise per みや 2026-11-17
-  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(w => w.apa), line(w => w.baris)];
+  // makna: the word's own `ms`, else the meaning in the kind label's brackets (kata tunjuk: dekat = ini, jauh = itu)
+  const makna = w => w.ms || (/^kata tunjuk/.test(w.apa) ? (/jauh/.test(w.apa) ? 'itu' : 'ini') : ((w.apa.match(/\(([^)]*)\)/) || [])[1] || '—'));
+  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(makna), line(w => `${w.baris}: ${sebab(w)}`)];
   return [`Ayat ${i + 1}/${n} · Lesson ${s.lesson}${s.part ? ' ' + s.part : ''}${round > 1 ? ' · pusingan ' + round : ''}`, '',
     ...across, '', s.ms].join('\n');
 }
