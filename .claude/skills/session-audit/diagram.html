@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session audit · one run, on ask</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520; --font-sans: 'Segoe UI', Arial, sans-serif; --font-mono: Consolas, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1100px; width: 100%; padding: 28px 32px; box-sizing: content-box; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 1000px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Skill · session-audit · runs on ask ("audit this session")</p>
+    <h1>The script counts what went wrong, Fable 5.2 judges it, you rule on each fix</h1>
+    <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Session audit flow</title>
+      <desc id="d">Transcript to script to Fable agent to self-check to ranked table to miya's go; the new skill adds the agent and the check.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#2d3142">
+        <rect x="20" y="40" width="140" height="70" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="90" y="70" text-anchor="middle" font-weight="600">1 Transcript</text>
+        <text x="90" y="90" text-anchor="middle" font-size="12" fill="#4f5d75">this session .jsonl</text>
+
+        <rect x="190" y="40" width="150" height="70" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="265" y="70" text-anchor="middle" font-weight="600">2 Script</text>
+        <text x="265" y="90" text-anchor="middle" font-size="12" fill="#4f5d75">lib/session-audit.js</text>
+
+        <rect x="370" y="40" width="160" height="70" rx="6" fill="#fbeee8" stroke="#bf4520" stroke-width="2"/>
+        <text x="450" y="70" text-anchor="middle" font-weight="600">3 Fable 5.2 reads</text>
+        <text x="450" y="90" text-anchor="middle" font-size="12" fill="#bf4520">NEW: judges the run</text>
+
+        <rect x="560" y="40" width="150" height="70" rx="6" fill="#fbeee8" stroke="#bf4520" stroke-width="2"/>
+        <text x="635" y="70" text-anchor="middle" font-weight="600">4 Self-check</text>
+        <text x="635" y="90" text-anchor="middle" font-size="12" fill="#bf4520">NEW: quote + home real</text>
+
+        <rect x="740" y="40" width="120" height="70" rx="6" fill="#ffffff" stroke="#4f5d75"/>
+        <text x="800" y="70" text-anchor="middle" font-weight="600">5 Ranked table</text>
+        <text x="800" y="90" text-anchor="middle" font-size="12" fill="#4f5d75">fix · home · saves</text>
+
+        <rect x="880" y="40" width="100" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
+        <text x="930" y="70" text-anchor="middle" font-weight="600">miya: go</text>
+        <text x="930" y="90" text-anchor="middle" font-size="12" fill="#4f5d75">per fix</text>
+
+        <g stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)">
+          <line x1="160" y1="75" x2="188" y2="75"/><line x1="340" y1="75" x2="368" y2="75"/><line x1="530" y1="75" x2="558" y2="75"/>
+          <line x1="710" y1="75" x2="738" y2="75"/><line x1="860" y1="75" x2="878" y2="75"/>
+        </g>
+
+        <rect x="190" y="170" width="620" height="120" rx="8" fill="#ffffff" stroke="#2d3142"/>
+        <text x="500" y="200" text-anchor="middle" font-weight="600" font-size="15">What stays the same</text>
+        <text x="220" y="232">Script unchanged; Domain Expansion step 7.4 still runs it at session end.</text>
+        <text x="220" y="258">Read only: no edit, commit, post, DB or Redmine call during the audit.</text>
+        <text x="220" y="280">Each fix is built later, on your go, through /system-build.</text>
+        <g stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" fill="none">
+          <path d="M930 110 L930 140 L500 140 L500 168"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</body>
+</html>
