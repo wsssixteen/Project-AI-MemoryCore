@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-17 (289819 TRG — "THE single most important thing since that is our module")
+
+- **He wants every module the issue crosses named and its evidence fetched at once, at the start.** I fetched logs only after an audit asked, one module at a time, and missed the third (Pendaftaran Landed). Access he set up for me (PROD logs) is to be used the moment it helps, never re-asked.
+- **"Audit with Fable before we proceed" paid off.** The audit found my patch hit the wrong row. When he asks for confidence HIGH first, the independent check is the step, not a formality.
+- **A picture of working vs failing, from the diagram-design skill, is his standard for "how the issue happens".** A straight line of boxes, or hand-made HTML with white space, he rejects on sight.
+- **He trims notes himself and asks "do we need this?" of every line.** A line that says "still unknown" or a question that does not change the fix comes out.
+
 ## Relationship reinforcement — 2026-11-16 (289425 — angry that the system blocked its own work: he wants a smooth journey)
 
 - **He opens sessions to work in parallel; a block from another session is a system fault, not his to wait on.** The release guard blocked every session's edit; he wanted it fixed at once and explained by picture.
