@@ -204,6 +204,8 @@ surfaced today".
 
 ### Required output — two parts, both written, not just spoken
 
+**Gate-checked (2026-11-17 per みや, 254267):** the close reply carries `A2 quest workflow: <finding + proposal row | none: reason>` and `A4 etanah-knowledge (<general|state key>): <finding + file written | none: reason>`; `domain/de-close-gate` condition C11 blocks the close without them.
+
 **(a) ASSESSMENT** — what this session actually showed, measured, with the instance that proves each
 point: the five-axis table in the DE reply and in the session recap (`main/current-session.md`); each
 proposal row of (b) carries its own instance. **No file.** `system/` holds the constitution and the

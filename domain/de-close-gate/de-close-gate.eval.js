@@ -18,7 +18,20 @@ const STALE_RECON = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'recon
 
 const SQ = (qa, verdict, ts) => JSON.stringify({ ts: ts || new Date().toISOString(), qa, redmine: 'Resolved', local: 'active', verdict, dur_ms: 5 });
 
+// C11 (2026-11-17): every DE close carries the two improvement-axis lines; fixtures get them unless _noAxes.
+const AXES = 'A2 quest workflow: none: no quest this session\nA4 etanah-knowledge (general): none: no etanah work';
 function run(overrides) {
+  const o = Object.assign({}, overrides);
+  if (!o._noAxes) {
+    const base = o._testEvents || [
+      { kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' },
+      { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' },
+      { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
+    ];
+    o._testEvents = [{ kind: 'text', role: 'assistant', text: AXES }, ...base];
+  }
+  delete o._noAxes;
+  overrides = o;
   const stdin = JSON.stringify(Object.assign({
     transcript_path: '',
     _testEvents: [
@@ -212,6 +225,33 @@ r = run({ _testFindings: [] });
 check('C10 no findings passes', r.status === 0, 'exit=' + r.status);
 r = run({ transcript_path: 'C:/no/such/file.jsonl' });
 check('C10 audit script failure never blocks', r.status === 0, 'exit=' + r.status);
+
+// C11 — improvement axes (2026-11-17, 254267): the close needs an A2 quest-workflow line and an A4 etanah-knowledge line.
+const C11BASE = [
+  { kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' },
+  { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' },
+];
+const close = t => ({ kind: 'text', role: 'assistant', text: t });
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close(CLOSE_BANNER)] });
+check('C11-1 REPLAY 254267: a close with neither line -> BLOCK naming A2 and A4', r.status === 2 && /C11 IMPROVEMENT AXES MISSING/.test(r.stderr) && /A2, A4/.test(r.stderr), 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('A2 quest workflow: proposal logged for teammate rows\n' + CLOSE_BANNER)] });
+check('C11-2 A2 only -> BLOCK naming A4', r.status === 2 && /AXES MISSING[^\n]*A4/.test(r.stderr) && !/MISSING[^\n]*A2/.test(r.stderr), 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('A2 quest workflow: x\nA4 etanah-knowledge (perak): STATE-FACTS 12 added'), close(CLOSE_BANNER)] });
+check('C11-3 lines in an EARLIER reply of the close count (Fable audit) -> pass', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('A2 quest workflow: none: no quest\nA4 etanah-knowledge (general): none: no etanah work\n' + CLOSE_BANNER)] });
+check('C11-4 "none: reason" on both lines -> pass', r.status === 0, 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('| A2 quest workflow: proposal row 2 |\n| A4 etanah knowledge (melaka): DATABASE.md |\n' + CLOSE_BANNER)] });
+check('C11-5 lines inside a table row, "etanah knowledge" with a space -> pass', r.status === 0, 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('A2 quest workflow:\nA4 etanah-knowledge (general):\n' + CLOSE_BANNER)] });
+check('C11-6 empty lines (label only) -> BLOCK', r.status === 2 && /C11/.test(r.stderr), 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close('A2 quest workflow: x\nA4 etanah-knowledge: y\n' + CLOSE_BANNER)] });
+check('C11-7 A4 without its (general|state) scope -> BLOCK naming A4', r.status === 2 && /AXES MISSING[^\n]*A4/.test(r.stderr), 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, { kind: 'text', role: 'user', text: 'A2 quest workflow: x\nA4 etanah-knowledge (general): y' }, close(CLOSE_BANNER)] });
+check('C11-8 lines only in HIS message do not count -> BLOCK', r.status === 2 && /C11/.test(r.stderr), 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [close('normal reply, no banner')] });
+check('C11-9 not a DE close -> silent even without the lines', r.status === 0, 'exit=' + r.status);
+r = run({ _noAxes: true, _testEvents: [...C11BASE, close(CLOSE_BANNER + '\n[skip-de-close-gate: test]')] });
+check('C11-10 bypass token still works', r.status === 0, 'exit=' + r.status);
 r = run({ stop_hook_active: true, _testFindings: FINDING });
 check('C10 second stop does not block again', r.status === 0, 'exit=' + r.status);
 
