@@ -100,6 +100,7 @@ Clause 5 exists because on 2026-07-24 three DB verifies stranded — familiars h
 - **Resume, never rerun**: on usage-limit/crash, `/sweep --resume` replays banked wave files (they exist on disk) and re-runs ONLY missing (ticket, wave) cells. Relaunching a banked wave is BANNED.
 - Findings → the qa_doc ONLY. **No file is ever written into any Task folder.** Knowledge distill (bestiary/post-mortem) happens ONLY at Phase-2 close, never mid-sweep.
 - Cleanup of a familiar's stray file = delete that one file by its full path. A recursive delete of any folder is banned (2026-10-29: `rm -r` on a worktree folder deleted 29 tracked files).
+- Each W4 audit-file row marked `OPEN|` or `VERDICT_FIX|` lands in the qa_doc as a falsifier ledger row, or is struck there with its reason.
 
 ## Step 7 — close-out
 
@@ -121,3 +122,5 @@ The run is not closed until this step is done. Judge every finding against the G
 Report table to miya: ticket · waves run · skip rule applied · verdict/next-action, plus one row per refinement from Step 8 — **the table IS the close; then STOP** (miya 2026-08-17). Very short sentences (2026-10-27). No fix continuation, no "commit X now" prompts, no audit walk-throughs in the same breath — **every ticket's fix happens in its OWN dedicated session**, resumed from its qa_doc. **Apply is NOT part of the sweep** — it stays a deliberate per-ticket act.
 
 > Fixture: `node domain/sweep/eval.js` asserts this file's contract (and runs `audit.eval.js`); the audit Tool's own fixtures are `node domain/sweep/audit.eval.js`.
+
+> 2026-11-17, per miya, 261986: two audit findings sat OPEN and never reached the ledger; Step 6 now carries the bullet for them.

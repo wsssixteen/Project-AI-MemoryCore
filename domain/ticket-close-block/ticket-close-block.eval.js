@@ -191,6 +191,61 @@ check('P12 289265: Maksud Pendudukan words, no raw column, no warning, each pela
   && /ID Permohonan: PTMLK\/02\/L\/MLPS\/2026\/7\nPelan: replaced with Pelan MLPS 7\.pdf/.test(r.out)
   && !/tujuan_permohonan|kegunaan/.test(r.out), r.out + ' | ' + r.err);
 
+// ── 261986 (2026-11-17): our commits only · --closing · newest int-env merge · rework=cycle-N. A second sandbox
+//    carries a stub quest/active-cli.js, so the active.txt block (cycle count) can be set per case. ──
+const sb2 = path.join(sb, 'g2'); fs.mkdirSync(path.join(sb2, 'domain', 'ticket-close-block'), { recursive: true }); fs.mkdirSync(path.join(sb2, 'quest'));
+for (const f of ['ticket-close-block.js', 'ba-names.json']) fs.copyFileSync(path.join(__dirname, f), path.join(sb2, 'domain', 'ticket-close-block', f));
+fs.writeFileSync(path.join(sb2, 'quest', 'active-cli.js'), "console.log(require('fs').readFileSync(require('path').join(__dirname, 'block.txt'), 'utf8'));\n");
+const setBlock = b => fs.writeFileSync(path.join(sb2, 'quest', 'block.txt'), b);
+const runG = args => { const x = spawnSync(process.execPath, [path.join(sb2, 'domain', 'ticket-close-block', 'ticket-close-block.js'), ...args], { encoding: 'utf8' }); return { out: (x.stdout || '').replace(/\r\n/g, '\n'), err: x.stderr || '', status: x.status }; };
+const mkRepo = name => {
+  const d = path.join(sb2, name); fs.mkdirSync(d); g(d, ['init', '-q']); g(d, ['config', 'user.email', 'ridhwan@x']); g(d, ['config', 'user.name', 'Ridhwan']);
+  fs.writeFileSync(path.join(d, 'a.txt'), '0\n'); g(d, ['add', '-A']); g(d, ['commit', '-q', '-m', 'base']); g(d, ['branch', '-m', 'mlk/master']); return d;
+};
+const commitAs = (d, who, n, msg) => { fs.writeFileSync(path.join(d, 'a.txt'), n + '\n'); g(d, ['-c', 'user.name=' + who, '-c', 'user.email=' + who + '@x', 'commit', '-q', '-am', msg]); };
+
+// A1: 2 of our commits for 2 cycles + 2 commits by a colleague that came in by merge -> not refused (was: 4 counted > 2 cycles)
+const r1 = mkRepo('r1'); g(r1, ['checkout', '-q', '-b', 'mlk/qa/261986v3']);
+commitAs(r1, 'Ridhwan', 1, 'Ref #261986 - cycle 1');
+g(r1, ['checkout', '-q', '-b', 'mlk/qa/246923v2', 'mlk/master']); commitAs(r1, 'ammarzakwan', 2, 'Ref #246923 - a'); commitAs(r1, 'ammarzakwan', 3, 'Ref #246923 - b');
+g(r1, ['checkout', '-q', 'mlk/qa/261986v3']); g(r1, ['merge', '-q', '--no-edit', '-X', 'theirs', 'mlk/qa/246923v2']);
+commitAs(r1, 'Ridhwan', 4, 'Ref #261986 - cycle 2');
+const noteG = extra => runG(['--repo', r1,'--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3', '--ba', 'mira', ...(extra || [])]);
+setBlock('qa=QA-261986\nclosed_cycle1=2026-10-30\n');
+r = noteG();
+check('G2a 2 of our commits for 2 cycles + 2 colleague commits merged in -> note printed, exit 0', r.status === 0 && /Salam Mira/.test(r.out), r.status + ' ' + r.err.slice(-300));
+commitAs(r1, 'Ridhwan', 5, 'Ref #261986 - extra');
+r = noteG();
+check('G2a2 a third commit of ours for 2 cycles -> still refused, counting ours only (3)', r.status === 3 && /3 non-merge commits/.test(r.err), r.status + ' ' + r.err.slice(0, 200));
+
+// G2b: --closing replaces the closing line (ours and default)
+r = noteG(['--multi-ok', 'test', '--closing', 'Thank you very much.']);
+check('G2b --closing "Thank you very much." ends the note with it and no "Thank you." line', r.status === 0 && /\nThank you very much\.\n$/.test(r.out) && !/^Thank you\.$/m.test(r.out), r.out.slice(-80));
+r = noteG(['--multi-ok', 'test']);
+check('G2b2 no --closing -> "Thank you." as before', r.status === 0 && /\nThank you\.\n$/.test(r.out), r.out.slice(-60));
+r = runG(['--alter', '--ticket', '1', '--ba', 'Fizah', '--id', 'X/1', '--tugasan', 'T', '--user', 'u@melaka.gov.my', '--closing', 'Terima kasih.']);
+check('G2b3 --closing also holds on --alter', r.status === 0 && /\nTerima kasih\.\n$/.test(r.out), r.out.slice(-60));
+
+// G2c: no --intenv-sha -> the NEWEST merge of this branch on mlk/int-env (two merges; the older one is not picked)
+const r3 = mkRepo('r3'); g(r3, ['checkout', '-q', '-b', 'mlk/qa/261986v3']); commitAs(r3, 'Ridhwan', 1, 'Ref #261986 - one');
+g(r3, ['checkout', '-q', '-b', 'mlk/int-env', 'mlk/master']); g(r3, ['merge', '-q', '--no-ff', '-m', "Merge remote-tracking branch 'remotes/origin/mlk/qa/261986v3' into mlk/int-env", 'mlk/qa/261986v3']);
+const older = g(r3, ['rev-parse', '--short', 'HEAD']);
+g(r3, ['checkout', '-q', 'mlk/qa/261986v3']); commitAs(r3, 'Ridhwan', 2, 'Ref #261986 - two');
+g(r3, ['checkout', '-q', 'mlk/int-env']); g(r3, ['merge', '-q', '--no-ff', '-m', "Merge remote-tracking branch 'remotes/origin/mlk/qa/261986v3' into mlk/int-env", 'mlk/qa/261986v3']);
+const newer = g(r3, ['rev-parse', '--short', 'HEAD']);
+r = runG(['--repo', r3, '--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3']);
+check('G2c two int-env merges of the branch -> the newest one is printed', older !== newer && r.out.includes('merged to mlk/int-env: ' + newer) && !r.out.includes(older), r.out + ' older=' + older + ' newer=' + newer);
+
+// G2d: the cycle count reads the block's rework=cycle-N too (261986: closed_ lines gave 3, rework=cycle-6 is the truth)
+const r4 = mkRepo('r4'); g(r4, ['checkout', '-q', '-b', 'mlk/qa/261986v3']);
+for (let i = 1; i <= 3; i++) commitAs(r4, 'Ridhwan', i, 'Ref #261986 - c' + i);
+setBlock('qa=QA-261986\nrework=cycle-3\n');
+r = runG(['--repo', r4, '--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3', '--ba', 'mira']);
+check('G2d rework=cycle-3 with 3 commits of ours -> note printed, exit 0', r.status === 0 && /Salam Mira/.test(r.out), r.status + ' ' + r.err.slice(0, 200));
+setBlock('qa=QA-261986\n');
+r = runG(['--repo', r4, '--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3', '--ba', 'mira']);
+check('G2d2 same branch, block without rework= or closed= -> refused (1 cycle)', r.status === 3 && /3 non-merge commits/.test(r.err), r.status + ' ' + r.err.slice(0, 200));
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);

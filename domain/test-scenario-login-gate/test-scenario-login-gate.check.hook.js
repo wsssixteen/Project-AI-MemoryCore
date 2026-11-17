@@ -178,7 +178,9 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
       };
       const short = [];
       for (const tk of tickets) {
-        let doc = ''; try { doc = fs.readFileSync(path.join(QADOC_ROOT, 'QA-' + tk, 'QA-' + tk + '.md'), 'utf8'); } catch (_) { continue; }
+        let doc = ''; // active\ first, then archive\ (an archived folder can still be an open quest, 261986)
+        for (const root of [QADOC_ROOT, path.join(QADOC_ROOT, '..', 'archive')]) { try { doc = fs.readFileSync(path.join(root, 'QA-' + tk, 'QA-' + tk + '.md'), 'utf8'); break; } catch (_) {} }
+        if (!doc) continue;
         const issues = new Set((doc.match(/^ISSUE\|(\d+)\|/mg) || []).map(s => s.split('|')[1])).size;
         if (!issues) continue;
         let seg = plain;
