@@ -680,6 +680,7 @@
 {"ts":"2026-11-13T03:56:02.936Z","id":"ADHOC-PRBB-2026-25","outcome":"pass","fails":[],"dur_ms":102}
 {"ts":"2026-11-13T03:56:26.006Z","id":"ADHOC-PRBB-2026-25","outcome":"pass","fails":[],"dur_ms":81}
 {"ts":"2026-11-13T06:22:32.143Z","id":"ADHOC-PLBP-2026-3","outcome":"pass","fails":[],"dur_ms":45}
+{"ts":"2026-11-16T02:48:57.357Z","id":"ADHOC-PLP-2026-8","outcome":"pass","fails":[],"dur_ms":55}
 {"ts":"2026-11-16T02:48:16.267Z","id":"ADHOC-PLP-2026-8","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":77}
 {"ts":"2026-11-16T02:48:25.943Z","id":"ADHOC-PLP-2026-8","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":77}
 {"ts":"2026-11-16T02:48:34.090Z","id":"ADHOC-PLP-2026-8","outcome":"pass","fails":[],"dur_ms":65}

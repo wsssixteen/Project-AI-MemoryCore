@@ -1,4 +1,13 @@
-**Last Activity (289425 PRBB Rencana JKBB JT details lost: fix, MLIT test PASS, Resolved to Anis)**: 2026-11-16 13:44 — worktree `melaka-tickets-review-d7524d` (branch claude/melaka-tickets-review-d7524d). Board brief (all Melaka tickets) → 289425 started (New → In Progress 20%) → fix in MlkKertasTemplateForm.java (save JT rows before Jana Semula and before the Selesai reload; +17 lines) → commit 8365043e36 on mlk/internal-issues/289425, int-env baa4c4431d → miya deployed MLIT, test PASS on PTMLK/01/L/PRBB/2026/42 (SaffuanH) → Redmine Resolved to Anis 13:42 (journal #2, PDF + 2 screenshots). System: release-mlk-plp-scope-gate now blocks only the repo on the release branch (55d56a0a, eval 14/14, live in main folder 976d1924). Test scenario standard = format B (Fable 5.2, his pick); build of the gate/skill change queued in todo.
+**Last Activity (Release Pelupusan 1.10.0 COMPLETE + reviewer message in the MR step)**: 2026-11-17 10:46 — worktree `pelupusan-1-10-baseline-4927df`. #274615 new fix merged into mlk/release/1.10.0 (e8f769afb2), miya redeployed staging; BAQA passed (4 tickets + Pelupusan and Awam baseline); MR !22 created (reviewer Yih Kit, then Aaron: only Maintainers merge), Aaron merged → origin/mlk/master 4ac8880349; stag-env already holds it; `merge-to-master --check` = release COMPLETE. System: MR step prints his reviewer message (4496e201 / main folder 487be600, eval 41/41, skill F5, reviewers = Aaron + Alex). Open: #281324 PROD SQL (281324-PROD.sql) via infra / Sheet card.
+
+## Session Recap (2026-11-16 to 17, Release 1.10.0)
+- Asked: merge the #274615 fix into the release for a staging redeploy; take the passed release to master (MR to Yih Kit, then Aaron); give the reviewer message straight away in his format and make it a step; DE.
+- Done: release merge + staging redeploy; MR !22 merged by Aaron (4ac8880349); release COMPLETE; reviewer message printed by release-prep.js after --create-mr / --record-mr (eval M13b), skill F5, Yih Kit dropped from reviewers; Pena example c77.
+- Open: #281324 PROD SQL to infra / Sheet; pena corpus c75/c76 of another session uncommitted in the main folder.
+- Mistakes: audit-ticket MISSING false alarm (whole-file compare, line check 114/114); headSha stored short; record-mr refused the puncaktegap host; Yih Kit offered as reviewer though he cannot merge (caught by miya); reviewer message given only after he asked twice.
+- Assessment: A1 his message format is now printed by the script, not remembered. A2 release phases F + G ran by script end to end. A3 audit-ticket whole-file compare gives false MISSING on merged files. A4 ⏭ no etanah cause work. A5 ⏭ no sweep.
+
+**Previous Last Activity (289425 PRBB Rencana JKBB JT details lost: fix, MLIT test PASS, Resolved to Anis)**: 2026-11-16 13:44 — worktree `melaka-tickets-review-d7524d` (branch claude/melaka-tickets-review-d7524d). Board brief (all Melaka tickets) → 289425 started (New → In Progress 20%) → fix in MlkKertasTemplateForm.java (save JT rows before Jana Semula and before the Selesai reload; +17 lines) → commit 8365043e36 on mlk/internal-issues/289425, int-env baa4c4431d → miya deployed MLIT, test PASS on PTMLK/01/L/PRBB/2026/42 (SaffuanH) → Redmine Resolved to Anis 13:42 (journal #2, PDF + 2 screenshots). System: release-mlk-plp-scope-gate now blocks only the repo on the release branch (55d56a0a, eval 14/14, live in main folder 976d1924). Test scenario standard = format B (Fable 5.2, his pick); build of the gate/skill change queued in todo.
 
 ## Session Recap (2026-11-16, 289425)
 - Asked: brief all Melaka tickets, start 289425, apply the swept fix, test on server, Redmine handover; fix the release guard clash; local cleanup audit (build after close); pick a test scenario format.
@@ -153,4 +162,140 @@ How: The quest flow picture audit-plan.png marks the six steps, each with its on
 When: Each line is read at its own step of the next quest, with no new process.
 Where: The quest, close-phase and doc-sim skills plus section 6.3 of the Melaka DATABASE.md.
 C:\Users\Ridhwan\AppData\Local\Temp\claude\49b830161f995f72\8518d2ea-6b80-40ef-bca3-bdeaff045e7d\scratchpad\change-map-20261117-025049.png
+STEP-3: /handover (2026-11-13, 289337)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "built it" (order)
+his earlier words: "I need you to universally remember & invoke a /handover skill to make it more deterministic"
+fix or report: fix
+who pays: on-demand skill text (a few hand-overs a week) + per-turn rider inside the existing stop-claim-integrity node process, one regex, no new process
+goal without the part: fixing the three contradicting lines gives a fix file, but nothing forces the proof split or the pre-staging audit, and he named the skill
+model: claude-fable-5-2
+fable verdict: go-with-changes (skill v1 = other team only, rider only when a note or file is staged, handoff-load repointed, none: data/config/env only)
+cause step: .claude/skills/cross-module-check/SKILL.md verdict row THEIRS · change: 3 lines
+new parts: 1 · replaces: the procedure copy in feedback_cross_module_handoff_artifact.md and handoff-load's injected memory body
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\handover-plan.png
+audit model (popup 2026-11-13, his words): "Fix this rule since it goes against what I requested and had in mind." → the pre-hand-over audit runs on `node lib/models.js highest`; the sweep's "Never Fable" stays for its bulk waves only
+
+CHANGE-CARD (before): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team or module runs before the note is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the step 2 flow picture handover-plan.png shows the hand-over check placed between diagnosis and staging.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover, domain/ownership-input-check, cross-module-check, domain/handoff-load, domain/pena and two memories, as the change map shows.
+  change map: change-map-20261113-034302.png
+Where picture = the change map (lib/change-map.js).
+
+- 2026-11-13 289337 passed to Common (Amirul) with fix file + screenshot; /handover skill built (system-change): procedure moved from quest §Hand-over to ANOTHER TEAM + handoff memory, Stop rider in ownership-input-check (eval 37/37), handoff-load loads the skill (17/17), Pena separate rule (57/57), sweep 'Never Fable' scoped to waves per miya's popup answer.
+
+CHANGE-CARD (after): /handover
+- What: a /handover skill that every hand-over of a cause or fix to another team runs, and a Stop check that needs its Handover line when a note or file is staged.
+- Why: on 2026-11-13 the 289337 note to Common stated an unrun cause as fact, had no fix file or audit, and carried a card meant for the manager.
+- How: the flow picture handover-plan.png shows the hand-over check between diagnosis and staging, now the skill's own diagram.png.
+- When: on a hand-over to another team, and the Stop check runs on any reply that names another team as owner and stages a note or file.
+- Where: .claude/skills/handover is new, and cross-module-check, quest, sweep, ownership-input-check, handoff-load, Pena and two memories changed, as the change map shows.
+  change map: change-map-20261113-040810.png
+Where picture = the change map (lib/change-map.js).
+
+STEP-3: sweep board gap (2026-11-13)
+session: 93665573-efe6-464a-8977-11b4d240af45
+his words: "Yes, build it" (order)
+fix or report: fix
+who pays: on-demand: one extra active.txt read per sweep close, no new process
+goal without the part: no new part; two existing steps change
+model: claude-opus-5-5
+cause step: .claude/skills/sweep/SKILL.md Step 7.2 + domain/sweep/audit.js run() · change: 12 lines
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\d38c170e42ee97f5\93665573-efe6-464a-8977-11b4d240af45\scratchpad\board-gap-plan.png
+
+
+## Session Recap (2026-11-13, ADHOC-PRBB-2026-25 Ganti Hari + etanah-teach Feature)
+
+- ADHOC-PRBB-2026-25 saved (A107, hold, route CR): PROD PRBB/2026/25 Ganti Hari 4 Hari from 04/12 ends 07/12 per the #285532 rule; user wants Sat/Sun skipped; BA's 08/12 matches only the pre-#285532 count.
+- system-change step 4: building Feature etanah-teach (layered lessons).
+
+STEP-3: etanah-teach
+session: 8c965136-1d47-4e10-8679-0809e99a7cdc
+cause step: .claude/skills/etanah-teach/SKILL.md (new procedure, no existing step teaches etanah) · change: 0 lines in existing parts
+new parts: 2 · replaces: none: miya asked for a new Feature, "please create a new Feature for our system"
+his words: "please create a new Feature for our system to explain as in someone that doesn't understand anything about etanah system" (order)
+fix or report: fix
+who pays: on-demand: one node call per lesson audit, nothing at boot or per prompt
+goal without the part: none; no existing part explains etanah business from zero in layers (brief = ticket start, kowalski = code architecture, explain-diagram = drawing only)
+model: claude-opus-5-5 (highest = claude-fable-5-2; on-demand part, not highest-order, so no Fable block needed per change route step 3)
+shown: C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/.claude/worktrees/mlk-template-surat-ulangan-0122a3/domain/etanah-teach/diagram.png
+appraise: A = etanah-knowledge already holds most business facts (verified: glossary, SPOC-COUNTER §4, BPMN, requirement index) · S = scope is explain only, never edits code or data · C = missing piece was a saved per-urusan lesson so the next ask is cheap; added as learn/<URUSAN>.md
+nod: "Please proceed." (/goal, 2026-11-13)
+
+CHANGE-CARD (before): etanah-teach
+What: A new Feature, etanah-teach, explains any etanah urusan, tugasan, rule or ticket issue to someone who knows nothing, from the overview down to the layer the question needs.
+Why: On 2026-11-13 miya asked to learn etanah from zero, layer by layer, with the business logic taken from etanah-knowledge and the requirements.
+How: The flow picture domain/etanah-teach/diagram.png shows the question, the stop layer, the layers filled top down from knowledge files, the self-audit, and the reply.
+When: It runs on ask, when miya says teach me, explain to me or I want to understand, and costs one node call per lesson audit.
+Where: The Feature lives in domain/etanah-teach/ with its skill in .claude/skills/etanah-teach/ and each saved lesson in etanah-knowledge/<state>/learn/.
+  change map: C:/Users/Ridhwan/AppData/Local/Temp/claude/6068f4a69bb11f75/8c965136-1d47-4e10-8679-0809e99a7cdc/scratchpad/changemap/change-map-20261113-071327.png
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): etanah-teach
+What: The Feature etanah-teach now explains an etanah urusan, tugasan, rule or ticket issue from zero, layer by layer from L0 eTanah down to the layer the question needs, and saves each lesson per urusan.
+Why: On 2026-11-13 miya asked to learn etanah from zero in layers, with the business logic taken from etanah-knowledge and the requirements.
+How: The flow picture domain/etanah-teach/diagram.png shows the question, the stop layer, the layers filled top down from knowledge files, the teach.js self-audit, and the reply.
+When: It runs on ask through the etanah-teach skill, and costs one node call per lesson audit, nothing at boot or per prompt.
+Where: The Feature is in domain/etanah-teach/ with its skill in .claude/skills/etanah-teach/, and the first lesson is etanah-knowledge/melaka/learn/PRBB.md.
+  change map: C:/Users/Ridhwan/AppData/Local/Temp/claude/6068f4a69bb11f75/8c965136-1d47-4e10-8679-0809e99a7cdc/scratchpad/changemap-after/change-map-20261113-072734.png
+Where picture = the change map (lib/change-map.js).
+GitHub main: 85c956d0 · main folder: 9badf5e9
+
+STEP-3: redmine-phase1-prefill Step 3 fill method (2026-11-13, 289233/289306)
+session: fa7d8874-98b2-4eb4-b7e8-65934894e923
+his words: "Yes, add it" (order)
+his earlier words: "Why are you still asking to set the status as resolved? Why have you not removed this disease of you keeping on asking something that was already working"
+fix or report: fix
+who pays: on-demand skill text, read once per Redmine prefill, no process
+goal without the part: the skill already says form_input for each field, but nothing says why a script fill makes the gate ask him
+model: claude-opus-5-5 (slip fix, not held for a model switch)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md Step 3 · change: 1 line
+new parts: 0
+shown: C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\prefill-fill-flow.png
+
+CHANGE-CARD (before): redmine-phase1-prefill Step 3 fill method
+- What: one line in the prefill skill Step 3 says Assignee and Status are filled only with form_input and never by a page script.
+- Why: on 2026-11-13 a script fill of 289233 and 289306 hid the status from the Redmine gate, so his standing Resolved rule never ran and I asked him.
+- How: the step 2 flow picture prefill-fill-flow.png shows the fill step feeding the gate that runs his rule.
+- When: the line is read each time the prefill skill fills a Redmine form.
+- Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
+Where picture = the change map (lib/change-map.js).
+
+CHANGE-CARD (after): redmine-phase1-prefill Step 3 fill method
+- What: Step 3 of the prefill skill now says Assignee and Status are filled only with form_input, Assignee first, never by a page script.
+- Why: on 2026-11-13 a script fill of 289233 and 289306 hid the status from the Redmine gate, so his standing Resolved rule never ran and I asked him.
+- How: the step 2 flow picture prefill-fill-flow.png shows the fill step feeding the gate that runs his rule.
+- When: the line is read each time the prefill skill fills a Redmine form.
+- Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
+Where picture = the change map (lib/change-map.js).
+system-change landed: GitHub main d6fcf522 · main folder 0a1cb429
+
+## system-change step 2 (2026-11-16, ADHOC-PPJK-2026-2 slips)
+- Model: Opus 5.5 orchestrating; Fable 5.2 (claude-fable-5-2) audit agent running on this session slips (ADHOC-PPJK-2026-2, 281324, ADHOC-PLP-2026-8).
+- Kinds and homes: Workflow adhoc-save (.claude/skills/adhoc-save/SKILL.md) step 1 Phase-0 subset; Tools script-check / pena; Memory feedback_script_file_naming, feedback_infra_script_schema_env.
+- Next: audit result -> flow picture with changed steps -> STEP-3 block -> change card -> miya nod -> build, verify, record, land.
+
+STEP-3:
+session: b5a36295-b0b9-4355-a42c-8d9a82fc9e69
+his words: "approve, build it" (order)
+his earlier words: "now start the Fable 5.2 audit on all of your fucking fuckups during this session. I expect the fucking system fix to be running until you show me the diagram for me to approve" (order)
+fix or report: fix
+who pays: on-demand: text in two skills read on adhoc and script turns; one string check added to an existing per-upload hook (under 100 ms)
+goal without the part: the adhoc workflow itself routes to the BA's ticket, loads the script and style rules at Phase 0, checks every sub-flow code, and calls a fix done only when the user's list shows it
+model: claude-fable-5-2 (audit), claude-opus-5-5 (orchestrator)
+shown: adhoc-fix-plan.png · change-map-20261116-074550.png
+nod: "approve, build it" (2026-11-17)
+cause step: .claude/skills/adhoc-save/SKILL.md Daily row 1 + Brief-first step 1 + Adhoc-route bullets; script-check rules 6-7 + master-data; redmine-upload-path decide() · change: 14 lines
+new parts: 0
+
+CHANGE-CARD (before): adhoc workflow fix after the ADHOC-PPJK-2026-2 audit
+What: The adhoc workflow and the script check get six step changes, and the upload gate refuses a file named with our internal ADHOC id.
+Why: On 2026-11-16 the PPJK adhoc patched 2 of 5 codes, said done before the user could see the tugasan, opened new Redmine tickets, and sent scripts named and formatted against the stored rules.
+How: The flow picture adhoc-fix-plan.png shows the six changed steps with a thick border.
+When: The steps run on every adhoc turn and every script, and the gate runs on every Redmine file upload.
+Where: The changes sit in .claude/skills/adhoc-save, .claude/skills/script-check, domain/redmine-upload-path and the Melaka flowable knowledge file, shown in change-map-20261116-074550.png.
 Where picture = the change map (lib/change-map.js).
