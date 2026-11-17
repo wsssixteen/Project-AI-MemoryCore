@@ -270,7 +270,7 @@ t('S112 real data: the baris pool is non-empty, never holds a tetap ending or a 
 });
 t('S113 warmup: 4 rounds in order (read without harakat, words, baris, pointer), each answer moves on, score /10 and streak at the end; a missed ayat comes back first', () => {
   reset(small); sent();
-  const a = run('warmup', '--date', D); ok(a.startsWith('Warm-up 1/4 · Read it'), a.split('\n')[0]); ok(a.includes('| هذا بيت |'), 'ayat shown without harakat');
+  const a = run('warmup', '--date', D); ok(a.startsWith('Warm-up 1/4 · Read it'), a.split('\n')[0]); ok(a.includes('| هذا بيت.'), 'ayat shown without harakat');
   ok(run('warmup', '--date', D) === a, 're-run shows the same round');
   const b = run('answer', 'هَذَا بَيْتٌ', '--date', D); ok(b.startsWith('Read it: 2/2'), b.split('\n')[0]); ok(b.includes('Warm-up 2/4'), 'moves to words');
   const c = run('answer', '1 x · 2 y · 3 z', '--date', D); ok(c.includes('Warm-up 3/4'), 'moves to baris');
