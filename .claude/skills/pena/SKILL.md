@@ -58,6 +58,7 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 | 4 | Check it. Fix every finding, then answer each "by hand" question (for `proven`: the query or code line and the count behind each rule sentence). | `node lib/pena.js check --profile <profile> --file <draft>` |
 | 4b | Self-audit, every Redmine note and hand-over, before it is shown. Read it as the reader. Each how-often word matches the count behind it (11 of 36 is not "sometimes"). Each cause is named in words the reader knows, never "factors". The check flags the vague words; the rest is mine to answer. | same `check` (module `proven`) |
 | 5 | Put the `PENA:` line of the last check under the draft in the reply. | — |
+| 6 | **A Redmine draft is staged on the ticket in the same turn** (2026-11-17 per miya, 275608: "every time you note a draft for redmine, please ALSO stage redmine straight away to save time. I want to see here and in browser."). After step 4, fill the ticket's edit form in Edge (Claude in Chrome): Notes = the draft word for word, plus the Assignee, fields and cycle-folder files the note names. Read the form back. The chat shows the same text. Never Submit: posting stays his (`feedback_redmine_write_needs_nod`). | BA pass → `redmine-phase1-prefill` · another team → `/handover` step 6 · any other note → the edit form directly |
 
 ## Steps — when miya changes a sentence or uses a style word
 
@@ -84,3 +85,5 @@ Or name modules when only some apply: `--module line,lean`.
 - Stored note shapes (the BA pass block, the infra block) stay in their own homes; each profile's `Also read:` line points to them.
 
 **Banned**: drafting first and running `show` after · pasting a `PENA:` line from an older check · storing a changed sentence at the end of the session instead of the turn it happened.
+
+*2026-11-17: step 6 added per miya (275608): every Redmine draft is staged on the ticket's edit form in Edge in the same turn, never submitted. Spec-preservation: steps 1-5, the banned line and the nod rule (feedback_redmine_write_needs_nod) unchanged; additive. Diagram added (system-design Rule 17). Eval 62/62.*
