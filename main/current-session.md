@@ -106,3 +106,15 @@ When: It runs every time a picture is rendered, on demand, and the eval passes 1
 Where: The parts sit in lib, the .claude folder and three skills, as the change map shows.
 C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-074526.png
 Where picture = the change map (lib/change-map.js).
+
+system-build step 3 (C11): resumed 2026-11-17 on his nod "This is after Fable 5.2 audit is it? If yes, please build it."
+
+CHANGE-CARD (after): DE audits quest workflow and etanah-knowledge
+What: The Domain Expansion close gate now blocks a close that lacks one quest-workflow line and one etanah-knowledge line.
+Why: On 2026-11-17 during ticket 254267 he asked that every Domain Expansion audit both, and Step 7.5 asked for them in prose only.
+How: The flow picture shows the new condition C11 inside de-close-gate at the DE-close banner.
+domain/de-close-gate/diagram.png
+When: It runs at every Domain Expansion close, as a Stop hook condition, and its eval passes 64 of 64.
+Where: The parts sit in domain/de-close-gate and Feature/Domain-Expansion, as the change map shows.
+C:\Users\Ridhwan\AppData\Local\Temp\claude\24af1f31d5c7a40a\971f936b-7b5e-4e24-8976-29e3d92a0acc\scratchpad\change-map-20261117-070820.png
+Where picture = the change map (lib/change-map.js).
