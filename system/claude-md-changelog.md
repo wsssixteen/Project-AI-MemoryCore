@@ -10,6 +10,16 @@
 
 ---
 
+## v2.11 (2026-11-17)
+
+**What**: §Disposition rule 8 and §PILLAR SHOW, DON'T EXPLAIN now say a picture starts from the diagram-design `example-<type>.html` and that `lib/diagram-render.js` refuses a page that fails its check and any box text over 60 characters, with no bypass.
+
+**Why**: 2026-11-17, ticket 254267. Three pictures were hand-made `<div>` boxes holding sentences; the renderer's self-check FAILED (no SVG) and they were forced out with `--no-check`. みや could not read them, could not understand the issue, and could not approve from them. Cause step: the `--no-check` flag in `lib/diagram-render.js`; second cause: the `explain-diagram` skill was not loaded before the first picture.
+
+**Fix at the cause**: `lib/diagram-render.js` loses `--no-check` and FAILs box text over 60 characters (eval 12/12, E6-E8 + W4 new, E7 = the exact 254267 page). Pointers in `explain-diagram` §2b/§3, `quest` SKILL (2 lines), `adhoc-save` SKILL.
+
+**Spec preservation**: every rule kept; additive words only. Changed and named: the chat story diagram fallback for a failed render stays, but a FAIL can no longer be rendered past.
+
 ## v2.10 (2026-11-17)
 
 §System map: "Every system change runs `/system-change`" → `/system-build`. His words (2026-11-17): "perform system upgrade (we should really change the name to be system-build or something" and "Yes, rename it". Paired in the same commit: `.claude/skills/system-change/` → `.claude/skills/system-build/` (old name and "system upgrade" kept as triggers), `domain/system-change/` → `domain/system-build/`, `design-consult-gate` accepts either name, `step3-check` highest-order list, `system/INDEX.md` route pointers and the paused-route marker `system-build step N`. Step 3 by Fable 5.2. Spec preservation: the route, its 8 steps and their owner (INDEX ruling 13) are unchanged; only the command's name changed. The concept "a system change" and `domain/system-change-title/` keep their names. History lines (the v1.97 entry below, session archives) keep the old name.
