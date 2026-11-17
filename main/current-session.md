@@ -195,3 +195,29 @@ CHANGE-CARD (after): redmine-phase1-prefill Step 3 fill method
 - Where: the folder .claude/skills/redmine-phase1-prefill holds the changed skill, drawn in C:\Users\Ridhwan\AppData\Local\Temp\claude\ba2a5e92ecb9cc61\fa7d8874-98b2-4eb4-b7e8-65934894e923\scratchpad\change-map-20261113-084156.png.
 Where picture = the change map (lib/change-map.js).
 system-change landed: GitHub main d6fcf522 · main folder 0a1cb429
+
+## system-change step 2 (2026-11-16, ADHOC-PPJK-2026-2 slips)
+- Model: Opus 5.5 orchestrating; Fable 5.2 (claude-fable-5-2) audit agent running on this session slips (ADHOC-PPJK-2026-2, 281324, ADHOC-PLP-2026-8).
+- Kinds and homes: Workflow adhoc-save (.claude/skills/adhoc-save/SKILL.md) step 1 Phase-0 subset; Tools script-check / pena; Memory feedback_script_file_naming, feedback_infra_script_schema_env.
+- Next: audit result -> flow picture with changed steps -> STEP-3 block -> change card -> miya nod -> build, verify, record, land.
+
+STEP-3:
+session: b5a36295-b0b9-4355-a42c-8d9a82fc9e69
+his words: "approve, build it" (order)
+his earlier words: "now start the Fable 5.2 audit on all of your fucking fuckups during this session. I expect the fucking system fix to be running until you show me the diagram for me to approve" (order)
+fix or report: fix
+who pays: on-demand: text in two skills read on adhoc and script turns; one string check added to an existing per-upload hook (under 100 ms)
+goal without the part: the adhoc workflow itself routes to the BA's ticket, loads the script and style rules at Phase 0, checks every sub-flow code, and calls a fix done only when the user's list shows it
+model: claude-fable-5-2 (audit), claude-opus-5-5 (orchestrator)
+shown: adhoc-fix-plan.png · change-map-20261116-074550.png
+nod: "approve, build it" (2026-11-17)
+cause step: .claude/skills/adhoc-save/SKILL.md Daily row 1 + Brief-first step 1 + Adhoc-route bullets; script-check rules 6-7 + master-data; redmine-upload-path decide() · change: 14 lines
+new parts: 0
+
+CHANGE-CARD (before): adhoc workflow fix after the ADHOC-PPJK-2026-2 audit
+What: The adhoc workflow and the script check get six step changes, and the upload gate refuses a file named with our internal ADHOC id.
+Why: On 2026-11-16 the PPJK adhoc patched 2 of 5 codes, said done before the user could see the tugasan, opened new Redmine tickets, and sent scripts named and formatted against the stored rules.
+How: The flow picture adhoc-fix-plan.png shows the six changed steps with a thick border.
+When: The steps run on every adhoc turn and every script, and the gate runs on every Redmine file upload.
+Where: The changes sit in .claude/skills/adhoc-save, .claude/skills/script-check, domain/redmine-upload-path and the Melaka flowable knowledge file, shown in change-map-20261116-074550.png.
+Where picture = the change map (lib/change-map.js).
