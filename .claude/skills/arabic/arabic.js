@@ -242,6 +242,7 @@ function cmdReview(date, next) {
 }
 function cmdAnswer(text, date) {
   const p = loadProgress();
+  if (p.warmup && p.warmup.active && p.warmup.date === date) return resolveWarmup(p, text);   // a warm-up round is awaiting its answer
   if (p.form_pending) return resolveForm(p, text);   // a form drill is awaiting its answer
   if (p.baris && p.baris.pending && barisGroups(text).length) return resolveBaris(p, text);   // a baris round is awaiting its answer
   const words = loadWords();
@@ -480,7 +481,8 @@ function barisPool(S2) {
   const items = []; for (let r = 0; per.some(m => m.length > r); r++) for (const m of per) if (m[r]) items.push(m[r]);   // round-robin: spread the ayat
   return { items, roles: BARIS_ROLES.filter(r => items.some(i => i.role === r[0])), lessons: [...new Set(items.map(i => i.s.lesson))] };
 }
-function cmdBaris(date, arg) {
+function cmdBaris(date, arg, count) {
+  const N = count || 5;
   const S2 = loadSentences(); const pool = barisPool(S2);
   if (!pool.items.length) return 'No baris questions: no class ayat with a class-cited reason yet.';
   const p = loadProgress(); const b = p.baris || (p.baris = { ptr: 0, round: 1, stats: {}, pending: null });
@@ -489,7 +491,7 @@ function cmdBaris(date, arg) {
     const st = k => b.stats[k] || { hit: 0, miss: 0 };
     const missed = pool.items.filter(i => st(i.key).miss > st(i.key).hit).slice(0, 2);
     const pick = [...missed];
-    while (pick.length < Math.min(5, pool.items.length)) {
+    while (pick.length < Math.min(N, pool.items.length)) {
       const it = pool.items[b.ptr % pool.items.length]; b.ptr++;
       if (b.ptr >= pool.items.length) { b.ptr = 0; b.round++; }
       if (!pick.includes(it)) pick.push(it);
@@ -815,6 +817,80 @@ function cmdGloss(text) {
 }
 
 // ---------- main ----------
+// ---------- warmup (2026-11-17 per みや: 5-minute pre-class revision, reading first, one small table per round) ----------
+// 4 rounds in order, one per reply: 1 read an ayat shown without harakat (1 pt) · 2 recall 3 words (3) · 3 baris of 3 words (3)
+// · 4 pick the pointer word for 3 nouns (3) = 10. Missed items come first next time. Streak = consecutive warmup days.
+const POINTERS = [   // book Lesson 16, pages 93-95 (class 2026-11-17)
+  ['بَيْتٌ', 'rumah', 'near', 'hadha'], ['بُيُوتٌ', 'rumah-rumah', 'near', 'hadhihi'], ['طُلَّابٌ', 'pelajar-pelajar lelaki', 'near', 'haulai'],
+  ['طَالِبَةٌ', 'pelajar perempuan', 'near', 'hadhihi'], ['رِجَالٌ', 'lelaki-lelaki', 'near', 'haulai'], ['كُتُبٌ', 'buku-buku', 'near', 'hadhihi'],
+  ['سَيَّارَةٌ', 'kereta', 'far', 'tilka'], ['نُجُومٌ', 'bintang-bintang', 'far', 'tilka'], ['طَالِبٌ', 'pelajar lelaki', 'far', 'dhalika'],
+  ['بَنَاتٌ', 'anak-anak perempuan', 'far', 'ulaika'], ['سَرِيرٌ', 'katil', 'far', 'dhalika'], ['مُدَرِّسَاتٌ', 'guru-guru perempuan', 'far', 'ulaika']];
+const POINTER_AR = { hadha: 'هٰذَا', hadhihi: 'هٰذِهِ', haulai: 'هٰؤُلَاءِ', dhalika: 'ذٰلِكَ', tilka: 'تِلْكَ', ulaika: 'أُولٰئِكَ' };
+function pointerOf(t) {
+  const s = (t || '').toLowerCase().replace(/[^a-z؀-ۿ]/g, '');
+  if (/[؀-ۿ]/.test(s)) { const k = stripArabic(s); return Object.keys(POINTER_AR).find(x => stripArabic(POINTER_AR[x]) === k) || null; }
+  const sk = s.replace(/[aeiouy]/g, '').replace(/th/g, 'dh').replace(/z/g, 'dh');   // hadha→hdh · hadhihi→hdhh · haulai→hl · dhalika→dhlk · tilka→tlk · ulaika→lk
+  return { hdh: 'hadha', hd: 'hadha', hdhh: 'hadhihi', hl: 'haulai', hwl: 'haulai', dhlk: 'dhalika', dlk: 'dhalika', tlk: 'tilka', lk: 'ulaika', wlk: 'ulaika' }[sk] || null;
+}
+function vocalWords(s) {   // per-word vocalised form, marks sorted per letter; dagger alif, tatweel, sukun and punctuation ignored
+  return (s || '').replace(/[ـْٰ؟?.!،,]/g, '').trim().split(/\s+/).filter(Boolean).map(w => {
+    const out = []; for (const ch of w) { if (/[ً-ّ]/.test(ch) && out.length) out[out.length - 1].m.push(ch); else out.push({ c: ch, m: [] }); }
+    return out.map(x => x.c + x.m.sort().join('')).join('');
+  });
+}
+function warmQuestion(p, S2, words) {
+  const w = p.warmup; const step = w.step;
+  if (step === 1) { const s = S2.sentences.find(x => x.id === w.read); return ['Warm-up 1/4 · Read it: type the ayat back with full harakat', '', '| Ayat |', '|---|', `| ${s.ar.replace(HARAKAT, '').replace(/ٰ/g, '')} |`, '', s.ms].join('\n'); }
+  if (step === 2) { const ws = w.recall.map(id => words.find(x => x.id === id)); return ['Warm-up 2/4 · Words: the Arabic for each, in order (Arabic or Latin)', '', '| # | Malay |', '|---|---|', ...ws.map((x, i) => `| ${i + 1} | ${x.malay} |`), '', 'Jawab: 1 … · 2 … · 3 …'].join('\n'); }
+  if (step === 3) return cmdBaris(p.warmup.date, null, 3).replace(/^Baris drill/, 'Warm-up 3/4 · Baris drill');
+  const ps = w.pointer.map(i => POINTERS[i]);
+  return ['Warm-up 4/4 · Pointer: hadha · hadhihi · haulai (near) / dhalika · tilka · ulaika (far)', '', '| # | Kata nama | Malay | Dekat / jauh |', '|---|---|---|---|', ...ps.map((x, i) => `| ${i + 1} | ${x[0]} | ${x[1]} | ${x[2] === 'near' ? 'dekat' : 'jauh'} |`), '', 'Jawab: 1 … · 2 … · 3 …'].join('\n');
+}
+function streakOf(days, date) { let n = 0; const d = parseDate(date); const set = new Set(days); while (set.has(fmt(d))) { n++; d.setUTCDate(d.getUTCDate() - 1); } return n; }
+function cmdWarmup(date) {
+  const S2 = loadSentences(); const words = loadWords(); const p = loadProgress();
+  if (!S2 || !S2.sentences || !S2.sentences.length) return 'No class ayat yet for the reading round.';
+  if (p.warmup && p.warmup.active && p.warmup.date === date) return warmQuestion(p, S2, words);
+  const set = rollIfNeeded(p, words, date); const old = p.warmup || {};
+  const readMiss = (old.readMiss || []).filter(id => S2.sentences.some(s => s.id === id));
+  const ptr = old.readPtr || 0; const read = readMiss[0] || S2.sentences[ptr % S2.sentences.length].id;
+  const recall = pickFive(p, words, set).slice(0, 3).map(x => x.id);
+  const pMiss = (old.pointerMiss || []).slice(0, 2); const pick = [...pMiss]; let pp = old.pointerPtr || 0;
+  while (pick.length < 3) { const i = pp % POINTERS.length; pp++; if (!pick.includes(i)) pick.push(i); }
+  p.warmup = { active: true, date, step: 1, score: 0, read, recall, pointer: pick, readMiss, readPtr: readMiss[0] ? ptr : ptr + 1, pointerMiss: old.pointerMiss || [], pointerPtr: pp, days: old.days || [] };
+  writeJson(PROGRESS, p);
+  return warmQuestion(p, S2, words);
+}
+function resolveWarmup(p, text) {
+  const S2 = loadSentences(); const words = loadWords(); const w = p.warmup; let out;
+  if (w.step === 1) {
+    const s = S2.sentences.find(x => x.id === w.read); const want = vocalWords(s.ar), got = vocalWords(text);
+    const ok = want.map((x, i) => x === got[i]); const all = ok.every(Boolean) && got.length === want.length;
+    if (all) { w.score++; w.readMiss = w.readMiss.filter(id => id !== s.id); } else if (!w.readMiss.includes(s.id)) w.readMiss.push(s.id);
+    const rtl = [...want.keys()].reverse(); const book = s.ar.replace(/[؟?.!،,]/g, '').trim().split(/\s+/);
+    out = [`Read it: ${ok.filter(Boolean).length}/${want.length} words right`, '', `| ${rtl.map(i => ok[i] ? '✓' : '✗').join(' | ')} |`, `| ${rtl.map(() => '---').join(' | ')} |`,
+      `| ${rtl.map(i => book[i] || '—').join(' | ')} |`, `| ${rtl.map(i => got[i] || '—').join(' | ')} |`].join('\n');
+  } else if (w.step === 2) {
+    const parts = (text || '').split(/\s*(?:·|,|;|\b[123]\b\s*[.)]?)\s*/).map(x => x.trim()).filter(Boolean);
+    const rows = w.recall.map((id, i) => { const x = words.find(y => y.id === id); const a = parts[i] || ''; const v = a ? match(a, x.arabic) : 'miss'; const st = stats(p, id); if (v === 'miss') st.miss++; else { st.hit++; w.score++; } return `| ${i + 1} | ${x.malay} | ${x.arabic} | ${a || '—'} ${v === 'hit' ? '✓' : v === 'near' ? '~' : '✗'} |`; });
+    out = ['Words', '', '| # | Malay | Arabic | Kamu |', '|---|---|---|---|', ...rows].join('\n');
+  } else if (w.step === 3) {
+    out = resolveBaris(p, text); const m = out.match(/^Baris (\d+)\//); if (m) w.score += Number(m[1]);
+    out = out.replace(/\n\n"next" = 5 lagi\.$/, '');
+  } else {
+    const toks = (text || '').split(/[\s·,;]+/).filter(t => t && !/^\d+[.)]?$/.test(t)).map(pointerOf);
+    const rows = w.pointer.map((pi, i) => { const it = POINTERS[pi]; const ok = toks[i] === it[3]; if (ok) { w.score++; w.pointerMiss = w.pointerMiss.filter(x => x !== pi); } else if (!w.pointerMiss.includes(pi)) w.pointerMiss.push(pi); return `| ${i + 1} | ${POINTER_AR[it[3]]} ${it[0]} | ${toks[i] ? POINTER_AR[toks[i]] : '—'} ${ok ? '✓' : '✗'} |`; });
+    out = ['Pointer', '', '| # | Jawapan | Kamu |', '|---|---|---|', ...rows].join('\n');
+  }
+  w.step++;
+  if (w.step > 4) {
+    w.active = false; if (!w.days.includes(w.date)) w.days.push(w.date);
+    writeJson(PROGRESS, p);
+    return [out, '', `Warm-up done: ${w.score}/10 · streak ${streakOf(w.days, w.date)} day(s)`].join('\n');
+  }
+  writeJson(PROGRESS, p);
+  return [out, '', warmQuestion(p, S2, words)].join('\n');
+}
 function main(argv) {
   const args = argv.slice(2); const di = args.indexOf('--date'); let date = null;
   if (di >= 0) { date = args[di + 1]; args.splice(di, 2); }
@@ -846,6 +922,7 @@ function main(argv) {
     case 'sentence': out = cmdSentence(args[1], date); break;
     case 'daily': out = cmdDaily(date); break;
     case 'baris': out = cmdBaris(date, args[1]); break;
+    case 'warmup': out = cmdWarmup(date); break;
     default: out = `Unknown command ${cmd}`;
   }
   if (cmd !== 'nudge') logRow({ cmd, date, arg: args.slice(1).join(' ') || undefined, outcome: (out || '').split('\n')[0].slice(0, 80), dur_ms: Date.now() - t0 });

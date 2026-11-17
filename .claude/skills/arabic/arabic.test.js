@@ -268,6 +268,18 @@ t('S112 real data: the baris pool is non-empty, never holds a tetap ending or a 
   const n = Number((/· (\d+) words in the pool/.exec(o) || [])[1]); ok(n > 20, 'pool ' + n);
   for (const s of S2.sentences) s.words.forEach(w => { if (!w.sebab.every(k => S2.sebab[k] && S2.sebab[k].cite)) for (const l of q) ok(!(l.includes(`| ${s.ar} |`) && l.includes(`| ${w.ar} |`)), 'belum word asked: ' + w.ar); });
 });
+t('S113 warmup: 4 rounds in order (read without harakat, words, baris, pointer), each answer moves on, score /10 and streak at the end; a missed ayat comes back first', () => {
+  reset(small); sent();
+  const a = run('warmup', '--date', D); ok(a.startsWith('Warm-up 1/4 · Read it'), a.split('\n')[0]); ok(a.includes('| هذا بيت |'), 'ayat shown without harakat');
+  ok(run('warmup', '--date', D) === a, 're-run shows the same round');
+  const b = run('answer', 'هَذَا بَيْتٌ', '--date', D); ok(b.startsWith('Read it: 2/2'), b.split('\n')[0]); ok(b.includes('Warm-up 2/4'), 'moves to words');
+  const c = run('answer', '1 x · 2 y · 3 z', '--date', D); ok(c.includes('Warm-up 3/4'), 'moves to baris');
+  const d = run('answer', '1 depan 1', '--date', D); ok(/^Baris \d\//.test(d), d.split('\n')[0]); ok(d.includes('Warm-up 4/4'), 'moves to pointer');
+  const e = run('answer', 'hadha hadhihi haulai', '--date', D); ok(/Warm-up done: \d+\/10 · streak 1 day/.test(e), e);
+  eq(prog().warmup.active, false);
+  run('warmup', '--date', '2026-09-08'); const f = run('answer', 'هَذَا بَيْتٍ', '--date', '2026-09-08'); ok(f.startsWith('Read it: 1/2'), f.split('\n')[0]);
+  ok(prog().warmup.readMiss.includes('T2'), 'missed ayat kept');
+});
 
 console.log(rows.join('\n'));
 console.log(`\n${pass} passed, ${fail} failed`);
