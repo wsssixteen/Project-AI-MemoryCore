@@ -7,7 +7,7 @@ description: Domain Expansion 💠 るり結界 (ラピス バリアー) — Rur
 
 The structured orchestrator for Domain Expansion. **Source of truth for each step's detail = `Feature/Domain-Expansion/expansion-protocol.md`** — this skill drives the SEQUENCE; it does not duplicate the bodies. Banner text is sacred (`feedback_domain_expansion_format.md`).
 
-boundary: covers this session's saves and its audit, steps 0a to 13: the session file, the diary, memory, every touched quest and adhoc, knowledge, the commit, push and land, the worktree close · never changes a part outside its own step list in the same turn (a Kernel file every hook runs, another Workflow's gate, a Rule) without its own `/system-change` and his nod; never skips or shrinks a step; never closes with a touched quest unsaved · stops at the closing banner; a finding that needs a build becomes a proposal row (step 7.5) or a `/system-change` with his nod, never a build inside the ritual
+boundary: covers this session's saves and its audit, steps 0a to 13: the session file, the diary, memory, every touched quest and adhoc, knowledge, the commit, push and land, the worktree close · never changes a part outside its own step list in the same turn (a Kernel file every hook runs, another Workflow's gate, a Rule) without its own `/system-build` and his nod; never skips or shrinks a step; never closes with a touched quest unsaved · stops at the closing banner; a finding that needs a build becomes a proposal row (step 7.5) or a `/system-build` with his nod, never a build inside the ritual
 
 ## Step 0 — banner + visible step-line (MANDATORY FIRST)
 

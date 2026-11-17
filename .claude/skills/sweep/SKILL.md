@@ -113,8 +113,8 @@ The run is not closed until this step is done. Judge every finding against the G
 
 1. **Fix now, then re-audit (fix loop)**: every `DEFECT` row of severity `run` has a `fix now` line — do it in this turn (re-run the one missing cell, bank the missing file, flag off, discard a W3 that read the qa_doc and re-run it blind). Re-run Step 7.3 until it exits 0.
 2. **Find the refinement**: every defect class carries a `refine` line and its `accuracy` effect. A refinement that removes or weakens a check that caught something in the last 3 runs (W4 changed a fix, the controller caught an error) is never proposed. Speed refinements must state why accuracy stays the same.
-3. **REFINE NOW** (the same class in 3 runs, system-design Rule 16): propose the change to this skill or the audit Tool, with its evidence, as one row of the close table. It is built through `/system-change` on his go.
-4. A class the Tool does not know yet (it prints `name it in CLASSES`) = add it to `domain/sweep/audit.js` with a fixture in `audit.eval.js` through `/system-change`.
+3. **REFINE NOW** (the same class in 3 runs, system-design Rule 16): propose the change to this skill or the audit Tool, with its evidence, as one row of the close table. It is built through `/system-build` on his go.
+4. A class the Tool does not know yet (it prints `name it in CLASSES`) = add it to `domain/sweep/audit.js` with a fixture in `audit.eval.js` through `/system-build`.
 
 ## Step 9 — the close table, then STOP
 

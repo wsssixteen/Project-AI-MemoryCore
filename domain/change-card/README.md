@@ -11,7 +11,7 @@ symptom: 2026-11-05 miya: "Answer in single sentence each: What, Why, How, When,
 
 # change-card
 
-**Born** 2026-11-05. **Kind** Feature (a skill + its checker). "system-upgrade" in his words is read as the change route (`/system-change`); not confirmed by him.
+**Born** 2026-11-05. **Kind** Feature (a skill + its checker). "system-upgrade" in his words is read as the change route (`/system-build`); not confirmed by him.
 
 ## What it is
 

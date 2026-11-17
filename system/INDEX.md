@@ -88,10 +88,10 @@ Decisions 10 to 12 are Ruri's defaults under ruling 9 and are open to his re-rul
 
 | # | Ruling | State at ruling time |
 |---|---|---|
-| 13 | The change route's step list is OWNED HERE, by Rules (§The change route below), not by its skill. This re-rules default 6 for this one Workflow, so Rules govern every change to Rules. The skill `/system-change` holds the order and the position only, and carries no copy of the steps. | none of the 7 change paths ended on main; 5 files each defined "a system change" differently |
+| 13 | The change route's step list is OWNED HERE, by Rules (§The change route below), not by its skill. This re-rules default 6 for this one Workflow, so Rules govern every change to Rules. The skill `/system-build` holds the order and the position only, and carries no copy of the steps. | none of the 7 change paths ended on main; 5 files each defined "a system change" differently |
 | 14 | **Capabilities** = Workflows + Features + Tools (Layers 2-3), the group between Rules above, Memory beside and Kernel below. The word was already used for Layer 3; it now spans Layer 2 too. | the group had no name ("blue box", 2026-10-28) |
 
-## The change route — every system change, whatever started it (owned here; `/system-change` runs it)
+## The change route — every system change, whatever started it (owned here; `/system-build` runs it)
 
 **A system change** = any change to a part of the seven kinds in the map above. This is the one definition: `design-consult-gate`, `system-edit-gate`, `system-change-title` and the daily-commit memory point here.
 
@@ -106,9 +106,9 @@ Decisions 10 to 12 are Ruri's defaults under ruling 9 and are open to his re-rul
 | 7 Land, same turn | commit by built index (`Co-Authored-By: Ruri`) → `git fetch` + merge `origin/main` → `git push origin HEAD:main` → `node lib/land-on-main.js <commit>`. REFUSED → check the main folder has nothing staged and no dirty copy of the files, merge local `main` into the branch, resolve, push again, then `git -C <main folder> merge --ff-only origin/main` | GitHub main SHA = main-folder HEAD, both shown |
 | 8 Report | **one change-map picture** (2026-11-03, per みや: "always show a diagram … use the boxes I've shown to you before"): the changed parts in a spec JSON (kind · tag new\|changed\|removed · name · folder · one line) → `node lib/change-map.js <spec.json>` draws the system map's own boxes in their colours, each part tagged in its kind's box, untouched kinds faded → Read the PNG → `SendUserFile`. A render FAIL: quote the `CHANGE-MAP: FAIL` line and give the `## System › <Kind>` tables (`.claude/reply-shape-spec.md` §3i). **Then the `change-card` AFTER card**: the same five lines rewritten from what landed, its Where = this change map (same spec JSON as step 3), `CHANGE-CARD: PASS` | `system-change-title` passes · card PASS |
 
-**Highest order** (the parts that govern changes; any edit to them takes step 3 from the highest model): this file · `.claude/skills/system-rules/`, `system-design/`, `system-change/`, `appraise/` SKILL.md · `domain/design-consult-gate/` · `domain/component-birth-gate/` · `domain/system-change-title/` · `.claude/hooks/system-edit-gate.js` · `core/forge.js` · `lib/his-words.js` · `lib/models.js` · `system/evolution-protocol.md` (the `highest-model-id` field). The `STEP-3:` block lives in `main/current-session.md`, outside this list, so writing it opens no route: the check runs once per change, never on its own output.
+**Highest order** (the parts that govern changes; any edit to them takes step 3 from the highest model): this file · `.claude/skills/system-rules/`, `system-design/`, `system-build/`, `appraise/` SKILL.md · `domain/design-consult-gate/` · `domain/component-birth-gate/` · `domain/system-change-title/` · `.claude/hooks/system-edit-gate.js` · `core/forge.js` · `lib/his-words.js` · `lib/models.js` · `system/evolution-protocol.md` (the `highest-model-id` field). The `STEP-3:` block lives in `main/current-session.md`, outside this list, so writing it opens no route: the check runs once per change, never on its own output.
 
-Position: the route runs inside one turn, so its position is the turn's task list. A route paused across turns writes `system-change step N` into `main/current-session.md`.
+Position: the route runs inside one turn, so its position is the turn's task list. A route paused across turns writes `system-build step N` into `main/current-session.md`.
 
 | Trigger (his words, 2026-10-28) | Lane: where step 4's detail lives |
 |---|---|
