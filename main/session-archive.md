@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-11-16 to 17, Release 1.10.0)
+- Asked: merge the #274615 fix into the release for a staging redeploy; take the passed release to master (MR to Yih Kit, then Aaron); give the reviewer message straight away in his format and make it a step; DE.
+- Done: release merge + staging redeploy; MR !22 merged by Aaron (4ac8880349); release COMPLETE; reviewer message printed by release-prep.js after --create-mr / --record-mr (eval M13b), skill F5, Yih Kit dropped from reviewers; Pena example c77.
+- Open: #281324 PROD SQL to infra / Sheet; pena corpus c75/c76 of another session uncommitted in the main folder.
+- Mistakes: audit-ticket MISSING false alarm (whole-file compare, line check 114/114); headSha stored short; record-mr refused the puncaktegap host; Yih Kit offered as reviewer though he cannot merge (caught by miya); reviewer message given only after he asked twice.
+- Assessment: A1 his message format is now printed by the script, not remembered. A2 release phases F + G ran by script end to end. A3 audit-ticket whole-file compare gives false MISSING on merged files. A4 ⏭ no etanah cause work. A5 ⏭ no sweep.
+
+**Previous Last Activity (289425 PRBB Rencana JKBB JT details lost: fix, MLIT test PASS, Resolved to Anis)**: 2026-11-16 13:44 — worktree `melaka-tickets-review-d7524d` (branch claude/melaka-tickets-review-d7524d). Board brief (all Melaka tickets) → 289425 started (New → In Progress 20%) → fix in MlkKertasTemplateForm.java (save JT rows before Jana Semula and before the Selesai reload; +17 lines) → commit 8365043e36 on mlk/internal-issues/289425, int-env baa4c4431d → miya deployed MLIT, test PASS on PTMLK/01/L/PRBB/2026/42 (SaffuanH) → Redmine Resolved to Anis 13:42 (journal #2, PDF + 2 screenshots). System: release-mlk-plp-scope-gate now blocks only the repo on the release branch (55d56a0a, eval 14/14, live in main folder 976d1924). Test scenario standard = format B (Fable 5.2, his pick); build of the gate/skill change queued in todo.
+
 ## Session Recap (2026-11-16, 289425)
 - Asked: brief all Melaka tickets, start 289425, apply the swept fix, test on server, Redmine handover; fix the release guard clash; local cleanup audit (build after close); pick a test scenario format.
 - Done: 289425 fixed, tested (MLIT PASS), Resolved to Anis; MLIT 2026/42 altered for the test (alter half-failed on a DB drop 12:52, repaired via Alter page) and altered back to PYRJKBBPTG (hazizi); release guard fix landed; todo rows: local-clean audit (A1-A4, P1-P4) and test scenario format B.
@@ -11472,6 +11481,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 

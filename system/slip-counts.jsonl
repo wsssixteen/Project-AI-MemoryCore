@@ -2273,3 +2273,6 @@
 {"ts":"2026-11-17T07:54:56.938Z","category":"A3"}
 {"ts":"2026-11-17T07:54:58.515Z","category":"A4"}
 {"ts":"2026-11-17T08:43:18.989Z","category":"reask/hallucination"}
+{"ts":"2026-11-17T13:53:47.606Z","category":"format-drift"}
+{"ts":"2026-11-17T15:56:18.140Z","category":"A1"}
+{"ts":"2026-11-17T15:56:52.466Z","category":"blocker"}

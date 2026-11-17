@@ -402,3 +402,5 @@
 {"ts":"2026-11-17T07:58:07.771Z","parts":8,"pass":36,"fail":0,"unruled":0,"skip":0,"dur_ms":1912,"partial":false}
 {"ts":"2026-11-17T09:31:40.844Z","parts":13,"pass":51,"fail":0,"unruled":0,"skip":0,"dur_ms":3601,"partial":false}
 {"ts":"2026-11-17T09:31:50.144Z","parts":13,"pass":51,"fail":0,"unruled":0,"skip":0,"dur_ms":4133,"partial":false}
+{"ts":"2026-11-17T15:56:27.549Z","parts":16,"pass":47,"fail":9,"unruled":0,"skip":1,"dur_ms":6528,"partial":false}
+{"ts":"2026-11-17T15:56:39.881Z","parts":16,"pass":47,"fail":9,"unruled":0,"skip":1,"dur_ms":5365,"partial":false}
