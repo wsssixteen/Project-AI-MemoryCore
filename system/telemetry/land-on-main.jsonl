@@ -288,3 +288,5 @@
 {"ts":"2026-11-16T04:59:44.259Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":635}
 {"ts":"2026-11-17T02:55:09.364Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":2674}
 {"ts":"2026-11-17T02:56:51.612Z","commit":"d0b6368e","outcome":"REFUSED","exit":2,"dur_ms":2314}
+{"ts":"2026-11-17T03:01:58.648Z","commit":"ad9e68d57c0b461f0128a8a3345bdc1df6db375a","outcome":"REFUSED","exit":2,"dur_ms":683}
+{"ts":"2026-11-17T03:02:13.281Z","commit":"ad9e68d57c0b461f0128a8a3345bdc1df6db375a","outcome":"REFUSED","exit":2,"dur_ms":3293}

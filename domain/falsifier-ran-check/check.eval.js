@@ -41,6 +41,7 @@ const RUBRIC = [
   '| R1 | Page-load saves keep the same version | BasePelupusanDokumenForm.java:792 | ours |',
   '| C1 | Editor upload with unchanged content returns the old id | WordEditorService.java:133 | common |', '',
   '- Falsifier C1: Word no-op save that changes body XML beyond rsid/paraId → compare says "changed" → still bumps.', '',
+  'ISSUE|1|Kemaskini with no edit|no new versi', '',
 ].join('\n');
 const HEAD0 = '## Falsifier ledger\n\nFix files: BasePelupusanDokumenForm.java, MlkKertasTemplateForm.java\n\n| # | design | falsifier | cheapest test | status |\n|---|---|---|---|---|\n';
 const STAND = ['path', 'siblings', 'render', 'given', 'env'].map((k, i) => `| ${91 + i} | standing: ${k} | ${k} gap | ${k} run | RAN: ${k} checked on the BA ID, nothing found |\n`).join('');
@@ -67,6 +68,14 @@ ok('03 REPLAY with the falsifier as an OPEN ledger row BLOCKS and prints the che
 active('true');
 doc(HEAD + row(1, 'RAN: 2026-10-04 Word COM re-save of Risalat template, body XML identical after rsid strip'));
 r = C.check('QA-244600'); ok('04 RAN with evidence + local test true passes', r.ok === true, kinds(r));
+// G1-G3 (2026-11-17, 274323): a given row answered RAN needs the ISSUE list written first.
+const NOISSUE = RUBRIC.replace(/^ISSUE\|.*$/m, '');
+fs.writeFileSync(DOC, NOISSUE + HEAD + row(1, 'RAN: 2026-10-04 Word COM re-save of Risalat template, body XML identical after rsid strip'));
+r = C.check('QA-244600'); ok('G1 REPLAY 274323: given RAN, no ISSUE line in the doc → given-no-issues', kinds(r) === 'given-no-issues' && /ISSUE\|n\|/.test(r.fails[0].msg), kinds(r));
+fs.writeFileSync(DOC, NOISSUE + HEAD.replace('RAN: given checked on the BA ID, nothing found', 'RAN: n/a — data patch ticket, the BA gave no item to answer') + row(1, 'RAN: 2026-10-04 Word COM re-save of Risalat template, body XML identical after rsid strip'));
+r = C.check('QA-244600'); ok('G2 given RAN: n/a with a reason, no ISSUE line → passes', r.ok === true, kinds(r));
+fs.writeFileSync(DOC, NOISSUE + HEAD.replace('RAN: given checked on the BA ID, nothing found', 'OPEN') + row(1, 'RAN: 2026-10-04 Word COM re-save of Risalat template, body XML identical after rsid strip'));
+r = C.check('QA-244600'); ok('G3 given still OPEN, no ISSUE line → only the OPEN fail, no given-no-issues', kinds(r) === 'open', kinds(r));
 doc(HEAD + row(1, 'RAN:')); r = C.check('QA-244600'); ok('05 RAN with no evidence blocks', kinds(r) === 'bad-status', kinds(r));
 doc(HEAD + row(1, 'RAN: ok')); r = C.check('QA-244600'); ok('06 RAN with a token word as evidence blocks', kinds(r) === 'bad-status', kinds(r));
 doc(HEAD + row(1, 'ACCEPTED-RISK: "ship it, BA will test the editor path" miya 2026-10-04')); r = C.check('QA-244600'); ok('07 ACCEPTED-RISK with quote + name + date passes', r.ok, kinds(r));
