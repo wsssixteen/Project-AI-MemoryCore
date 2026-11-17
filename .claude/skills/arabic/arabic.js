@@ -353,7 +353,8 @@ function renderSentence(S2, s, i, n, round) {
   // baris cell = the ending + its cause in a few words (per みや 2026-11-17: "too long"); a fixed ending says only "tetap"
   const SHORT = { mubtada: 'mubtada', khabar: 'khabar', tanwin: 'nakirah', aliflam: 'alif lam', mudaf: 'mudaf', 'mudaf-ilaih': 'mudaf ilaih', majrur: 'selepas huruf jarr', sifat: 'ikut mawsuf', badal: 'ganti mubtada', 'munada-depan': 'munada', munada: 'munada', tetap: 'tetap', soal: 'kata tanya', 'soal-khabar': 'khabar di depan', 'khabar-depan': 'khabar muqaddam', syibh: 'khabar syibh jumlah', 'khabar-ayat': 'khabar jumlah', tasrif: 'tasrif fiil', 'sebelum-ya': 'sebelum dhamir saya', 'jamak-lelaki': 'jamak lelaki', 'tak-tanwin': 'tak terima tanwin' };
   const cause = w => { sebab(w); const b = w.baris.replace(/\s*\(tetap\)/, ''); return /tetap/.test(w.baris) || w.sebab[0] === 'tetap' ? `${b} (tetap)` : `${b} (${SHORT[w.sebab[0]] || 'belum dipelajari'})`; };
-  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(makna), line(cause)];
+  s.words.forEach(cause); // validates reason keys; the baris row is not printed (per みや 2026-11-17: "remove the fourth row, make it simpler tables")
+  const across = [line(peranan), line(() => '---'), line(w => w.ar), line(makna)];
   return [`Ayat ${i + 1}/${n} · Lesson ${s.lesson}${s.part ? ' ' + s.part : ''}${round > 1 ? ' · pusingan ' + round : ''}`, '',
     ...across, '', s.ms].join('\n');
 }
