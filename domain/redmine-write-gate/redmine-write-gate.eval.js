@@ -399,6 +399,7 @@ fs.writeFileSync(STATE_FILE, JSON.stringify({
   300010: { status: 'KIV', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
   300011: { status: 'New', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
   300012: { status: 'Rework', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777 },
+  300013: { status: 'Rework (Requirement Update)', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
 }));
 const nav = (num, tabId = 1) => JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + num, name: 'mcp__claude-in-chrome__navigate', input: { url: 'http://172.16.90.169/redmine/issues/' + num + '/edit', tabId } }] } });
 const run11 = (toolName, toolInput, lines) => { const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: toolName, tool_input: toolInput, transcript_path: transcript(lines) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS, REDMINE_GATE_TICKET_STATE: STATE_FILE, REDMINE_GATE_LOG: path.join(sb, 'gate-log.jsonl') } }); return { out: (r.stdout || '') + (r.stderr || ''), status: r.status }; };
@@ -421,6 +422,8 @@ r = statusFill('Resolved', [nav(300002), ...staging]);
 check('F149 someone else\'s ticket, In Progress → BLOCK (row 3 covers New only)', blocked(r) && /someone else's work/.test(r.out), r.out.slice(0, 240));
 r = statusFill('Resolved', [nav(300012), ...staging]);
 check('F150 someone else\'s ticket, Rework → BLOCK', blocked(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300013), ...staging]);
+check('F172 REPLAY 274323: his ticket, Rework (Requirement Update) → Resolved → allowed (row 1, a Rework sub-status)', ruled(r) && /row 1/.test(r.out), r.out.slice(0, 200));
 for (const [id, num, name] of [['F151', 300003, 'Verified'], ['F152', 300004, 'Closed'], ['F153', 300005, 'Ready in PROD'], ['F154', 300006, 'Cancelled'], ['F155', 300007, 'Resolved']]) {
   r = statusFill('Resolved', [nav(num), ...staging]);
   check(id + ' ' + name + ' → BLOCK always by the rule (row 4, never set back)', blocked(r) && /row 4/.test(r.out) && /never set back/.test(r.out), r.out.slice(0, 240));

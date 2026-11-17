@@ -37,6 +37,13 @@ Where picture = the change map (lib/change-map.js).
 
 **Last Activity (ADHOC-PRBB-2026-24 + knowledge-first session)**: 2026-11-12 09:40 — worktree `penang-common-null-error-219adf` (branch claude/adhoc-session-standby-c1d1d0). PROD PRBB slaid lines adhoc: cause Microsoft Print to PDF strips; fixed PDF in 2. Fix; system fix landed b7f17eaa (main folder 598a6116): adhoc reads etanah-knowledge index.md first, knowledge-first-gate blocks the first DB query before a knowledge read, staging test by file origin, wrong MLK STAG rule removed.
 
+STEP-3: test scenario shape + status rule Rework sub-status (289376, 274323)
+session: 1879c463-c64a-4782-a882-8e26600129e0
+his words: "use a better formatting for test scenario please" (order)
+cause step: .claude/skills/stop-point-summary/SKILL.md Test Scenario variant · change: 16 lines
+new parts: 0
+fix or report: fix
+
 STEP-3: redmine-phase1-prefill Step 5 attachments (281324)
 session: d2a90df8-1bc0-4e84-b5e5-ede6d65a2283
 his words: "why did you not upload all the things needed just now when you prepare the redmine stage?" (order)
