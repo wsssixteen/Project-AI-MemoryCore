@@ -832,10 +832,10 @@ function pointerOf(t) {
   const sk = s.replace(/[aeiouy]/g, '').replace(/th/g, 'dh').replace(/z/g, 'dh');   // hadha→hdh · hadhihi→hdhh · haulai→hl · dhalika→dhlk · tilka→tlk · ulaika→lk
   return { hdh: 'hadha', hd: 'hadha', hdhh: 'hadhihi', hl: 'haulai', hwl: 'haulai', dhlk: 'dhalika', dlk: 'dhalika', tlk: 'tilka', lk: 'ulaika', wlk: 'ulaika' }[sk] || null;
 }
-function vocalWords(s) {   // per-word vocalised form, marks sorted per letter; dagger alif, tatweel, sukun and punctuation ignored
-  return (s || '').replace(/[ـْٰ؟?.!،,]/g, '').trim().split(/\s+/).filter(Boolean).map(w => {
+function vocalWords(s) {   // per-word vocalised form, marks sorted per letter; dagger alif = fatha (hadha is typed with a fatha); tatweel, sukun and punctuation ignored
+  return (s || '').replace(/\u0670/g, '\u064E').replace(/[\u0640\u0652\u061F?.!\u060C,]/g, '').trim().split(/\s+/).filter(Boolean).map(w => {
     const out = []; for (const ch of w) { if (/[ً-ّ]/.test(ch) && out.length) out[out.length - 1].m.push(ch); else out.push({ c: ch, m: [] }); }
-    return out.map(x => x.c + x.m.sort().join('')).join('');
+    return out.map(x => x.c + [...new Set(x.m)].sort().join('')).join('');
   });
 }
 function warmQuestion(p, S2, words) {
