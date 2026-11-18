@@ -805,6 +805,7 @@ The ordered `pull → checkout -b → stage → commit → push → /verify → 
 - `.claude/auto-memory/feedback_pengguna_semasa.md` — permohonan id + live holder
 - `.claude/auto-memory/feedback_awam_test_scenario_entry_key.md` — AWAM entry key, portal logins, kaunter vs AWAM, URL host = WAR
 - `.claude/auto-memory/feedback_tasks_folder_format.md` — Task folder shape and what goes in it
+- `.claude/auto-memory/feedback_template_work_junior_builds.md` — template .docx: WE build it at Apply, never ask who builds (2026-11-18)
 - `.claude/auto-memory/feedback_state_aware_knowledge_load.md` · `reference_perak_codev_scope.md` — non-Melaka states
 
 *2026-10-04 — falsifier ledger per みや (#244600): Rubric row (e) now also writes each falsifier as a ledger row; new bullets "Falsifier ledger" (statuses, design-changed-after-Rubric rewrite, the three enforcement points, no skip token) and "Straight to Apply" (pointer to quest-protocol's 2026-05-14 autonomous-flow rule, which this loaded file did not carry); the never-commit line names its gate. Spec-preservation: Rubric rows a-h, Logger choice, Exhaustive-branch logging and the never-commit rule are unchanged in meaning; additive. Fire + effect check: `domain/falsifier-ran-check/check.eval.js` 45/45.*

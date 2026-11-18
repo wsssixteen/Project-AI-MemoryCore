@@ -63,7 +63,7 @@
 - [patch-script-rules](feedback_readable_safe_script.md) — SCRIPT-CHECK, looks-safe script, never DELETE ind_*, any other wrong row assessed by rule 4, scope sweep, I run SELECTs
 - [script-file-naming](feedback_script_file_naming.md) — <ticket>.sql = the update, <ticket>-check.sql = one combined check; never -2/-3
 - [sql-insert-id](feedback_sql_insert_id_check.md) — INSERT with hardcoded PK: check @GeneratedValue first
-- [infra-requests](feedback_prod_patch_infra_handoff.md) — PROD patch message format; server log one-liner, no path
+- [infra-requests](feedback_prod_patch_infra_handoff.md) — PROD patch message format; server log one-liner, no path; PROD logs per state via saved WinSCP sites (MLK/TRG/SEL/WP/PRK), no passwords in memory
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
@@ -83,7 +83,7 @@
 - [redmine-sla](reference_redmine_sla_hours.md) — 🚨 SLA for dev: Critical 6, High 10, Medium 22, Low 31 hours; timer 8am to 5pm; Terengganu Sunday to Thursday, the rest Monday to Friday
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
 - [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only; BA test scenario = SENARIO list of key names
-- [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
+- [template-junior-builds](feedback_template_work_junior_builds.md) — 🚨 template .docx: WE build it, never ask who builds; he names who to pass to when he wants (2026-11-18)
 
 ## Etanah facts
 - [hakmilik-change-map](reference_hakmilik_change_map.md) — hakmilik table map; luas + unit in ind_mklmt_hkmlk; office by title type: GRN/PN/HSD = PTG 00, others = district PTD
