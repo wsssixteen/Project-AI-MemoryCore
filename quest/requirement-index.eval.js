@@ -139,6 +139,20 @@ t(`K281324 (no requirement exists) is flagged weak, not presented as a match${RE
   const r = runReal(['--ticket', '281324', '--no-refresh', '--top', '3']);
   return /top match is weak on the subject/.test(r.stdout) || r.stdout.slice(0, 300);
 });
+// 289425 (2026-11-18): a paper ticket's Next also names the paper's Template requirements; hit 1 was the Jana Semula button spec.
+t(`P289425 paper ticket names Template reads 230727 (JKBB) + 230726 (PTG)${REAL ? '' : ' — skipped'}`, () => {
+  if (!REAL) return true;
+  const r = runReal(['--ticket', '289425', '--no-refresh']);
+  const line = (r.stdout.split(/\r?\n/).find(l => /Paper:/.test(l)) || '');
+  return (/--read 230727 /.test(line) && /--read 230726 /.test(line)) || 'Paper line: ' + (line || r.stdout.slice(0, 200));
+});
+for (const num of [265109, 282587, 285532]) {
+  t(`P${num} screen ticket prints no Paper line (tugasan names in its description do not count)${REAL ? '' : ' — skipped'}`, () => {
+    if (!REAL) return true;
+    const r = runReal(['--ticket', String(num), '--no-refresh']);
+    return !/Paper:/.test(r.stdout) || 'Paper line printed';
+  });
+}
 
 // --- blind key: 30 recent tickets judged 2026-10-27 by a Sonnet reader that never saw the tool's answer.
 // [ticket, right requirement ids] or [ticket, 'none']; a ticket that is itself a requirement is its own answer.
