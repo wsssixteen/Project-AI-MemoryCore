@@ -152,7 +152,8 @@
       "tak / dah / amik / je, not tidak dapat / dihantar / dipaparkan.",
       "Refer, commit, merge, branch, table, value stay English.",
       "Basically / Actually / so / just, not Ringkasnya / Oleh itu.",
-      "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\"."
+      "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\".",
+      "Never \"perlu\" (2026-11-18 per miya, 275608): \"kena\" for a must (Pendaftaran kena deploy dulu), \"boleh\" for a can or a next step they may take (Pendaftaran boleh guna common 1.15.1)."
     ],
     "banned": [
       "dihantar",
@@ -164,7 +165,8 @@
       "nilai tetap",
       "Rujuk",
       "jadual",
-      "ye"
+      "ye",
+      "perlu"
     ],
     "check": "rojak"
   },
