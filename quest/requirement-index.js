@@ -38,6 +38,9 @@
  * 2026-11-16 (289376, PRBB): each row keeps its full description as `desc`, and --load T5 lists first the urusan's
  * children whose description lines hold every value word, with those lines printed. Why: the Bayaran Royalti rule
  * sits in #219625 (the first tugasan that shows the panel) past the 400-char snippet; the index never held it.
+ * 2026-11-18 (289425, PRBB): --ticket on a ticket whose subject names a paper (PAPER_RE) prints a `Paper:` line naming
+ * every Template requirement among the hits. Why: hit 1 was the Jana Semula button spec; the Rencana specs #230727 and
+ * #230726 (3.1 and 3.2, ADUN organisasi, PTG sign right) sat at hits 2 and 6, unread, and the BA sent the ticket back.
  *
  * CLI:
  *   node quest/requirement-index.js --read <req> --for <ticket> [--section "<words>"]   read the requirement in full (prints REQUIREMENT-READ #<req>);
@@ -485,6 +488,9 @@ function fmtHit(h, n, stateKey) {
 // Each urusan master sits under one parent ticket per state ("Pelupusan - Parent Ticket All Urusan").
 const URUSAN_PARENT = { melaka: 215975 };
 const TIER_ORDER = ['T2', 'T5', 'T3', 'T4', 'T1'];
+// Words in the ticket SUBJECT that say the issue shows on a printed paper (--ticket names the paper's Template requirement, 289425).
+// Subject only: in a description these words are mostly tugasan names ("Penyediaan Kertas Pertimbangan"), not the paper.
+const PAPER_RE = /\b(rencana|kertas|surat|borang|template|laporan|sijil|notis|minit|jana semula)\b/i;
 const TIER_NAME = { T1: 'urusan tree', T2: 'called-flow kods', T3: 'integration', T4: 'cross-module', T5: 'value words' };
 const TIER_CAP = 3;
 const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -743,6 +749,9 @@ async function main(argv, log) {
   else if (!chain.length && !self && hits[0].match === 'none') console.log('  ⚠ top match is weak on the subject — likely no requirement for this exact ask; say "none found" unless a row above clearly fits, or try --find with the screen or tab name');
   const first = chain[0] ? chain[0].id : hits[0] ? hits[0].row.id : null;
   if (first) console.log(`  Next: read it in full before any verdict: node quest/requirement-index.js --read ${first} --for ${issue.id} (a subject match is never a verdict). Then write REQUIREMENT-MATCH: ${issue.id} → #<req> "<subject>" — <aligned | extends | contradicts> — read: "<the rule that decides, quoted>", or none found / not needed.`);
+  // 289425 (2026-11-18): a ticket about a printed paper also reads the paper's own Template requirement; hit 1 was the Jana Semula button spec.
+  const specs = PAPER_RE.test(issue.subject || '') ? hits.filter(h => /\btemplate\b/i.test(h.row.subject) && h.row.id !== first).map(h => h.row.id) : [];
+  if (specs.length) console.log(`  Paper: also read each Template requirement above, the spec of the printed paper (each variant it names is a V row): ${specs.map(id => `node quest/requirement-index.js --read ${id} --for ${issue.id}`).join(' ; ')}`);
   return 0;
 }
 
