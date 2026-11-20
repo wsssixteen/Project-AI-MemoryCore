@@ -1,7 +1,7 @@
 {
   "_comment": "THE state registry (single source, tracked, worktree-safe). Every hook / skill / script that touches a per-state thing — Task folder, etanah-knowledge dir, repo root, trunk branch, DB MCP, permohonan prefix, BPMN key prefix, Redmine project — resolves it through lib/states.js, never a literal. Add a state = one record here + `node lib/states.js validate <key>`; remove = `node lib/states.js remove <key>`. Hosts / IPs / URLs live in system/states.local.json (gitignored overlay, same shape, deep-merged) — never here. Facts marked `_unverified` are structure copied from the reference state and must be confirmed against a real source before a tool relies on them.",
   "version": 1,
-  "updated": "2026-10-03",
+  "updated": "2026-11-20",
   "reference_state": "melaka",
   "tasks_root": "OneDrive - Pymsoft Sdn Bhd/1. Tasks",
   "repos_root": "E:/Projects",
@@ -28,8 +28,10 @@
         "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "mlk/master" },
         "awam":       { "repo": "etanah-awam",       "trunk": "mlk/master" },
         "common":     { "repo": "etanah-common",     "trunk": "mlk/master" },
-        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "master" }
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "master" },
+        "pendaftaran": { "repo": "etanah-pendaftaran", "trunk": "mlk/master", "reference_only": true }
       },
+      "modules_note": "reference_only = cloned 2026-11-20 (GitLab etanah/etanah-pendaftaran, mlk/master) to READ the pendaftaran team's code while debugging; we edit only pelupusan + awam. For Melaka (the reference state) the flag is documentation: ticket-gate renders it only for non-reference states.",
       "branch_prefix": "mlk",
       "ticket_branch": "mlk/<tracker>/<num>",
       "bpmn": { "prefix": "MLK", "root_module": "PLP" },

@@ -62,3 +62,4 @@
 {"ts":"2026-11-06T08:36:50.032Z","cmd":"gates","state":"kedah","outcome":"3 bad","exit":1,"dur_ms":410}
 {"ts":"2026-11-06T08:42:40.279Z","cmd":"gates","state":"wp","outcome":"5 bad","exit":1,"dur_ms":448}
 {"ts":"2026-11-06T08:43:45.618Z","cmd":"gates","state":"wp","outcome":"4 bad","exit":1,"dur_ms":286}
+{"ts":"2026-11-20T08:19:05.766Z","cmd":"gates","state":"melaka","outcome":"0 bad","exit":0,"dur_ms":866}

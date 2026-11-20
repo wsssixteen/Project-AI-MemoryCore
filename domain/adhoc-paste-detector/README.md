@@ -3,6 +3,7 @@ symptom: 2026-08-13 PPTPB Teknikal Selangor issue pasted several times over sess
 goal: inject the MANDATORY ADHOC-scaffold procedure (task folder + active.txt block + ADHOC-REGISTER row + qa_doc) so the issue is captured like a Redmine retrieval, not answered inline and lost
 goal_signal: the UserPromptSubmit fire produced: inject the MANDATORY ADHOC-scaffold procedure (task folder + active.txt block + 
 retention: keep
+footprint: every prompt: one node hook process that checks the message text and exits; nothing stays running
 # adhoc-paste-detector
 
 **Primitive**: hook-only (UserPromptSubmit). **Lifecycle**: created 2026-08-13 · **WIDENED 2026-08-26** (per miya — PDTJ jabatan-teknikal intake answered inline for a dozen turns with no scaffold).
@@ -35,3 +36,5 @@ The mandatory ADHOC scaffold procedure: (1) Task folder + `0. Brief/` + `quest/n
 ## Bypass
 
 `[skip-adhoc-paste: <reason>]`
+
+*2026-11-20 per miya (ADHOC-PRBB-2026-26): the 'ask infra first' injection now asks infra only for an INTERNAL or STAGING server log; a PROD server log is pulled by us through the saved WinSCP site (both nodes). Paired lines: quest SKILL server-log bullet, adhoc-save step 1. Eval 27/27.*
