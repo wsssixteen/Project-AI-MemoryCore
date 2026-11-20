@@ -31,7 +31,7 @@ If any precondition fails → STOP and surface to みや; never half-execute.
 
 | Field | In-scope? | Notes |
 |---|---|---|
-| Status | left as it is (In Progress); never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608) | — |
+| Status | In Progress: still New on his ticket → set In Progress (Step 2b backstop, 2026-11-20, 290431); already In Progress or later → left as it is; never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608) | — |
 | Assignee | ✓ → みや mentions, default Aaron Loh Zhi Yong | per photo |
 | % Done | ✓ → 50% (2026-11-18 per miya, 275608) | — |
 | Resolved By | ✓ → Ahmad Ridhwan Anuar | per photo |
@@ -72,7 +72,7 @@ If page redirects to login → STOP, emit: `Redmine not logged in. Log in at <UR
 node domain/redmine-write-gate/status-rule.js <qaNum> --assignee "<assignee>"
 ```
 
-It prints the live status and assignee and whether Resolved is ALLOWED or BLOCKED, by the rule rows in `domain/redmine-write-gate/status-rule.json` (the one home of the rule and the BA list; `redmine-write-gate` v1.11 enforces the same function). Fill the **Assignee before the Status**: on a New ticket under someone else, the rule allows Resolved only once a BA is in the Assignee field.
+It prints the live status and assignee and whether the hand-back status (In Progress since 2026-11-18) is ALLOWED or BLOCKED, by the rule rows in `domain/redmine-write-gate/status-rule.json` (the one home of the rule; `redmine-write-gate` enforces the same function). **Backstop (2026-11-20, 290431)**: live status New on his ticket → set Status = In Progress on this form BEFORE the Assignee moves (row 2 allows it with no words); never leave his ticket New at a hand-back. New under someone else → change nothing, ask him. Resolved is set only when he names it.
 
 ### Step 3 — Fill the 6 fields (per みや's photo)
 
