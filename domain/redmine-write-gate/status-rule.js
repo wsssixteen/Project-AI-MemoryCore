@@ -74,9 +74,7 @@ function verdict(s) {
   const mine = isOwner(s.assignee, s.assigneeId);
   if (mine) return { allow: true, row: norm(status) === 'new' || norm(status) === 'in progress' ? 2 : 1, why: `under ${r.owner.name}, status ${status}` };
   if (norm(status) !== 'new') return { allow: false, row: 3, why: `under ${s.assignee || 'nobody'} and ${status}: someone else's work (row 3 covers New only)` };
-  if (isBA(s.assignee)) return { allow: true, row: 3, why: `New, already under BA ${s.assignee}` };
-  if (s.stagedAssignee && isBA(s.stagedAssignee)) return { allow: true, row: 3, why: `New under ${s.assignee || 'nobody'}, sent back to BA ${s.stagedAssignee}` };
-  return { allow: false, row: 3, why: `New under ${s.assignee || 'nobody'}: set the Assignee to a BA first (status-rule.json ba list), then the Status` };
+  return { allow: false, row: 3, why: `New under ${s.assignee || 'nobody'}: not his ticket, never changed without his word; ask him (2026-11-20, 290431)` };
 }
 
 // Live state. Evals and the skill's dry runs point REDMINE_GATE_TICKET_STATE at a JSON file { "<num>": { status, assignee, assigneeId } }.

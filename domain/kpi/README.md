@@ -7,6 +7,8 @@ retention: keep (`main/kpi-moments.jsonl`, append-only, `merge=union`) · `main/
 footprint: on-demand: 1 node process per call, about 0.2 s, nothing running otherwise
 self_audit: every writing command (`add`, `render`) ends with `audit`: rows read back from disk and checked against the goal (fields · competency code · one sentence · evidence pointer shape · no full colleague name from the Redmine roster · no duplicate · page in sync with the ledger · the row just added is on disk); WARN when a competency has no row in 90 days. FAIL = exit 1 with the fix; the skill runs the fix loop before the reply. Every run writes a log row (outcome · goal_met · dur_ms).
 state-scoped: no — one ledger per person; tickets from every state (the ticket id carries the state)
+boundary: covers main/kpi-moments.jsonl, main/kpi-tracker.md and domain/kpi/log.jsonl · never writes a next-year row unless miya asked in his own message, never counts a next-year row in this year's tables, never names a colleague · stops at the self-audit line; a FAIL names its fix
+diagram: domain/kpi/diagram.html + diagram.png
 
 | Part | File |
 |---|---|
@@ -18,6 +20,7 @@ state-scoped: no — one ledger per person; tickets from every state (the ticket
 | Eval | `domain/kpi/kpi.eval.js` |
 | Log | `domain/kpi/log.jsonl` |
 | Pending rows + SessionStart reminder | `kpi.js pending add / pending --boot / confirm / drop` · hook `domain/kpi-pending/` |
+| Next-year list (only on miya's ask) | `kpi.js next add / next` · row `kind: "next-year"` · page section "Next year" |
 | Quest step | `.claude/skills/quest/SKILL.md` Workflow runner table, row "Any phase, the moment a KPI moment happens" · `close-phase` Phase 2 Step 2 · `quest/quest-protocol.md` Phase 2 Step 2 · `verify` Checklist E2 |
 
 A row: `{ date, ticket, competency, what, evidence }`. Competencies (Pymsoft appraisal form 2026): B1 Technical & Domain Knowledge · B2 Quality of Work · B3 Delivery & Planning · B4 Ownership & Initiative · B5 Communication · B6 Teamwork & Collaboration · C1 Code Quality & Engineering Practice · C2 Problem Solving & Production Support. Honest rows count (own rework under B2).
@@ -105,8 +108,29 @@ Events are appended, never edited, so the `merge=union` rule stays safe. The sel
 | 33 | Ledger broken at boot | fixture-added: hook silent, exit 0 (kpi-pending F5) |
 | 34 | Confirming without reading Redmine | accepted-risk: the skill requires reading the live journal first; the evidence field records which journal |
 | 35 | Pending forgotten for weeks | handled: printed every session start + 30-day WARN |
+| 36 | Next-year row added on my own initiative | accepted-risk: the skill says only on his ask; the boundary line makes it a slip at audit |
+| 37 | Next-year row counted in this year's table | fixture-added: list shows 0 rows (kpi 46), page keeps B4 empty (kpi 45) |
+| 38 | Same next-year row twice | fixture-added: refused (kpi 48) |
+| 39 | Next-year row with no evidence | handled: same row rules as add (refused) |
+| 40 | Next-year row naming a colleague | handled: same no-names check as add |
+| 41 | Next-year row with a future date | handled: same date check as add |
+| 42 | `next` with no rows | handled: prints 0 next-year row(s), exit 0 |
+| 43 | Older checkout reads a ledger holding a next-year row | accepted-risk: its audit FAILs on unknown kind until it pulls main; landing on main the same turn keeps the gap short |
+| 44 | Union merge brings a next-year row from another session | handled: audit FAIL out of sync until render, same as add rows |
+| 45 | Next year arrives and the rows should move to this year | accepted-risk: no auto move; his call next year (re-add with `add`) |
+| 46 | A next-year row and an add row for the same work | handled: different kind, so not a duplicate; both shown in their own sections |
+| 47 | Coverage WARN counts next-year rows | handled: coverage reads counted rows only |
+| 48 | Pending id collides with a next-year row | handled: next-year rows carry no id |
+| 49 | `next add` with a bad competency | handled: refused, same as add |
+| 50 | `next list` given as a word | handled: any word after `next` that is not `add` lists |
+| 51 | Hand edit of the Next year section | handled: audit FAIL out of sync, run render |
+| 52 | Next-year row with two sentences | handled: refused, one sentence only |
+| 53 | Quest save adds a next-year row by itself | accepted-risk: the save step calls `list` and `add` only, never `next add` |
+| 54 | Session start prints next-year rows | handled: `pending --boot` reads open pending rows only |
+| 55 | His ask in other words ("note this for next year") | handled: the skill's When row lists his phrasings; his order in any wording is the ask (system-rules Rule 8) |
 
 ## Change log
 
 - 2026-10-23 born (forge `new skill kpi`, registry row). Eval 30/30.
 - 2026-10-23 pending rows + `domain/kpi-pending/` SessionStart reminder (forge `new check kpi-pending`). Spec kept: add / list / render / audit and every earlier check unchanged (fixtures 1-30 still green). Eval 43/43, kpi-pending 6/6. First pending row: P-262027-B4-20261023.
+- 2026-11-20 next-year list per miya (290646: "take note on our kpi for next year. This will be a list only when I ask you to add like in this case."): row kind `next-year`, `kpi.js next add / next`, page section "Next year", never counted this year; skill section "Next-year list" (what · when · where · how · why); boundary and diagram lines added. Spec kept: add / pending / confirm / drop / render / audit unchanged (fixtures 1-43 still green). Eval 51/51. First row: #290646 B4.

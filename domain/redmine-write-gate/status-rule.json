@@ -1,7 +1,7 @@
 {
-  "_what": "miya's standing rule for a Redmine status hand-back (2026-11-03): read by domain/redmine-write-gate/status-rule.js, the hook and the redmine-phase1-prefill skill. One list; nothing here is repeated elsewhere.",
+  "_what": "miya's standing rule for a Redmine status hand-back (2026-11-03; hand-back In Progress since 2026-11-18, 275608; a New ticket under someone else is never changed, ask him, 2026-11-20, 290431): read by domain/redmine-write-gate/status-rule.js, the hook and the redmine-phase1-prefill skill. One list; nothing here is repeated elsewhere.",
   "owner": { "name": "Ahmad Ridhwan Anuar", "id": 1311 },
-  "handback_status": "Resolved",
+  "handback_status": "In Progress",
   "status_ids": { "1": "New", "2": "In Progress", "3": "Resolved", "5": "Closed", "9": "Open", "31": "Verified" },
   "lower": ["New", "Open", "In Progress", "Rework", "KIV", "Reviewing"],
   "frozen": ["Resolved", "Verified", "Closed", "Ready in PROD", "Cancelled"],
