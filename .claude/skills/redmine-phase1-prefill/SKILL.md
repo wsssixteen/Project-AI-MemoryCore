@@ -1,6 +1,6 @@
 ---
 name: redmine-phase1-prefill
-description: Pre-fill the Redmine ticket Edit form at Phase 1 close after git commit + push — drives the page via Claude in Chrome MCP (Status=Resolved · Assignee=<chosen> · %Done=100% · Resolved By + Resolved By Text=Ahmad Ridhwan Anuar · Notes templated · Files uploaded from highest-numbered Task subfolder) THEN STOPS BEFORE SUBMIT so みや reviews + clicks Submit himself. MANUAL INVOKE ONLY — never auto-binds to quest workflow. Triggers — "redmine prefill", "prefill redmine for X", "/redmine-phase1-prefill", "fill the redmine form", "redmine close prefill", "phase 1 redmine", explicit manual invocation only.
+description: Pre-fill the Redmine ticket Edit form at Phase 1 close after git commit + push — drives the page via Claude in Chrome MCP (Status left as it is, never Resolved · Assignee=<chosen> · %Done=50% · Resolved By + Resolved By Text=Ahmad Ridhwan Anuar · Notes templated · Files uploaded from highest-numbered Task subfolder) THEN STOPS BEFORE SUBMIT so みや reviews + clicks Submit himself. MANUAL INVOKE ONLY — never auto-binds to quest workflow. Triggers — "redmine prefill", "prefill redmine for X", "/redmine-phase1-prefill", "fill the redmine form", "redmine close prefill", "phase 1 redmine", explicit manual invocation only.
 ---
 
 # redmine-phase1-prefill — manual-invoke Phase 1 close form prefill
@@ -31,9 +31,9 @@ If any precondition fails → STOP and surface to みや; never half-execute.
 
 | Field | In-scope? | Notes |
 |---|---|---|
-| Status | ✓ → Resolved | per photo |
+| Status | left as it is (In Progress); never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608) | — |
 | Assignee | ✓ → みや mentions, default Aaron Loh Zhi Yong | per photo |
-| % Done | ✓ → 100% | per photo |
+| % Done | ✓ → 50% (2026-11-18 per miya, 275608) | — |
 | Resolved By | ✓ → Ahmad Ridhwan Anuar | per photo |
 | Resolved By Text | ✓ → Ahmad Ridhwan Anuar | per photo |
 | Notes | ✓ → templated | per photo |
@@ -80,7 +80,7 @@ Use `mcp__Claude_in_Chrome__form_input` for each. **Assignee and Status: form_in
 
 | Field | Selector hint | Value |
 |---|---|---|
-| Status | `#issue_status_id` (select) | `Resolved` when Step 2b says ALLOWED, with no question to him: under him and lower than Resolved (New · Open · In Progress · Rework · KIV · Reviewing), or New under someone else and sent back to a BA. BLOCKED = leave the select as it is and say in one line why: a status at or past Resolved (Resolved · **Verified** · Ready in PROD · Closed · Cancelled) is never set back, whoever holds it (2026-11-03 per みや; 2026-10-21 #282587: Verified was set back to Resolved), and someone else's In Progress / Rework is their work. His named order ("set status to X") always outranks the rule. Rule + BA list: `domain/redmine-write-gate/status-rule.json` |
+| Status | `#issue_status_id` (select) | **Not touched (2026-11-18 per miya, 275608: "we never choose resolved and leave it at In Progress", "We let BA set as Verified if pass")**. Older rule kept for reference only: `Resolved` when Step 2b says ALLOWED, with no question to him: under him and lower than Resolved (New · Open · In Progress · Rework · KIV · Reviewing), or New under someone else and sent back to a BA. BLOCKED = leave the select as it is and say in one line why: a status at or past Resolved (Resolved · **Verified** · Ready in PROD · Closed · Cancelled) is never set back, whoever holds it (2026-11-03 per みや; 2026-10-21 #282587: Verified was set back to Resolved), and someone else's In Progress / Rework is their work. His named order ("set status to X") always outranks the rule. Rule + BA list: `domain/redmine-write-gate/status-rule.json` |
 | Assignee | `#issue_assigned_to_id` (select) | `<assignee>` (default Aaron Loh Zhi Yong) |
 | % Done | `#issue_done_ratio` (select) | `100` |
 | Resolved By | `#issue_custom_field_values_<id>` (select) | `Ahmad Ridhwan Anuar` |
@@ -137,9 +137,9 @@ Verify all 6 fields are filled + N files attached via `mcp__Claude_in_Chrome__ge
 ═══ Redmine prefill complete — QA-<num> ═══
 
   URL: https://<host>/issues/<num>/edit
-  Status: Resolved ✓
+  Status: In Progress (untouched) ✓
   Assignee: <name> ✓
-  % Done: 100% ✓
+  % Done: 50% ✓
   Resolved By: Ahmad Ridhwan Anuar ✓
   Resolved By Text: Ahmad Ridhwan Anuar ✓
   Notes: filled (<N> chars) ✓
