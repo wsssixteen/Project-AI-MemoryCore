@@ -310,3 +310,5 @@
 {"ts":"2026-11-20T03:22:37.191Z","commit":"2737596a","outcome":"LANDED","exit":1,"dur_ms":10565}
 {"ts":"2026-11-20T03:22:47.157Z","commit":"2737596a","outcome":"REFUSED","exit":2,"dur_ms":3596}
 {"ts":"2026-11-20T08:17:40.047Z","commit":"--help","outcome":"land-on-main:","exit":2,"dur_ms":11}
+{"ts":"2026-11-20T08:31:52.366Z","commit":"HEAD","outcome":"REFUSED","exit":2,"dur_ms":1802}
+{"ts":"2026-11-20T08:32:19.845Z","commit":"31d3ffe2","outcome":"LANDED","exit":0,"dur_ms":13296}
