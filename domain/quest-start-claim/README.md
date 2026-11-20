@@ -78,3 +78,4 @@ After the change it reads the ticket again. `set` is written only when Redmine r
 | 33 | the script is edited to send a literal 100% | handled by the write gate (F89 there: payload shape changed, exemption void) |
 | 34 | the script is edited to also change the assignee | handled by the write gate (F88 there) |
 | 35 | ticket already In Progress at 0% (started before 2026-10-09) | handled: guard 2, nothing sent; the % is his to set |
+| 36 | block born by a sweep or by `ticket-gate.js` carries `quest_start_ts`, not `quest_start`, then is set `status=active` (290431, 2026-11-20: the claim skipped silently and the ticket stayed New through the done-alter post) | fixture-added (F71 to F73: `quest_start_ts` counts as the start stamp in both guards; a hold block with it still never calls Redmine) |

@@ -117,11 +117,11 @@ function afterArchive(qa) {
 // The rule and its three guards have one home: lib/quest-start-claim.js.
 function shouldClaim(qa, lines) {
     const get = k => ((lines.find(l => l.startsWith(k + '=')) || '').slice(k.length + 1)).trim();
-    return get('status').toLowerCase() === 'active' && get('quest_start') !== '' && !!redmineCheck.numOf(qa);
+    return get('status').toLowerCase() === 'active' && (get('quest_start') || get('quest_start_ts')) !== '' && !!redmineCheck.numOf(qa);   // quest_start_ts = ticket-gate stamp (290431)
 }
 function claimOnStart(qa, lines) {
     if (!LIVE && process.env.QUEST_CLAIM_TEST !== '1') return;
-    if (!shouldClaim(qa, lines)) return;
+    if (!shouldClaim(qa, lines)) { if (redmineCheck.numOf(qa) && /^status=active$/im.test(lines.join('\n'))) console.log(`  ⚠ Redmine #${redmineCheck.numOf(qa)}: New → In Progress NOT started (block has no quest_start stamp)`); return; }
     const script = path.join(__dirname, '..', 'lib', 'quest-start-claim.js');
     if (!fs.existsSync(script)) return;
     try {

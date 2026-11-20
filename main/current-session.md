@@ -387,3 +387,5 @@ who pays: none: wording only, no new part
 goal without the part: n/a, no new part
 model: claude-opus-5-5
 shown: none (wording change of an existing step)
+
+- system-build step 4 (2026-11-20, slip 290431 status stayed New): quest-start claim guards accept quest_start_ts (lib/quest-start-claim.js:52, quest/active-cli.js:120), eval F71-F73 added, stale F34 dropped, README row 36; NOT committed. Waiting Fable 5.2 audit (history + outlier scenarios) before the gate wording fix and landing.
