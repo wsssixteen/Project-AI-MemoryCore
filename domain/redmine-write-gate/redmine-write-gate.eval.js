@@ -442,6 +442,13 @@ r = statusFill('Resolved', [nav(399999), ...staging]);
 check('F160 Redmine does not answer for the ticket → BLOCK, says so', blocked(r) && /did not answer/.test(r.out), r.out.slice(0, 240));
 r = statusFill('In Progress', [nav(300011), ...staging]);
 check('F161 his New ticket, Status = In Progress through the form, no words → BLOCK (the rule covers Resolved only)', blocked(r), r.out.slice(0, 200));
+// 290431 (2026-11-20): his order for In Progress in past tense / should-be form was refused; the verb list took base forms only.
+for (const [id, words] of [['F173', 'I thought you changed it to In Progress, that is the thing I asked you to change to and leave at'], ['F174', 'it should be In Progress'], ['F175', 'leave it at In Progress']]) {
+  r = statusFill('In Progress', [nav(300011), user(words)]);
+  check(id + ' his order "' + words.slice(0, 40) + '" → In Progress allowed', !blocked(r), r.out.slice(0, 200));
+}
+r = statusFill('In Progress', [nav(300011), user('do not change it to In Progress')]);
+check('F176 "do not change it to In Progress" → still BLOCK', blocked(r), r.out.slice(0, 200));
 r = run11('mcp__claude-in-chrome__browser_batch', { actions: [{ name: 'form_input', input: { tabId: 1, ref: 'ref_568', value: 'Devayani Priya Shanmugam' } }, { name: 'form_input', input: { tabId: 1, ref: 'ref_549', value: 'Resolved' } }] }, [nav(300009), ...staging]);
 check('F162 browser_batch: Assignee = BA then Status = Resolved on an unassigned New ticket → allowed (row 3)', ruled(r) && /Devayani/.test(r.out), r.out.slice(0, 240));
 r = statusFill('Resolved', [nav(300002, 1), nav(287747, 2), ...staging], 2);

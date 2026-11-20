@@ -110,7 +110,7 @@ const STATUS_JS = /issue_status_id[^\n]{0,120}?(?:\.value\s*=|\.selectedIndex\s*
 const STATUS_ACTION = /\b(?:set|change|update|tukar|kemaskini|mark|put|make|move|resolve|close|reopen|status)\w*/i;
 const statusOrder = v => {
   const name = v && v !== '?' ? v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '(?:new|open|in progress|resolved|closed|kiv|reviewing|rework|verified|cancelled|ready in prod)';
-  return new RegExp('(?<!\\b(?:don\'?t|do not|jangan|not|never)\\s)(?:\\b(?:set|change|update|tukar|kemaskini|mark|put|make|move)\\b[^.\\n]{0,40}\\b' + name + '\\b|\\b' + name + '\\b[^.\\n]{0,12}\\b(?:status|it|the ticket)\\b|\\bstatus\\b[^.\\n]{0,20}\\b' + name + '\\b|\\[redmine-status-ok(?::\\s*' + name + ')?\\])', 'i');
+  return new RegExp('(?<!\\b(?:don\'?t|do not|jangan|not|never)\\s)(?:\\b(?:set|change|update|tukar|kemaskini|mark|put|make|move|switch|revert|leave|keep)\\w*\\b[^.\\n]{0,40}\\b' + name + '\\b|\\b(?:should|must|supposed to)\\s+(?:be|stay|remain)\\s+(?:at\\s+)?' + name + '\\b|\\b' + name + '\\b[^.\\n]{0,12}\\b(?:status|it|the ticket)\\b|\\bstatus\\b[^.\\n]{0,20}\\b' + name + '\\b|\\[redmine-status-ok(?::\\s*' + name + ')?\\])', 'i');
 };
 const hisStatusWords = (tp, value) => decide(tp, { approve: statusOrder(value), action: STATUS_ACTION, hold: REDMINE_HOLD, bypass: BYPASS });
 // v1.12 (2026-11-05, 288533, miya: "remove this step ... It already knows"): a hold made ONLY of staging words
