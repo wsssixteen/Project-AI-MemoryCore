@@ -99,7 +99,7 @@ process.stdin.on('end', () => {
       '       ⚠️ SootUp blind spot: Java method-refs (util::populateX) invisible (~281/589',
       '          populators missing). A "no callers" result is NOT authoritative — confirm',
       '          with codegraph MCP / Grep before relying on a negative.',
-      '  • codegraph MCP      — live callers/callees (etanah-pelupusan + common + AWAM indexed; pass projectPath)',
+      '  • codegraph MCP      — live callers/callees (etanah-pelupusan + common + AWAM indexed, + pendaftaran read only; pass projectPath)',
       '  • entity_table_map.json — 596 entity↔table (etanah-domain-1.0.4-MLK JAR). Resolve a',
       '          table\'s entity (or the reverse) HERE first — never grep the table name in Java',
       '          (@Table names are prefix-SPLIT: TablePrefixConstant.UMM_TABLE_PREFIX + "A_HKMLK").',
