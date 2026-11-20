@@ -50,6 +50,20 @@ node domain/kpi/kpi.js pending add --ticket "#NNNNNN" --competency B4 --what "<o
 - Settle it only after reading the live Redmine journal yourself: condition held → `node domain/kpi/kpi.js confirm <id> --evidence "#NNNNNN journal <date>"`; condition failed or the BA objected → `node domain/kpi/kpi.js drop <id> --why "<reason>"`.
 - A pending row older than 30 days raises a WARN in the self-audit.
 
+## Next-year list — only when he asks (2026-11-20 per みや, 290646)
+
+His words: "take note on our kpi for next year. This will be a list only when I ask you to add like in this case."
+
+| Question | Answer |
+|---|---|
+| What | Work he wants claimed in NEXT year's appraisal, e.g. a fix done beyond the ticket's scope (290646: the DMPRU Semakan white page fixed with the DMPRZ ticket). |
+| When | Only when he asks: "take note on our kpi for next year", "add to next year's KPI", "note this for next year". Never on my own, never at a quest save, never from the moment table above. |
+| Where | The same ledger `main/kpi-moments.jsonl`, as `kind: "next-year"`; `main/kpi-tracker.md` shows it under "Next year", outside this year's counts. No other file. |
+| How | `node domain/kpi/kpi.js next add --ticket "#NNNNNN" --competency <code> --what "<one sentence>" --evidence "<pointer>"` · read back: `node domain/kpi/kpi.js next`. Same row rules and self-audit as `add`. |
+| Why | Next year's KPI is set later; this keeps what he picked on record so it is not mined from memory then. |
+
+Reply line: `KPI next year: <code> noted — <ticket>`.
+
 ## Every quest save (quest skill save list item 4 · close-phase Save-quest step 1c)
 
 `node domain/kpi/kpi.js list --ticket <n>` (pending rows show as PENDING: settle them if the BA verdict is in). A moment since the last save that is not there gets added now. Reply line: `KPI: <n> rows · <m> pending — <added CODE | no new moment>`. Phase 2 pastes the line of the save that started it.
