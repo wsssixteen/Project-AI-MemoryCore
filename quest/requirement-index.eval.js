@@ -314,6 +314,7 @@ t('W3 Discovery schema REQUIRES specSource + requirementMatch', () => {
 });
 t('W4 no "BA\'s LITERAL scope" wording left in the Discovery prompt', () => !/BA's LITERAL scope/.test(WF) || 'still there');
 t('W5 SKILL Phase 0 step 2a (BA/TSO) + 2b (REQUIREMENT-MATCH) present', () => (/^2a\. .*ticket-load-verify\.js/m.test(SK) && /^2b\. .*requirement-index\.js --ticket/m.test(SK)) || 'missing');
+t('W5b SKILL 2b: the read follows a widened scope, before the edit and before any screen question (290646)', () => (/^2b\. .*The read follows the scope.*before the edit, and before any question to him about what that screen shows.*a question a read would answer is banned/m.test(SK)) || 'missing');
 t('W6 SKILL resume step iii echoes role and REQUIREMENT-MATCH', () => {
   const iii = (SK.match(/^\s*\| iii \|.*$/m) || [''])[0];
   return (/role \[BA \/ TSO/.test(iii) && /REQUIREMENT-MATCH/.test(iii)) || 'missing in iii';
