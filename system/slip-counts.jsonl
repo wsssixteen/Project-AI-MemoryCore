@@ -2300,6 +2300,7 @@
 {"ts":"2026-11-20T03:36:02.130Z","category":"process-skip"}
 {"ts":"2026-11-20T06:31:05.988Z","category":"blocker"}
 {"ts":"2026-11-20T03:51:10.546Z","category":"status-rule"}
+{"ts":"2026-11-20T08:27:00.750Z","category":"gate/repeat-block"}
 {"ts":"2026-11-20T07:02:51.930Z","category":"rule-reconcile"}
 {"ts":"2026-11-20T08:20:45.175Z","category":"A1"}
 {"ts":"2026-11-20T08:20:47.891Z","category":"A3"}
