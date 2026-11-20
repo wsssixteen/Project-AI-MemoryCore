@@ -389,3 +389,15 @@ model: claude-opus-5-5
 shown: none (wording change of an existing step)
 
 - system-build step 4 (2026-11-20, slip 290431 status stayed New): quest-start claim guards accept quest_start_ts (lib/quest-start-claim.js:52, quest/active-cli.js:120), eval F71-F73 added, stale F34 dropped, README row 36; NOT committed. Waiting Fable 5.2 audit (history + outlier scenarios) before the gate wording fix and landing.
+
+STEP-3:
+session: 170e3cd5-40ed-4954-a367-8f851f28bb96
+his words: "Please create one and think of where to add this context so that next time you will know where, how, what, why & when to save."
+cause step: domain/kpi/kpi.js:effective+render+next command · change: about 22 lines
+new parts: 0
+fix or report: fix
+who pays: on-demand: 1 node process per call, only when miya asks
+goal without the part: a next-year row kind inside the existing kpi ledger, no new file
+model: claude-opus-5-5
+shown: none (in-Feature row kind)
+
