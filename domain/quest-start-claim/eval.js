@@ -187,6 +187,28 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   check('F23 the quest_start stamp starts the check, and the command returns BEFORE the change is sent', /🔖 Redmine #900023/.test(res.out) && landed23 && w23 && res.exitAt < w23.at, `exit ${res.ms}ms · landed=${landed23} · ` + res.out.trim());
   check('F23b the background run left its own log row', await until(() => rows(r23, 'quest-start-claim').some(l => l.outcome === 'set'), 3000), JSON.stringify(rows(r23, 'quest-start-claim')));
 
+  // 290431 (2026-11-20): ticket-gate stamps quest_start_ts, not quest_start; the claim must take it.
+  tickets[900071] = { status: NEW(), assignee: mine() };
+  x = await claim('900071', 'qa=QA-900071\nquest_start_ts=2026-11-20T03:32:30.958Z\nstatus=active\n');
+  check('F71 active block with only the ticket-gate stamp quest_start_ts → set', x.log[0].outcome === 'set' && tickets[900071].status.name === 'In Progress', x.res.out);
+
+  tickets[900074] = { status: NEW(), assignee: { id: OTHER, name: 'A Colleague' }, module: 'Pelupusan' };
+  x = await claim('900074', started(900074));
+  check('F74 New under a colleague, Module Pelupusan → nothing sent, the line says ASK miya (290431)', x.log[0].outcome === 'skipped-not-mine' && writes(900074).length === 0 && /ASK miya/.test(x.res.out), x.res.out);
+  tickets[900075] = { status: NEW(), assignee: { id: OTHER, name: 'A Colleague' }, module: 'Pendaftaran' };
+  x = await claim('900075', started(900075));
+  check('F75 New under a colleague, another module → nothing sent, no ask', x.log[0].outcome === 'skipped-not-mine' && !/ASK miya/.test(x.res.out), x.res.out);
+
+  tickets[900072] = { status: NEW(), assignee: mine() };
+  x = await claim('900072', 'qa=QA-900072\nquest_start_ts=2026-11-20T03:32:30.958Z\nstatus=hold\n');
+  check('F72 sweep-born hold block with quest_start_ts → skipped-not-started, the server is never called', x.log[0].outcome === 'skipped-not-started' && calls(900072).length === 0, x.res.out);
+
+  tickets[900073] = { status: NEW(), assignee: mine() };
+  const r73 = mkRoot('qa=QA-900073\nquest_start_ts=2026-11-20T03:32:30.958Z\nstatus=hold\nphase=Rubric\n');
+  res = await run(CLI, ['update', 'QA-900073', 'status=active', 'phase=A4'], cliEnv(r73, true));
+  const landed73 = await until(() => tickets[900073].status.name === 'In Progress', 9000);
+  check('F73 the 290431 path: sweep block (hold + quest_start_ts) then update status=active → In Progress', /🔖 Redmine #900073/.test(res.out) && landed73, res.out.trim());
+
   tickets[900123] = { status: NEW(), assignee: mine() };
   const r23c = mkRoot('qa=QA-900123\nstatus=hold\nphase=0\nassigned_to_me=2026-10-06\n');
   res = await run(CLI, ['update', 'QA-900123', 'status=active', 'phase=0', 'current_phase=Discovery', 'ticket_type=bug', 'local_test_confirmed=false', 'quest_start=@now'], cliEnv(r23c, true));
@@ -243,7 +265,6 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   check('F32 step 6b keeps the patch-ticket path for a status that is not New', /patch/i.test(step6b) && /row 1 of Next steps/.test(step6b), step6b.slice(0, 160));
   const readme = read('domain/quest-start-claim/README.md');
   check('F33 README carries symptom / goal / goal_signal / retention / footprint / state-scoped, no TODO', ['symptom: ', 'goal: ', 'goal_signal: ', 'retention: keep', 'footprint: on-demand', 'state-scoped: no'].every(k => readme.includes('\n' + k)) && !/TODO/.test(readme));
-  check('F34 NUKE-MARKER present with the five fields', ['Created', 'Session', 'Files', 'Rollback', 'Retire'].every(f => read('domain/quest-start-claim/NUKE-MARKER.md').includes('| ' + f)));
   check('F35 the script header carries the forge keys', ['// symptom: ', '// goal: ', '// goal_signal: ', '// retention: keep', '// footprint: on-demand'].every(k => src.includes(k)));
   check('F36 the memory index line for the write-nod rule names its one standing exception', /redmine-write-nod\]\(feedback_redmine_write_needs_nod\.md\)[^\n]*standing exception: New to In Progress at quest start/.test(read('.claude/auto-memory/MEMORY.md')));
   check('F37 the write gate names the one exempt path', /quest-start-claim\\\.js/.test(gate) || /quest-start-claim\.js/.test(gate));

@@ -406,50 +406,59 @@ const run11 = (toolName, toolInput, lines) => { const r = spawnSync(process.exec
 const statusFill = (value, lines, tabId = 1) => run11(CHROME_FORM, { tabId, ref: 'ref_549', value, action_summary: 'sets the Status' }, lines);
 const ruled = r => !blocked(r) && /allowed by miya's standing rule/.test(r.out);
 const staging = [user('Retry prefill')];
-r = statusFill('Resolved', [nav(287747), ...staging]);
-check('F143 REPLAY 287747: his ticket, In Progress → Resolved, no words → allowed by the rule (row 2)', ruled(r) && /row 2/.test(r.out), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(287638), ...staging]);
+r = statusFill('In Progress', [nav(287747), ...staging]);
+check('F143 REPLAY 287747: his ticket, In Progress → In Progress hand-back, no words → allowed by the rule (row 2; never Resolved since 2026-11-18)', ruled(r) && /row 2/.test(r.out), r.out.slice(0, 200));
+r = statusFill('In Progress', [nav(287638), ...staging]);
 check('F144 his ticket, Rework → Resolved → allowed (row 1, a gap he left open)', ruled(r) && /row 1/.test(r.out), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(300010), ...staging]);
+r = statusFill('In Progress', [nav(300010), ...staging]);
 check('F145 his ticket, KIV → Resolved → allowed (row 1)', ruled(r), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(300001), ...staging]);
-check('F146 someone else\'s ticket, New, no BA staged → BLOCK, says stage the Assignee first', blocked(r) && /Stage the Assignee/.test(r.out), r.out.slice(0, 240));
+r = statusFill('In Progress', [nav(300001), ...staging]);
+check('F146 someone else\'s ticket, New → BLOCK, says ask him (290431)', blocked(r) && /ask him/.test(r.out), r.out.slice(0, 240));
 r = run11(CHROME_FORM, { tabId: 1, ref: 'ref_568', value: 'Nurul Amirah Nadiah', action_summary: 'sets the Assignee' }, [nav(300001), ...staging]);
 check('F147 Assignee = a BA on that form → silent (remembered)', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
-r = statusFill('Resolved', [nav(300001), ...staging]);
-check('F148 then Status = Resolved on the same New ticket → allowed (row 3: sent back to the BA)', ruled(r) && /row 3/.test(r.out) && /Nurul Amirah Nadiah/.test(r.out), r.out.slice(0, 240));
-r = statusFill('Resolved', [nav(300002), ...staging]);
+r = statusFill('In Progress', [nav(300001), ...staging]);
+check('F148 then Status on the same New ticket after Assignee = BA → still BLOCK, not his ticket (2026-11-20 retires the 11-03 row 3)', blocked(r) && /ask him/.test(r.out), r.out.slice(0, 240));
+r = statusFill('In Progress', [nav(300002), ...staging]);
 check('F149 someone else\'s ticket, In Progress → BLOCK (row 3 covers New only)', blocked(r) && /someone else's work/.test(r.out), r.out.slice(0, 240));
-r = statusFill('Resolved', [nav(300012), ...staging]);
+r = statusFill('In Progress', [nav(300012), ...staging]);
 check('F150 someone else\'s ticket, Rework → BLOCK', blocked(r), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(300013), ...staging]);
+r = statusFill('In Progress', [nav(300013), ...staging]);
 check('F172 REPLAY 274323: his ticket, Rework (Requirement Update) → Resolved → allowed (row 1, a Rework sub-status)', ruled(r) && /row 1/.test(r.out), r.out.slice(0, 200));
 for (const [id, num, name] of [['F151', 300003, 'Verified'], ['F152', 300004, 'Closed'], ['F153', 300005, 'Ready in PROD'], ['F154', 300006, 'Cancelled'], ['F155', 300007, 'Resolved']]) {
-  r = statusFill('Resolved', [nav(num), ...staging]);
+  r = statusFill('In Progress', [nav(num), ...staging]);
   check(id + ' ' + name + ' → BLOCK always by the rule (row 4, never set back)', blocked(r) && /row 4/.test(r.out) && /never set back/.test(r.out), r.out.slice(0, 240));
 }
 r = statusFill('Resolved', [nav(300003), user('set status to Resolved')]);
 check('F156 Verified + his named order → allowed on his order (the rule never overrides his words)', !blocked(r) && /set on miya's order/.test(r.out), r.out.slice(0, 200));
 r = statusFill('Resolved', [nav(287747), user("no, don't change the status")]);
 check('F157 his ticket, In Progress, but "don\'t change the status" → BLOCK (a hold wins over the rule)', blocked(r), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(300011), user('stage it 300011')]);
+r = statusFill('In Progress', [nav(300011), user('stage it 300011')]);
 check('F166 his New ticket + "stage it" → Resolved allowed by the rule (stage holds the Submit only, 288533)', ruled(r), r.out.slice(0, 200));
-r = statusFill('Resolved', [nav(300008), ...staging]);
-check('F158 New and already under a BA (Anis) → allowed (row 3)', ruled(r) && /row 3/.test(r.out), r.out.slice(0, 200));
-r = statusFill('Resolved', staging);
+r = statusFill('In Progress', [nav(300008), ...staging]);
+check('F158 New and already under a BA (Anis) → BLOCK, ask him (290431)', blocked(r) && /ask him/.test(r.out), r.out.slice(0, 200));
+r = statusFill('In Progress', staging);
 check('F159 no navigate to /issues/<num> in the transcript → BLOCK, says the ticket is not known', blocked(r) && /ticket is not known/.test(r.out), r.out.slice(0, 240));
-r = statusFill('Resolved', [nav(399999), ...staging]);
+r = statusFill('In Progress', [nav(399999), ...staging]);
 check('F160 Redmine does not answer for the ticket → BLOCK, says so', blocked(r) && /did not answer/.test(r.out), r.out.slice(0, 240));
 r = statusFill('In Progress', [nav(300011), ...staging]);
-check('F161 his New ticket, Status = In Progress through the form, no words → BLOCK (the rule covers Resolved only)', blocked(r), r.out.slice(0, 200));
-r = run11('mcp__claude-in-chrome__browser_batch', { actions: [{ name: 'form_input', input: { tabId: 1, ref: 'ref_568', value: 'Devayani Priya Shanmugam' } }, { name: 'form_input', input: { tabId: 1, ref: 'ref_549', value: 'Resolved' } }] }, [nav(300009), ...staging]);
-check('F162 browser_batch: Assignee = BA then Status = Resolved on an unassigned New ticket → allowed (row 3)', ruled(r) && /Devayani/.test(r.out), r.out.slice(0, 240));
-r = statusFill('Resolved', [nav(300002, 1), nav(287747, 2), ...staging], 2);
+check('F161 his New ticket, Status = In Progress through the form, no words → allowed (row 2: the prefill backstop, 290431)', ruled(r) && /row 2/.test(r.out), r.out.slice(0, 200));
+// 290431 (2026-11-20): his order for In Progress in past tense / should-be form was refused; the verb list took base forms only.
+for (const [id, words] of [['F173', 'I thought you changed it to In Progress, that is the thing I asked you to change to and leave at'], ['F174', 'it should be In Progress'], ['F175', 'leave it at In Progress']]) {
+  r = statusFill('In Progress', [nav(300011), user(words)]);
+  check(id + ' his order "' + words.slice(0, 40) + '" → In Progress allowed', !blocked(r), r.out.slice(0, 200));
+}
+r = statusFill('In Progress', [nav(300011), user('do not change it to In Progress')]);
+check('F176 "do not change it to In Progress" → still BLOCK', blocked(r), r.out.slice(0, 200));
+r = run11('mcp__claude-in-chrome__browser_batch', { actions: [{ name: 'form_input', input: { tabId: 1, ref: 'ref_568', value: 'Devayani Priya Shanmugam' } }, { name: 'form_input', input: { tabId: 1, ref: 'ref_549', value: 'In Progress' } }] }, [nav(300009), ...staging]);
+check('F162 browser_batch: Assignee = BA then Status on an unassigned New ticket → BLOCK (not his ticket, 290431)', blocked(r), r.out.slice(0, 240));
+r = statusFill('In Progress', [nav(300002, 1), nav(287747, 2), ...staging], 2);
 check('F163 two tabs: the status fill on tab 2 reads tab 2\'s ticket (287747, his) → allowed', ruled(r) && /#287747/.test(r.out), r.out.slice(0, 200));
 const cli = spawnSync(process.execPath, [path.join(__dirname, 'status-rule.js'), '287747', '--json'], { encoding: 'utf8', timeout: 20000, env: { ...process.env, REDMINE_GATE_TICKET_STATE: STATE_FILE } });
 check('F164 status-rule.js CLI prints the state and the verdict as JSON', /"allow":true/.test(cli.stdout || '') && /"row":2/.test(cli.stdout || ''), (cli.stdout || cli.stderr || '').slice(0, 200));
+r = statusFill('Resolved', [nav(287747), ...staging]);
+check('F177 his ticket, Resolved with no words → BLOCK (never Resolved unless he names it, 2026-11-18)', blocked(r), r.out.slice(0, 200));
 const SRM = require(path.join(__dirname, 'status-rule.js'));
-check('F165 guard: status-rule.json keeps the owner id 1311, Resolved as the hand-back and the five frozen statuses', SRM.rule().owner.id === 1311 && SRM.rule().handback_status === 'Resolved' && ['Resolved', 'Verified', 'Closed', 'Ready in PROD', 'Cancelled'].every(x => SRM.rule().frozen.includes(x)), JSON.stringify(SRM.rule().frozen));
+check('F165 guard: status-rule.json keeps the owner id 1311, In Progress as the hand-back and the five frozen statuses', SRM.rule().owner.id === 1311 && SRM.rule().handback_status === 'In Progress' && ['Resolved', 'Verified', 'Closed', 'Ready in PROD', 'Cancelled'].every(x => SRM.rule().frozen.includes(x)), JSON.stringify(SRM.rule().frozen));
 
 // v1.12 (2026-11-05): running this gate's own eval from a shell tool is not a Redmine write (it blocked itself before).
 const OWN_EVAL_REL = 'node domain/redmine-write-gate/redmine-write-gate.eval.js';
