@@ -153,7 +153,8 @@
       "Refer, commit, merge, branch, table, value stay English.",
       "Basically / Actually / so / just, not Ringkasnya / Oleh itu.",
       "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\".",
-      "Never \"perlu\" (2026-11-18 per miya, 275608): \"kena\" for a must (Pendaftaran kena deploy dulu), \"boleh\" for a can or a next step they may take (Pendaftaran boleh guna common 1.15.1)."
+      "Never \"perlu\" (2026-11-18 per miya, 275608): \"kena\" for a must (Pendaftaran kena deploy dulu), \"boleh\" for a can or a next step they may take (Pendaftaran boleh guna common 1.15.1).",
+      "\"dekat\", never the preposition \"di\" (Butang Jana dekat Penyediaan Syor SO); \"reflect\", never \"terbawa\" (Kemaskini manual dalam Word daerah tak reflect dekat dokumen PTG) (2026-11-20 per miya, ADHOC-PRBB-2026-26)."
     ],
     "banned": [
       "dihantar",
@@ -166,7 +167,9 @@
       "Rujuk",
       "jadual",
       "ye",
-      "perlu"
+      "perlu",
+      "di",
+      "terbawa"
     ],
     "check": "rojak"
   },

@@ -376,3 +376,14 @@ Last Activity: 2026-11-17 17:29 · DE run
 - System: falsifier-ran-check issue:n + BA example lines (d6f05947); manifest PDF notes + full BA notes + 1) lists; legend ban in quest TEMPLATE-SCENARIO (d82f58fb / main a43e8387); 4 gaps: test table reads archive docs, BA note counts our commits only, --closing, newest int-env merge, rework=cycle-N, sweep Step 6 (599ce2d8 / main b69f3ba6).
 - Open: Mira's verify + JPPH answer; staging not deployed; 4 PT Syarikat templates carry the same run-level JT tag (outside 261986); tempoh pajakan asal "-" reaches every urusan; note tool has no draft mode.
 Resume: none for this session; 261986 resumes on Mira's reply (qa_doc projects/coding-projects/archive/QA-261986/QA-261986.md, ## Quest Story).
+
+
+STEP-3: PROD server log = pull ourselves; INT/STG = ask infra
+session: 5449e6c0-365f-4cc1-9ef4-3dd6a493f7c5
+his words: "if you need PROD server log, you can retrieve it yourself. For internal (staging & internal), we only then we need to ask for infra" (order)
+cause step: .claude/skills/quest/SKILL.md:569 Server log of a deployed env · change: 3 lines · new parts: 0
+fix or report: fix
+who pays: none: wording only, no new part
+goal without the part: n/a, no new part
+model: claude-opus-5-5
+shown: none (wording change of an existing step)

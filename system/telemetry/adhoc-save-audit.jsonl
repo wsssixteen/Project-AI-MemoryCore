@@ -693,3 +693,12 @@
 {"ts":"2026-11-17T02:55:26.774Z","id":"ADHOC-RPT-2026-1","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":84}
 {"ts":"2026-11-17T02:55:42.088Z","id":"ADHOC-RPT-2026-1","outcome":"pass","fails":[],"dur_ms":69}
 {"ts":"2026-11-17T02:56:23.477Z","id":"ADHOC-RPT-2026-1","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-11-20T02:32:40.567Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":57}
+{"ts":"2026-11-20T02:48:12.914Z","id":"ADHOC-PRBB-2026-26","outcome":"fail","fails":["task folder: BA downloads MOVED (none left on Desktop/Downloads)"],"dur_ms":54}
+{"ts":"2026-11-20T02:48:18.238Z","id":"ADHOC-PRBB-2026-26","outcome":"fail","fails":["task folder: BA downloads MOVED (none left on Desktop/Downloads)"],"dur_ms":46}
+{"ts":"2026-11-20T02:48:34.518Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":38}
+{"ts":"2026-11-20T02:53:31.631Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":39}
+{"ts":"2026-11-20T03:01:06.732Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-11-20T03:03:31.383Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-11-20T03:10:08.668Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-11-20T03:12:27.048Z","id":"ADHOC-PRBB-2026-26","outcome":"pass","fails":[],"dur_ms":52}
