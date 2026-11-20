@@ -13,7 +13,7 @@
 | B5 | Communication | 0 | - |
 | B6 | Teamwork & Collaboration | 2 | 2026-11-16 |
 | C1 | Code Quality & Engineering Practice | 0 | - |
-| C2 | Problem Solving & Production Support | 5 | 2026-11-04 |
+| C2 | Problem Solving & Production Support | 6 | 2026-11-20 |
 
 ## Pending — counts once its condition holds (printed at every session start)
 
@@ -69,6 +69,7 @@ _No rows yet._
 
 | Date | Ticket | What happened | Evidence |
 |---|---|---|---|
+| 2026-11-20 | ADHOC-PRBB-2026-26 | Traced a PROD PRBB Rencana JKBB mismatch to a colleague's PTG Jana change that deletes the daerah's Rencana record and regenerates it, proven by the deleted record and a staging comparison. | commit 2024b86a09 (CR 259108) MlkKertasTemplateForm.onJanaUpdate -> deleteExistingRisalatDocuments; et_main.umm_a_dok_keluaran 8643894 absent, skg_dok 15752988 v24 medan_pk_id 8643894 |
 | 2026-11-04 | #288169 | Traced a PROD duplicate-JKR, missing-MPAG Ulasan JT screen to agency record 8 being renamed to MPAG for three weeks, using the field audit table, and patched only the 6 affected rows instead of the shared agency code. | PROD et_sistem.pt_audit_field rename 21/07 16:58 and 13/08 13:57 · 2. Fix 288169.sql · verify SELECT 6 rows agensi 6 |
 | 2026-11-03 | #287892 | Proved the Desa rate data was correct and fixed the lookup in pelupusan alone, by handing common a pre-chosen rate row, so no common-team change was needed. | commit 55782d7ce1 PelupusanService.java; etanah-common CukaiCalculationService.calculate():197; stg1 test DESA II RM 66.00 · confirmed 2026-11-04 (BAQA list 2026-11-04: eSOKONGAN #287892 - Verified Staging; Baseline Pelupusan 1.9.2 Passed) |
 | 2026-10-30 | ADHOC-MCL-2026-3 | Found that a 2026-06-19 commit stops the MCL Semakan Kemasukan Maklumat save at the premium check, so Tajuk Risalat is never saved and PROD Laporan Tanah has no Perkara. | etanah-pelupusan 5734174bd9 (#265081) MlkMaklumatTanahLesenPendudukanForm.performCustomSave :686-691; Redmine 223227 comments 12, 14, 19; PROD 0 of 37 MCL at PLT have tajukRisalat |
