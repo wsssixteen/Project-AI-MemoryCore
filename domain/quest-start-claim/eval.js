@@ -192,6 +192,13 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   x = await claim('900071', 'qa=QA-900071\nquest_start_ts=2026-11-20T03:32:30.958Z\nstatus=active\n');
   check('F71 active block with only the ticket-gate stamp quest_start_ts → set', x.log[0].outcome === 'set' && tickets[900071].status.name === 'In Progress', x.res.out);
 
+  tickets[900074] = { status: NEW(), assignee: { id: OTHER, name: 'A Colleague' }, module: 'Pelupusan' };
+  x = await claim('900074', started(900074));
+  check('F74 New under a colleague, Module Pelupusan → nothing sent, the line says ASK miya (290431)', x.log[0].outcome === 'skipped-not-mine' && writes(900074).length === 0 && /ASK miya/.test(x.res.out), x.res.out);
+  tickets[900075] = { status: NEW(), assignee: { id: OTHER, name: 'A Colleague' }, module: 'Pendaftaran' };
+  x = await claim('900075', started(900075));
+  check('F75 New under a colleague, another module → nothing sent, no ask', x.log[0].outcome === 'skipped-not-mine' && !/ASK miya/.test(x.res.out), x.res.out);
+
   tickets[900072] = { status: NEW(), assignee: mine() };
   x = await claim('900072', 'qa=QA-900072\nquest_start_ts=2026-11-20T03:32:30.958Z\nstatus=hold\n');
   check('F72 sweep-born hold block with quest_start_ts → skipped-not-started, the server is never called', x.log[0].outcome === 'skipped-not-started' && calls(900072).length === 0, x.res.out);
