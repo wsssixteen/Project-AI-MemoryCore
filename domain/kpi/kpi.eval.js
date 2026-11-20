@@ -131,6 +131,21 @@ check('42 an event for a pending id that does not exist fails the audit', r.code
 const bootHook = path.join(REPO, 'domain', 'kpi-pending', 'kpi-pending.check.hook.js');
 check('43 SessionStart hook calls pending --boot', fs.existsSync(bootHook) && /pending['", ]+--boot/.test(fs.readFileSync(bootHook, 'utf8')), 'hook missing');
 
+// 44-48 next-year list (miya 2026-11-20, 290646: "take note on our kpi for next year ... a list only when I ask")
+R = fresh();
+const nxt = ['next', 'add', '--ticket', '#290646', '--competency', 'B4', '--what', 'Fixed the DMPRU Semakan white page alongside the DMPRZ ticket fix.', '--evidence', 'MlkPelupusanMigrasiPengesahanForm.java:46'];
+r = run(R, nxt);
+check('44 next add → PASS, row stored as kind next-year', r.code === 0 && /self-audit: PASS/.test(r.out) && /"kind":"next-year"/.test(fs.readFileSync(ledger(R), 'utf8')), r.out);
+check('45 next-year row sits under its own section, not under B4', /## Next year[\s\S]*#290646/.test(fs.readFileSync(view(R), 'utf8')) && /## B4 — Ownership & Initiative\n\n_No rows yet\._/.test(fs.readFileSync(view(R), 'utf8')), 'page wrong');
+r = run(R, ['list']);
+check('46 this year\'s list does not count it', /0 row\(s\)/.test(r.out), r.out);
+r = run(R, ['next']);
+check('47 next lists it', /#290646[\s\S]*1 next-year row/.test(r.out), r.out);
+r = run(R, nxt);
+check('48 the same next-year row again → refused', r.code === 2 && /already in the ledger/.test(r.out), r.out);
+const kpiSkill = fs.readFileSync(path.join(REPO, '.claude', 'skills', 'kpi', 'SKILL.md'), 'utf8');
+check('49 kpi skill says the next-year list is written only on his ask', /## Next-year list[\s\S]*only when (he|miya) asks/i.test(kpiSkill), 'skill section missing');
+
 const fail = results.filter(x => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 300)));
 console.log('kpi eval: ' + (results.length - fail.length) + '/' + results.length);
