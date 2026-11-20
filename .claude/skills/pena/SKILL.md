@@ -38,8 +38,8 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 
 | Profile | Use it for | Modules |
 |---|---|---|
-| `redmine-dev-mapping` | answer to another team's developer (table and column, how to read a value) | greet · lean · line · table · separate · script · proven · topdown · attach |
-| `redmine-ba-pass` | passing a fix or patch to the BA | greet · lean · line · plain · proven · topdown · table · attach |
+| `redmine-dev-mapping` | answer to another team's developer (table and column, how to read a value) | greet · lean · line · table · separate · script · proven · topdown · attach · rojak |
+| `redmine-ba-pass` | passing a fix or patch to the BA | greet · lean · line · plain · proven · topdown · table · attach · rojak |
 | `redmine-dev-fixlist` | fix list or findings for a developer | greet · lean · line · rojak · proven · topdown · table · attach |
 | `redmine-rootcause` | Root cause and Solution fields | lean · line · plain · rojak · proven |
 | `flowable-description` | the Save model Description line for a Flowable model change | lean · line · rojak |
@@ -85,5 +85,7 @@ Or name modules when only some apply: `--module line,lean`.
 - Stored note shapes (the BA pass block, the infra block) stay in their own homes; each profile's `Also read:` line points to them.
 
 **Banned**: drafting first and running `show` after · pasting a `PENA:` line from an older check · storing a changed sentence at the end of the session instead of the turn it happened.
+
+*2026-11-18: "perlu" banned in `rojak` ("kena" for a must, "boleh" for a can), and `rojak` added to `redmine-ba-pass` and `redmine-dev-mapping` so their Malay lines are checked, per miya (275608: "never use that, update my writing style"). Additive; eval 62/62.*
 
 *2026-11-17: step 6 added per miya (275608): every Redmine draft is staged on the ticket's edit form in Edge in the same turn, never submitted. Spec-preservation: steps 1-5, the banned line and the nod rule (feedback_redmine_write_needs_nod) unchanged; additive. Diagram added (system-design Rule 17). Eval 62/62.*

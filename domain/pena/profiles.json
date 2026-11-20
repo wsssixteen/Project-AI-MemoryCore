@@ -10,7 +10,8 @@
       "script",
       "proven",
       "topdown",
-      "attach"
+      "attach",
+      "rojak"
     ],
     "pointers": [
       ".claude/auto-memory/feedback_ticket_writing_style.md (entries 10 and 14)"
@@ -26,7 +27,8 @@
       "proven",
       "topdown",
       "table",
-      "attach"
+      "attach",
+      "rojak"
     ],
     "pointers": [
       ".claude/auto-memory/feedback_ticket_writing_style.md (entries 1, 2, 5, 13)",
