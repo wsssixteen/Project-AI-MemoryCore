@@ -310,3 +310,7 @@
 {"ts":"2026-11-20T03:22:37.191Z","commit":"2737596a","outcome":"LANDED","exit":1,"dur_ms":10565}
 {"ts":"2026-11-20T03:22:47.157Z","commit":"2737596a","outcome":"REFUSED","exit":2,"dur_ms":3596}
 {"ts":"2026-11-20T08:17:40.047Z","commit":"--help","outcome":"land-on-main:","exit":2,"dur_ms":11}
+{"ts":"2026-11-20T08:29:49.060Z","commit":"a8a00ad4e08f6e4e5ac4e5233c411fab606ef73e","outcome":"REFUSED","exit":2,"dur_ms":4288}
+{"ts":"2026-11-20T08:30:32.692Z","commit":"02254db96d21e34e147c4c0ff26cc2f339789c24","outcome":"REFUSED","exit":2,"dur_ms":1003}
+{"ts":"2026-11-20T08:30:52.879Z","commit":"63cd7cbf","outcome":"REFUSED","exit":2,"dur_ms":9326}
+{"ts":"2026-11-20T08:30:58.989Z","commit":"02254db9","outcome":"REFUSED","exit":2,"dur_ms":5907}
