@@ -21,6 +21,8 @@
 //   node domain/kpi/kpi.js pending [list|--boot]   open pending rows; --boot prints nothing when there are none (SessionStart)
 //   node domain/kpi/kpi.js confirm <id> [--evidence "<journal>"]   the condition held: the row now counts
 //   node domain/kpi/kpi.js drop <id> --why "<reason>"               the condition failed (e.g. BA objected): withdrawn
+//   node domain/kpi/kpi.js next add <same flags as add>   a note for NEXT year's KPI, ONLY when miya asks (2026-11-20, 290646)
+//   node domain/kpi/kpi.js next [list]                    the next-year list; never counted in this year's tables
 // Exit 0 = PASS · 1 = audit FAIL (fix printed) · 2 = usage / refused row.
 // state-scoped: no — one ledger per person, tickets from every state (the ticket id carries the state).
 'use strict';
@@ -86,6 +88,7 @@ function people() {
 //   kind "pending"   a moment that counts only once its --until condition holds (id P-<ticket>-<code>-<yyyymmdd>)
 //   kind "confirm"   event: the pending row with this id now counts (date = the day it was confirmed)
 //   kind "drop"      event: the pending row with this id is withdrawn (why = the reason, e.g. BA objected)
+//   kind "next-year" a note for next year's KPI, written only on miya's ask; shown in its own section, never counted
 function isEvent(r) { return r.kind === 'confirm' || r.kind === 'drop'; }
 function rowProblems(r) {
   const p = [];
@@ -96,7 +99,7 @@ function rowProblems(r) {
     if (r.kind === 'drop' && !String(r.why || '').trim()) p.push(['why', 'a drop needs --why']);
     return p;
   }
-  if (r.kind && r.kind !== 'pending') p.push(['kind', 'unknown kind "' + r.kind + '"']);
+  if (r.kind && r.kind !== 'pending' && r.kind !== 'next-year') p.push(['kind', 'unknown kind "' + r.kind + '"']);
   if (r.kind === 'pending') {
     if (!/^P-/.test(r.id || '')) p.push(['id', 'pending row has no id']);
     if (!String(r.until || '').trim()) p.push(['until', 'pending row needs --until "<the condition that makes it count>"']);
@@ -127,20 +130,21 @@ function clean(rows) { return rows.map(r => { const c = Object.assign({}, r); de
 function effective(rows) {
   const ev = new Map();
   for (const r of rows) if (isEvent(r) && !ev.has(r.id)) ev.set(r.id, r);
-  const counted = [], open = [];
+  const counted = [], open = [], next = [];
   for (const r of rows) {
     if (isEvent(r)) continue;
+    if (r.kind === 'next-year') { next.push(r); continue; }
     if (r.kind !== 'pending') { counted.push(r); continue; }
     const e = ev.get(r.id);
     if (!e) open.push(r);
     else if (e.kind === 'confirm') counted.push(Object.assign({}, r, { evidence: r.evidence + ' · confirmed ' + e.date + (e.evidence ? ' (' + e.evidence + ')' : '') }));
   }
-  return { counted, open };
+  return { counted, open, next };
 }
 
 // ---------- view ----------
 function render(rows) {
-  const { counted, open } = effective(rows);
+  const { counted, open, next } = effective(rows);
   const by = {};
   for (const c of CODES) by[c] = [];
   for (const r of counted) if (by[r.competency]) by[r.competency].push(r);
@@ -166,6 +170,10 @@ function render(rows) {
     if (!by[c].length) { out.push('_No rows yet._'); continue; }
     out.push('| Date | Ticket | What happened | Evidence |', '|---|---|---|---|');
     for (const r of by[c]) out.push('| ' + r.date + ' | ' + r.ticket + ' | ' + cell(r.what) + ' | ' + cell(r.evidence) + ' |');
+  }
+  if (next.length) {
+    out.push('', '## Next year — noted only on miya\'s ask, not counted this year', '', '| Date | Ticket | Code | What happened | Evidence |', '|---|---|---|---|---|');
+    for (const r of next.slice().sort((a, b) => (b.date + b.ticket).localeCompare(a.date + a.ticket))) out.push('| ' + r.date + ' | ' + r.ticket + ' | ' + r.competency + ' | ' + cell(r.what) + ' | ' + cell(r.evidence) + ' |');
   }
   return out.join('\n') + '\n';
 }
@@ -276,6 +284,19 @@ if (cmd === 'pending') {
   logRow({ cmd: boot ? 'pending-boot' : 'pending-list', outcome: 'ok', rows: open.length });
   process.exit(0);
 }
+if (cmd === 'next') {
+  if (process.argv[3] === 'add') {
+    const row = Object.assign({ kind: 'next-year' }, rowFromArgs());
+    append(row, 'next-add');
+    console.log('next-year  ' + row.date + '  ' + row.ticket + '  ' + row.competency + '  ' + row.what);
+    report('next-add', audit(row), { ticket: row.ticket, competency: row.competency });
+  }
+  const { next } = effective(readLedger().rows);
+  for (const r of next) console.log(r.date + '  ' + r.ticket + '  ' + r.competency + '  ' + r.what + '  [' + r.evidence + ']');
+  console.log(next.length + ' next-year row(s)');
+  logRow({ cmd: 'next-list', outcome: 'ok', rows: next.length });
+  process.exit(0);
+}
 if (cmd === 'confirm' || cmd === 'drop') {
   const row = { kind: cmd, id: String(process.argv[3] || ''), date: argOf('date') || today() };
   if (cmd === 'confirm' && argOf('evidence')) row.evidence = String(argOf('evidence')).trim();
@@ -284,5 +305,5 @@ if (cmd === 'confirm' || cmd === 'drop') {
   console.log((cmd === 'confirm' ? 'confirmed  ' : 'dropped  ') + row.id);
   report(cmd, audit(row), { id: row.id });
 }
-console.error('usage: node domain/kpi/kpi.js <add|list|render|audit|competencies|pending [add|list|--boot]|confirm <id>|drop <id>> ... (see header)');
+console.error('usage: node domain/kpi/kpi.js <add|list|render|audit|competencies|pending [add|list|--boot]|confirm <id>|drop <id>|next [add|list]> ... (see header)');
 process.exit(2);
