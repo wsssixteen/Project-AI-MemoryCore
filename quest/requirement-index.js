@@ -419,6 +419,16 @@ function folderOf(num) {
   }
   return null;
 }
+// The state of a ticket, from its active.txt block (state= line, then its task_folder); null when unknown.
+function stateOfTicket(num) {
+  if (!num) return null;
+  const S = statesLib();
+  if (!S) return null;
+  try {
+    const block = fs.readFileSync(ACTIVE_TXT, 'utf8').split(/\r?\n\s*\r?\n/).find(b => new RegExp(`^qa=(QA-)?${num}\\s*$`, 'm').test(b));
+    return block ? S.resolve({ activeBlock: block }).state : null;
+  } catch (_) { return null; }
+}
 function localTicket(num) {
   const folder = folderOf(num);
   if (!folder) return null;
@@ -638,15 +648,17 @@ const noDesc = (k, v) => (k === 'desc' ? undefined : v);
 async function main(argv, log) {
   const flag = n => { const i = argv.indexOf('--' + n); return i >= 0 ? (argv[i + 1] || '') : null; };
   const has = n => argv.includes('--' + n);
-  let stateKey = flag('state') || 'melaka';
+  // No --state: the ticket's own active.txt block says which state it is (290517, a Selangor ticket, was searched in the Melaka index).
+  let stateKey = flag('state') || stateOfTicket(flag('ticket') || flag('for')) || 'melaka';
   const S = statesLib();
   if (S && S.get(stateKey)) stateKey = S.get(stateKey).key;
   const json = has('json');
   const top = Number(flag('top')) || 8;
   const refresh = !has('no-refresh');
 
-  if (!REQ_PROJECTS[stateKey]) {
-    console.log(`REQUIREMENT-MATCH: n/a — no Requirement project registered for ${stateKey}. Add it to REQ_PROJECTS in quest/requirement-index.js.`);
+  // A state with no index still reads a ticket by number (--read needs no index).
+  if (!REQ_PROJECTS[stateKey] && !flag('read')) {
+    console.log(`REQUIREMENT-MATCH: n/a — no Requirement index for ${stateKey} (REQ_PROJECTS in quest/requirement-index.js). Find the requirement from the code: git log on every file that makes or shows the value of concern, then node quest/requirement-index.js --read <ticket named in the commit> --for <num>.`);
     return 0;
   }
   if (has('build')) {
@@ -857,7 +869,7 @@ async function readRequirement(req, forTicket, log, section) {
   return read < specs ? 1 : 0;
 }
 
-module.exports = { requestKind, screenHint, tokenize, codesOf, kodsOf, rowFromIssue, prepare, search, renderMd, load, localTicket,
+module.exports = { requestKind, screenHint, tokenize, codesOf, kodsOf, rowFromIssue, prepare, search, renderMd, load, localTicket, stateOfTicket,
   expandSynonyms, sectionFilter, loadTiers, loadNext, calledFlowKods, EXTRACT_PY, SYNONYMS, REQ_PROJECTS, REQ_TRACKERS, DATA_FILE, MD_FILE };
 
 if (require.main === module) {

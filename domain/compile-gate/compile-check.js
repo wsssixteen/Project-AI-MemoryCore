@@ -13,6 +13,10 @@
 // then the missing JDK 8 toolchain. Now: any repo PATH (worktree included) is a valid target, an
 // offline dependency miss retries online once, every failure is labelled, every run is logged.
 //
+// v3 (2026-11-23, 290517): in a linked git worktree (E:\Dev\etanah-work\wt-<ticket>) the pom's
+// git-commit-id plugin stops the build before javac ("Could not get HEAD Ref"). The compile needs
+// no git info, so every run passes -Dmaven.gitcommitid.skip=true.
+//
 // Usage:
 //   node domain/compile-gate/compile-check.js run    <module|repo-path>   # mvn compile; records the green marker
 //   node domain/compile-gate/compile-check.js verify <module|repo-path>   # exit 0 iff green + no .java edited since
@@ -107,7 +111,7 @@ function newestJavaMtime(dir) {
 }
 
 function mvn(top, offline) {
-  const args = [...(offline ? ['-o'] : []), '-q', '-t', `"${TC}"`, 'compile'];
+  const args = [...(offline ? ['-o'] : []), '-q', '-t', `"${TC}"`, '-Dmaven.gitcommitid.skip=true', 'compile'];
   const r = spawnSync(MVN, args, { cwd: top, encoding: 'utf8', shell: true, maxBuffer: 1 << 26, windowsHide: true });
   const out = (r.stdout || '') + (r.stderr || '');
   return { ok: r.status === 0, out };

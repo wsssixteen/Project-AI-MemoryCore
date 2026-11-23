@@ -32,7 +32,7 @@ fs.writeFileSync(path.join(OLD, '0. Brief', 'Description.txt'), [
   '2026-09-28', '', 'Ticket issue description:', '', 'Env: INTERNAL ISSUE', 'Ticket: INTERNAL ISSUE #281324',
   'Subject: Semua urusan PLP - Penerimaan Bukti Penyampaian Pos Berdaftar', '', 'ID PErmohonan: PTMLK/03/L/PRBB/2026/8', 'Klik Hantar > Error',
 ].join('\n'));
-fs.writeFileSync(path.join(SB, 'active.txt'), `qa=QA-286315\nstatus=active\ntask_folder=${TASK}\n\nqa=QA-281324\ntask_folder=${OLD}\n\nqa=QA-999\ntask_folder=${path.join(SB, 'gone')}\n`);
+fs.writeFileSync(path.join(SB, 'active.txt'), `qa=QA-286315\nstatus=active\ntask_folder=${TASK}\n\nqa=QA-281324\ntask_folder=${OLD}\n\nqa=QA-999\ntask_folder=${path.join(SB, 'gone')}\n\nqa=QA-777\nstate=selangor\ntask_folder=${path.join(SB, 'gone')}\n`);
 process.env.REQ_ACTIVE_FILE = path.join(SB, 'active.txt');
 process.env.REQ_NO_LOG = '1';
 
@@ -292,6 +292,12 @@ t('C1 a state with no Requirement project says n/a and exits 0 (no guess, no net
   const r = cli(['--ticket', '1', '--state', 'perak']);
   return (r.status === 0 && /REQUIREMENT-MATCH: n\/a/.test(r.stdout)) || `${r.status} ${r.stdout}${r.stderr}`;
 });
+// 290517 (2026-11-23): a Selangor ticket with no --state was searched in the Melaka index and its top hits were Melaka requirements.
+t('C1b no --state: the state comes from the ticket block, and a no-index state names the code route', () => {
+  const r = cli(['--ticket', '777']);
+  return (r.status === 0 && /no Requirement index for selangor/.test(r.stdout) && /git log on every file/.test(r.stdout)) || `${r.status} ${r.stdout}${r.stderr}`;
+});
+t('C1c stateOfTicket: a block with no state line and no Task folder gives null (Melaka default stays)', () => R.stateOfTicket('999') === null || String(R.stateOfTicket('999')));
 t('C2 no mode prints usage and exits 2', () => { const r = cli([]); return (r.status === 2 && /usage/.test(r.stdout)) || `${r.status}`; });
 t('C3 the usage log is git-ignored (a call never dirties the tree)', () => {
   const r = spawnSync('git', ['check-ignore', '-q', 'quest/requirement-index.log.jsonl'], { cwd: REPO });
