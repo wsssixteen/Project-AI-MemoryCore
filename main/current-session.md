@@ -410,3 +410,22 @@ goal without the part: a next-year row kind inside the existing kpi ledger, no n
 model: claude-opus-5-5
 shown: none (in-Feature row kind)
 
+
+STEP-3:
+session: f8f2f1d1-3c3e-4c65-8ef8-09af82e87341
+his words: "build the prefix check" (order)
+cause step: domain/commit-subject-gate/version-direction.js:gateCommit (runs at every etanah git commit via compile-gate) · change: about 12 lines
+new parts: 0
+fix or report: fix
+who pays: on-demand: one regex inside the existing check, only at an etanah git commit
+goal without the part: a rule inside the check that already runs at commit, no new file
+model: claude-opus-5-5
+shown: prefix-flow.png
+
+CHANGE-CARD (before): commit prefix check
+What: The commit check that already runs at every etanah git commit now refuses a subject that does not start with Ref # or QA #.
+Why: Eight pushed commits since 2026-11-04 started with ESOKONGAN # because each session copied the last one and no check looked at the prefix.
+How: The flow picture prefix-flow.png shows git commit going through the compile gate into version-direction.js, where the new rule sits.
+When: It runs at the moment of an etanah git commit with a -m subject, and Merge and Revert subjects pass.
+Where: The change is in domain/commit-subject-gate, shown on the planned change map change-map-20261123-031857.png.
+Where picture = the change map (lib/change-map.js).

@@ -176,6 +176,28 @@ check('F68 replay #285768: "Up common to 1.10.17-MLK.beta.patch1" → BLOCK', !V
 check('F69 release version still uses Up / Revert: "Up common to 1.10.8-MLK" → pass', VD.checkSubject('Ref #246964 - Up common to 1.10.8-MLK', '1.10.3-MLK.beta.patch5', '1.10.8-MLK').ok, '');
 check('F67 subject read from a git -C commit -m command', VD.subjectFromCommand('git -C "E:\\x" commit -q -m "Ref #282303 - Up common to 1.7.23"') === 'Ref #282303 - Up common to 1.7.23', '');
 
+// F70-F79: prefix at the commit moment (2026-11-23, 290707 replay: 8 pushed "ESOKONGAN #" subjects since 2026-11-04)
+const BAD = [
+  'ESOKONGAN #290707 - PRBB - Rencana JKBB PTG - Jana kekalkan dokumen daerah, kemaskini bahagian PTG sahaja',
+  'ESOKONGAN #290646 - DMPRU - Semakan Data Migrasi tidak papar Rekod Pembaharuan ikut keperluan',
+  'ESOKONGAN #290646 - DMPRZ - Menu Semakan Data Migrasi ke Senarai Tugasan bila tiada tugasan & DMPRU Rekod Pembaharuan',
+  'ESOKONGAN #287346 - MCL - PKPPT - Kertas Pertimbangan tandatangan PPD di kiri & luas ikut hakmilik',
+  'ESOKONGAN #287346 - MCL - PKPPT - Kertas Pertimbangan sempadan papar lot, status tanah & aktiviti',
+  'ESOKONGAN #287346 - MCL - PKPPT - Kertas Pertimbangan blok tandatangan & sempadan ikut template terkini',
+  'ESOKONGAN #287346 - MCL - PKPPT - Kertas Pertimbangan Premium (Nominal) & susunan Mukim ikut template terkini',
+  'ESOKONGAN #287346 - MCL - PKPPT - Fix ralat Syarat Nyata & Kertas Pertimbangan ikut template terkini',
+];
+check('F70 replay: all 8 real "ESOKONGAN #" subjects → BLOCK', BAD.every(s => !VD.checkPrefix(s).ok), BAD.filter(s => VD.checkPrefix(s).ok).join(' | '));
+check('F71 "Ref #290707 - PRBB - ..." → pass', VD.checkPrefix('Ref #290707 - PRBB - Rencana JKBB PTG - Jana kekalkan dokumen daerah').ok, '');
+check('F72 "QA #262762 - OPLPS - ..." → pass', VD.checkPrefix('QA #262762 - OPLPS - PB - Tujuan Pengiklanan save').ok, '');
+check('F73 merge subject → pass', VD.checkPrefix("Merge remote-tracking branch 'origin/mlk/esokongan/290707' into mlk/int-env").ok, '');
+check('F74 revert subject → pass', VD.checkPrefix('Revert "Ref #290707 - PRBB - Jana"').ok, '');
+check('F75 bare "#280110" → BLOCK', !VD.checkPrefix('#280110').ok, '');
+check('F76 block text names the Ref # shape with the ticket', /Ref #290707 - <URUSAN>/.test(VD.checkPrefix(BAD[0]).message || ''), '');
+check('F77 gateCommit blocks a wrong prefix before reading the pom', !VD.gateCommit({ command: 'git commit -m "ESOKONGAN #290707 - PRBB - x"', top: 'Z:\\no-such-repo' }).ok, '');
+check('F78 gateCommit with no -m (merge --no-edit) → pass', VD.gateCommit({ command: 'git commit --no-edit', top: 'Z:\\no-such-repo' }).ok, '');
+check('F79 "ref #290707 - x" lower case → BLOCK', !VD.checkPrefix('ref #290707 - x').ok, '');
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\ncommit-subject-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

@@ -18,6 +18,7 @@ retention: rotate monthly
 | R5 | subject ≤ 100 characters |
 | R6 | a redraft for the same ticket is never longer than the previous draft in this transcript |
 | R8 | mixed but mainly English: no marker phrase anywhere (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP); and the description is not mainly Malay. Of its lowercase-initial words, N in all, M are Malay function words (dan, yang, tidak, buang, banding, untuk, dengan, ...); block when M >= 3 AND M*2 > N (exactly half passes). Capitalised screen and button names never count; Jana Semula, Muat Naik and Muat Turun are also ignored in lowercase |
+| R9 | at the real `git commit` (version-direction.js, called by compile-gate): the subject starts `Ref #<num> - ` or `QA #<num> - `; `Merge ` and `Revert ` subjects pass; a commit with no `-m` passes. Added 2026-11-23 per miya (290707: 8 pushed "ESOKONGAN #" subjects since 2026-11-04, each copied from the last) |
 
 Bypass: `[skip-commit-subject: <reason>]` in the same reply.
 
@@ -78,3 +79,6 @@ Bypass: `[skip-commit-subject: <reason>]` in the same reply.
 | 37 | R8: mixed subjects, 0 of 8 and 1 of 3 Malay words | pass (F50, F51) |
 | 38 | R8: exactly half Malay (4 of 8) | pass, the rule needs more than half (F52) |
 | 39 | R8: Capitalised first Malay verb ("Buang logger ujian") | pass, only lowercase-initial words count (F54) |
+| 40 | R9: the 8 real "ESOKONGAN #" subjects | block (F70) |
+| 41 | R9: Ref #, QA #, Merge, Revert, no -m | pass (F71-F74, F78) |
+| 42 | R9: bare "#280110", lower-case "ref #" | block (F75, F79) |
