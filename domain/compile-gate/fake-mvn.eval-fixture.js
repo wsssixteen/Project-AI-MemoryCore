@@ -14,6 +14,8 @@ const COMP = [
   '[ERROR] D:\\Project\\eTanah\\Melaka\\etanah-awam\\src\\main\\java\\my\\gov\\etanah\\awam\\pelupusan\\constant\\PelupusanConstant.java:[259,31] error: variable URSN_PDBB is already defined in class PelupusanConstant',
   '[ERROR] D:\\Project\\eTanah\\Melaka\\etanah-awam\\src\\main\\java\\my\\gov\\etanah\\awam\\pelupusan\\constant\\PelupusanConstant.java:[259,31] error: variable URSN_PDBB is already defined in class PelupusanConstant',
 ].join('\n');
+const GITID = '[ERROR] Failed to execute goal pl.project13.maven:git-commit-id-plugin:4.9.10:revision (default) on project etanah-pelupusan: Could not complete Mojo execution...: Error: Could not get HEAD Ref, are you sure you have some commits in the dotGitDirectory? -> [Help 1]';
+if (mode === 'linked-worktree') { if (process.argv.includes('-Dmaven.gitcommitid.skip=true')) process.exit(0); console.log(GITID); process.exit(1); }
 if (mode === 'ok') process.exit(0);
 if (mode === 'dep-then-ok') { if (offline) { console.log(DEP); process.exit(1); } process.exit(0); }
 if (mode === 'dep-both') { console.log(DEP); process.exit(1); }

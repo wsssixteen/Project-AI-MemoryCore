@@ -133,6 +133,9 @@ check('F26 hook blocks raw mvn end-to-end with the tool command', r.status === 2
 // F27: end-to-end hook: commit in that repo with no marker → blocked, message carries the repo path
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: `cd ${awam}; git commit -q -m "Ref #1 - x"` }, cwd: memc }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F27 hook gates a worktree commit end-to-end', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+// F28 (2026-11-23, 290517): a linked worktree whose git-commit-id plugin cannot read HEAD still compiles green
+c = cc(['run', awam], 'linked-worktree');
+check('F28 linked-worktree build passes the git-plugin skip and records green', c.status === 0 && /BUILD SUCCESS/.test(c.stdout), 'exit=' + c.status + ' ' + c.stdout.slice(-200));
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 
 let failed = 0;
