@@ -73,10 +73,28 @@ function subjectFromCommand(command) {
   return m ? m[2].split('\n')[0].trim() : null;
 }
 
+// Prefix follows the tracker: Ref # (eSOKONGAN and every non-QA tracker) or QA #; never the tracker name
+// (2026-11-23 per miya, 290707: 8 pushed commits started "ESOKONGAN #", each copied from the last; commit-conventions.md:89).
+const PREFIX_OK = /^(Ref|QA) #\d{4,} - |^Merge |^Revert /;
+function checkPrefix(subject) {
+  if (PREFIX_OK.test(subject)) return { ok: true };
+  const ticket = (/#(\d{4,})/.exec(subject) || [])[1] || '<num>';
+  return {
+    ok: false,
+    message: [
+      '⛔ commit-subject-gate (prefix): an etanah commit subject starts with "Ref #<num> - " (QA # only for the QA tracker).',
+      `   Subject: ${subject}`,
+      `   Use:  Ref #${ticket} - <URUSAN> - <TUGASAN> - <what changed>   (.claude/commit-conventions.md:89)`,
+    ].join('\n'),
+  };
+}
+
 // Reads the staged pom.xml change in `top`. Fail-open on anything unreadable.
 function gateCommit({ command, top }) {
   const subject = subjectFromCommand(command);
   if (!subject || !top) return { ok: true };
+  const p = checkPrefix(subject);
+  if (!p.ok) return p;
   let diff = '';
   try { diff = execSync(`git -C "${top}" diff --cached -U0 -- pom.xml`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch (_) { return { ok: true }; }
   let oldVer = null, newVer = null;
@@ -90,4 +108,4 @@ function gateCommit({ command, top }) {
   return checkSubject(subject, oldVer, newVer);
 }
 
-module.exports = { direction, checkSubject, subjectFromCommand, gateCommit };
+module.exports = { direction, checkSubject, checkPrefix, subjectFromCommand, gateCommit };
