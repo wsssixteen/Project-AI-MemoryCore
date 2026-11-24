@@ -183,6 +183,25 @@ check('G3 audit PASSES once a goal_met row exists for that session', au.status =
 au = auditWith([{ ts: fresh, sid: 'y', outcome: 'fired', title: DATE + '<2-4 keywords>', goal_met: null }]);
 check('G4 audit leaves a fire younger than 15 minutes pending', au.status === 0, au.stdout);
 
+// ── Later ticket (2026-11-24, 286712): a dated session gets a ticket after its first prompt ──
+const doneSeen = (sid, extra) => { const f = path.join(TMP, 'seen-t' + (k++) + '.json'); fs.writeFileSync(f, JSON.stringify({ [sid]: { t: Date.now(), s: 'done', ...(extra || {}) } })); return f; };
+const child4 = (p) => transcript([app(), titleRec('24/11/2026 - Child session 4'), typed('boot'), typed(p)]);
+r = run({ session_id: 't1', prompt: 'please start /quest http://172.16.90.169/redmine/issues/286712', transcript_path: child4('please start /quest http://172.16.90.169/redmine/issues/286712') }, { seen: doneSeen('t1') });
+check('T1 replay: dated "Child session 4", later ticket 286712 → rename line keeping the title date', r.out.includes('"24/11/2026 - 286712"') && r.out.includes('If this session now works on ticket 286712'), r.out);
+check('T2 the number is remembered, a repeat prompt with it is silent', (() => { const again = run({ session_id: 't1', prompt: 'back to 286712', transcript_path: child4('back to 286712') }, { seen: r.seen }); return !again.out; })(), 'fired twice');
+r = run({ session_id: 't3', prompt: 'also look at 290517', transcript_path: transcript([app(), titleRec('24/11/2026 - 286712'), typed('boot'), typed('also look at 290517')]) }, { seen: doneSeen('t3') });
+check('T3 title already holds a ticket → silent, marked tk', !r.out && JSON.parse(fs.readFileSync(r.seen, 'utf8')).t3.tk === true, r.out);
+r = run({ session_id: 't4', prompt: 'just chatting, no number', transcript_path: child4('just chatting, no number') }, { seen: doneSeen('t4') });
+check('T4 no 6-digit number → silent', !r.out, r.out);
+r = run({ session_id: 't5', prompt: '<task-notification> ticket 286712 done', transcript_path: child4('x') }, { seen: doneSeen('t5') });
+check('T5 machine notice carrying a number → silent', !r.out, r.out);
+r = run({ session_id: 't6', prompt: 'work on 286712', transcript_path: child4('work on 286712') }, { seen: doneSeen('t6', { s: 'asked' }) });
+check('T6 session still asked to rename (undated) → this branch stays silent', !r.out, r.out);
+r = run({ session_id: 't7', prompt: 'start 286712', transcript_path: transcript([app(), titleRec('24/11/2026 - Child session 4'), renameCall('24/11/2026 - 290517'), typed('boot'), typed('start 286712')]) }, { seen: doneSeen('t7') });
+check('T7 a dated rename call holding a ticket counts → silent', !r.out, r.out);
+r = run({ session_id: 't8', prompt: 'the date 24/11/2026 and resit 2611202 only', transcript_path: child4('the date 24/11/2026 and resit 2611202 only') }, { seen: doneSeen('t8', { tk: true }) });
+check('T8 tk already set → no transcript read, silent', !r.out, r.out);
+
 // ── Slow bundle: the real dispatcher, a sibling slower than the budget ──
 const SB = path.join(TMP, 'root');
 for (const rel of ['lib/hook-runtime.js', 'lib/turn-context.js', 'lib/dispatch-hooks.js', REL]) {

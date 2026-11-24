@@ -72,17 +72,33 @@ function scan(file, current) {
   return info;
 }
 
+// A Redmine link (".../issues/286712") counts as the ticket too; TICKET_RX skips a number after "/" so dates and ids stay out.
+function ticketIn(src) { const s = String(src || ''); return s.match(/\/issues\/(\d{6})(?!\d)/) || s.match(TICKET_RX); }
 function wanted(src, date) {
-  const m = String(src || '').match(TICKET_RX);
+  const m = ticketIn(src);
   return { ticket: m ? m[1] : null, title: `${date} - ${m ? m[1] : '<2-4 keywords>'}` };
 }
 function startDate(info) { const d = info.first && info.first.ts ? new Date(info.first.ts) : null; return d && !Number.isNaN(d.getTime()) ? dmy(d) : today(); }
+
+// A dated session that later gets a ticket from him (2026-11-24, 286712: "Child session 4" kept its name).
+// Fires once per number, only while neither title holds a 6-digit number; a prompt with no number costs nothing.
+function laterTicket(data, sid, s, prompt) {
+  if (s.s !== 'done' || s.tk || MACHINE_RX.test(prompt)) return { outcome: 'seen' };
+  const m = ticketIn(prompt);
+  if (!m || (s.asked || []).includes(m[1]) || !data.transcript_path) return { outcome: 'seen' };
+  const info = scan(data.transcript_path, prompt);
+  if ([info.title, info.renamed].some(t => /\d{6}/.test(String(t || '')))) return { outcome: 'seen', marked: markSeen(sid, { tk: true }) };
+  const cur = info.renamed || info.title;
+  const date = (String(cur || '').match(/^\d{1,2}\/\d{1,2}\/\d{4}/) || [])[0] || today();
+  return { outcome: 'ticket-not-in-title', ticket: m[1], title: `${date} - ${m[1]}`, current: cur, later: true, marked: markSeen(sid, { asked: [...(s.asked || []), m[1]] }), goal_met: null };
+}
 
 function decidePrompt(data) {
   const prompt = String(data.prompt || '');
   const sid = String(data.session_id || '');
   if (!sid || !prompt.trim()) return { outcome: 'no-input' };
-  if (seenGet(sid)) return { outcome: 'seen' };
+  const s = seenGet(sid);
+  if (s) return laterTicket(data, sid, s, prompt);
   if (MACHINE_RX.test(prompt)) return { outcome: 'machine-wait' };   // wait for his first real message, no mark
   const info = data.transcript_path ? scan(data.transcript_path, prompt) : scan('', prompt);
   if (dated(info.title) || info.renamed) return { outcome: 'already-dated', title: info.renamed || info.title, marked: markSeen(sid, { s: 'done' }), goal_met: true };
@@ -116,6 +132,7 @@ function decideStart(data) {
 }
 
 function line(d) {
+  if (d.later) return `📛 session-name: his message names ticket ${d.ticket} and this session's name "${String(d.current || '').slice(0, 60)}" has no ticket. If this session now works on ticket ${d.ticket}, rename it: mcp__ccd_session_mgmt__set_session_title { session_id: "self", title "${d.title}" } (load the tool with ToolSearch "select:mcp__ccd_session_mgmt__set_session_title" first). Do not mention the rename in the reply.\n`;
   const head = d.resumed ? 'this session has no dated title yet' : 'first message of this session';
   const t = d.ticket
     ? `title "${d.title}"`
@@ -148,7 +165,7 @@ else if (require.main === module) {
     const t0 = Date.now();
     const d = event === 'Stop' ? decideStop(data) : event === 'PreToolUse' ? decideStart(data) : decidePrompt(data);
     if (d.outcome !== 'seen' && d.outcome !== 'no-input') logRow({ sid: data.session_id, event, outcome: d.outcome, title: d.title, marked: d.marked, goal_met: d.goal_met, dur_ms: Date.now() - t0 });
-    if (d.outcome === 'fired' || d.outcome === 'fired-resumed') return { fired: true, blocked: false, contextOut: line(d) };
+    if (d.outcome === 'fired' || d.outcome === 'fired-resumed' || d.outcome === 'ticket-not-in-title') return { fired: true, blocked: false, contextOut: line(d) };
     if (d.outcome === 'stop-block') return { fired: true, blocked: true, blockReason: line(d) };
     if (d.outcome === 'start-title-denied') return { fired: true, blocked: true, blockReason: `📛 session-name: a session title starts with the date. Call ${d.tool} again with title "${d.title}".\n` };
     return { fired: false };
