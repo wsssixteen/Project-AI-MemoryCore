@@ -102,9 +102,9 @@ check('F10 Task folder (Perak) outranks PTMLK prefix in the prompt', fired(r) &&
 // F11 unknown state → asks, never defaults to melaka
 r = run({ prompt: 'please alter PTXX/01/L/PT/2026/1 to Semakan Permohonan' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
 check('F11 unknown prefix → state=unknown + ask line, no melaka default', fired(r) && /state=unknown/.test(r.out) && /never default to Melaka/.test(r.out), r.out.slice(0, 160));
-// F12 missing state file → the advisory says so (selangor not written)
-r = run({ prompt: 'tolong alter ID PTSGR/01/L/PT/2026/3 ke tugasan KM' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
-check('F12 state file absent → ⚠️ FILE MISSING surfaced', fired(r) && /state=selangor/.test(r.out) && /FILE MISSING/.test(r.out), r.out.slice(0, 160));
+// F12 missing state file → the advisory says so (kedah has none; selangor got its file 2026-11-24)
+r = run({ prompt: 'tolong alter ID PTKED/01/L/PT/2026/3 ke tugasan KM' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
+check('F12 state file absent → ⚠️ FILE MISSING surfaced', fired(r) && /state=kedah/.test(r.out) && /FILE MISSING/.test(r.out), r.out.slice(0, 160));
 // F13 huge transcript (2 MB of noise + one late alter line) → still fires within timeout
 const big = Array.from({ length: 4000 }, (_, i) => asst('noise line ' + i + ' ' + 'x'.repeat(400)));
 big.push(asst('Fix shape: Alter Flow Flowable to node sid-DC02FA30.'));
@@ -119,10 +119,10 @@ check('F21 A5 says assignee = agihan default, never nextUser', /ASSIGNEE = agiha
 check('F22 A6 = miya voice memory + fill-if-exists', /feedback_ticket_writing_style/.test(r.out) && /fill every field that exists/.test(r.out) && !/done-alter 5-line block/.test(r.out), r.out.slice(0, 120));
 // F22b (2026-11-05, 288533) A6 names the note generator: the done-alter note is generated, never typed
 check('F22b A6 names ticket-close-block --alter as the note generator', /A6 ⬜[^\n]*ticket-close-block\.js --alter, never typed/.test(r.out), r.out.slice(0, 120));
-// F23 (2026-10-21, /goal) Perak keeps the runbook-for-miya A5; Melaka A5 = run it yourself with alter.js + approval code
-check('F23a Perak A5 = runbook for miya, no alter.js run line', /A5 ⬜ RUNBOOK for みや/.test(r.out) && !/RUN IT YOURSELF/.test(r.out), r.out.slice(0, 160));
+// F23 (2026-11-24, 290196) a non-Melaka A5 = run alter.js --state, or BUILD the state, never hand it to a person; Melaka A5 keeps its own text
+check('F23a Perak A5 = alter.js --state perak or build it, never a person; no Melaka run line', /A5 ⬜ RUN with node [^\n]*alter\.js --state perak/.test(r.out) && /never hand the alter to a person/.test(r.out) && !/RUN IT YOURSELF/.test(r.out), r.out.slice(0, 160));
 r = run({ prompt: 'tolong alter tugasan PTMLK/02/L/PT/2026/343' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
-check('F23b Melaka A5 = alter.js dry-run → approval code → --approve, AFTER check, keeper login', /A5 ⬜ RUN IT YOURSELF/.test(r.out) && /--dry-run/.test(r.out) && /--approve <code>/.test(r.out) && /keeper\.js --login --env prod/.test(r.out) && /ASSIGNEE = agihan default/.test(r.out), r.out.slice(0, 300));
+check('F23b Melaka A5 = alter.js dry-run → approval code → --approve, AFTER check, one-command setup-login', /A5 ⬜ RUN IT YOURSELF/.test(r.out) && /--dry-run/.test(r.out) && /--approve <code>/.test(r.out) && /keeper\.js --setup-login --state melaka --env prod/.test(r.out) && !/keeper\.js --login/.test(r.out) && /ASSIGNEE = agihan default/.test(r.out), r.out.slice(0, 300));
 // F24 (2026-10-28, alter-sim) Melaka A1 names the no-page engine read; Perak A1 does not
 check('F24a Melaka A1 = alter.js live (engine read, no page)', /A1 ⬜ [^\n]*alter\.js live --env <stg\|mlit> --id <ID>/.test(r.out) && /NOT CONSISTENT/.test(r.out), r.out.slice(0, 300));
 r = run({ prompt: 'retrieve 275847', transcript_path: transcript([]) });
@@ -159,8 +159,11 @@ check('G9 reminder on a PROD II ticket = alter.js approval, no runner', reminder
 r = run({ prompt: '286650 alter PTMLK/02/L/PLTP/2026/13 on stg', transcript_path: transcript([readTool('C:/x/etanah-knowledge/ALTER-TICKET-PLAYBOOK.md')]) });
 check('G10 reminder on STG = runner for Alter Flow', reminder(r) && /env=stg\) = STG\/MLIT Alter Flow: headless runner/.test(r.out) && !/APPROVAL CODE/.test(r.out), r.out.slice(0, 260));
 r = run({ prompt: 'retrieve 275847', transcript_path: transcript([]) });
-check('G11 Perak A5 carries neither the runner nor alter.js', /A5 ⬜ RUNBOOK for みや/.test(r.out) && !/run\.ps1|alter\.js --env/.test(r.out), r.out.slice(0, 200));
+check('G11 Perak A5: no Melaka runner, names the build steps and the one login command', /Adding a state/.test(r.out) && /keeper\.js --setup-login --state perak/.test(r.out) && !/run\.ps1/.test(r.out), r.out.slice(0, 200));
 const lg = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-12).join('\n');
+r = run({ prompt: 'tolong alter ID PTSEL/01/L/PSBS/2024/1 ke SPI pada env staging' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
+check('G17 Selangor A5 = alter.js --state selangor + the one login command (290196)', fired(r) && /state=selangor/.test(r.out) && /alter\.js --state selangor/.test(r.out) && /keeper\.js --setup-login --state selangor/.test(r.out), r.out.slice(0, 200));
+check('G18 A0 says the env comes from the ticket words first (290196)', /ENV = the ticket's own words first/.test(r.out), r.out.slice(0, 200));
 check('G12 log rows carry env + tracker', /"env":"prod"/.test(lg) && /"tracker":"Internal Issue \(PROD\)"/.test(lg), lg.slice(-200));
 // ---- real replay against the live disk (skipped when the real Tasks root is absent) ----
 const realTasks = (() => { try { return require(path.join(ROOT, 'lib', 'states.js')).tasksRoot(); } catch (_) { return ''; } })();

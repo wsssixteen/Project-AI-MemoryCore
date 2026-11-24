@@ -30,7 +30,48 @@ const ALTER = /(?:^|[\s"'\\/])alter\.js(?=[\s"']|$)/i;          // alter.js, not
 const SAFE = /(?:^|\s)--(?:dry-run|login|help)(?=\s|$|["'])/i;
 const APPROVE_ARG = /--approve[\s=]+["']?([0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4})(?![0-9A-Fa-f])/;
 // split on shell separators so `node alter.js --dry-run; node alter.js --env prod ...` is judged per command
-const segments = cmd => String(cmd).split(/\r?\n|;|&&|\|\||\|/).map(s => s.trim()).filter(Boolean);
+// a line continuation (` or \ at line end) joins first, so a wrapped run stays one command; a single & also separates
+const segments = cmd => String(cmd).replace(/[`\\]\r?\n/g, ' ').split(/\r?\n|;|&&?|\|\||\|/).map(s => s.trim()).filter(Boolean);
+
+// ── run detection (2026-11-24, 290196 + Fable rounds 3-4): one quote-aware pass, fail closed ──
+// here-string / heredoc bodies are text, never run; a line continuation joins; split on ; & | newline outside quotes
+function runUnits(cmd) {
+  const s = String(cmd).replace(/@'\r?\n[\s\S]*?\r?\n'@/g, "''").replace(/<<-?\s*['"]?(\w+)['"]?\r?\n[\s\S]*?\r?\n\1\b/g, '')
+    .replace(/[`\\]\r?\n/g, ' ');
+  const out = []; let cur = '', q = '';
+  for (const ch of s) {
+    if (q) { if (ch === q) q = ''; cur += ch; continue; }
+    if (ch === '"' || ch === "'") { q = ch; cur += ch; continue; }
+    if (ch === ';' || ch === '&' || ch === '|' || ch === '\n' || ch === '\r') { out.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  out.push(cur);
+  return out.map(u => u.trim()).filter(Boolean);
+}
+// quoted bodies blanked, except a double-quoted string that holds $( ) (PowerShell runs it); a trailing # comment dropped
+const masked = u => u.replace(/'[^']*'/g, "''").replace(/"(?:[^"$]|\$(?!\())*"/g, '""').replace(/\s#.*$/, '');
+const READ_HEAD = /^\s*(?:\$\w+\s*=\s*\$\w+\.Replace\(|\(Get-Content\b[^)]*\)\s*-replace|(?:Set|Add)-Content\b|Out-File\b|echo\b|Write-(?:Output|Host)\b|Select-String\b|sls\b|grep\b|rg\b|findstr\b|git\b|Get-Content\b|cat\b)/i;
+function isRun(u, cmd) {
+  const m = masked(u);
+  const alterish = ALTER.test(u) || /FlowableAlter[\\/]alter(?=[\s"']|$)/i.test(u)
+    || (/\bnode(?:\.exe)?["']?\s+(?:--?[\w-]+\s+)*["']?\$\w+/i.test(u) && ALTER.test(cmd))      // node $f, $f = ...alter.js
+    || (/\bnode(?:\.exe)?\s+\.(?=\s|$)/i.test(u) && /FlowableAlter/i.test(cmd));               // node . in the tool folder
+  if (!alterish) return false;
+  const invoked = NODE.test(u) || /^\s*&?\s*\$\w+\s+/.test(u);                                // node ... or & $node ...
+  if (!invoked) return false;
+  // node runs another script that only takes alter.js as an argument (keeper.js --note alter.js, an eval file): not a run
+  const scripts = [...u.matchAll(/\bnode(?:\.exe)?["']?\s+(?:-{1,2}[\w-]+(?:=\S+)?\s+)*["']?([^\s"']+)/gi)].map(x => x[1]);
+  if (scripts.length && !/^\s*&?\s*\$\w+\s+/.test(u)
+    && scripts.every(t => /\.[cm]?js$/i.test(t) && !/(?:^|[\\/])alter\.js$/i.test(t))) return false;
+  if (READ_HEAD.test(u) && !/(\$\(|\(|`)[^)]*?(alter\.js|\bnode\b)/i.test(m)) return false;    // a read or text edit that only quotes it
+  return true;
+}
+const isSafe = u => { const m = masked(u); return /(?:^|\s)--(?:dry-run|login|help|check)(?=\s|$)/i.test(m) || /alter\.js["']?\s+(?:live|help)(?=\s|$)/i.test(m); };
+// a literal --env word is risky only when it is an approval env; a run with no literal env (variable, splat) is risky
+function envRisky(u, envs) {
+  const lit = masked(u).match(/--env[\s=]+([\w-]+)/i);
+  return lit ? envs.has(lit[1].toLowerCase()) : true;
+}
 
 // miya's approval: the code (dash optional) + an approval word, no negation in the same sentence
 const APPROVAL_WORD = /\b(?:approve[ds]?|approval|lulus(?:kan)?|go(?: ahead)?|proceed|run it|yes|ok(?:ay)?|setuju|boleh)\b/i;
@@ -59,12 +100,12 @@ function logRow(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date(
 function judge(data) {
   if (!/^(Bash|PowerShell)$/.test(String(data.tool_name || ''))) return { fired: false };
   const cmd = String((data.tool_input && data.tool_input.command) || '');
-  if (!cmd || !NODE.test(cmd) || !ALTER.test(cmd)) return { fired: false };
+  if (!cmd || !(NODE.test(cmd) || /&\s*\$\w+/.test(cmd)) || !(ALTER.test(cmd) || /FlowableAlter/i.test(cmd))) return { fired: false };
   const envs = approvalEnvs();
   const isEnv = s => [...envs].some(e => new RegExp(`(?<![\\w-])${e}(?![\\w-])`, 'i').test(s));
   // inline code (node -e / --eval / -p) can hide shell separators inside its string: judge the whole command as one
-  const units = /\bnode(?:\.exe)?\s+(?:-e|--eval|-p|--print)\b/i.test(cmd) ? [cmd] : segments(cmd);
-  const risky = units.filter(s => ALTER.test(s) && !SAFE.test(s) && isEnv(s));
+  const evalMode = /\bnode(?:\.exe)?\s+(?:-e|--eval|-p|--print)\b/i.test(cmd);
+  const risky = (evalMode ? [cmd] : runUnits(cmd)).filter(s => evalMode ? ALTER.test(s) && !SAFE.test(s) && isEnv(s) : isRun(s, cmd) && !isSafe(s) && envRisky(s, envs));
   if (!risky.length) return { fired: false };
 
   const last = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';
