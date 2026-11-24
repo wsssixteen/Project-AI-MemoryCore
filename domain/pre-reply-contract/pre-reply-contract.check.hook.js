@@ -40,7 +40,7 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '📐 pre-reply-contract v2-blend (permanent — compose RIGHT the first time):',
     '   · First line = the answer in plain words. No preamble, recap, closers.',
     '   · Break everything into SHORT bullets/numbered steps — one fact per line, ≤5 per list. Tables for data; flows of 3+ boxes as a picture (explain-diagram skill → lib/diagram-render.js).',
-    '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
+    '   · Caveman voice, always on (.claude/skills/caveman/SKILL.md): load-bearing words only, understanding > concision > grammar; drop articles and filler where the line still reads in one pass; max 20 words per sentence; fewer, shorter sentences, never fragments he must decode. NEVER drop not/never/no/only, numbers, units, exact errors. Plain full sentences for: a question to him, options, warnings, irreversible steps, the Next steps "What it means" cell, anything Pena covers, anything saved outside chat.',
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
     '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line. The thing he asked about or asked me to create: FULL folder path from the drive letter in a ```text block, file name on its own line; never part of a path; never a path list of every changed file.',
     '   · Tables in chat = a normal Markdown table, NEVER a code block (the app draws the lines; say so if he asks for more). Pictures, pages, documents: every cell has lines on all four sides.',
