@@ -30,7 +30,7 @@ function approvalLine(line, c) {
 function approves(text, code, kind) {
   const c = norm(code);
   if (!/^[0-9A-F]{8}$/.test(c)) return false;
-  const lines = String(text || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const lines = String(text || '').split(kind === 'popup' ? /\n|,\s+/ : '\n').map(l => l.trim()).filter(Boolean);
   if (kind === 'popup') return lines.some(l => approvalLine(l, c));
   return lines.length === 1 && approvalLine(lines[0], c);
 }
@@ -56,18 +56,26 @@ function judge(data) {
   //    sent AFTER that plan was sealed, writes <code>.miya.json stamped with the message's own time. The tool refuses a
   //    run with --approve without a fresh record (the check sits in the tool; no command is parsed for runs here).
   const msgs = data.transcript_path ? hisMessages(String(data.transcript_path), { limit: 3 }) : [];
-  // his newest message holds or withdraws ("wait", "stop", "batal", "not yet" ...): every unused record is withdrawn
-  if (msgs[0] && HOLD.test(String(msgs[0].text || '')) && !/(?:approved?|lulus|setuju)\s/i.test(String(msgs[0].text || ''))) {
+  // a hold withdraws (round 8): his last 3 messages, newest first; the first that is an exact approval line ends the
+  // look-back, the first that holds ("wait", "batal", "cancel the approved plan" ...) withdraws every unused record
+  // written before it. A false hold only costs him one repeat of the line (fail closed).
+  const exactAny = msg => [...String(msg.text || '').matchAll(/(?<![0-9A-F])([0-9A-F]{4})-?([0-9A-F]{4})(?![0-9A-F])/gi)]
+    .some(m => fs.existsSync(path.join(PLANS, (m[1] + m[2]).toUpperCase() + '.json')) && approves(msg.text, m[1] + m[2], msg.kind));
+  let holdAt = null;
+  for (const msg of msgs) { if (exactAny(msg)) break; if (HOLD.test(String(msg.text || ''))) { holdAt = Date.parse(msg.ts) || Date.now(); break; } }
+  if (holdAt) {
     const gone = [];
     try {
       for (const n of fs.readdirSync(PLANS)) {
         if (!/^[0-9A-F]{8}\.miya\.json$/i.test(n)) continue;
+        let rec = {}; try { rec = JSON.parse(fs.readFileSync(path.join(PLANS, n), 'utf8')); } catch (_) { /* unreadable: withdraw */ }
+        if (Date.parse(rec.ts) > holdAt) continue;                                        // approved after the hold: keep
         fs.renameSync(path.join(PLANS, n), path.join(PLANS, n.replace(/\.miya\.json$/i, '.miya.withdrawn.json')));
         gone.push(n.slice(0, 8));
       }
     } catch (_) { /* no plans folder: nothing to withdraw */ }
-    if (gone.length) { logRow({ outcome: 'withdrawn', codes: gone }); return { fired: true, blocked: false, contextOut: 'prod-alter-gate: miya held; approval withdrawn for ' + gone.join(', ') + '\n' }; }
-    return { fired: false };
+    if (gone.length) logRow({ outcome: 'withdrawn', codes: gone });
+    if (gone.length) return { fired: true, blocked: false, contextOut: 'prod-alter-gate: miya held; approval withdrawn for ' + gone.join(', ') + '\n' };
   }
   const written = [], seen = new Set();
   for (const msg of msgs) {
