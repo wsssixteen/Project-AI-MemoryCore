@@ -7,7 +7,7 @@ metadata:
 
 **Which tool per env = playbook A5 (`etanah-knowledge/ALTER-TICKET-PLAYBOOK.md`), its one home.** Melaka STG/MLIT Alter Flow: the headless runner; every other alter: `alter.js --state <key>`. (AlterSim `as.ps1` is an older page-free path, not the first choice.)
 
-**Tool**: `E:\Dev\scripts\FlowableAlter\` (its own git; README there). **A state with no `envs.json` block is built, never handed to a person**: README "Adding a state" steps 1-5; built = its self-check passes (2026-11-24, 290196). Drives the "Pelupusan Flowable Alter Page" headless for prod / stg / mlit.
+**Tool**: `E:\Dev\scripts\FlowableAlter\` (its own git; README there). **A state with no `envs.json` block is built, never handed to a person**: README "Adding a state" steps 1-6; built = its self-check passes (2026-11-24, 290196). Drives the "Pelupusan Flowable Alter Page" headless for prod / stg / mlit.
 
 - `alter.js ... --dry-run --headless` → plan + `APPROVAL CODE: XXXX-XXXX` (plan sealed in `logs\plans\`).
 - miya approves in chat ("approve XXXX-XXXX", or an AskUserQuestion option carrying the code) → same command + `--approve XXXX-XXXX`.
