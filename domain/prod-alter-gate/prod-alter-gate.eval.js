@@ -69,11 +69,14 @@ const R = [
   ['R12e approval, then "wait, hold on" → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { u: 'wait, hold on' }]); }, x => !fs.existsSync(mark())],
   ['R13 harness meta line after his approval → record written', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { meta: 'Caveat: hook output' }]); }, x => fs.existsSync(mark())],
   ['R14 injected skill text as the last user line → his approval still counts', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { meta: 'Base directory for this skill: x' }, { u: 'Base directory for this skill: y' }]); }, x => fs.existsSync(mark())],
-  ['R15 Malay "ok lulus 3F9A-2C11" → record written', () => { plan(); return run(ANY, [{ u: 'ok lulus 3F9A-2C11' }]); }, x => fs.existsSync(mark())],
+  ['R15 Malay "lulus 3F9A-2C11" → record written', () => { plan(); return run(ANY, [{ u: 'lulus 3F9A-2C11' }]); }, x => fs.existsSync(mark())],
   ['R16 code that is a prefix of a longer hex string → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11FF' }]); }, x => !fs.existsSync(mark())],
   ['R17 no transcript → no record, nothing blocked', () => { plan(); return run(ANY, null); }, x => !x.blocked && !fs.existsSync(mark())],
   ['R18 malformed transcript lines are skipped, approval still found', () => { plan(); const f = transcript([{ u: 'approve 3F9A-2C11' }]); fs.appendFileSync(f, '{not json\n'); const x = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Bash', tool_input: { command: ANY }, transcript_path: f }), encoding: 'utf8', env: ENV }); return { blocked: x.status === 2 }; }, () => fs.existsSync(mark())],
-  ['R19 two codes approved in one message, both sealed → both recorded', () => { plan(); plan('AAAA1111'); return run(ANY, [{ u: 'approve 3F9A-2C11 and approve AAAA-1111' }]); }, () => fs.existsSync(mark()) && fs.existsSync(mark('AAAA1111'))],
+  ['R19 two codes approved in two messages, both sealed → both recorded', () => { plan(); plan('AAAA1111'); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { u: 'approve AAAA-1111' }]); }, () => fs.existsSync(mark()) && fs.existsSync(mark('AAAA1111'))],
+  ['R19b a valid record, then his "wait, stop, do not run it" → record withdrawn', () => { plan(); fs.writeFileSync(mark(), JSON.stringify({ code: CODE, ts: new Date().toISOString() })); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { u: 'wait, stop, do not run it' }]); }, () => !fs.existsSync(mark()) && fs.existsSync(path.join(PLANS, CODE + '.miya.withdrawn.json'))],
+  ['R19c "approve 3F9A-2C11 but wait until I say go" in one message → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11 but wait until I say go' }]); }, () => !fs.existsSync(mark())],
+  ['R19d he pastes the tool line "plus --approve 3F9A-2C11" → no record', () => { plan(); return run(ANY, [{ u: 'same command plus --approve 3F9A-2C11' }]); }, () => !fs.existsSync(mark())],
   ['R20 the Write/Read tools are not this hook\'s business', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }], 'Write'); }, x => !x.blocked && !fs.existsSync(mark())],
 ];
 for (const [n, act, pred] of R) { reset(); let res; try { res = act(); } catch (e) { res = { err: e.message }; } check(n, pred(res || {}), JSON.stringify(res).slice(0, 300)); }
@@ -95,13 +98,20 @@ const { approves } = require(HOOK);
  ['A2 "ok what does <code> change" is not an approval', 'ok what does AB12-CD34 change', false],
  ['A3 "is <code> ok to run" is not an approval', 'is AB12-CD34 ok to run', false],
  ['A4 "go back and redo the dry run for <code>" is not an approval', 'go back and redo the dry run for AB12-CD34', false],
- ['A5 "approve <code>, don\'t forget to verify after" is an approval', "approve AB12-CD34, don't forget to verify after", true],
- ['A6 "approve <code> and do not stop until it is verified" is an approval', 'approve AB12-CD34 and do not stop until it is verified', true],
- ['A7 "Approved.\\n<code>" is an approval', 'Approved.\nAB12-CD34', true],
- ['A8 "Yes. <code>" is an approval', 'Yes. AB12-CD34', true],
+ ['A5 round 7: an approval line with more text after it is not an exact approval', "approve AB12-CD34, don't forget to verify after", false],
+ ['A6 "I can\'t approve <code> until Aaron confirms" is not an approval', "I can't approve AB12-CD34 until Aaron confirms", false],
+ ['A7 "before I approve <code> show me the rows" is not an approval', 'before I approve AB12-CD34 show me the rows', false],
+ ['A8 a pasted tool refusal is not an approval', "approval AB12-CD34 is not approved in miya's own message yet", false],
  ['A9 "don\'t approve <code>" is not an approval', "don't approve AB12-CD34", false],
  ['A10 "<code> approved" is an approval', 'AB12-CD34 approved', true],
-].forEach(([n, text, want]) => check(n, approves(text, 'AB12CD34') === want, text));
+ ['A11 "approve `<code>`" is an approval', 'approve `AB12-CD34`', true],
+ ['A12 \'approve "<code>"\' is an approval', 'approve "AB12-CD34"', true],
+ ['A13 "approve the plan <code>" is an approval', 'approve the plan AB12-CD34', true],
+ ['A14 "approve <code>." is an approval', 'approve AB12-CD34.', true],
+ ['A15 "<code> approve" is an approval', 'AB12-CD34 approve', true],
+ ['A16 "tak nak luluskan <code>" is not an approval', 'tak nak luluskan AB12-CD34', false],
+].forEach(([n, text, want]) => check(n, approves(text, 'AB12CD34', 'typed') === want, text));
+check('A17 popup answer "Approve <code>" is an approval', approves('Approve AB12-CD34', 'AB12CD34', 'popup') === true, '');
 
 // ═══ no command is parsed for runs: PROD runs and reads both pass the hook (the tool enforces, T1-T5)
 const P = [

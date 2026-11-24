@@ -122,7 +122,7 @@ function resolveEnv(prompt, folderName) {
 }
 // Melaka A5: the tool for the env(s), first. The full table is the playbook's A5 row (one home).
 function melakaA5(env) {
-  const prod = `PROD → node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env prod --action <…> --id <ID> --target <KOD> --dry-run --headless → APPROVAL CODE → show みや the plan + code → same command + --approve <code> (prod-alter-gate); the AFTER check must print VERIFIED; logged out (exit 4) → give him the one command exit 4 prints: node keeper.js --setup-login --state melaka --env prod`;
+  const prod = `PROD → node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env prod --action <…> --id <ID> --target <KOD> --dry-run --headless → APPROVAL CODE → show みや the plan + code, and the exact reply line "approve <code>" in its own text block (or a popup option "Approve <code>") → same command + --approve <code> (prod-alter-gate records only that exact line); the AFTER check must print VERIFIED; logged out (exit 4) → give him the one command exit 4 prints: node keeper.js --setup-login --state melaka --env prod`;
   const low = `STG/MLIT → Alter Flow: the headless runner, no login (cd E:\\Dev\\scripts\\FlowableAlter\\runner; .\\run.ps1 alter-flow --env <stg|mlit> --id <ID> --target <KOD> = plan, + --run = alter + DB check, RESULT PASS; boot 2-7 min, created_by=SYSTEM, deny-list in runner README) · Initiate & Alter: alter.js --env <stg|mlit> (logged out → Edge mode, edge-agent.js); never ask みや to log in for STG/MLIT`;
   const e = env.split('+');
   const rows = env === 'unknown' ? [prod, low] : [...(e.includes('prod') ? [prod] : []), ...(e.some(x => x !== 'prod') ? [low] : [])];

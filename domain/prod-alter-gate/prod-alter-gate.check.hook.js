@@ -15,27 +15,24 @@ const LOG = process.env.PROD_ALTER_GATE_LOG || path.join(__dirname, 'log.jsonl')
 
 const PLANS = process.env.FLOWABLE_ALTER_PLANS || 'E:/Dev/scripts/FlowableAlter/logs/plans';
 
-// miya's approval (round 6, 2026-11-24): an approval word right next to the code, never a loose "go/ok/yes" elsewhere
-// in the sentence; a negation counts only right before that word; a question about the code is never an approval
+// miya's approval (round 7, 2026-11-24): an EXACT line, nothing else in it: "approve <code>" (also: approved / lulus /
+// luluskan / setuju, an optional "the" / "plan" / "alter" / "code" between, "<code> approved"), quotes or backticks
+// around the code allowed. A typed message must be only that line; a popup answer counts per picked option. Free text
+// ("I can't approve X yet", a pasted tool line) never records (rounds 5-7: reading free text for intent never plateaued).
 const { hisMessages } = require(path.join(ROOT, 'lib', 'his-words.js'));
-const HOLD = /\b(?:wait|hold|stop|cancel|don'?t run|do not run|jangan|belum)\b/i;
+const HOLD = /\b(?:wait|hold|stop|cancel|batal|tunggu|abort|not yet|don'?t|do not|jangan|belum|tak jadi)\b/i;
 const norm = c => String(c || '').replace(/-/g, '').toUpperCase();
-function approves(text, code) {
-  const t = String(text || '');
+function approvalLine(line, c) {
+  const s = String(line || '').replace(/[\x60"'*_]/g, '').replace(/[.!\s]+$/, '').trim();
+  const C = c.slice(0, 4) + '-?' + c.slice(4);
+  return new RegExp('^(?:approved?|lulus(?:kan)?|setuju)\\s+(?:the\\s+)?(?:(?:plan|alter|code)\\s+)?' + C + '$|^' + C + '\\s+(?:approved?|lulus|diluluskan)$', 'i').test(s);
+}
+function approves(text, code, kind) {
   const c = norm(code);
   if (!/^[0-9A-F]{8}$/.test(c)) return false;
-  const hit = new RegExp('(?<![0-9A-F])' + c.slice(0, 4) + '-?' + c.slice(4) + '(?![0-9A-F])', 'i').exec(t);
-  if (!hit) return false;
-  const tail = t.slice(hit.index + hit[0].length);
-  const end = tail.search(/[.\n?]/);
-  if (end >= 0 && tail[end] === '?') return false;                                    // "what does <code> do?"
-  const before = t.slice(Math.max(0, hit.index - 60), hit.index);
-  const after = tail.slice(0, 30);
-  const wordBefore = /\b(approve[ds]?|approval|lulus(?:kan)?|setuju)\b[\s:,-]*(?:the\s+)?(?:code\s*)?$/i.exec(before);
-  if (wordBefore && /\b(?:don'?t|do not|not|never|jangan|tak|tidak|no|belum)\s+(?:yet\s+)?$/i.test(before.slice(0, wordBefore.index))) return false;
-  const wordAfter = /^[\s:,-]*(?:is\s+)?(?:approved|lulus|diluluskan)\b/i.test(after);
-  const lineBefore = /(?:^|[\n.!])\s*(?:yes|approved|ok|lulus)[.!,]?\s*$/i.test(before) && /^[\s.!]*(?:$|\n)/.test(after);
-  return !!wordBefore || wordAfter || lineBefore;
+  const lines = String(text || '').split('\n').map(l => l.trim()).filter(Boolean);
+  if (kind === 'popup') return lines.some(l => approvalLine(l, c));
+  return lines.length === 1 && approvalLine(lines[0], c);
 }
 
 function logRow(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) { /* never block on logging */ } }
@@ -59,6 +56,19 @@ function judge(data) {
   //    sent AFTER that plan was sealed, writes <code>.miya.json stamped with the message's own time. The tool refuses a
   //    run with --approve without a fresh record (the check sits in the tool; no command is parsed for runs here).
   const msgs = data.transcript_path ? hisMessages(String(data.transcript_path), { limit: 3 }) : [];
+  // his newest message holds or withdraws ("wait", "stop", "batal", "not yet" ...): every unused record is withdrawn
+  if (msgs[0] && HOLD.test(String(msgs[0].text || '')) && !/(?:approved?|lulus|setuju)\s/i.test(String(msgs[0].text || ''))) {
+    const gone = [];
+    try {
+      for (const n of fs.readdirSync(PLANS)) {
+        if (!/^[0-9A-F]{8}\.miya\.json$/i.test(n)) continue;
+        fs.renameSync(path.join(PLANS, n), path.join(PLANS, n.replace(/\.miya\.json$/i, '.miya.withdrawn.json')));
+        gone.push(n.slice(0, 8));
+      }
+    } catch (_) { /* no plans folder: nothing to withdraw */ }
+    if (gone.length) { logRow({ outcome: 'withdrawn', codes: gone }); return { fired: true, blocked: false, contextOut: 'prod-alter-gate: miya held; approval withdrawn for ' + gone.join(', ') + '\n' }; }
+    return { fired: false };
+  }
   const written = [], seen = new Set();
   for (const msg of msgs) {
     const text = String(msg.text || '');
@@ -67,7 +77,7 @@ function judge(data) {
       if (seen.has(code)) continue;
       seen.add(code);                                                                  // the newest message naming it decides
       const planF = path.join(PLANS, code + '.json'), mark = path.join(PLANS, code + '.miya.json');
-      if (!fs.existsSync(planF) || !approves(text, code)) continue;
+      if (!fs.existsSync(planF) || !approves(text, code, msg.kind)) continue;
       let plan = {}, rec = null;
       try { plan = JSON.parse(fs.readFileSync(planF, 'utf8')); } catch (_) { continue; }
       try { rec = JSON.parse(fs.readFileSync(mark, 'utf8')); } catch (_) { rec = null; }
