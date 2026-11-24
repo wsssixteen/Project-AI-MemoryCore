@@ -19,10 +19,10 @@ const PLANS = process.env.FLOWABLE_ALTER_PLANS || 'E:/Dev/scripts/FlowableAlter/
 // luluskan / setuju, an optional "the" / "plan" / "alter" / "code" between, "<code> approved"), quotes or backticks
 // around the code allowed. A typed message must be only that line; a popup answer counts per picked option. Free text
 // ("I can't approve X yet", a pasted tool line) never records (rounds 5-7: reading free text for intent never plateaued).
-const { hisMessages } = require(path.join(ROOT, 'lib', 'his-words.js'));
+const { hisMessages, isInjected } = require(path.join(ROOT, 'lib', 'his-words.js'));
 const norm = c => String(c || '').replace(/-/g, '').toUpperCase();
 function approvalLine(line, c) {
-  const s = String(line || '').replace(/[\x60"'*_]/g, '').replace(/[.!\s]+$/, '').trim();
+  const s = String(line || '').replace(/[\x60"'*_]/g, '').replace(/\(recommended\)\s*$/i, '').replace(/[.!\s]+$/, '').trim();
   const C = c.slice(0, 4) + '-?' + c.slice(4);
   return new RegExp('^(?:approved?|lulus(?:kan)?|setuju)\\s+(?:the\\s+)?(?:(?:plan|alter|code)\\s+)?' + C + '$|^' + C + '\\s+(?:approved?|lulus|diluluskan)$', 'i').test(s);
 }
@@ -37,15 +37,28 @@ function approves(text, code, kind) {
 function logRow(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) { /* never block on logging */ } }
 
 // a real record path: 8 hex + the record suffix, a wildcard, or a code built in a script (template or + concat)
-const RECORD = /(?:[0-9A-F]{8}|\*|\}|\$\w+|\+\s*['"\x60])\.?miya(?:\.used)?\.json/i;
+const RECORD = /(?:[0-9A-F]{8}|\}|\$\w+|\+\s*['"\x60])\.?miya(?:\.used)?\.json/i;
 const fresh = (rec, created) => { const at = Date.parse(rec && rec.ts); return at >= Date.parse(created) && (Date.now() - at) / 60000 <= 60; };
 
-// real shape: Your questions have been answered: "q"="a", "q2"="a2". You can now continue with these answers in mind.
-// anything left after removing those pieces (a "user notes: ..." line) means he said more than the pick
+// tail lines back to sinceMs, widening like lib/his-words.js does (round 10: one 400 KB read missed events)
+function tailSince(tp, sinceMs) {
+  let size = 0; try { size = fs.statSync(tp).size; } catch (_) { return null; }
+  for (const want of [600000, 4000000, 20000000]) {
+    const n = Math.min(size, want);
+    let s = ''; try { const fd = fs.openSync(tp, 'r'), b = Buffer.alloc(n); fs.readSync(fd, b, 0, n, size - n); fs.closeSync(fd); s = b.toString('utf8'); } catch (_) { return null; }
+    const lines = s.split('\n');
+    const first = lines.slice(1).find(l => /"timestamp"/.test(l));
+    let ts = NaN; try { ts = Date.parse(JSON.parse(first).timestamp); } catch (_) { /* keep widening */ }
+    if (n === size || ts <= sinceMs) return lines;
+  }
+  return null;
+}
+// a popup answer with a typed note ("user notes: ...") is more than the pick (round 10: only a note is extra;
+// a plan preview or a quoted word in the question is not)
 function popupHasExtra(tp, ts) {
-  let tail = '';
-  try { const st = fs.statSync(tp), n = Math.min(st.size, 400000), fd = fs.openSync(tp, 'r'), b = Buffer.alloc(n); fs.readSync(fd, b, 0, n, st.size - n); fs.closeSync(fd); tail = b.toString('utf8'); } catch (_) { return true; }
-  for (const l of tail.split('\n')) {
+  const lines = tailSince(tp, Date.parse(ts) - 1000);
+  if (!lines) return true;
+  for (const l of lines) {
     if (!l.includes('questions have been answered')) continue;
     let o; try { o = JSON.parse(l); } catch (_) { continue; }
     if (o.timestamp !== ts) continue;
@@ -53,26 +66,28 @@ function popupHasExtra(tp, ts) {
     for (const x of Array.isArray(c) ? c : []) {
       if (!x || x.type !== 'tool_result') continue;
       const s = typeof x.content === 'string' ? x.content : Array.isArray(x.content) ? x.content.filter(y => y && y.type === 'text').map(y => y.text).join('\n') : '';
-      if (!/questions have been answered/.test(s)) continue;
-      const rest = s.replace(/^\s*Your questions have been answered:\s*/, '').replace(/"[^"]*"="[^"]*"/g, '')
-        .replace(/You can now continue with (?:these|the user's) answers in mind\.?/i, '').replace(/[\s,.]/g, '');
-      return rest.length > 0;
+      if (/questions have been answered/.test(s)) return /\buser notes:/i.test(s);
     }
   }
   return false;
 }
-
+// his Esc interrupt or his rejection of a tool call after the approval clears it; my own tool errors and app
+// notices do not (round 10: a word list over every error refused real approvals)
 function newerUserEvent(tp, sinceMs) {
-  let tail = '';
-  try { const st = fs.statSync(tp), n = Math.min(st.size, 400000), fd = fs.openSync(tp, 'r'), b = Buffer.alloc(n); fs.readSync(fd, b, 0, n, st.size - n); fs.closeSync(fd); tail = b.toString('utf8'); } catch (_) { return false; }
-  for (const l of tail.split('\n')) {
+  const lines = tailSince(tp, sinceMs);
+  if (!lines) return true;
+  for (const l of lines) {
     if (!/"type"\s*:\s*"user"/.test(l)) continue;
     let o; try { o = JSON.parse(l); } catch (_) { continue; }
     if (!(Date.parse(o.timestamp) > sinceMs) || o.isMeta) continue;
     const c = o.message && o.message.content;
     const texts = typeof c === 'string' ? [c] : Array.isArray(c) ? c.filter(x => x && x.type === 'text').map(x => x.text) : [];
-    if (texts.some(x => x && x.trim() && !/^\s*<(?:task-notification|system-reminder|local-command|command-)/.test(x))) return true;
-    if (Array.isArray(c) && c.some(x => x && x.type === 'tool_result' && x.is_error && /\b(?:user|reject|denied|declin|interrupt)/i.test(typeof x.content === 'string' ? x.content : JSON.stringify(x.content || '')))) return true;
+    if (texts.some(x => /^\s*\[Request interrupted by user/.test(x || ''))) return true;
+    // any other entry of his with no words also clears it: a screenshot, a slash command, a popup note with no pick
+    if (Array.isArray(c) && c.some(x => x && x.type === 'image')) return true;
+    if (texts.some(x => /<command-name>/.test(x || '') || (x && x.trim() && !isInjected(x)))) return true;
+    if (Array.isArray(c) && c.some(x => x && x.type === 'tool_result' && /\buser notes:/i.test(typeof x.content === 'string' ? x.content : JSON.stringify(x.content || '')))) return true;
+    if (Array.isArray(c) && c.some(x => x && x.type === 'tool_result' && x.is_error && /doesn'?t want to proceed|user (?:rejected|denied|declined)|the user provided the following reason/i.test(typeof x.content === 'string' ? x.content : JSON.stringify(x.content || '')))) return true;
   }
   return false;
 }
