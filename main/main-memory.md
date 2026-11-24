@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-23/24 (Baseline 1.10.2 — "so what is that message from gitlab AI, false alarm?")
+
+- **A machine review is a claim list, not a verdict.** He wanted each GitLab AI point checked against the full code and one word per point; trust nothing it says about files it never saw.
+- **He relays BA findings mid-release and expects the trace, then lets the BA's own test settle it.** Show what is proven and the one cheap test; do not rush a fix before the BA answers.
+
 ## Relationship reinforcement — 2026-11-17 (289819 TRG — "THE single most important thing since that is our module")
 
 - **He wants every module the issue crosses named and its evidence fetched at once, at the start.** I fetched logs only after an audit asked, one module at a time, and missed the third (Pendaftaran Landed). Access he set up for me (PROD logs) is to be used the moment it helps, never re-asked.
