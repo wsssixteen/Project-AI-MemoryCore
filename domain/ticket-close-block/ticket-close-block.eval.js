@@ -246,6 +246,12 @@ setBlock('qa=QA-261986\n');
 r = runG(['--repo', r4, '--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3', '--ba', 'mira']);
 check('G2d2 same branch, block without rework= or closed= -> refused (1 cycle)', r.status === 3 && /3 non-merge commits/.test(r.err), r.status + ' ' + r.err.slice(0, 200));
 
+// E1-E2 (290196, miya 2026-11-24): a test env alter lets the BA reproduce, "simulate"; prod stays "verify"
+r = run(['--alter', '--ticket', '290196', '--ba', 'Fatin', '--id', 'PTSEL/01/L/PSBS/2024/1', '--tugasan', 'Semakan Permohonan (SPI) SBTL', '--user', 'zalizanyusuf@selangor.gov.my', '--env', 'stg']);
+check('E1 --env stg -> "Can proceed to simulate."', r.status === 0 && r.out.startsWith('Salam Fatin, have altered as below. Can proceed to simulate.'), r.out.slice(0, 120));
+r = run(['--alter', '--ticket', '290196', '--ba', 'Fatin', '--id', 'X/1', '--tugasan', 'T', '--user', 'u@x', '--env', 'PROD']);
+check('E2 --env PROD -> "Can proceed to verify."', r.status === 0 && /Can proceed to verify\.\n/.test(r.out), r.out.slice(0, 120));
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);
