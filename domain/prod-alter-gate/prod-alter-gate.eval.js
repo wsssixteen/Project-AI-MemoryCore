@@ -22,12 +22,14 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 let tn = 0;
 function transcript(entries) {
   const f = path.join(TMP, `t${tn++}.jsonl`);
+  const now = new Date().toISOString();                                       // his message time (round 6): after the plan by default
   const rows = entries.map(e => {
-    if (e.u !== undefined) return { type: 'user', message: { role: 'user', content: e.u } };
-    if (e.meta !== undefined) return { type: 'user', isMeta: true, message: { role: 'user', content: e.meta } };
-    if (e.popup) return { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: 'Your questions have been answered: ' + Object.entries(e.popup).map(([q, a]) => `"${q}"="${a}"`).join(', ') }] } };
-    if (e.tool !== undefined) return { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: e.tool }] } };
-    return { type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: e.a }] } };
+    const ts = e.ts || now;
+    if (e.u !== undefined) return { type: 'user', timestamp: ts, message: { role: 'user', content: e.u } };
+    if (e.meta !== undefined) return { type: 'user', timestamp: ts, isMeta: true, message: { role: 'user', content: e.meta } };
+    if (e.popup) return { type: 'user', timestamp: ts, message: { role: 'user', content: [{ type: 'tool_result', content: 'Your questions have been answered: ' + Object.entries(e.popup).map(([q, a]) => `"${q}"="${a}"`).join(', ') }] } };
+    if (e.tool !== undefined) return { type: 'user', timestamp: ts, message: { role: 'user', content: [{ type: 'tool_result', content: e.tool }] } };
+    return { type: 'assistant', timestamp: ts, message: { role: 'assistant', content: [{ type: 'text', text: e.a }] } };
   });
   fs.writeFileSync(f, rows.map(r => JSON.stringify(r)).join('\n') + '\n');
   return f;
@@ -52,7 +54,7 @@ const R = [
   ['R1 his "approve 3F9A-2C11" + sealed plan → record written', () => { plan(); return run(ANY, [{ a: 'APPROVAL CODE: 3F9A-2C11' }, { u: 'approve 3F9A-2C11' }]); }, x => !x.blocked && fs.existsSync(mark())],
   ['R2 code without dash in his message → record written', () => { plan(); return run(ANY, [{ u: 'approved 3f9a2c11' }]); }, x => fs.existsSync(mark())],
   ['R3 a different code approved → no record for this one', () => { plan(); return run(ANY, [{ u: 'approve 1111-2222' }]); }, x => !fs.existsSync(mark())],
-  ['R4 approval in an OLDER message, last one a new topic → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { a: 'ok' }, { u: 'what about the PRBB ticket' }]); }, x => !fs.existsSync(mark())],
+  ['R4 approval sent BEFORE the plan was sealed → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11', ts: new Date(Date.now() - 300000).toISOString() }]); }, x => !fs.existsSync(mark())],
   ['R5 code only echoed by the assistant → no record', () => { plan(); return run(ANY, [{ u: 'do the alter' }, { a: 'approve 3F9A-2C11' }]); }, x => !fs.existsSync(mark())],
   ['R6 negation "do not approve 3F9A-2C11 yet" → no record', () => { plan(); return run(ANY, [{ u: 'do not approve 3F9A-2C11 yet' }]); }, x => !fs.existsSync(mark())],
   ['R7 question about the code → no record', () => { plan(); return run(ANY, [{ u: 'what does 3F9A-2C11 approve?' }]); }, x => !fs.existsSync(mark())],
@@ -60,7 +62,11 @@ const R = [
   ['R9 popup answer "Approve 3F9A-2C11" → record written', () => { plan(); return run(ANY, [{ popup: { 'Run this PROD alter?': 'Approve 3F9A-2C11' } }]); }, x => fs.existsSync(mark())],
   ['R10 popup answered "Not now" → no record', () => { plan(); return run(ANY, [{ popup: { 'Run this PROD alter? (3F9A-2C11)': 'Not now' } }]); }, x => !fs.existsSync(mark())],
   ['R11 approval but no sealed plan for the code → no record', () => run(ANY, [{ u: 'approve 3F9A-2C11' }]), x => !fs.existsSync(mark())],
-  ['R12 record already there → not rewritten', () => { plan(); fs.writeFileSync(mark(), '{"code":"3F9A2C11","ts":"2000-01-01T00:00:00Z"}'); run(ANY, [{ u: 'approve 3F9A-2C11' }]); return {}; }, () => /2000-01-01/.test(fs.readFileSync(mark(), 'utf8'))],
+  ['R12 a valid record already there → not rewritten', () => { plan(); fs.writeFileSync(mark(), JSON.stringify({ code: CODE, ts: new Date().toISOString(), his: 'KEEP' })); run(ANY, [{ u: 'approve 3F9A-2C11' }]); return {}; }, () => /KEEP/.test(fs.readFileSync(mark(), 'utf8'))],
+  ['R12b a stale record (older than the plan) + his fresh approval → rewritten', () => { plan(); fs.writeFileSync(mark(), JSON.stringify({ code: CODE, ts: '2000-01-01T00:00:00Z', his: 'OLD' })); run(ANY, [{ u: 'approve 3F9A-2C11' }]); return {}; }, () => !/OLD/.test(fs.readFileSync(mark(), 'utf8'))],
+  ['R12c re-sealed plan, only his OLD approval in the transcript → no new record', () => { plan(CODE, new Date().toISOString()); return run(ANY, [{ u: 'approve 3F9A-2C11', ts: new Date(Date.now() - 120000).toISOString() }]); }, x => !fs.existsSync(mark())],
+  ['R12d approval, then a second message of his (both after the plan) → record written', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { u: 'also check 290517 after' }]); }, x => fs.existsSync(mark())],
+  ['R12e approval, then "wait, hold on" → no record', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { u: 'wait, hold on' }]); }, x => !fs.existsSync(mark())],
   ['R13 harness meta line after his approval → record written', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { meta: 'Caveat: hook output' }]); }, x => fs.existsSync(mark())],
   ['R14 injected skill text as the last user line → his approval still counts', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }, { meta: 'Base directory for this skill: x' }, { u: 'Base directory for this skill: y' }]); }, x => fs.existsSync(mark())],
   ['R15 Malay "ok lulus 3F9A-2C11" → record written', () => { plan(); return run(ANY, [{ u: 'ok lulus 3F9A-2C11' }]); }, x => fs.existsSync(mark())],
@@ -80,6 +86,22 @@ const G = [
   ['G4 renaming a used record back → blocked', 'mv 3F9A2C11.miya.used.json 3F9A2C11.miya.json'],
 ];
 for (const [n, c, t] of G) { reset(); const x = run(c, [{ u: 'hi' }], t); check(n, x.blocked && /approval record/.test(x.out), x.out); }
+// round 6: naming the record kind in prose is not touching a record
+[['G5 commit message naming <code>.miya.json → not blocked', 'git commit -m "prod-alter-gate: record approval as <code>.miya.json"'],
+ ['G6 git log --grep ".miya.json" → not blocked', 'git log --oneline --grep ".miya.json"']].forEach(([n, c]) => { reset(); const x = run(c, [{ u: 'hi' }]); check(n, !x.blocked, x.out); });
+// round 6: the approval word must sit next to the code
+const { approves } = require(HOOK);
+[['A1 "<code> looks wrong, go again with target SDK" is not an approval', 'AB12-CD34 looks wrong, go again with target SDK', false],
+ ['A2 "ok what does <code> change" is not an approval', 'ok what does AB12-CD34 change', false],
+ ['A3 "is <code> ok to run" is not an approval', 'is AB12-CD34 ok to run', false],
+ ['A4 "go back and redo the dry run for <code>" is not an approval', 'go back and redo the dry run for AB12-CD34', false],
+ ['A5 "approve <code>, don\'t forget to verify after" is an approval', "approve AB12-CD34, don't forget to verify after", true],
+ ['A6 "approve <code> and do not stop until it is verified" is an approval', 'approve AB12-CD34 and do not stop until it is verified', true],
+ ['A7 "Approved.\\n<code>" is an approval', 'Approved.\nAB12-CD34', true],
+ ['A8 "Yes. <code>" is an approval', 'Yes. AB12-CD34', true],
+ ['A9 "don\'t approve <code>" is not an approval', "don't approve AB12-CD34", false],
+ ['A10 "<code> approved" is an approval', 'AB12-CD34 approved', true],
+].forEach(([n, text, want]) => check(n, approves(text, 'AB12CD34') === want, text));
 
 // ═══ no command is parsed for runs: PROD runs and reads both pass the hook (the tool enforces, T1-T5)
 const P = [

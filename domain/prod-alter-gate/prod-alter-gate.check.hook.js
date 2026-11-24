@@ -15,58 +15,75 @@ const LOG = process.env.PROD_ALTER_GATE_LOG || path.join(__dirname, 'log.jsonl')
 
 const PLANS = process.env.FLOWABLE_ALTER_PLANS || 'E:/Dev/scripts/FlowableAlter/logs/plans';
 
-// miya's approval: the code (dash optional) + an approval word, no negation in the same sentence
-const APPROVAL_WORD = /\b(?:approve[ds]?|approval|lulus(?:kan)?|go(?: ahead)?|proceed|run it|yes|ok(?:ay)?|setuju|boleh)\b/i;
-const NEGATION = /\b(?:don'?t|do not|jangan|never|not|wait|hold|stop|cancel|tak|tidak|no)\b/i;
-const { lastHis } = require(path.join(ROOT, 'lib', 'his-words.js'));
-const lastUserText = lastHis; // his last message only (PROD safety); injected lines never replace it
-
+// miya's approval (round 6, 2026-11-24): an approval word right next to the code, never a loose "go/ok/yes" elsewhere
+// in the sentence; a negation counts only right before that word; a question about the code is never an approval
+const { hisMessages } = require(path.join(ROOT, 'lib', 'his-words.js'));
+const HOLD = /\b(?:wait|hold|stop|cancel|don'?t run|do not run|jangan|belum)\b/i;
 const norm = c => String(c || '').replace(/-/g, '').toUpperCase();
 function approves(text, code) {
   const t = String(text || '');
   const c = norm(code);
   if (!/^[0-9A-F]{8}$/.test(c)) return false;
-  const hit = new RegExp(`(?<![0-9A-F])${c.slice(0, 4)}-?${c.slice(4)}(?![0-9A-F])`, 'i').exec(t);
+  const hit = new RegExp('(?<![0-9A-F])' + c.slice(0, 4) + '-?' + c.slice(4) + '(?![0-9A-F])', 'i').exec(t);
   if (!hit) return false;
-  // judge only the sentence that carries the code
-  const start = Math.max(t.lastIndexOf('.', hit.index), t.lastIndexOf('\n', hit.index), t.lastIndexOf('?', hit.index)) + 1;
-  const rest = t.slice(hit.index + hit[0].length);
-  const end = rest.search(/[.\n?]/);
-  const sentence = t.slice(start, hit.index + hit[0].length + (end < 0 ? rest.length : end));
-  if (/\?\s*$/.test(t.slice(start, hit.index + hit[0].length + (end < 0 ? rest.length : end + 1)))) return false; // a question about the code
-  return APPROVAL_WORD.test(sentence) && !NEGATION.test(sentence);
+  const tail = t.slice(hit.index + hit[0].length);
+  const end = tail.search(/[.\n?]/);
+  if (end >= 0 && tail[end] === '?') return false;                                    // "what does <code> do?"
+  const before = t.slice(Math.max(0, hit.index - 60), hit.index);
+  const after = tail.slice(0, 30);
+  const wordBefore = /\b(approve[ds]?|approval|lulus(?:kan)?|setuju)\b[\s:,-]*(?:the\s+)?(?:code\s*)?$/i.exec(before);
+  if (wordBefore && /\b(?:don'?t|do not|not|never|jangan|tak|tidak|no|belum)\s+(?:yet\s+)?$/i.test(before.slice(0, wordBefore.index))) return false;
+  const wordAfter = /^[\s:,-]*(?:is\s+)?(?:approved|lulus|diluluskan)\b/i.test(after);
+  const lineBefore = /(?:^|[\n.!])\s*(?:yes|approved|ok|lulus)[.!,]?\s*$/i.test(before) && /^[\s.!]*(?:$|\n)/.test(after);
+  return !!wordBefore || wordAfter || lineBefore;
 }
 
 function logRow(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) { /* never block on logging */ } }
+
+// a real record path: 8 hex + the record suffix, a wildcard, or a code built in a script (template or + concat)
+const RECORD = /(?:[0-9A-F]{8}|\*|\}|\$\w+|\+\s*['"\x60])\.?miya(?:\.used)?\.json/i;
+const fresh = (rec, created) => { const at = Date.parse(rec && rec.ts); return at >= Date.parse(created) && (Date.now() - at) / 60000 <= 60; };
 
 function judge(data) {
   if (!/^(Bash|PowerShell)$/.test(String(data.tool_name || ''))) return { fired: false };
   const cmd = String((data.tool_input && data.tool_input.command) || '');
   // 1. an approval record is written by this hook from his own message only; a command that touches one is refused
-  if (/\.miya(?:\.used)?\.json/i.test(cmd)) {
+  if (RECORD.test(cmd)) {
     logRow({ outcome: 'blocked', why: 'touches an approval record', cmd: cmd.slice(0, 200) });
     return { fired: true, blocked: true, blockReason: [
       '⛔ prod-alter-gate: this command touches a <code>.miya.json approval record.',
       '   Only this hook writes it, from miya\'s own message that approves the code. Show him the plan and code instead.',
     ].join('\n') };
   }
-  // 2. his last message approves a sealed plan code → write <code>.miya.json; alter.js refuses a no-terminal live-site
-  //    run without it (the check lives in the tool, so no run shape escapes it and no read is ever blocked here)
-  const last = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';
-  const written = [];
-  for (const m of String(last).matchAll(/(?<![0-9A-F])([0-9A-F]{4})-?([0-9A-F]{4})(?![0-9A-F])/gi)) {
-    const code = (m[1] + m[2]).toUpperCase();
-    const plan = path.join(PLANS, `${code}.json`);
-    const mark = path.join(PLANS, `${code}.miya.json`);
-    if (!fs.existsSync(plan) || fs.existsSync(mark) || !approves(last, code)) continue;
-    try {
-      fs.writeFileSync(mark, JSON.stringify({ code, ts: new Date().toISOString(), his: last.replace(/\s+/g, ' ').slice(0, 200) }, null, 2));
-      written.push(code);
-    } catch (_) { /* the tool then refuses the run: fail closed */ }
+  // 2. his last 3 messages, newest first: a hold stops the scan; the first message that approves a sealed plan code,
+  //    sent AFTER that plan was sealed, writes <code>.miya.json stamped with the message's own time. The tool refuses a
+  //    run with --approve without a fresh record (the check sits in the tool; no command is parsed for runs here).
+  const msgs = data.transcript_path ? hisMessages(String(data.transcript_path), { limit: 3 }) : [];
+  const written = [], seen = new Set();
+  for (const msg of msgs) {
+    const text = String(msg.text || '');
+    for (const m of text.matchAll(/(?<![0-9A-F])([0-9A-F]{4})-?([0-9A-F]{4})(?![0-9A-F])/gi)) {
+      const code = (m[1] + m[2]).toUpperCase();
+      if (seen.has(code)) continue;
+      seen.add(code);                                                                  // the newest message naming it decides
+      const planF = path.join(PLANS, code + '.json'), mark = path.join(PLANS, code + '.miya.json');
+      if (!fs.existsSync(planF) || !approves(text, code)) continue;
+      let plan = {}, rec = null;
+      try { plan = JSON.parse(fs.readFileSync(planF, 'utf8')); } catch (_) { continue; }
+      try { rec = JSON.parse(fs.readFileSync(mark, 'utf8')); } catch (_) { rec = null; }
+      if (rec && fresh(rec, plan.created)) continue;                                    // a valid record stays
+      if (!msg.ts || !(Date.parse(msg.ts) >= Date.parse(plan.created))) continue;        // his words came before this plan
+      if ((Date.now() - Date.parse(msg.ts)) / 60000 > 60) continue;
+      try {
+        fs.writeFileSync(mark, JSON.stringify({ code, ts: msg.ts, his: text.replace(/\s+/g, ' ').slice(0, 200) }, null, 2));
+        written.push(code);
+      } catch (_) { /* the tool then refuses the run: fail closed */ }
+    }
+    if (HOLD.test(text) && !written.length) break;                                       // "wait" after an approval: stop
   }
   if (!written.length) return { fired: false };
-  logRow({ outcome: 'approval-recorded', codes: written, last_user: last.slice(0, 160) });
-  return { fired: true, blocked: false, contextOut: `prod-alter-gate: miya approved ${written.map(c => c.slice(0, 4) + '-' + c.slice(4)).join(', ')} in his own message; the run with --approve may go\n` };
+  logRow({ outcome: 'approval-recorded', codes: written });
+  return { fired: true, blocked: false, contextOut: 'prod-alter-gate: miya approved ' + written.map(c => c.slice(0, 4) + '-' + c.slice(4)).join(', ') + ' in his own message; the run with --approve may go\n' };
 }
 
 if (require.main === module) {
@@ -75,4 +92,4 @@ if (require.main === module) {
     return judge(data);
   });
 }
-module.exports = { approves, lastUserText, judge };
+module.exports = { approves, judge };
