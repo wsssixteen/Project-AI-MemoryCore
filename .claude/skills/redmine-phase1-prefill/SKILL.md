@@ -95,6 +95,8 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
+**Pena on every text that goes into Notes, generated or rewritten** (2026-11-24 per みや, 286712: two hand rewrites after his feedback skipped Pena, one long jammed sentence, then a line telling QA she was wrong): write the draft to a file, run `node lib/pena.js check --profile redmine-ba-pass --file <draft>` (another surface: its profile from `node lib/pena.js list`), fix every finding, answer its by-hand lines, and show its `PENA:` line in the reply before the form_input. **Banned**: filling Notes with text that has no `PENA:` line this turn.
+
 **Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql] --env <env of the alter>`. A test env alter prints "Can proceed to simulate.", PROD "verify" (290196). It prints the note (its one home; `ALTER-TICKET-PLAYBOOK.md` §5.1 points to it); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
 
 **Patch ticket (data, document or file) = GENERATE the note, never write it** (2026-11-11 per みや, 288974: a typed note said a linked permohonan was "tidak diubah" after the script had removed its link): `node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" --sql <num>.sql [--file "<Dokumen name>=<new file>"] [--was "<column>=<value in the BEFORE check>"] [--tugasan "<tugasan>"] [--user <login>]`. It lists every thing the script changed, per permohonan, in BA words; the wording lives only in the generator. Clear every `warn:` line (pass the value it asks for) before pasting. Patch + alter: the `--alter` line above with `--patched --sql <num>.sql`. The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned**: a patch note typed by hand · telling the BA how to route it.
@@ -170,6 +172,8 @@ When みや says he submitted ("sent", "submitted", "done", "have sent"): read t
 - File upload silently fails (size limit / network) → never claim success without verifying via subsequent get_page_text
 
 ## History
+
+Updated 2026-11-24 — Step 4 gains the Pena check on every Notes text, generated or rewritten, with its `PENA:` line shown before the form_input, per みや (286712: "Did you check pena or writing rules?"). Additive; every Step 4 rule kept.
 
 Updated 2026-11-13 — Step 5 gains 5a (his test photos saved red-boxed into the folder first, always) and 5b (every file uploaded, an invocation list never narrows it; one-line attachment mention) per みや (281324: 1 of 8 files staged, an attachment table added). Additive; the empty-folder edge case stays.
 

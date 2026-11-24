@@ -30,6 +30,8 @@ check('C10 step 8 Impact card: the five columns, the SLA line, the hand-back ban
 check('W1 cross-module-intake scanner alert names the skill', read(path.join(ROOT, 'domain', 'cross-module-intake', 'scan.js')).includes('cross-module-check'));
 check('W2 ownership-input-check block text names the skill', read(path.join(ROOT, 'domain', 'ownership-input-check', 'ownership-input-check.check.hook.js')).includes('cross-module-check'));
 check('W3 quest Recon ownership row names the skill', read(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md')).includes('cross-module-check'));
+// 2026-11-24 (290517): the takeover step must carry the report-file limit, or a returned .jrxml fault is offered as ours.
+check('W3b quest takeover Limits send a .jrxml fault back to Reports', /Limits: [^\n]*`\.jrxml` change stays with the Reports team[^\n]*never put to/.test(read(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md'))));
 check('W4 Debug Ritual 7 names the skill', read(path.join(ROOT, 'quest', 'quest-protocol.md')).includes('cross-module-check'));
 
 // Scanner end-to-end: an intake text carrying a hand-off phrase prints the skill name.
