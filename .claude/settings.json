@@ -424,6 +424,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "mcp__terminal__run_in_terminal",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\prod-alter-gate\\\\prod-alter-gate.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
