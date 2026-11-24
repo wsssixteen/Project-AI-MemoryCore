@@ -5,7 +5,7 @@ metadata:
   type: reference
 ---
 
-**🚨 STAGING / MLIT = PAGE-FREE, NO LOGIN (2026-10-28 per miya, 262027)**: run the alter page's own Java code straight on the DB — `powershell -NoProfile -ExecutionPolicy Bypass -File E:\Dev\scripts\AlterSim\as.ps1 -Env stg1|stg2|mlit -Id <ID> -Target <KOD>` = rollback trial; same + `-Commit` = the real alter (commits only on a clean run). Then `node E:\Dev\scripts\FlowableAlter\alter.js live --env stg|mlit --id <ID>` must show LINKED. Never ask him for a keeper login for stg/mlit. PROD stays on alter.js + his approval code below.
+**Which tool per env = playbook A5 (`etanah-knowledge/ALTER-TICKET-PLAYBOOK.md`), its one home.** Melaka STG/MLIT Alter Flow: the headless runner; every other alter: `alter.js --state <key>`. (AlterSim `as.ps1` is an older page-free path, not the first choice.)
 
 **Tool**: `E:\Dev\scripts\FlowableAlter\` (its own git; README there). **A state with no `envs.json` block is built, never handed to a person**: README "Adding a state" steps 1-5; built = its self-check passes (2026-11-24, 290196). Drives the "Pelupusan Flowable Alter Page" headless for prod / stg / mlit.
 
