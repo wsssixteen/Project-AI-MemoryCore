@@ -55,6 +55,10 @@ const COL = {
   'umm_a_permit_lesen.kegunaan': v => v === null ? null : ['Kegunaan', v],
   'umm_a_permit_lesen.kegunaan_id': () => null,
   'umm_a_tgsn.flag_aktif': v => ['Tugasan', v === 'N' ? 'closed' : 'reopened'],
+  // PLTP lease patch (290970): the screen's Tempoh Pajakan Luput comes from these three
+  'umm_a_tgsn.last_modified_date': () => ['Approval date', 'set back to the day the approval task was made'],
+  'umm_a_permohonan_tnh.tempoh_pajakan_dilulus': v => ['Tempoh Pemegangan Baru Diluluskan', `${v} Tahun`],
+  'umm_a_permohonan_tnh.trkh_luput_pajakan': v => { const m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(v)); return ['Start of new lease', m ? `${m[3]}/${m[2]}/${m[1]}` : v]; },
   'umm_a_tgsn.status_tugasan': v => ['Tugasan', v === 'Selesai' ? 'closed' : v],
   'umm_a_tgsn.trkh_tetap': () => ['Tugasan', ''],
   lokasi_fail_pdf: (v, x) => {
@@ -207,7 +211,13 @@ if (arg('patch') === true) {
   const key = Object.keys(names).find(k => k.toLowerCase() === baArg.toLowerCase());
   if (!key) console.error(`warn: no short name for "${baArg}" in ba-names.json — check how miya greets this BA`);
   warns.forEach(w => console.error('warn: ' + w));
-  const body = [...groups].map(([id, lines]) => [...(id ? [`ID Permohonan: ${id}`] : []), ...lines].join('\n')).join('\n\n');
+  // IDs with the same changes share one block (290970 per miya: "group the id with same actions")
+  const same = new Map();
+  for (const [id, lines] of groups) { const k = lines.join('\n'); if (!same.has(k)) same.set(k, { ids: [], lines }); same.get(k).ids.push(id); }
+  const body = [...same.values()].map(({ ids, lines }) => {
+    const named = ids.filter(Boolean);
+    return [...(named.length ? [`ID Permohonan: ${named.join(', ')}`] : []), ...lines].join('\n');
+  }).join('\n\n');
   console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', CLOSING].join('\n'));
   logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'patch', ids: [...groups.keys()].filter(Boolean), warns: warns.length, outcome: 'printed' });
   process.exit(0);
@@ -216,7 +226,7 @@ if (arg('patch') === true) {
 // --alter (2026-11-05 per miya, 288533: "Does quest not load the format?"): the done-alter / patch+alter note in
 // ALTER-TICKET-PLAYBOOK §5.1 shape, generated here so no step writes it by hand. No repo needed.
 // node ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check>
-//      [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]
+//      [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql] [--env prod|stg|mlit|...]
 if (arg('alter') === true) {
   const need = ['ticket', 'ba', 'id', 'tugasan', 'user'].filter(k => !arg(k) || arg(k) === true);
   if (need.length) { console.error('--alter needs: ' + need.map(k => '--' + k).join(' ')); process.exit(1); }
@@ -236,8 +246,8 @@ if (arg('alter') === true) {
     if (others.length) console.error('warn: patched but not in this note: ' + others.map(k => k || '(no ID Permohonan)').join(', '));
   }
   const out = [
-    // every done-alter is a PROD action the BA passes to the user: "Can proceed to verify." (miya 2026-11-12, 288625)
-    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. Can proceed to verify.`,
+    // PROD alter: "verify" (288625). A test env alter (--env stg/mlit/...) lets the BA reproduce: "simulate" (290196)
+    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. Can proceed to ${arg('env') && arg('env') !== true && String(arg('env')).toLowerCase() !== 'prod' ? 'simulate' : 'verify'}.`,
     '',
     '<pre>',
     `ID Permohonan: ${arg('id')}`,
