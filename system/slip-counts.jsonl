@@ -2309,3 +2309,5 @@
 {"ts":"2026-11-24T08:20:01.077Z","category":"wording"}
 {"ts":"2026-11-24T08:56:39.395Z","category":"gate/regression"}
 {"ts":"2026-11-24T08:56:41.053Z","category":"gate/repeat-block"}
+{"ts":"2026-11-25T07:13:41.403Z","category":"blocker"}
+{"ts":"2026-11-25T07:25:31.210Z","category":"reask/rambling"}
