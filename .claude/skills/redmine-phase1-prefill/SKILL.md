@@ -101,7 +101,7 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql] --env <env of the alter>`. A test env alter prints "Can proceed to simulate.", PROD "verify" (290196). It prints the note (its one home; `ALTER-TICKET-PLAYBOOK.md` §5.1 points to it); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
 
-**Patch ticket (data, document or file) = GENERATE the note, never write it** (2026-11-11 per みや, 288974: a typed note said a linked permohonan was "tidak diubah" after the script had removed its link): `node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" --sql <num>.sql [--file "<Dokumen name>=<new file>"] [--was "<column>=<value in the BEFORE check>"] [--tugasan "<tugasan>"] [--user <login>]`. It lists every thing the script changed, per permohonan, in BA words; the wording lives only in the generator. Clear every `warn:` line (pass the value it asks for) before pasting. Patch + alter: the `--alter` line above with `--patched --sql <num>.sql`. The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned**: a patch note typed by hand · telling the BA how to route it.
+**Patch ticket (data, document or file) = GENERATE the note, never write it** (2026-11-11 per みや, 288974: a typed note said a linked permohonan was "tidak diubah" after the script had removed its link): `node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" --sql <num>.sql [--file "<Dokumen name>=<new file>"] [--was "<column>=<value in the BEFORE check>"] [--tugasan "<tugasan>"] [--user <login>]`. It lists every thing the script changed, per permohonan, in BA words; the wording lives only in the generator. A document replace alone takes no `--user`: its User ID line is redundant (291091 per miya). A ticket already Verified or later gets no "Can proceed to verify." line; the generator reads the live status itself (291091 per miya). Clear every `warn:` line (pass the value it asks for) before pasting. Patch + alter: the `--alter` line above with `--patched --sql <num>.sql`. The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned**: a patch note typed by hand · telling the BA how to route it.
 
 ```
 Hi <Assignee firstname>, please find the fix at mlk/qa/<NNN>.
@@ -154,6 +154,8 @@ Verify all 6 fields are filled + N files attached via `mcp__Claude_in_Chrome__ge
 
 **Hard rule**: DO NOT click Submit. みや reviews and submits manually.
 
+**A staged form lives only in its tab** (2026-11-25 per miya, 291091: a session reload reopened the tab empty and I still called it staged). Every later reply that mentions the staged form re-runs this Step 6 check on the current tab first; a missing note or file is filled again before the reply.
+
 ### Step 7 — After he submits: check, then close the tabs (2026-10-27 per みや, #285768)
 
 When みや says he submitted ("sent", "submitted", "done", "have sent"): read the ticket page once (`get_page_text`) to confirm the new journal, status and assignee, then close EVERY tab this skill opened (`tabs_close_mcp`, each tab id from `tabs_context_mcp`). Close only tabs I opened, never his own. **Banned**: leaving a Redmine tab open after his submit. **The same for a check (2026-11-06 per みや: "always close back tabs if you're simply checking something")**: a tab opened only to read a ticket or a journal closes in the same turn as the read; only a staged form waits open for his word.
@@ -190,3 +192,7 @@ Updated 2026-11-04 — Step 4 gains the PROD patch note shape per みや (#28816
 Created 2026-06-01 by みや design conversation (S4). Trigger photo: Redmine Edit form for QA-263344 showing the 6 fields to fill + Notes template + files area. Manual-invoke decision per みや: "the best/practical option is browser mcp which is slow"; ready for invoke but not auto-bound to quest closure.
 
 *2026-11-25 — another module's ticket fills Notes + Assignee only (290196, per みや). Additive.*
+
+*2026-11-25 — Step 4 patch line: a document replace alone takes no --user, and a ticket already Verified or later gets no verify line (the generator reads the live status). Per miya (291091). Additive; every Step 4 rule kept.*
+
+*2026-11-25 — Step 6: a staged form lives only in its tab; every later reply that mentions it re-checks the current tab first (291091 per miya: files lost after a session reload). Additive; Step 6 unchanged otherwise.*

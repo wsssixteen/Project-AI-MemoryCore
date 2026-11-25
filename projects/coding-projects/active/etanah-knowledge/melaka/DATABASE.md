@@ -97,6 +97,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 |---|---|---|
 | Urusan code on `umm_aplikasi` | **No `urusan_kod` column** — join to `ind_ursn` via `ursn_id` | `umm_aplikasi.urusan_kod` does not exist |
 | Parent application link | `hubungan_aplikasi_id` | ~~`hubungan_id`~~ |
+| System parameter value (`rjk_parameter_sistem`) | `nilai_parameter` (plus `nilai_rahsia` for secrets), looked up by `kod` (verified stg1 2026-11-24, `UJT_PERINGATAN_TARIKH_MULA`) | ~~`nilai`~~ |
 | FK from `umm_a_rizab` to permohonan tanah | `a_permohonan_tnh_id` references `umm_a_permohonan_tnh(a_permohonan_tnh_id)` | ~~`app_permohonan_tanah_id`~~ |
 | Urusan lookup pattern | Always JOIN `umm_aplikasi` → `ind_ursn` on `ursn_id` | Never filter by urusan_kod on umm_aplikasi directly |
 | `umm_aplikasi` FK to self (parent) | `hubungan_aplikasi_id` references `umm_aplikasi(aplikasi_id)` | |
@@ -1746,3 +1747,18 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 ## 16. Peranan (role) names — where they live (2026-11-10, #288188)
 - There is no ind_peranan table. `pcp_peranan_modul.peranan_id` points at `rjk_senarai_ahli_kumpulan.senarai_ahli_kumpulan_id` (kod + nama, e.g. 1514 PPT Penolong Pentadbir Tanah, 7131 PPD Penolong Pegawai Daerah, 1519 PH Pendaftar). No FK is declared, so information_schema does not show the link.
 - A user's roles: `SELECT peranan_modul_id, flag_peranan_utama FROM pcp_capaian_pengguna WHERE pengguna_id = (SELECT pengguna_id FROM pcp_pengguna WHERE nama_pengguna = '<login>');` then `SELECT peranan_id, modul_id FROM pcp_peranan_modul WHERE peranan_modul_id IN (...)` then `SELECT kod, nama FROM rjk_senarai_ahli_kumpulan WHERE senarai_ahli_kumpulan_id IN (...)`.
+
+### Letter-value lookups (verified on PROD et_main, 2026-11-25, 291091)
+
+| Value on a letter | Table · column | Note |
+|---|---|---|
+| Mukim / bandar / pekan | `ind_bandar_pekan_mukim.nama` by `bandar_pekan_mukim_id` | no `rjk_bandar_pekan_mukim` table |
+| Daerah | `ind_daerah.nama` by `daerah_id` | |
+| Sekatan kepentingan text | `ind_sktn_kptgn.perihal` by `sktn_kptgn_id` | no `nama` column |
+| Kategori tanah, unit luas, bandar, negeri, taraf, status | `rjk_senarai_ahli_kumpulan.nama` by `senarai_ahli_kumpulan_id` | one generic lookup table (kod + nama) |
+| Officer name from a login | `pcp_pengguna.nama` where `nama_pengguna = '<login>'` | no `id_pengguna` column |
+| Office header | `ind_pejabat.nama · no_tel1 · no_faks · emel` | |
+| Applicant name + address | `umm_a_pihak_bkptg` by `aplikasi_id` (`nama`, `alamat..alamat4`, `poskod`, `bandar_id`, `negeri_id`) | |
+| Notis 5A total on a letter | `umm_a_mklmt_premium.jumlah_premium` by `aplikasi_id` | |
+
+- Column traps (2026-11-25, #291261, PROD et_main): umm_aplikasi has NO flag_flowable column; pcp_pengguna has NO id_pengguna column, the login is nama_pengguna (pk pengguna_id). umm_tgsn_semasa columns: tgsn_semasa_id, aplikasi_id, a_tgsn_id, p_aplikasi_id, hantaran_notis_id, mesyuarat_pbn_id, mklmt_laporan_siasatan_id.

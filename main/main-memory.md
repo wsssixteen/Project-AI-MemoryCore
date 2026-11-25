@@ -3,6 +3,28 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-25 (290196 — "you failed previously based on also putting my name as the one that solves")
+
+- **A ticket from another module is not ours to sign.** He wants only what was asked of us written on it; his name on a Root Cause or Resolved By he never owned is a claim made for him.
+- **He audits my past work on his own and asks "did you make a mistake?".** The answer is the live record first (Redmine journal), then the cause in one sentence, then the fix built where it happens.
+- **When a /goal asks for something destructive to other sessions, I hold and say why.** He cleared the goal himself.
+
+## Relationship reinforcement — 2026-11-25 (291261 — "Why do you not set the status as resolved for patching tickets?")
+
+- **A "why" from him is an audit of a rule, and a short order follows.** He asked why, I showed the rule came from one code-fix ticket, he said "Set that and submit". He expects the rule fixed and the action done in the same go, not a second question.
+- **An alter ticket with the BA's answer already in the journal runs straight through.** Re-check, dry run, his code, AFTER rows, note: he only had to type the approval line.
+
+## Relationship reinforcement — 2026-11-25 (291091 — angry: "steps is broken, focus on that")
+
+- **A step he asked for is checked to exist before I say it is done.** He had asked for a judge of the note against the ticket; nothing held it, and I learned that only when he asked. Search first, then say plainly that it was never built.
+- **"Staged" is a fact about the screen now, never about a tab I filled earlier.** A reload emptied the form and I still called it staged.
+- **When he asks "did you go through proper system build", the honest answer is the list of what I skipped**, then the route run in full.
+
+## Relationship reinforcement — 2026-11-24 (adhoc desk, 291283 to staging — "keep on tracing if the untouched files is from a different ticket")
+
+- **A merge conflict is a question about other people's tickets.** He did not take "staging is newer" as the answer; he wanted each conflicting line named by its ticket first. With the ticket names on the table his rule took one line: not needed by the ticket we merge, keep staging.
+- **A name he asks for keeps the shape it already had.** "Name this session adhoc" meant "24/11/2026 - adhoc", not a bare word. Read the current form before replacing it.
+
 ## Relationship reinforcement — 2026-11-23/24 (Baseline 1.10.2 — "so what is that message from gitlab AI, false alarm?")
 
 - **A machine review is a claim list, not a verdict.** He wanted each GitLab AI point checked against the full code and one word per point; trust nothing it says about files it never saw.

@@ -200,6 +200,17 @@ function patchGroups(inAlter) { // inAlter: --tugasan and --user belong to the a
   return { groups: out, warns };
 }
 
+// A ticket already Verified or later has nothing left to verify: the note drops "Can proceed to ..." (291091 per miya)
+function pastVerify() {
+  try {
+    const sr = require(path.resolve(__dirname, '../redmine-write-gate/status-rule.js'));
+    const st = sr.liveStateSync(arg('ticket'));
+    const done = sr.rule().frozen.filter(x => sr.norm(x) !== 'resolved').map(sr.norm);
+    if (st && done.includes(sr.norm(st.status))) { console.error(`info: #${arg('ticket')} is ${st.status}, no verify line`); return true; }
+  } catch (_) {}
+  return false;
+}
+
 if (arg('patch') === true) {
   const need = ['ticket', 'ba'].filter(k => !arg(k) || arg(k) === true);
   if (need.length) { console.error('--patch needs: ' + need.map(k => '--' + k).join(' ')); process.exit(1); }
@@ -218,7 +229,7 @@ if (arg('patch') === true) {
     const named = ids.filter(Boolean);
     return [...(named.length ? [`ID Permohonan: ${named.join(', ')}`] : []), ...lines].join('\n');
   }).join('\n\n');
-  console.log([`Salam ${key ? names[key] : baArg}, have patched as below. Can proceed to verify.`, '', '<pre>', body, '</pre>', '', CLOSING].join('\n'));
+  console.log([`Salam ${key ? names[key] : baArg}, have patched as below.${pastVerify() ? '' : ' Can proceed to verify.'}`, '', '<pre>', body, '</pre>', '', CLOSING].join('\n'));
   logRow({ ts: new Date().toISOString(), ticket: arg('ticket'), mode: 'patch', ids: [...groups.keys()].filter(Boolean), warns: warns.length, outcome: 'printed' });
   process.exit(0);
 }
@@ -247,7 +258,7 @@ if (arg('alter') === true) {
   }
   const out = [
     // PROD alter: "verify" (288625). A test env alter (--env stg/mlit/...) lets the BA reproduce: "simulate" (290196)
-    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below. Can proceed to ${arg('env') && arg('env') !== true && String(arg('env')).toLowerCase() !== 'prod' ? 'simulate' : 'verify'}.`,
+    `Salam ${key ? names[key] : baArg}, have ${patched ? 'patched the data and altered' : 'altered'} as below.${pastVerify() ? '' : ` Can proceed to ${arg('env') && arg('env') !== true && String(arg('env')).toLowerCase() !== 'prod' ? 'simulate' : 'verify'}.`}`,
     '',
     '<pre>',
     `ID Permohonan: ${arg('id')}`,

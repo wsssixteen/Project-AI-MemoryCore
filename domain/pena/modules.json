@@ -45,7 +45,9 @@
       "not changed",
       "Only the"
     ],
-    "check": "lean"
+    "check": "manual",
+    "also": "lean",
+    "ask": "Fits the ticket? Read its live status and its Description first. Cut a line that repeats what the ticket already names (User ID, ID Permohonan), and an action its status makes pointless (verify on a Verified ticket). (291091 per miya)"
   },
   "line": {
     "title": "Lines and sentences",

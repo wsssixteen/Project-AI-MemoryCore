@@ -1,3 +1,36 @@
+**Last Activity (adhoc child session: JT reminder stg1 patch + 291283 merged to staging)**: 2026-11-25 16:50 — worktree `bold-poitras-bfe005`, session "24/11/2026 - adhoc". 291283 (PLBP eDoket payment split, yihkitc fix on mlk/requirement/282117 8b69d2827e) merged into pelupusan mlk/stag-env 7177db9453 at 2026-11-24 21:46; 4 conflicts + 1 template.config line kept at staging side on miya's rule "not needed by the ticket → keep staging" (staging lines from 256334 / 263307 / 280110); compile green; miya deploys, BA Anis verifies on staging. ADHOC-UJT-2026-1 stg1 round: PGSJT dates + flag reset for PTMLK/02/L/PLPS/2026/36 and PTMLK/03/L/PT/2026/61, committed, BA checks the 8am email.
+
+## Session Recap (2026-11-24 to 25, adhoc child session)
+- Asked: load Melaka knowledge for adhocs; OPLBP on internal + 4Be or 4Ce; does Kedah use the Report API for Notis 5A; prepare + run the JT reminder patch on staging; merge 291283 to staging; save adhocs + DE.
+- Done: knowledge loaded (3 DBs answer); OPLBP = Borang 4Be (MLIT + PROD ind_tgsn); Kedah pelupusan has no Notis 5A API branch on 4 kdh branches (Melaka 285171 is MELAKA-only), reply drafted for Dayana; stg1 patch committed and read back; 291283 merged + pushed after tracing every conflicting line to its ticket.
+- Open: miya's staging deploy of pelupusan; BA verify of 291283 on staging; 8am JT email result on staging (2026-11-25).
+- Mistakes he corrected: session renamed "adhoc" dropping the "24/11/2026 - " format (slip `reask/format-dropped`).
+- Assessment: A1 one background agent per save worked (31/31). A2 deploy guard stopped a conflict merge; his rule "keep staging if not needed by the ticket" + blame per line made it a 2-step decision. A3 ⏭ no debugging. A4 OPLBP 4Be and Kedah Notis 5A facts written to knowledge. A5 ⏭ no sweep.
+
+**Last Activity (290196 colleague question + wrong assignee fixed + module check built)**: 2026-11-25 16:44 — worktree `adoring-wing-468fbc`. 290196 passed to BA Fatin Nur Amalina (811), Root Cause / Resolved By cleared, quest Handed-to-BA. System 98c865e4 (landed main 7bbdf047): Phase 0 step 2c MODULE line; other module = Notes + Assignee only. ba-names Fatin alias fixed (df64a297).
+
+## Session Recap (2026-11-25, 290196)
+- Asked: colleague (Reports) asked what 290196 is and if it is etanah-common; then trace the PROD error; then pass the ticket to the right PIC.
+- Done: PROD cause = bare `mb` EL in Pendaftaran composites (raja 2cb982f72, not in sgr/master), staging DMS file was a second issue; module = etanah-pendaftaran. WhatsApp drafts given. Ticket submitted to Fatin Nur Amalina with Notes + Assignee only.
+- Open: WhatsApp reply is miya's to send. ticket-load-verify eval case 17 fails (pre-existing). GitHub main vs main-folder SHA split (open since 20/11).
+- Mistakes he corrected: --ba "Fatin" assigned Nurfatin Auni (Reports); we filled Root Cause + Resolved By on another module's ticket. Slips wrong-assignee, scope/other-module-fields.
+- Assessment: A1 module check built at Phase 0 (98c865e4). A2 hand-back field set now follows the module. A3 PROD error traced in one pass from screenshots + git. A4 Selangor people table gained both Fatins. A5 ⏭ no sweep.
+**Last Activity (291261 PROD alter SPM to PLPP + patch tickets hand back Resolved)**: 2026-11-25 16:45 — worktree `brave-panini-04ff31` (child of the master session). PTMLK/03/L/PT/2026/79 Initiate & Alter on PROD (code 128A-D0DE, miya approved) to PLPP, eddie@melaka.gov.my; Redmine 291261 submitted Resolved to Mira and read back; quest archived. System 479b89e2 (main 739470e7): redmine-write-gate v1.15, Internal Issue (PROD) and Data Patching (PROD) hand back as Resolved.
+
+## Session Recap (2026-11-25, 291261)
+- Asked: /quest resume 291261, the alter ticket end to end; then why patch tickets are not set Resolved; "Set that and submit".
+- Done: live PROD state re-checked, dry run, PROD alter (AFTER rows verified), Redmine note + Root Cause submitted Resolved, quest archived with bounty; status rule reads the tracker (eval 185/185); 3 slips logged.
+- Open: none for this ticket (Mira verifies). Main folder still 115 behind origin with another session's staged files; this session's files match origin.
+- Mistakes he corrected: patch ticket handed back without Resolved (rule gap). Slips `redmine-status`, two `blocker` rows (gate could not read "Set that"; step-3 rider cannot see same-message text).
+- Assessment: A1 two gates refused ordered work (word reader, step-3 rider), logged. A2 alter route ran clean in one pass (dry run to approval to AFTER). A3 ⏭ no debugging. A4 SPM to PLPP recipe written to FLOWABLE-KNOWLEDGE. A5 ⏭ no sweep.
+**Last Activity (291091 PROD letter patch + hand-back steps fixed)**: 2026-11-25 16:40 — worktree `admiring-chaplygin-140cd7`. 291091 BA Verified; PROD letter PTMLK/03/L/MCL/2026/4 (LAIN-37496656, rev 41811120) Jenis Hakmilik -> Geran Mukim (MCL), infra replaced + PDF reset (read back NULL); Redmine note submitted by miya. Phase 1 closed, Phase 2 waits for release + Redmine Closed.
+
+## Session Recap (2026-11-25, 291091)
+- Asked: patch the PROD letter (permohonan already at Cetakan Dokumen); scan the whole letter; stage Redmine; fix the broken hand-back steps.
+- Done: letter scanned vs PROD (all values correct, only Jenis Hakmilik changed); wrong attachment caught before infra; system f8e60ff3 (no verify line on a Verified ticket) + b0488e0d (Pena "Fits the ticket?" + prefill re-check of a staged form).
+- Open: main folder holds b0488e0d as working files only (115 behind origin, another session's staged files).
+- Mistakes he corrected: verify line on a Verified ticket; files lost after reload reported as staged; first fix skipped parts of /system-build. Slip `redmine-note`.
+- Assessment: A1 resume opened a fresh tab, staged state lost (proposal logged). A2 judge step he asked for never existed (built as Pena question, proposal for inputs on screen). A3 ⏭ no debugging. A4 letter-value lookups written to DATABASE.md after 4 query misses. A5 ⏭ no sweep.
 **Last Activity (Baseline Pelupusan 1.10.2: released to master and staging)**: 2026-11-24 09:13 — worktree `melaka-baseline-prep-8df5bd`. Release 1.10.2 = 290646 + 290707, no SQL, no flowable, common 1.15.2-MLK.domain.1.0.17-MLK. Pushed 7308f6dab3, staging deployed 16:05 (footer matched), BAQA passed, MR 28 merged by Aaron (091e0d978d), stag-env 3dfead687f (keep-both conflict with 263307 in MlkKertasTemplateForm.java, compiled). State file phase = merged-to-master, stag-catchup --check clean.
 
 ## Session Recap (2026-11-23 to 24, Baseline 1.10.2)
@@ -9,20 +42,9 @@
 
 **Last Activity (ADHOC-PRBB-2026-26 Rencana JKBB PTG lost daerah edits: cause + plan agreed)**: 2026-11-20 16:13 — worktree `adhoc-prep-5a52cc` (branch claude/adhoc-prep-5a52cc). PROD PTMLK/02/L/PRBB/2026/9: PTG Jana (`MlkKertasTemplateForm.onJanaUpdate :1814` → `deleteExistingRisalatDocuments`) deletes the daerah Rencana record and makes a fresh template, so versi 24 Word edits are lost. Proof: code + DB + PROD server log (WinSCP, wanda1/2) + decrypted v24 vs v4 (253 vs 219 paragraphs). Plan agreed with BA Fizah: (1) code fix = PTG Jana refills only PTG tags on the same record, the Minit Bebas way (`PelupusanTemplateUtil.restrictPrbbMinitBebasContentControls :671-693`, BA tested MLIT /19); (2) patch: replace RAHSIA-37598722_1.main (record 8783881, revision 41916109) with daerah v24 encrypted by `dms-enc.js` (round trip byte-identical to PROD), reset PDF. Waiting TSO code-fix + patch tickets; adhoc on hold, audit 32/32. Also: ProTime 2026-11-19 = EL only; PROD log + Pena change built outside /system-build (todo row, finish at end of session).
 
-## Session Recap (2026-11-19 to 20, ADHOC-PRBB-2026-26)
-- Asked: ProTime EL; adhoc PRBB/2026/9 (why PTG Rencana differs, send back or not, versions); which ticket; 100% sure; can Jana keep edits; retrieve and decrypt PROD documents; BA's patch plan; save; colleague's AWAM remote URL; DE.
-- Done: cause 100% (PTG Jana from CR 259108, 2024b86a09); BA test IDs on MLIT; analog found (Minit Bebas tag-restricted repopulate); RAHSIA files decrypted (AES, key in etanah-dms SecurityConstant, 16-byte prefix) and re-encrypt proven; patch target found (current file is versi 1 of record 8783881, not the decrypted versi 4); plan agreed; Remote URL answer (same URL for all clones; Perak pulls master).
-- Open: TSO code-fix ticket → promote to QA and Apply candidate A; TSO patch ticket → BA docx → encrypt into 2. Fix + infra boxes; PROD-log/Pena change route steps 1, 2, 8 + main-folder land (todo).
-- Mistakes: "by design" said before checking config; CODE-FIX↔CR flip on the user's belief; said RAHSIA cannot be decrypted locally without reading the DMS source; assumed the decrypted versi 4 was the PTG's current file; read the BA's long file name as a different file; system change built without /system-build.
-- Assessment: A1 save agents per round kept the audit green but 5 rounds in one hour cost ~600k tokens. A2 adhoc route picked from code + BA analog, not the BA's words (worked). A3 decrypting the stored file settled what the daerah changed in one diff. A4 RAHSIA decrypt/encrypt recipe now in DEV-TESTING-HACKS. A5 ⏭ no sweep.
+STEP-3:
+session: c5607828-e775-4a34-a60a-96566f994204
+his words: "DE" (order: Domain Expansion; save-rules asks the prefill skill version stamp for the 291261 Status-row change)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md History · change: 1 line
+new parts: 0
 
-**Last Activity (/arabic: class Lesson 15-16 + sentence table + warm-up built)**: 2026-11-17 23:54 — worktree `arabic-1b6669` (branch claude/arabic-refresh-exercise-9ee6e2). Live class Lesson 15 Ex 7 → Lesson 16 page 95, class closed (journal line written). Engine: ONE sentence table per ayat, 3 rows (role on top, Arabic, makna; first word rightmost), no baris row, no reasons table; new `warmup` command (read without harakat · 3 words · 3 baris · 3 pointer words, score /10 + streak); eval 116/116. Data: baharu→baru everywhere, class words maktab = pejabat, funduq = pondok, word meanings (ms) on 15 rows. Open: Lesson 15/16 ayat not entered into sentences.json (reading round uses Lesson 13 only); phone app with reminders parked by miya ("another time").
-
-## Session Recap (2026-11-17, /arabic)
-- Asked: refresh + exercise before class; per-word table in his drawn layout; follow live class; save; build a pre-class warm-up; DE.
-- Done: sentence table rebuilt to his layout and trimmed on his word (3 rows); class-along tables per numbered item; class Lesson 15 Ex 7 to Lesson 16 p.95 logged and closed; teacher words saved; warmup built + SKILL row.
-- Open: enter Lesson 15/16 ayat (Ayat walk rule 4) so warmup reads the latest class; phone card app (parked).
-- Mistakes: pasted the old row-per-word table though he had specified the across layout (2026-11-10); built two tables then misread his "that table" praise; split question/answer into two tables; cut Ex 2 at the page break (items 16-19 missed); "baharu" used; asked "which line is wrong" three times when he only meant next section; Arabic put in a bullet.
-- Assessment: A1 his format now lives in the engine (renderSentence), not in my memory. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
-
-**Last Activity (#289819 TRG PT owner Syer empty → handed to ummi)**: 2026-11-17 15:50 — worktree `pelupusan-1-10-baseline-4927df` (branch claude/redmine-issue-289819-a78938). TRG PROD PTTRG/07/01/L/PT/2026/100 → HSBM 07MH1480/2026: Rekod Ketuanpunyaan empty because the owner Syer is NULL on the PLP pemohon row 11820775 AND on the Pendaftaran copy 12035908 (1 of 44,906 copies in 2026). Patch `2. Fix\289819.sql` (Syer 1/1, 2 rows, schema-checked on PROD), picture `3. Diagram - working vs failing.png`; miya submitted the note 07:47 (Resolved By him, 100%). Open: ummi runs the script on PROD; why PSSHS Hantar saved no Syer is unknown (no log line). TRG repos pulled in both places (pelupusan +63, awam +56, common +39); 6 other TRG repos refused by GitLab.

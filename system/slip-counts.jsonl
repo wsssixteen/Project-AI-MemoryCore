@@ -2306,6 +2306,12 @@
 {"ts":"2026-11-20T08:20:47.891Z","category":"A3"}
 {"ts":"2026-11-20T08:20:57.621Z","category":"A2"}
 {"ts":"2026-11-20T08:31:51.758Z","category":"blocker"}
+{"ts":"2026-11-24T02:48:56.228Z","category":"reask/format-dropped"}
 {"ts":"2026-11-24T08:20:01.077Z","category":"wording"}
 {"ts":"2026-11-24T08:56:39.395Z","category":"gate/regression"}
 {"ts":"2026-11-24T08:56:41.053Z","category":"gate/repeat-block"}
+{"ts":"2026-11-25T07:13:41.403Z","category":"blocker"}
+{"ts":"2026-11-25T07:25:31.210Z","category":"reask/rambling"}
+{"ts":"2026-11-25T08:51:05.821Z","category":"A1"}
+{"ts":"2026-11-25T08:51:14.729Z","category":"A2"}
+{"ts":"2026-11-25T08:58:17.173Z","category":"blocker"}
