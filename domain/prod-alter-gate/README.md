@@ -31,3 +31,5 @@ footprint: per-tool: one node process per Bash/PowerShell call, under 40 MB, exi
 **state-scoped**: no for the gate (keyed by alter.js env names). The tool's envs.json is keyed by state (`melaka` today); a Perak/Terengganu block added there with `"approval": true` on its prod env is gated with no change here.
 
 **Adversarial scenarios (Rule 12)**: 27 fixtures S1–S27 + E1/E2 in `prod-alter-gate.eval.js` (31/31 green 2026-10-21). Accepted risks: (a) I could hand-write a transcript line — the transcript is the harness's file and the code also has to match a plan alter.js sealed, so a forged approval still needs a real dry-run of the exact plan; (b) a run through the browser tools (clicking Proceed on the PROD page in Edge) is outside this gate — the playbook bans that route for PROD.
+
+- 2026-11-25 — reads the deploy plans folder too (`DEPLOY_PLANS`, default `domain/deploy/plans`) and accepts "approve deploy <code>" (290517, per miya). Same newest-message, single-record rules. Evals D1-D3.

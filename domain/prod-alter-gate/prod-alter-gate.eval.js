@@ -14,7 +14,9 @@ const TOOL = process.env.FLOWABLE_ALTER_DIR || 'E:/Dev/scripts/FlowableAlter';
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'pag-eval-'));
 const PLANS = path.join(TMP, 'plans');
 fs.mkdirSync(PLANS);
-const ENV = { ...process.env, PROD_ALTER_GATE_LOG: path.join(TMP, 'log.jsonl'), FLOWABLE_ALTER_PLANS: PLANS };
+const DPLANS = path.join(TMP, 'deploy-plans');
+fs.mkdirSync(DPLANS);
+const ENV = { ...process.env, PROD_ALTER_GATE_LOG: path.join(TMP, 'log.jsonl'), FLOWABLE_ALTER_PLANS: PLANS, DEPLOY_PLANS: DPLANS };
 const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
@@ -91,6 +93,20 @@ const R = [
   ['R20 the Write/Read tools are not this hook\'s business', () => { plan(); return run(ANY, [{ u: 'approve 3F9A-2C11' }], 'Write'); }, x => !x.blocked && !fs.existsSync(mark())],
 ];
 for (const [n, act, pred] of R) { reset(); let res; try { res = act(); } catch (e) { res = { err: e.message }; } check(n, pred(res || {}), JSON.stringify(res).slice(0, 300)); }
+
+// 2026-11-25 (290517): deploy-plan seals in its own folder; the same reader records "approve deploy <code>" there
+{
+  const DC = 'D290A517', dplan = () => fs.writeFileSync(path.join(DPLANS, DC + '.json'), JSON.stringify({ code: DC, kind: 'deploy', created: new Date(Date.now() - 60000).toISOString() }));
+  const dmark = path.join(DPLANS, DC + '.miya.json');
+  const dreset = () => { for (const f of fs.readdirSync(DPLANS)) fs.rmSync(path.join(DPLANS, f)); };
+  dreset(); dplan(); run(ANY, [{ a: 'DEPLOY-PLAN: D290-A517 sealed' }, { u: 'approve deploy D290-A517' }]);
+  check('D1 "approve deploy D290-A517" records the approval in the deploy plans folder', fs.existsSync(dmark), fs.readdirSync(DPLANS).join(','));
+  run(ANY, [{ u: 'approve deploy D290-A517' }, { u: 'wait, not yet' }]);
+  check('D2 a newer message of his withdraws the deploy approval', !fs.existsSync(dmark), fs.readdirSync(DPLANS).join(','));
+  dreset(); dplan(); run(ANY, [{ u: 'deploy it lah D290-A517 approve?' }]);
+  check('D3 free text with the code is not an approval', !fs.existsSync(dmark), fs.readdirSync(DPLANS).join(','));
+  dreset();
+}
 
 // ═══ forge guard: a command touching an approval record is blocked
 const G = [

@@ -27,7 +27,7 @@ const OWNER_ID = 1311;
 
 // Issue JSON -> the row classify() reads.
 function toResult(num, i) {
-  return { num, status: i.status && i.status.name, assignee: i.assigned_to ? i.assigned_to.name : 'NONE', assigneeId: i.assigned_to ? i.assigned_to.id : null, done: i.done_ratio };
+  return { num, status: i.status && i.status.name, assignee: i.assigned_to ? i.assigned_to.name : 'NONE', assigneeId: i.assigned_to ? i.assigned_to.id : null, done: i.done_ratio, tracker: i.tracker ? i.tracker.name : '' };
 }
 
 function fetchIssue(num) {

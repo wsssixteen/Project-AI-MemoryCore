@@ -14,6 +14,10 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const LOG = process.env.PROD_ALTER_GATE_LOG || path.join(__dirname, 'log.jsonl');
 
 const PLANS = process.env.FLOWABLE_ALTER_PLANS || 'E:/Dev/scripts/FlowableAlter/logs/plans';
+// 2026-11-25 (290517): the deploy-plan tool seals its plans the same way; one approval reader serves both folders
+const DEPLOY_PLANS = process.env.DEPLOY_PLANS || path.join(ROOT, 'domain', 'deploy', 'plans');
+const PLAN_DIRS = [PLANS, DEPLOY_PLANS];
+const planDir = code => PLAN_DIRS.find(d => fs.existsSync(path.join(d, code + '.json')));
 
 // miya's approval (round 7, 2026-11-24): an EXACT line, nothing else in it: "approve <code>" (also: approved / lulus /
 // luluskan / setuju, an optional "the" / "plan" / "alter" / "code" between, "<code> approved"), quotes or backticks
@@ -24,7 +28,7 @@ const norm = c => String(c || '').replace(/-/g, '').toUpperCase();
 function approvalLine(line, c) {
   const s = String(line || '').replace(/[\x60"'*_]/g, '').replace(/\(recommended\)\s*$/i, '').replace(/[.!\s]+$/, '').trim();
   const C = c.slice(0, 4) + '-?' + c.slice(4);
-  return new RegExp('^(?:approved?|lulus(?:kan)?|setuju)\\s+(?:the\\s+)?(?:(?:plan|alter|code)\\s+)?' + C + '$|^' + C + '\\s+(?:approved?|lulus|diluluskan)$', 'i').test(s);
+  return new RegExp('^(?:approved?|lulus(?:kan)?|setuju)\\s+(?:the\\s+)?(?:(?:plan|alter|code|deploy)\\s+)?' + C + '$|^' + C + '\\s+(?:approved?|lulus|diluluskan)$', 'i').test(s);
 }
 function approves(text, code, kind) {
   const c = norm(code);
@@ -113,8 +117,9 @@ function judge(data) {
   if (newest) {
     for (const m of String(newest.text || '').matchAll(/(?<![0-9A-F])([0-9A-F]{4})-?([0-9A-F]{4})(?![0-9A-F])/gi)) {
       const code = (m[1] + m[2]).toUpperCase();
-      const planF = path.join(PLANS, code + '.json');
-      if (!fs.existsSync(planF) || !approves(newest.text, code, newest.kind)) continue;
+      const dir = planDir(code);
+      if (!dir || !approves(newest.text, code, newest.kind)) continue;
+      const planF = path.join(dir, code + '.json');
       let plan = {}; try { plan = JSON.parse(fs.readFileSync(planF, 'utf8')); } catch (_) { continue; }
       const at = Date.parse(newest.ts);
       if (at >= Date.parse(plan.created) && (Date.now() - at) / 60000 <= 60) now.add(code);
@@ -125,14 +130,17 @@ function judge(data) {
   if (now.size && newest.kind === 'popup' && popupHasExtra(String(data.transcript_path), newest.ts)) now.clear();
   if (now.size && newerUserEvent(String(data.transcript_path), Date.parse(newest.ts))) now.clear();
   const written = [], gone = [];
-  let names = []; try { names = fs.readdirSync(PLANS); } catch (_) { /* no plans folder */ }
-  for (const n of names) {                                                              // withdraw what he no longer says
-    const mm = /^([0-9A-F]{8})\.miya\.json$/i.exec(n);
-    if (!mm || now.has(mm[1].toUpperCase())) continue;
-    try { fs.renameSync(path.join(PLANS, n), path.join(PLANS, n.replace(/\.miya\.json$/i, '.miya.withdrawn.json'))); gone.push(mm[1]); } catch (_) { /* leave */ }
+  for (const D of PLAN_DIRS) {
+    let names = []; try { names = fs.readdirSync(D); } catch (_) { /* no plans folder */ }
+    for (const n of names) {                                                            // withdraw what he no longer says
+      const mm = /^([0-9A-F]{8})\.miya\.json$/i.exec(n);
+      if (!mm || now.has(mm[1].toUpperCase())) continue;
+      try { fs.renameSync(path.join(D, n), path.join(D, n.replace(/\.miya\.json$/i, '.miya.withdrawn.json'))); gone.push(mm[1]); } catch (_) { /* leave */ }
+    }
   }
   for (const code of now) {                                                             // record what he says now
-    const planF = path.join(PLANS, code + '.json'), mark = path.join(PLANS, code + '.miya.json');
+    const D = planDir(code); if (!D) continue;
+    const planF = path.join(D, code + '.json'), mark = path.join(D, code + '.miya.json');
     let plan = {}, rec = null;
     try { plan = JSON.parse(fs.readFileSync(planF, 'utf8')); } catch (_) { continue; }
     try { rec = JSON.parse(fs.readFileSync(mark, 'utf8')); } catch (_) { rec = null; }
