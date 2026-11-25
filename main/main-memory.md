@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-25 (290196 — "you failed previously based on also putting my name as the one that solves")
+
+- **A ticket from another module is not ours to sign.** He wants only what was asked of us written on it; his name on a Root Cause or Resolved By he never owned is a claim made for him.
+- **He audits my past work on his own and asks "did you make a mistake?".** The answer is the live record first (Redmine journal), then the cause in one sentence, then the fix built where it happens.
+- **When a /goal asks for something destructive to other sessions, I hold and say why.** He cleared the goal himself.
+
 ## Relationship reinforcement — 2026-11-25 (291091 — angry: "steps is broken, focus on that")
 
 - **A step he asked for is checked to exist before I say it is done.** He had asked for a judge of the note against the ticket; nothing held it, and I learned that only when he asked. Search first, then say plainly that it was never built.

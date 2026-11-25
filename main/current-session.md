@@ -7,6 +7,14 @@
 - Mistakes he corrected: session renamed "adhoc" dropping the "24/11/2026 - " format (slip `reask/format-dropped`).
 - Assessment: A1 one background agent per save worked (31/31). A2 deploy guard stopped a conflict merge; his rule "keep staging if not needed by the ticket" + blame per line made it a 2-step decision. A3 ⏭ no debugging. A4 OPLBP 4Be and Kedah Notis 5A facts written to knowledge. A5 ⏭ no sweep.
 
+**Last Activity (290196 colleague question + wrong assignee fixed + module check built)**: 2026-11-25 16:44 — worktree `adoring-wing-468fbc`. 290196 passed to BA Fatin Nur Amalina (811), Root Cause / Resolved By cleared, quest Handed-to-BA. System 98c865e4 (landed main 7bbdf047): Phase 0 step 2c MODULE line; other module = Notes + Assignee only. ba-names Fatin alias fixed (df64a297).
+
+## Session Recap (2026-11-25, 290196)
+- Asked: colleague (Reports) asked what 290196 is and if it is etanah-common; then trace the PROD error; then pass the ticket to the right PIC.
+- Done: PROD cause = bare `mb` EL in Pendaftaran composites (raja 2cb982f72, not in sgr/master), staging DMS file was a second issue; module = etanah-pendaftaran. WhatsApp drafts given. Ticket submitted to Fatin Nur Amalina with Notes + Assignee only.
+- Open: WhatsApp reply is miya's to send. ticket-load-verify eval case 17 fails (pre-existing). GitHub main vs main-folder SHA split (open since 20/11).
+- Mistakes he corrected: --ba "Fatin" assigned Nurfatin Auni (Reports); we filled Root Cause + Resolved By on another module's ticket. Slips wrong-assignee, scope/other-module-fields.
+- Assessment: A1 module check built at Phase 0 (98c865e4). A2 hand-back field set now follows the module. A3 PROD error traced in one pass from screenshots + git. A4 Selangor people table gained both Fatins. A5 ⏭ no sweep.
 **Last Activity (291091 PROD letter patch + hand-back steps fixed)**: 2026-11-25 16:40 — worktree `admiring-chaplygin-140cd7`. 291091 BA Verified; PROD letter PTMLK/03/L/MCL/2026/4 (LAIN-37496656, rev 41811120) Jenis Hakmilik -> Geran Mukim (MCL), infra replaced + PDF reset (read back NULL); Redmine note submitted by miya. Phase 1 closed, Phase 2 waits for release + Redmine Closed.
 
 ## Session Recap (2026-11-25, 291091)
