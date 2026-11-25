@@ -807,6 +807,24 @@
         "last": ""
       },
       "status": "unused"
+    },
+    {
+      "id": "deploy-plan",
+      "answers": "Turn a BA or QA request to deploy a ticket to internal or staging into one sealed merge plan with an approval code; merge and push only after miya types approve deploy <code>",
+      "call": "node domain/deploy/deploy-plan.js plan --ticket <num> --env <internal|staging> --state <state> [--repo <work clone>] [--ba <short name>] · run --approve <XXXX-XXXX> · status <code>",
+      "home": "domain/deploy/deploy-plan.js",
+      "groups": [
+        "tickets"
+      ],
+      "state_scope": "any state with env_branches in system/states.json (Selangor, Perak, Kedah, Terengganu); Melaka has none yet and stops",
+      "footprint": "on-demand: one node process plus git children per call; log domain/deploy/log.jsonl, plans domain/deploy/plans/",
+      "eval": "node domain/deploy/deploy-plan.eval.js",
+      "born": "2026-11-25 (290517: the QA asked for staging; merge, checks and note took several turns by hand). Approval record written by domain/prod-alter-gate.",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
     }
   ],
   "unused_scripts_2026-10-06": {
