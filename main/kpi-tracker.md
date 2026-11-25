@@ -80,4 +80,6 @@ _No rows yet._
 
 | Date | Ticket | Code | What happened | Evidence |
 |---|---|---|---|---|
+| 2026-11-25 | #280110 | B4 | Found the PLBP Ganti Hari end date one day later than the PRBB rule of 285532 on three BA-verified staging permits, and fixed it in one line before the release reached PROD. | bffa5aa51d |
+| 2026-11-25 | #263307 | B6 | Audited a colleague's PLBP implementation (CR 263307, requirements 280110, 280111, 280112) before Baseline Pelupusan 1.11.0: requirement, histories and full code change read; one verdict per ticket. | bffa5aa51d |
 | 2026-11-20 | #290646 | B4 | Fixed the DMPRU Semakan Data Migrasi white page in the same change as the DMPRZ ticket fix, beyond the ticket's scope. | etanah-pelupusan MlkPelupusanMigrasiPengesahanForm.java:39 |
