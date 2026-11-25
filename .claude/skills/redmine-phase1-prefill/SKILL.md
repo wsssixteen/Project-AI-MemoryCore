@@ -154,6 +154,8 @@ Verify all 6 fields are filled + N files attached via `mcp__Claude_in_Chrome__ge
 
 **Hard rule**: DO NOT click Submit. みや reviews and submits manually.
 
+**A staged form lives only in its tab** (2026-11-25 per miya, 291091: a session reload reopened the tab empty and I still called it staged). Every later reply that mentions the staged form re-runs this Step 6 check on the current tab first; a missing note or file is filled again before the reply.
+
 ### Step 7 — After he submits: check, then close the tabs (2026-10-27 per みや, #285768)
 
 When みや says he submitted ("sent", "submitted", "done", "have sent"): read the ticket page once (`get_page_text`) to confirm the new journal, status and assignee, then close EVERY tab this skill opened (`tabs_close_mcp`, each tab id from `tabs_context_mcp`). Close only tabs I opened, never his own. **Banned**: leaving a Redmine tab open after his submit. **The same for a check (2026-11-06 per みや: "always close back tabs if you're simply checking something")**: a tab opened only to read a ticket or a journal closes in the same turn as the read; only a staged form waits open for his word.
@@ -192,3 +194,5 @@ Created 2026-06-01 by みや design conversation (S4). Trigger photo: Redmine Ed
 *2026-11-25 — another module's ticket fills Notes + Assignee only (290196, per みや). Additive.*
 
 *2026-11-25 — Step 4 patch line: a document replace alone takes no --user, and a ticket already Verified or later gets no verify line (the generator reads the live status). Per miya (291091). Additive; every Step 4 rule kept.*
+
+*2026-11-25 — Step 6: a staged form lives only in its tab; every later reply that mentions it re-checks the current tab first (291091 per miya: files lost after a session reload). Additive; Step 6 unchanged otherwise.*

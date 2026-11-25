@@ -144,3 +144,5 @@ Eval: 46/46 (fixtures 41 to 46 new).
 
 Module `lean`: never tell the reader, or anyone in the ticket, that their earlier answer was wrong when no one asked; give the missing fact only (pair c90). Rule text only, no check change: the banned list stays English, so a Malay correction is still caught by the by-hand read, not by `check`. Rollback: remove the last rule line of `lean` in `modules.json`. Eval 62/62.
 
+
+- 2026-11-25 (291091, per miya): module lean also asks by hand 'Fits the ticket?' (read the live status and the Description; cut a line that repeats the ticket, or a verify on a Verified ticket). Its mechanical lean checks still run (also: lean). Eval 19d, 63/63.
