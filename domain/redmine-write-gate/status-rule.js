@@ -60,6 +60,14 @@ function isOwner(assignee, assigneeId) {
   return loose(assignee) === loose(r.owner.name);
 }
 
+// A patch ticket (its tracker in patch_trackers) hands back as Resolved: the BA does not test a PROD patch or alter, she
+// passes it on (2026-11-25 per miya, 291261: "Why do you not set the status as resolved for patching tickets?").
+function handbackFor(s) {
+  const r = rule();
+  const t = norm(s && s.tracker);
+  return t && (r.patch_trackers || []).some(x => norm(x) === t) ? r.handback_status_patch : r.handback_status;
+}
+
 // The one decision. `to` is the status the form sets; `stagedAssignee` is the Assignee already filled on the same
 // form (row 3 needs a BA there, or the ticket already under a BA).
 function verdict(s) {
@@ -69,7 +77,8 @@ function verdict(s) {
   const frozen = r.frozen.map(norm), lower = r.lower.map(norm);
   if (!status) return { allow: false, row: 0, why: 'the live status is not known' };
   if (frozen.includes(norm(status))) return { allow: false, row: 4, why: `the ticket is ${status}: at or past Resolved, never set back` };
-  if (norm(to) !== norm(r.handback_status)) return { allow: false, row: 0, why: `the rule covers a hand-back to ${r.handback_status} only; "${to}" needs his named order` };
+  const back = handbackFor(s);
+  if (norm(to) !== norm(back) && norm(to) !== norm(r.handback_status)) return { allow: false, row: 0, why: `the rule covers a hand-back to ${back} only${s && s.tracker ? ' (tracker ' + s.tracker + ')' : ''}; "${to}" needs his named order` };
   if (!lower.includes(norm(status)) && !lower.includes(norm(status).replace(/\s*\(.*\)$/, ''))) return { allow: false, row: 0, why: `status "${status}" is not in the rule` };
   const mine = isOwner(s.assignee, s.assigneeId);
   if (mine) return { allow: true, row: norm(status) === 'new' || norm(status) === 'in progress' ? 2 : 1, why: `under ${r.owner.name}, status ${status}` };
@@ -88,7 +97,7 @@ async function liveState(num) {
   try {
     const rsc = require(path.join(ROOT, 'quest', 'redmine-status-check.js'));
     const r = await rsc.fetchIssue(n[0]);
-    return r ? { num: n[0], status: r.status, assignee: r.assignee === 'NONE' ? null : r.assignee, assigneeId: r.assigneeId } : null;
+    return r ? { num: n[0], status: r.status, assignee: r.assignee === 'NONE' ? null : r.assignee, assigneeId: r.assigneeId, tracker: r.tracker || '' } : null;
   } catch (_) { return null; }
 }
 function liveStateSync(num) {
@@ -96,7 +105,7 @@ function liveStateSync(num) {
   try { const o = JSON.parse(String(r.stdout || '').trim()); return o && o.state ? o.state : null; } catch (_) { return null; }
 }
 
-module.exports = { rule, isBA, isOwner, verdict, liveState, liveStateSync, norm, loose };
+module.exports = { rule, isBA, isOwner, verdict, handbackFor, liveState, liveStateSync, norm, loose };
 
 if (require.main === module) {
   const argv = process.argv.slice(2);

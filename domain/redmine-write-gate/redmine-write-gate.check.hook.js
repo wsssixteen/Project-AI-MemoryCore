@@ -265,7 +265,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
       }
       // v1.11: no order and no hold → his standing rule decides a hand-back (status-rule.json).
       let ruled = null;
-      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS) || SUBMIT_APPROVAL.test(lastS)) && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
+      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS) || SUBMIT_APPROVAL.test(lastS)) && value !== '?' && [SR.rule().handback_status, SR.rule().handback_status_patch].some(h => SR.norm(value) === SR.norm(h))) {
         const num = data.transcript_path ? ticketFromTranscript(String(data.transcript_path), ti.tabId) : null;
         const state = num ? SR.liveStateSync(num) : null;
         ruled = { num, state, v: state ? SR.verdict(Object.assign({ to: value, stagedAssignee: stagedAssignee(num) }, state)) : null };
