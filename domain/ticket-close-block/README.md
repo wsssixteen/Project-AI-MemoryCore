@@ -100,3 +100,4 @@ With `--ba` on OUR fix (commit author is us), the tool first runs `domain/falsif
 | 38 | `--alter` with no patch flags after this change | fixture-added (P10) — byte for byte F1 |
 | 39 | patch + alter | fixture-added (P9) — patched lines under the ID, above Tugasan and User ID |
 | 40 | `--patch` across several permohonan with `--file` | handled — the file line goes under `--id`, else the first with a warn |
+| 41 | `--ba` short name shared by two people (two Fatins: Nurfatin Auni Aziz Nasatioun, Fatin Nur Amalina) | handled 2026-11-25 (290196: `--ba "Fatin"` led the session to assign Nurfatin Auni instead of the requester Fatin Nur Amalina) — the bare `"Fatin"` alias is removed, so `--ba "Fatin"` now warns; pass the journal author's full Redmine name. Rollback: re-add `"Fatin": "Fatin"` to `ba-names.json` |
