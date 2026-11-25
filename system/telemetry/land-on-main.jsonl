@@ -326,3 +326,7 @@
 {"ts":"2026-11-25T08:17:56.212Z","commit":"f8e60ff3","outcome":"LANDED","exit":1,"dur_ms":14980}
 {"ts":"2026-11-25T08:24:56.050Z","commit":"b0488e0d","outcome":"REFUSED","exit":2,"dur_ms":6503}
 {"ts":"2026-11-25T02:48:44.043Z","commit":"479b89e2165cb02d8f56ed8137273e2a5839f9af","outcome":"LANDED","exit":0,"dur_ms":18883}
+{"ts":"2026-11-25T08:56:45.371Z","commit":"c48b45dc","outcome":"REFUSED","exit":2,"dur_ms":959}
+{"ts":"2026-11-25T08:56:51.171Z","commit":"c48b45dc","outcome":"REFUSED","exit":2,"dur_ms":1052}
+{"ts":"2026-11-25T08:57:01.318Z","commit":"c48b45dc","outcome":"nothing","exit":1,"dur_ms":3213}
+{"ts":"2026-11-25T08:57:31.527Z","commit":"bbb1b67c","outcome":"REFUSED","exit":2,"dur_ms":9658}
