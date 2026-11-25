@@ -1,3 +1,11 @@
+**Last Activity (291091 PROD letter patch + hand-back steps fixed)**: 2026-11-25 16:40 — worktree `admiring-chaplygin-140cd7`. 291091 BA Verified; PROD letter PTMLK/03/L/MCL/2026/4 (LAIN-37496656, rev 41811120) Jenis Hakmilik -> Geran Mukim (MCL), infra replaced + PDF reset (read back NULL); Redmine note submitted by miya. Phase 1 closed, Phase 2 waits for release + Redmine Closed.
+
+## Session Recap (2026-11-25, 291091)
+- Asked: patch the PROD letter (permohonan already at Cetakan Dokumen); scan the whole letter; stage Redmine; fix the broken hand-back steps.
+- Done: letter scanned vs PROD (all values correct, only Jenis Hakmilik changed); wrong attachment caught before infra; system f8e60ff3 (no verify line on a Verified ticket) + b0488e0d (Pena "Fits the ticket?" + prefill re-check of a staged form).
+- Open: main folder holds b0488e0d as working files only (115 behind origin, another session's staged files).
+- Mistakes he corrected: verify line on a Verified ticket; files lost after reload reported as staged; first fix skipped parts of /system-build. Slip `redmine-note`.
+- Assessment: A1 resume opened a fresh tab, staged state lost (proposal logged). A2 judge step he asked for never existed (built as Pena question, proposal for inputs on screen). A3 ⏭ no debugging. A4 letter-value lookups written to DATABASE.md after 4 query misses. A5 ⏭ no sweep.
 **Last Activity (Baseline Pelupusan 1.10.2: released to master and staging)**: 2026-11-24 09:13 — worktree `melaka-baseline-prep-8df5bd`. Release 1.10.2 = 290646 + 290707, no SQL, no flowable, common 1.15.2-MLK.domain.1.0.17-MLK. Pushed 7308f6dab3, staging deployed 16:05 (footer matched), BAQA passed, MR 28 merged by Aaron (091e0d978d), stag-env 3dfead687f (keep-both conflict with 263307 in MlkKertasTemplateForm.java, compiled). State file phase = merged-to-master, stag-catchup --check clean.
 
 ## Session Recap (2026-11-23 to 24, Baseline 1.10.2)
@@ -26,3 +34,14 @@
 - Assessment: A1 his format now lives in the engine (renderSentence), not in my memory. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
 
 **Last Activity (#289819 TRG PT owner Syer empty → handed to ummi)**: 2026-11-17 15:50 — worktree `pelupusan-1-10-baseline-4927df` (branch claude/redmine-issue-289819-a78938). TRG PROD PTTRG/07/01/L/PT/2026/100 → HSBM 07MH1480/2026: Rekod Ketuanpunyaan empty because the owner Syer is NULL on the PLP pemohon row 11820775 AND on the Pendaftaran copy 12035908 (1 of 44,906 copies in 2026). Patch `2. Fix\289819.sql` (Syer 1/1, 2 rows, schema-checked on PROD), picture `3. Diagram - working vs failing.png`; miya submitted the note 07:47 (Resolved By him, 100%). Open: ummi runs the script on PROD; why PSSHS Hantar saved no Syer is unknown (no log line). TRG repos pulled in both places (pelupusan +63, awam +56, common +39); 6 other TRG repos refused by GitLab.
+
+STEP-3:
+session: 6457a431-0660-4b9a-a807-7e35f98650a1
+his words: "There's nothing to be verified." (order)
+cause step: domain/ticket-close-block/ticket-close-block.js:patch note + alter note greeting · change: 12 lines
+new parts: 0
+fix or report: fix
+who pays: on-demand: one live-status read per generated patch or alter note
+goal without the part: a note for a ticket already Verified or later never asks the BA to verify
+model: claude-opus-5-5
+shown: none (one-line greeting change)

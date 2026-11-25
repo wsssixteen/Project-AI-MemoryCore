@@ -35,7 +35,9 @@ The prose close-message uses miya's plain sentence voice — see `feedback_ticke
 
 ## Done-alter note: `--alter` (2026-11-05, 288533)
 
-`node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]`
+`node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql] [--env prod|stg|mlit|...]`
+
+`--env` (2026-11-24 per miya, 290196): an alter on a test environment (stg, mlit, any env not `prod`) is done so the BA can reproduce, so the note says "Can proceed to simulate."; PROD or no `--env` keeps "Can proceed to verify." Pass the env of the alter every time.
 
 Prints the Melaka done-alter note (alter alone) or the patch+alter note (`--patched`). No repo needed. This script is the note's one home: `ALTER-TICKET-PLAYBOOK.md` §5.1, quest step 6c, `redmine-phase1-prefill` Step 4 and `alter-ticket-gate` A6 point here and never restate the shape. `--resit` adds a `No. Resit:` line under the ID; `--prod-script` adds the attached-script line (file name only). Missing or empty required flag = exit 1, nothing printed. Unknown BA = greeted as given + a stderr warning. Eval: `ticket-close-block.eval.js` (alter only · patch+alter with resit and script · unknown BA · missing args · empty flag · log rows).
 
@@ -98,3 +100,6 @@ With `--ba` on OUR fix (commit author is us), the tool first runs `domain/falsif
 | 38 | `--alter` with no patch flags after this change | fixture-added (P10) — byte for byte F1 |
 | 39 | patch + alter | fixture-added (P9) — patched lines under the ID, above Tugasan and User ID |
 | 40 | `--patch` across several permohonan with `--file` | handled — the file line goes under `--id`, else the first with a warn |
+| 41 | `--ba` short name shared by two people (two Fatins: Nurfatin Auni Aziz Nasatioun, Fatin Nur Amalina) | handled 2026-11-25 (290196: `--ba "Fatin"` led the session to assign Nurfatin Auni instead of the requester Fatin Nur Amalina) — the bare `"Fatin"` alias is removed, so `--ba "Fatin"` now warns; pass the journal author's full Redmine name. Rollback: re-add `"Fatin": "Fatin"` to `ba-names.json` |
+
+- 2026-11-25 (291091, per miya): --patch and --alter read the ticket's live status (domain/redmine-write-gate/status-rule.js liveStateSync); Verified, Closed, Ready in PROD or Cancelled = no 'Can proceed to verify/simulate.' line, nothing is left to verify. Resolved and earlier keep the line. Eval V1-V3 (41/41).

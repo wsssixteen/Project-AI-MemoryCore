@@ -29,4 +29,6 @@ diagram: domain/session-name/diagram.png
 
 **Change it**: format → `dmy()` / `line()`; ticket shape → `TICKET_RX`; which prompts count → `MACHINE_RX` / `scan()`; budget → `domain/bundles/upsm-mode.json`. Eval: `node domain/session-name/session-name.eval.js` (56 fixtures, incl. every start kind and the slow-bundle replay).
 
+v3 (2026-11-24, per みや on 286712: "check if the session name fits the current ticket that I just gave you"; design checked by claude-fable-5-2): a session marked done is no longer always silent. A later prompt of his that names a ticket (a 6-digit number or a `/issues/<num>` link) while neither the title nor a dated rename holds a 6-digit number gets one conditional rename line `<the title's own date> - <ticket>`, once per number. Silent for a machine notice, a session still asked or gave-up or no-app, and once the title holds a ticket (`tk`). Cost: none on a prompt with no number; one transcript read on a prompt with one. The ticket reader also takes a Redmine link now (`ticketIn`), for the first prompt too. Eval T1-T8 (64/64).
+
 v2 changed specs (named per system-design Rule 6): a resumed old session is no longer silent (it is dated by its first prompt); a transcript over 512 KB is no longer treated as old by size; goal_met is no longer written at fire time; the line now sits first in its bundle.

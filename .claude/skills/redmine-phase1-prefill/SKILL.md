@@ -31,7 +31,7 @@ If any precondition fails → STOP and surface to みや; never half-execute.
 
 | Field | In-scope? | Notes |
 |---|---|---|
-| Status | In Progress: still New on his ticket → set In Progress (Step 2b backstop, 2026-11-20, 290431); already In Progress or later → left as it is; never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608) | — |
+| Status | In Progress: still New on his ticket → set In Progress (Step 2b backstop, 2026-11-20, 290431); already In Progress or later → left as it is; never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608). **Patch ticket (tracker Internal Issue (PROD) or Data Patching (PROD)) on his ticket → Resolved** (2026-11-25 per miya, 291261: the BA does not test a PROD patch or alter); the list is `patch_trackers` in `domain/redmine-write-gate/status-rule.json` | — |
 | Assignee | ✓ → みや mentions, default Aaron Loh Zhi Yong | per photo |
 | % Done | ✓ → 50% (2026-11-18 per miya, 275608) | — |
 | Resolved By | ✓ → Ahmad Ridhwan Anuar | per photo |
@@ -87,6 +87,8 @@ Use `mcp__Claude_in_Chrome__form_input` for each. **Assignee and Status: form_in
 | Resolved By Text | `#issue_custom_field_values_<id>` (text) | `Ahmad Ridhwan Anuar` |
 | Notes textarea | `#issue_notes` (textarea) | (see Step 4) |
 
+**Another module's ticket first (2026-11-25 per みや, 290196):** when the quest manifest's `MODULE:` line says `other module` (quest SKILL.md Phase 0 step 2c), fill ONLY Notes and Assignee (the asker's full name from the journal); Root Cause, Solution, Resolved By, Resolved By Text and % Done stay as they are, and our branch or fix goes in the note. The rest of this table and the line below apply to our own module only.
+
 **Fill a field if it EXISTS on the form, skip it if it does not.** Read the form's field list first, never assume. Root Cause Issue (DEV) exists on eSOKONGAN MELAKA → fill it in the shape of `.claude/auto-memory/feedback_redmine_rootcause_format.md`. A Solution field exists on some trackers only → fill it only when present (みや 2026-09-30, #282555).
 
 Resolved By + Resolved By Text custom-field IDs need to be discovered on first run via `mcp__Claude_in_Chrome__find` against the form labels — cache the IDs in skill state after first successful discovery.
@@ -95,9 +97,11 @@ Resolved By + Resolved By Text custom-field IDs need to be discovered on first r
 
 **READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
-**Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql]`. It prints the note (its one home; `ALTER-TICKET-PLAYBOOK.md` §5.1 points to it); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
+**Pena on every text that goes into Notes, generated or rewritten** (2026-11-24 per みや, 286712: two hand rewrites after his feedback skipped Pena, one long jammed sentence, then a line telling QA she was wrong): write the draft to a file, run `node lib/pena.js check --profile redmine-ba-pass --file <draft>` (another surface: its profile from `node lib/pena.js list`), fix every finding, answer its by-hand lines, and show its `PENA:` line in the reply before the form_input. **Banned**: filling Notes with text that has no `PENA:` line this turn.
 
-**Patch ticket (data, document or file) = GENERATE the note, never write it** (2026-11-11 per みや, 288974: a typed note said a linked permohonan was "tidak diubah" after the script had removed its link): `node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" --sql <num>.sql [--file "<Dokumen name>=<new file>"] [--was "<column>=<value in the BEFORE check>"] [--tugasan "<tugasan>"] [--user <login>]`. It lists every thing the script changed, per permohonan, in BA words; the wording lives only in the generator. Clear every `warn:` line (pass the value it asks for) before pasting. Patch + alter: the `--alter` line above with `--patched --sql <num>.sql`. The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned**: a patch note typed by hand · telling the BA how to route it.
+**Alter ticket (alter alone, or patch + alter) = GENERATE the note, never write it**: `node domain/ticket-close-block/ticket-close-block.js --alter --ticket <num> --ba "<BA name>" --id <ID> --tugasan "<tugasan>" --user <login from the AFTER check> [--resit "<no1>, <no2>"] [--patched] [--prod-script <num>.sql] --env <env of the alter>`. A test env alter prints "Can proceed to simulate.", PROD "verify" (290196). It prints the note (its one home; `ALTER-TICKET-PLAYBOOK.md` §5.1 points to it); paste its output into Notes as is (2026-11-05 per みや, 288533: I wrote the ID, tugasan and login in one sentence, the shape §5.1 bans). **Banned**: an alter or patch+alter note typed by hand.
+
+**Patch ticket (data, document or file) = GENERATE the note, never write it** (2026-11-11 per みや, 288974: a typed note said a linked permohonan was "tidak diubah" after the script had removed its link): `node domain/ticket-close-block/ticket-close-block.js --patch --ticket <num> --ba "<BA name>" --sql <num>.sql [--file "<Dokumen name>=<new file>"] [--was "<column>=<value in the BEFORE check>"] [--tugasan "<tugasan>"] [--user <login>]`. It lists every thing the script changed, per permohonan, in BA words; the wording lives only in the generator. A document replace alone takes no `--user`: its User ID line is redundant (291091 per miya). A ticket already Verified or later gets no "Can proceed to verify." line; the generator reads the live status itself (291091 per miya). Clear every `warn:` line (pass the value it asks for) before pasting. Patch + alter: the `--alter` line above with `--patched --sql <num>.sql`. The BA does not test a PROD patch; she passes it to the TSO, who asks the user. **Banned**: a patch note typed by hand · telling the BA how to route it.
 
 ```
 Hi <Assignee firstname>, please find the fix at mlk/qa/<NNN>.
@@ -150,6 +154,8 @@ Verify all 6 fields are filled + N files attached via `mcp__Claude_in_Chrome__ge
 
 **Hard rule**: DO NOT click Submit. みや reviews and submits manually.
 
+**A staged form lives only in its tab** (2026-11-25 per miya, 291091: a session reload reopened the tab empty and I still called it staged). Every later reply that mentions the staged form re-runs this Step 6 check on the current tab first; a missing note or file is filled again before the reply.
+
 ### Step 7 — After he submits: check, then close the tabs (2026-10-27 per みや, #285768)
 
 When みや says he submitted ("sent", "submitted", "done", "have sent"): read the ticket page once (`get_page_text`) to confirm the new journal, status and assignee, then close EVERY tab this skill opened (`tabs_close_mcp`, each tab id from `tabs_context_mcp`). Close only tabs I opened, never his own. **Banned**: leaving a Redmine tab open after his submit. **The same for a check (2026-11-06 per みや: "always close back tabs if you're simply checking something")**: a tab opened only to read a ticket or a journal closes in the same turn as the read; only a staged form waits open for his word.
@@ -171,6 +177,8 @@ When みや says he submitted ("sent", "submitted", "done", "have sent"): read t
 
 ## History
 
+Updated 2026-11-24 — Step 4 gains the Pena check on every Notes text, generated or rewritten, with its `PENA:` line shown before the form_input, per みや (286712: "Did you check pena or writing rules?"). Additive; every Step 4 rule kept.
+
 Updated 2026-11-13 — Step 5 gains 5a (his test photos saved red-boxed into the folder first, always) and 5b (every file uploaded, an invocation list never narrows it; one-line attachment mention) per みや (281324: 1 of 8 files staged, an attachment table added). Additive; the empty-folder edge case stays.
 
 Updated 2026-11-13 — Step 3: Assignee and Status filled only by form_input, never a page script, per みや ("Yes, add it", 289233/289306). Additive; the form_input rule of Step 3 was already there.
@@ -182,3 +190,9 @@ Updated 2026-11-05 — Step 4 alter note: the parenthetical restating the note's
 Updated 2026-11-04 — Step 4 gains the PROD patch note shape per みや (#288169/#288261: he rewrote my "Please help to verify" to "Can proceed to verify"; the BA passes a PROD patch to the TSO, who asks the user). Spec-preservation: every step and ban unchanged; additive.
 
 Created 2026-06-01 by みや design conversation (S4). Trigger photo: Redmine Edit form for QA-263344 showing the 6 fields to fill + Notes template + files area. Manual-invoke decision per みや: "the best/practical option is browser mcp which is slow"; ready for invoke but not auto-bound to quest closure.
+
+*2026-11-25 — another module's ticket fills Notes + Assignee only (290196, per みや). Additive.*
+
+*2026-11-25 — Step 4 patch line: a document replace alone takes no --user, and a ticket already Verified or later gets no verify line (the generator reads the live status). Per miya (291091). Additive; every Step 4 rule kept.*
+
+*2026-11-25 — Step 6: a staged form lives only in its tab; every later reply that mentions it re-checks the current tab first (291091 per miya: files lost after a session reload). Additive; Step 6 unchanged otherwise.*

@@ -63,7 +63,7 @@
 - [patch-script-rules](feedback_readable_safe_script.md) — SCRIPT-CHECK, looks-safe script, never DELETE ind_*, any other wrong row assessed by rule 4, scope sweep, I run SELECTs
 - [script-file-naming](feedback_script_file_naming.md) — <ticket>.sql = the update, <ticket>-check.sql = one combined check; never -2/-3
 - [sql-insert-id](feedback_sql_insert_id_check.md) — INSERT with hardcoded PK: check @GeneratedValue first
-- [infra-requests](feedback_prod_patch_infra_handoff.md) — PROD patch message format; server log one-liner, no path
+- [infra-requests](feedback_prod_patch_infra_handoff.md) — PROD patch message format; server log one-liner, no path; PROD logs per state via saved WinSCP sites (MLK/TRG/SEL/WP/PRK), no passwords in memory
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
@@ -97,7 +97,7 @@
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
 - [project-name](project_name_lapis_lazuli.md) — project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done
-- [installed-skills](project_installed_skills.md) — third-party skills and plugins (wayfinder 2026-09-11; impeccable, diagram-design, hyperframes, mattpocock-skills, REA, taste-skill, ui-ux-pro-max, awesome-design-md 2026-10-19/20): how each was installed and what it costs; which tool for which job = /project skill section 7; record every install here the moment it happens
+- [installed-skills](project_installed_skills.md) — third-party skills and plugins (wayfinder 2026-09-11; impeccable, diagram-design, hyperframes, mattpocock-skills, REA, taste-skill, ui-ux-pro-max, awesome-design-md 2026-10-19/20; caveman voice 2026-11-24, always on via pre-reply-contract): how each was installed and what it costs; which tool for which job = /project skill section 7; record every install here the moment it happens
 - [artifact-registry](reference_artifact_registry.md) — every published artifact + link; update by link, never a second copy
 - [observatory](reference_observatory.md) — diagnose first with node lib/observatory.js --brief; app on :7790
 

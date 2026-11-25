@@ -266,6 +266,11 @@ if (/^REWORK/.test(cycleVerdict) && reopens.length) {
         ? `REWORK-AUDIT: done · ${rows.length} wrong-fix row(s) since ${since}`
         : `REWORK-AUDIT: owed · launch ONE highest-model agent (node lib/models.js highest) on why the cycle before failed, then node lib/wrong-fix.js add QA-${num} per BA issue (quest SKILL.md § Rework audit)`;
 }
+// 2026-11-25 (miya, 290196): another module's ticket gets only what was asked of us at the Redmine write.
+const moduleName = ((historyText.match(/^\s*Module = (.+)$/m) || [])[1] || '').trim();
+const moduleLine = !moduleName ? 'MODULE: not synced · read the Module field before any Redmine write'
+    : /^(pelupusan|awam)$/i.test(moduleName) ? `MODULE: ${moduleName} · ours · full field set at hand-back`
+    : `MODULE: ${moduleName} · other module · Redmine write = Notes + Assignee (asker, full name) only; Root Cause, Solution, Resolved By, % Done stay as they are`;
 
 // ---- integrity checks (these are the reason this exits non-zero) ----
 // Search the WHOLE task folder, not just 0. Brief/ — an attachment we upload OURSELVES
@@ -369,7 +374,7 @@ const scopeLine = `PATCH-SCOPE: ${scopeRows.length} row(s) · ${scopeWarn} ⚠${
 if (asJson) {
     console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
         descriptionBy: { author: descAuthor, role: descRole ? descRole.cls : 'unknown' }, specSource: [specJson('issue'), specJson('expected')],
-        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine, reworkAudit: reworkAuditLine },
+        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine, reworkAudit: reworkAuditLine }, module: moduleLine,
         pdfAnnotations: Object.fromEntries(pdfNotes), patchScope: { rows: scopeRows, warn: scopeWarn, line: scopeLine } }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
@@ -430,6 +435,7 @@ L.push('D. CYCLE — derived from Redmine status + cycle folders + journal reope
 L.push(`   ${cycleLine}`);
 if (cycleWarn) L.push(`   ${cycleWarn}`);
 if (reworkAuditLine) L.push(`   ${reworkAuditLine}`);
+L.push(`   ${moduleLine}`);
 L.push('');
 L.push('D2. TICKET FIELDS + RELATIONS \u2014 the reporter\u2019s own metadata. Echo the decision-bearing ones.');
 if (!fieldsSynced) {

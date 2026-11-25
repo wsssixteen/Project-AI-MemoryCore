@@ -30,6 +30,14 @@ check('C10 step 8 Impact card: the five columns, the SLA line, the hand-back ban
 check('W1 cross-module-intake scanner alert names the skill', read(path.join(ROOT, 'domain', 'cross-module-intake', 'scan.js')).includes('cross-module-check'));
 check('W2 ownership-input-check block text names the skill', read(path.join(ROOT, 'domain', 'ownership-input-check', 'ownership-input-check.check.hook.js')).includes('cross-module-check'));
 check('W3 quest Recon ownership row names the skill', read(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md')).includes('cross-module-check'));
+// 2026-11-24 (290517): the takeover step must carry the report-file limit, or a returned .jrxml fault is offered as ours.
+check('W3b quest takeover Limits send a .jrxml fault back to Reports', /Limits: [^\n]*`\.jrxml` change stays with the Reports team[^\n]*never put to/.test(read(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md'))));
+// 2026-11-24 (290517): "proven on the screen's own route, or it is not said" — the three rules and their signal lines must stay.
+const QUEST = read(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md'));
+check('W3c quest takeover step 2: verdict from the print, with a ROUTE-PROOF line', /verdict comes from what the commit prints or shows on the screen's own route[^\n]*`ROUTE-PROOF: /.test(QUEST));
+check('W3d quest save: an unproven defect line is written HYPOTHESIS', /\*\*Proven, or labelled[^\n]*starts `HYPOTHESIS:`/.test(QUEST));
+check('W3e handover step 4 names the note code check and its NOTE-CODE line', /no code block that differs from the fix file[^\n]*`NOTE-CODE:`/.test(read(path.join(ROOT, '.claude', 'skills', 'handover', 'SKILL.md'))));
+check('W3f quest Phase 1 closure: Priority High merges to internal and staging', /\*\*Priority High = internal AND staging[^\n]*env_branches[^\n]*stagenv_merge=/.test(QUEST));
 check('W4 Debug Ritual 7 names the skill', read(path.join(ROOT, 'quest', 'quest-protocol.md')).includes('cross-module-check'));
 
 // Scanner end-to-end: an intake text carrying a hand-off phrase prints the skill name.

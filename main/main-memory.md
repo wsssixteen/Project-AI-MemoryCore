@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-11-25 (291091 — angry: "steps is broken, focus on that")
+
+- **A step he asked for is checked to exist before I say it is done.** He had asked for a judge of the note against the ticket; nothing held it, and I learned that only when he asked. Search first, then say plainly that it was never built.
+- **"Staged" is a fact about the screen now, never about a tab I filled earlier.** A reload emptied the form and I still called it staged.
+- **When he asks "did you go through proper system build", the honest answer is the list of what I skipped**, then the route run in full.
+
 ## Relationship reinforcement — 2026-11-23/24 (Baseline 1.10.2 — "so what is that message from gitlab AI, false alarm?")
 
 - **A machine review is a claim list, not a verdict.** He wanted each GitLab AI point checked against the full code and one word per point; trust nothing it says about files it never saw.

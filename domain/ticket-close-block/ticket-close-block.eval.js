@@ -246,6 +246,27 @@ setBlock('qa=QA-261986\n');
 r = runG(['--repo', r4, '--ticket', '261986', '--module', 'pelupusan', '--branch', 'mlk/qa/261986v3', '--ba', 'mira']);
 check('G2d2 same branch, block without rework= or closed= -> refused (1 cycle)', r.status === 3 && /3 non-merge commits/.test(r.err), r.status + ' ' + r.err.slice(0, 200));
 
+// E1-E2 (290196, miya 2026-11-24): a test env alter lets the BA reproduce, "simulate"; prod stays "verify"
+r = run(['--alter', '--ticket', '290196', '--ba', 'Fatin', '--id', 'PTSEL/01/L/PSBS/2024/1', '--tugasan', 'Semakan Permohonan (SPI) SBTL', '--user', 'zalizanyusuf@selangor.gov.my', '--env', 'stg']);
+check('E1 --env stg -> "Can proceed to simulate."', r.status === 0 && r.out.startsWith('Salam Fatin, have altered as below. Can proceed to simulate.'), r.out.slice(0, 120));
+r = run(['--alter', '--ticket', '290196', '--ba', 'Fatin', '--id', 'X/1', '--tugasan', 'T', '--user', 'u@x', '--env', 'PROD']);
+check('E2 --env PROD -> "Can proceed to verify."', r.status === 0 && /Can proceed to verify\.\n/.test(r.out), r.out.slice(0, 120));
+
+// V1-V3 (291091, miya 2026-11-25): a ticket already Verified or later has nothing to verify -> no "Can proceed to ..." line
+fs.mkdirSync(path.join(sb2, 'domain', 'redmine-write-gate'), { recursive: true });
+for (const f of ['status-rule.js', 'status-rule.json']) fs.copyFileSync(path.join(__dirname, '..', 'redmine-write-gate', f), path.join(sb2, 'domain', 'redmine-write-gate', f));
+const stFx = path.join(sb2, 'state.json');
+fs.writeFileSync(stFx, JSON.stringify({ '291091': { status: 'Verified', assignee: 'Nurul Amirah Nadiah' }, '291092': { status: 'In Progress', assignee: 'Ahmad Ridhwan Anuar' }, '291093': { status: 'Closed', assignee: 'Nurhafizah Hasan' } }));
+process.env.REDMINE_GATE_TICKET_STATE = stFx;
+const docPatch = t => runG(['--patch', '--ticket', t, '--ba', 'mira', '--id', 'PTMLK/03/L/MCL/2026/4', '--file', 'Surat Keputusan Lulus=LAIN-37496656_1.main']);
+r = docPatch('291091');
+check('V1 --patch on a Verified ticket -> "have patched as below." with no verify line', r.status === 0 && r.out.startsWith('Salam Mira, have patched as below.\n'), r.out.slice(0, 120) + ' | ' + r.err);
+r = docPatch('291092');
+check('V2 --patch on an In Progress ticket -> keeps "Can proceed to verify."', r.status === 0 && r.out.startsWith('Salam Mira, have patched as below. Can proceed to verify.\n'), r.out.slice(0, 120) + ' | ' + r.err);
+r = runG(['--alter', '--ticket', '291093', '--ba', 'Fizah', '--id', 'X/1', '--tugasan', 'T', '--user', 'u@melaka.gov.my']);
+check('V3 --alter on a Closed ticket -> no "Can proceed to ..." line', r.status === 0 && r.out.startsWith('Salam Fizah, have altered as below.\n'), r.out.slice(0, 120) + ' | ' + r.err);
+delete process.env.REDMINE_GATE_TICKET_STATE;
+
 fs.rmSync(sb, { recursive: true, force: true });
 console.log(`\nticket-close-block.eval: ${pass}/${total} ${pass === total ? 'green' : 'RED'}`);
 process.exit(pass === total ? 0 : 1);

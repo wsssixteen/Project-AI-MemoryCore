@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap — 2026-11-25 (child session "25/11/2026 - 291091", Opus 5.5)
+
+**Last Activity**: 2026-11-25 16:40 · DE closing.
+- 291091 (MCL Surat Keputusan Lulus Jenis Hakmilik): BA Verified on MLKSTG. PROD letter for PTMLK/03/L/MCL/2026/4 (LAIN-37496656, rev 41811120) patched: Jenis Hakmilik -> Geran Mukim (MCL) only; infra replaced + PDF reset (read back NULL). Redmine note submitted by miya with 291091.sql + LAIN-37496656_1.main. Phase 1 closed; Phase 2 waits for release + Redmine Closed.
+- System (all on GitHub main): f8e60ff3 ticket-close-block --patch/--alter drops "Can proceed to verify" when the ticket is Verified or later (live status; eval 41/41) + prefill: no --user on a doc-only replace · b0488e0d Pena lean asks by hand "Fits the ticket?" on every Redmine note (63/63) + prefill Step 6 re-checks a staged form on the current tab before any later reply.
+- Main folder: f8e60ff3 landed as 096cb41b; b0488e0d applied to working files only (main folder 115 behind origin with another session's staged files; not merged by me).
+- Slips: redmine-note (verify line + lost attachments). miya's anger: steps broken, judge step he asked for never existed, the route was skipped on the first fix.
+- Resume point: nothing open for 291091 until release.
+
 ## Session Recap (2026-11-17, #289819 TRG)
 - Asked: help TRG on #289819; audit by Fable 5.2 before proceeding; use the PROD server logs; fill and stage Redmine; DE.
 - Done: cause proven (DB + Pelupusan code `PelupusanPendaftaranService.java:197-220` + PROD logs: PSSHS 16:21:44, integration copy 16:24:38, draft in etanah-pendaftaran-landed); first script wrong (PLP row only), fixed after the audit found the Pendaftaran copy row; history check: 2 alters (#280438) + 2 patches (#278815, #285970), none touch Syer; Redmine fields + note staged, submitted by miya.
@@ -12264,6 +12273,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 - Mistakes: first BA note and picture carried sentences and an A/B table he did not want; the deep-research skill created research_notes/ and reports/ at the repo root (folded into the quest doc and removed).
 - Assessment: A1 a generic research skill writes its own folders, which breaks the no-invented-folders rule. A2 quest resume found the older session and its state in two calls. A3 three parallel research tracks answered a design question in about 10 minutes. A4 MPT visibility is pure reference data per urusan. A5 ⏭ no sweep.
 **Last Activity**: 2026-11-05 17:58 — worktree `appraisal-ratings-review-02cd68` (branch claude/hotfix-ticket-287346-610847), hotfix skill loaded, hotfix branch for 287346 prepared then parked (no hotfix order), Domain Expansion.
+
 
 
 

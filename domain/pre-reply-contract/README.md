@@ -16,4 +16,5 @@ retention: rotate monthly
 **Eval**: `pre-reply-contract.eval.js` — 6 fixtures incl. the 2026-07-28 verbatim "reply with ONLY a table" replay. 6/6 green at ship (2026-08-16).
 
 2026-11-03 (miya, 287350): a correction reply and every quest reply end on what it means and the next step; a bare fact is banned. Rollback: git revert this commit.
+2026-11-24 (miya: "retrieving caveman skill, and implement that on writing and also diagram produce to be very concise and short"): the load-bearing-words line became the caveman voice line, pointing to `.claude/skills/caveman/SKILL.md` (JuliusBrussee b89752f, verbatim). Kept: understanding > concision > grammar, NEVER drop not/never/no/only, numbers, units, exact errors. Added: drop articles and filler, max 20 words a sentence, never fragments he must decode, plain full sentences for questions, options, warnings, irreversible steps, the Next steps "What it means" cell, Pena text and anything saved outside chat. Nothing dropped. Eval F2c. Rollback: git revert this commit.
 diagram: diagram.png

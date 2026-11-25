@@ -7,6 +7,17 @@ description: Fast env-deploy card for Melaka test environments — merge a ticke
 
 > ⚠️ **ONE RUN PER TICKET.** Several tickets in one ask = a separate full run for each ticket: own Redmine read, own check, own temp branch, own compile, own push, own result line. Never two tickets in one branch or one push (2026-10-28 per みや, 286315 + 285768). Each card that covers more than one ticket opens with this ⚠️ line so he sees it was followed.
 
+## 0 · A BA or QA asks us to deploy a ticket to another environment (2026-11-25 per みや, 290517: "We can definitely automate a ticket that BA simply asks to deploy to another environment")
+
+Any state with `env_branches` in `system/states.json` (Melaka has none yet: it keeps the card below). Ours or a ticket we never touched:
+
+1. `node domain/deploy/deploy-plan.js plan --ticket <num> --env <internal|staging> --state <state> --ba <asker short name>` — reads only, no question.
+2. Sealed → show the plan lines and the code, and his line in its own block: `approve deploy XXXX-XXXX`. Stopped → show the STOP line; that is the "anything to be resolved" question.
+3. On his approval: `node domain/deploy/deploy-plan.js run --approve <code>` → quote the `DEPLOY-PLAN: merged` line (date-time + merge subject).
+4. His deploy, then the note from the plan is staged (assignee = the asker, status untouched) and goes out on his word.
+
+Seen running when: `domain/deploy/log.jsonl` has a `merged` row with his approval line. Body: `domain/deploy/README.md`.
+
 `/deploy <env> <module> <ticket-or-branch>`
 
 `/deploy internal awam 271721` · `/deploy stag plp mlk/qa/265537`
@@ -227,7 +238,7 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 9. `git fetch origin <base>` then re-check ancestry against `origin/<base>` → must be true.
 10. `git checkout <original-branch>` · `git branch -D ruri/<env>merge-<ticket>` · `git stash pop`
 
-**Conflict** → stop, show conflicted paths, never auto-resolve.
+**Conflict** → stop with the merge left in progress in the work clone, show each conflicted file with its hunk, ask みや how to resolve; never auto-resolve, never `merge --abort` and hand him the merge (291091, 2026-11-25: the merge was aborted and handed back; his words: "you're supposed to merge and ask me how to resolve"). A conflict in a file the ticket never touched usually means the ticket branch was cut from the wrong base: deploy-guard refuses to push such a branch (kind `wrong-base`).
 
 ---
 
@@ -533,3 +544,5 @@ so that never repeats.
 *2026-10-08: §5b added per miya (#283751): a server test gets the Test scenario for the env he named and the Redmine handover right after the deploy steps; rule 2 reworded to allow them and the one env popup. Spec preservation: §1-§5, §6 rules 1 and 3-10, §7, §8 unchanged.*
 
 *2026-10-23: step 1b now runs `release-prep.js stag-catchup --check` and catches the env branch up through the script (release-mlk-plp Phase G, #246964; folds slip proposal A4 of 2026-09-29). Spec change: the catch-up is pushed by the script before the ticket merge instead of in one push with it; compile kept.*
+
+- 2026-11-25 — per みや (290517: "We can definitely automate a ticket that BA simply asks to deploy to another environment"): §0 BA deploy request runs `domain/deploy/deploy-plan.js` (plan sealed under a code, merge only on "approve deploy <code>"; the server deploy and the Redmine Submit stay his). Fable 5.2 design, core only. Additive.

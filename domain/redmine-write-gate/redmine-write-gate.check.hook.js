@@ -43,7 +43,7 @@ const PAYLOAD_KEY = /(?<!\w)["']?issue["']?\s*:\s*\{|(?<![.\w])["']?(?:uploads?|
 const isMutation = t => WRITE_VERB.test(t) || QUOTED_VERB.test(t) || REQUEST_BODY.test(t) || PAYLOAD_KEY.test(t);
 // Read-only helpers, matched on the basename. ticket-load-verify.js reads only local Task-folder files — its body names
 // redmine-sync.js and a /notes:/ parser regex, which blocked every /quest resume (2026-09-25, #256334).
-const READ_ONLY_SCRIPT = /(?:^|[\\/])(?:redmine-(?:sync|board|reconcile|status-check)(?:\.eval)?|ticket-load-verify)\.js$/i;
+const READ_ONLY_SCRIPT = /(?:^|[\\/])(?:redmine-(?:sync|board|reconcile|status-check)(?:\.eval)?|ticket-load-verify(?:\.eval)?)\.js$/i;
 // Every script the command executes — quoted (spaces allowed) or bare path.
 const NODE_SCRIPT = /node\s+(?:"([^"]+?\.js)"|'([^']+?\.js)'|([^"'\s]+\.js))/gi;
 // What counts as miya's approval — the LAST user message only, never an older turn.
@@ -265,7 +265,7 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
       }
       // v1.11: no order and no hold → his standing rule decides a hand-back (status-rule.json).
       let ruled = null;
-      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS) || SUBMIT_APPROVAL.test(lastS)) && value !== '?' && SR.norm(value) === SR.norm(SR.rule().handback_status)) {
+      if ((st.verdict !== 'deny' || stageOnlyHold(st, lastS) || SUBMIT_APPROVAL.test(lastS)) && value !== '?' && [SR.rule().handback_status, SR.rule().handback_status_patch].some(h => SR.norm(value) === SR.norm(h))) {
         const num = data.transcript_path ? ticketFromTranscript(String(data.transcript_path), ti.tabId) : null;
         const state = num ? SR.liveStateSync(num) : null;
         ruled = { num, state, v: state ? SR.verdict(Object.assign({ to: value, stagedAssignee: stagedAssignee(num) }, state)) : null };

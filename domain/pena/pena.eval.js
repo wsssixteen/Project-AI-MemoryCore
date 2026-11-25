@@ -81,6 +81,8 @@ r = run(['check', '--module', 'lean', '--text', 'Only the Lulus letter is change
 check('19b unasked scope line caught by lean (289378)', r.status === 1 && has(r, 'lean') && r.stdout.includes('scope line'), r.stdout);
 r = run(['check', '--module', 'lean', '--text', '1. Page 1 shows the PTG logo.']);
 check('19c a BA item line passes lean', r.status === 0, r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--text', 'Salam Mira, have patched as below. Can proceed to verify.\nUser ID: masirah@melaka.gov.my\nThank you.']);
+check('19d every Redmine note asks "Fits the ticket?" (status + Description), 291091', r.stdout.includes('[lean] by hand: Fits the ticket?') && r.stdout.includes('Verified'), r.stdout);
 
 // --- out-of-spec inputs ---
 r = run(['check', '--profile', 'nope', '--text', 'x y z']);
