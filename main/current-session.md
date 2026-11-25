@@ -26,3 +26,14 @@
 - Assessment: A1 his format now lives in the engine (renderSentence), not in my memory. A2 ⏭ no quest. A3 ⏭ no debugging. A4 ⏭ no etanah work. A5 ⏭ no sweep.
 
 **Last Activity (#289819 TRG PT owner Syer empty → handed to ummi)**: 2026-11-17 15:50 — worktree `pelupusan-1-10-baseline-4927df` (branch claude/redmine-issue-289819-a78938). TRG PROD PTTRG/07/01/L/PT/2026/100 → HSBM 07MH1480/2026: Rekod Ketuanpunyaan empty because the owner Syer is NULL on the PLP pemohon row 11820775 AND on the Pendaftaran copy 12035908 (1 of 44,906 copies in 2026). Patch `2. Fix\289819.sql` (Syer 1/1, 2 rows, schema-checked on PROD), picture `3. Diagram - working vs failing.png`; miya submitted the note 07:47 (Resolved By him, 100%). Open: ummi runs the script on PROD; why PSSHS Hantar saved no Syer is unknown (no log line). TRG repos pulled in both places (pelupusan +63, awam +56, common +39); 6 other TRG repos refused by GitLab.
+
+STEP-3:
+session: 6457a431-0660-4b9a-a807-7e35f98650a1
+his words: "There's nothing to be verified." (order)
+cause step: domain/ticket-close-block/ticket-close-block.js:patch note + alter note greeting · change: 12 lines
+new parts: 0
+fix or report: fix
+who pays: on-demand: one live-status read per generated patch or alter note
+goal without the part: a note for a ticket already Verified or later never asks the BA to verify
+model: claude-opus-5-5
+shown: none (one-line greeting change)
