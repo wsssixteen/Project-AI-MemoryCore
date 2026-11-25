@@ -31,7 +31,7 @@ If any precondition fails → STOP and surface to みや; never half-execute.
 
 | Field | In-scope? | Notes |
 |---|---|---|
-| Status | In Progress: still New on his ticket → set In Progress (Step 2b backstop, 2026-11-20, 290431); already In Progress or later → left as it is; never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608) | — |
+| Status | In Progress: still New on his ticket → set In Progress (Step 2b backstop, 2026-11-20, 290431); already In Progress or later → left as it is; never Resolved, the BA sets Verified on a pass (2026-11-18 per miya, 275608). **Patch ticket (tracker Internal Issue (PROD) or Data Patching (PROD)) on his ticket → Resolved** (2026-11-25 per miya, 291261: the BA does not test a PROD patch or alter); the list is `patch_trackers` in `domain/redmine-write-gate/status-rule.json` | — |
 | Assignee | ✓ → みや mentions, default Aaron Loh Zhi Yong | per photo |
 | % Done | ✓ → 50% (2026-11-18 per miya, 275608) | — |
 | Resolved By | ✓ → Ahmad Ridhwan Anuar | per photo |

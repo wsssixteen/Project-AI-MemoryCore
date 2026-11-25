@@ -400,6 +400,11 @@ fs.writeFileSync(STATE_FILE, JSON.stringify({
   300011: { status: 'New', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
   300012: { status: 'Rework', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777 },
   300013: { status: 'Rework (Requirement Update)', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311 },
+  291261: { status: 'New', assignee: 'Ahmad Ridhwan Anuar (Dev PLP)', assigneeId: 1311, tracker: 'Internal Issue (PROD)' },
+  300014: { status: 'In Progress', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311, tracker: 'Data Patching (PROD)' },
+  300015: { status: 'New', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311, tracker: 'eSOKONGAN' },
+  300016: { status: 'Verified', assignee: 'Ahmad Ridhwan Anuar', assigneeId: 1311, tracker: 'Internal Issue (PROD)' },
+  300017: { status: 'New', assignee: 'Aaron Loh Zhi Yong', assigneeId: 777, tracker: 'Data Patching (PROD)' },
 }));
 const nav = (num, tabId = 1) => JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + num, name: 'mcp__claude-in-chrome__navigate', input: { url: 'http://172.16.90.169/redmine/issues/' + num + '/edit', tabId } }] } });
 const run11 = (toolName, toolInput, lines) => { const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: toolName, tool_input: toolInput, transcript_path: transcript(lines) }), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: STAGE, CLAUDE_PROJECT_DIR: ROOT, REDMINE_GATE_SLIPS: SLIPS, REDMINE_GATE_TICKET_STATE: STATE_FILE, REDMINE_GATE_LOG: path.join(sb, 'gate-log.jsonl') } }); return { out: (r.stdout || '') + (r.stderr || ''), status: r.status }; };
@@ -457,7 +462,23 @@ const cli = spawnSync(process.execPath, [path.join(__dirname, 'status-rule.js'),
 check('F164 status-rule.js CLI prints the state and the verdict as JSON', /"allow":true/.test(cli.stdout || '') && /"row":2/.test(cli.stdout || ''), (cli.stdout || cli.stderr || '').slice(0, 200));
 r = statusFill('Resolved', [nav(287747), ...staging]);
 check('F177 his ticket, Resolved with no words → BLOCK (never Resolved unless he names it, 2026-11-18)', blocked(r), r.out.slice(0, 200));
+// 2026-11-25 (291261, miya: "Why do you not set the status as resolved for patching tickets?"): a patch tracker hands back as Resolved.
+r = statusFill('Resolved', [nav(291261), user('Set that and submit')]);
+check('F178 REPLAY 291261: his New Internal Issue (PROD) ticket, Resolved with no status words → allowed by the rule', ruled(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300014), ...staging]);
+check('F179 his In Progress Data Patching (PROD) ticket → Resolved allowed', ruled(r), r.out.slice(0, 200));
+r = statusFill('In Progress', [nav(291261), ...staging]);
+check('F180 his New patch ticket → In Progress still allowed (the prefill backstop)', ruled(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300015), ...staging]);
+check('F181 his New eSOKONGAN (code fix) ticket → Resolved still BLOCK (code fixes stay In Progress)', blocked(r), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300016), ...staging]);
+check('F182 Verified patch ticket → BLOCK (never set back)', blocked(r) && /row 4/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300017), ...staging]);
+check('F183 someone else\'s New patch ticket → BLOCK, ask him', blocked(r) && /ask him/.test(r.out), r.out.slice(0, 200));
+r = statusFill('Resolved', [nav(300014), user("don't change the status")]);
+check('F184 patch ticket + "don\'t change the status" → BLOCK (a hold wins)', blocked(r), r.out.slice(0, 200));
 const SRM = require(path.join(__dirname, 'status-rule.js'));
+check('F185 guard: patch trackers are Internal Issue (PROD) and Data Patching (PROD), hand-back Resolved', SRM.rule().handback_status_patch === 'Resolved' && ['Internal Issue (PROD)', 'Data Patching (PROD)'].every(x => SRM.rule().patch_trackers.includes(x)), JSON.stringify(SRM.rule().patch_trackers));
 check('F165 guard: status-rule.json keeps the owner id 1311, In Progress as the hand-back and the five frozen statuses', SRM.rule().owner.id === 1311 && SRM.rule().handback_status === 'In Progress' && ['Resolved', 'Verified', 'Closed', 'Ready in PROD', 'Cancelled'].every(x => SRM.rule().frozen.includes(x)), JSON.stringify(SRM.rule().frozen));
 
 // v1.12 (2026-11-05): running this gate's own eval from a shell tool is not a Redmine write (it blocked itself before).
