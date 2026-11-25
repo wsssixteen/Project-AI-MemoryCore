@@ -31,9 +31,6 @@ function decide(command, turnText, hisText) {
     return { block: false, bypass: true };
   }
   if (!ETANAH_CTX.test(cmd)) return { block: false };
-  // the one allowed way to move an origin branch backwards (P4, lib/origin-rewrite.js): it force-pushes with a lease
-  // and resets his clone in the same step; a raw force-push stays blocked below.
-  if (/\blib[\\/]origin-rewrite\.js\b/.test(cmd)) return { block: false, tool: 'origin-rewrite' };
 
   // `git -C <folder> <verb>` counts the same as `git <verb>` (2026-11-05: `git -C ... cherry-pick` slipped through)
   const g = String.raw`\bgit(?:\s+-C\s+(?:"[^"]*"|'[^']*'|\S+))?\s+`;
@@ -42,6 +39,10 @@ function decide(command, turnText, hisText) {
   if (/-X\s*(?:ours|theirs)\b/i.test(cmd) || /\bcheckout\s+--(?:ours|theirs)\b/i.test(cmd)) {
     return { block: true, kind: 'auto-resolve' };
   }
+  // the one allowed way to move an origin branch backwards (P4, lib/origin-rewrite.js): it force-pushes with a lease
+  // and resets his clone in the same step; a raw force-push stays blocked. Checked after cherry-pick and auto-resolve,
+  // so a mention of the path cannot exempt them (291091, 2026-11-25: a cherry-pick ran unchecked in such a command).
+  if (/\blib[\\/]origin-rewrite\.js\b/.test(cmd)) return { block: false, tool: 'origin-rewrite' };
   if (new RegExp(g + 'push\\b', 'i').test(cmd) && /(?:--force\b|--force-with-lease\b|(?:^|\s)-f\b|\s\+[\w./-]*mlk\/)/i.test(cmd)) {
     return { block: true, kind: 'force-push' };
   }
@@ -69,7 +70,7 @@ function liveDecide(cmd, cwd, hisText, gitFn) {
   const dirM = cmd.match(/\bcd\s+(?:"([^"]+)"|'([^']+)'|(\S+))/) || cmd.match(/\bgit\s+-C\s+(?:"([^"]+)"|'([^']+)'|(\S+))/);
   const dir = (dirM && (dirM[1] || dirM[2] || dirM[3])) || cwd;
   const turn = String(hisText || '');
-  const mergeM = cmd.match(/\bgit\s+merge\b[^;&|]*?\b(?:origin\/)?(mlk\/(?:esokongan|internal|qa|cr|requirement)\/\d+(?:v\d+)?)\b/i);
+  const mergeM = cmd.match(/\bgit(?:\s+-C\s+(?:"[^"]*"|'[^']*'|\S+))?\s+merge\b[^;&|]*?\b(?:origin\/)?(mlk\/(?:esokongan|internal|qa|cr|requirement)\/\d+(?:v\d+)?)\b/i);
   if (mergeM && !/\[miya-ordered-remerge:\s*[^\]]+\]/i.test(turn)) {
     const branch = mergeM[1];
     const env = (cmd.match(/\bmlk\/(int-env|stag-env|training)\b/i) || [])[1];
@@ -78,7 +79,15 @@ function liveDecide(cmd, cwd, hisText, gitFn) {
       if (log && log.split('\n').some(s => s.includes(branch))) return { block: true, kind: 're-merge', detail: `${branch} already merged into mlk/${e} today` };
     }
   }
-  const pushM = cmd.match(/\bgit\s+push\b[^;&|]*?\b(mlk\/(?:esokongan|internal|qa|cr|requirement)\/\d+(?:v\d+)?)\b/i);
+  const pushM = cmd.match(/\bgit(?:\s+-C\s+(?:"[^"]*"|'[^']*'|\S+))?\s+push\b[^;&|]*?\b(mlk\/(?:esokongan|internal|qa|cr|requirement)\/\d+(?:v\d+)?)\b/i);
+  // v3 (291091, 2026-11-25): a ticket branch holds only its own commits on top of origin/mlk/master
+  // (it was cut from mlk/stag-env and carried 206 other commits into the int-env merge)
+  if (pushM && !/\[miya-ordered-base:\s*[^\]]+\]/i.test(turn)) {
+    const num = pushM[1].match(/\/(\d+)/)[1];
+    const subj = git(`log --no-merges --format=%s origin/mlk/master..${pushM[1]}`, dir);
+    const off = subj ? subj.split('\n').filter(s => s && !s.includes(num)) : [];
+    if (off.length) return { block: true, kind: 'wrong-base', detail: `${off.length} commit(s) on ${pushM[1]} outside origin/mlk/master carry no ${num}` };
+  }
   if (pushM && !/\[miya-ordered-multi-commit:\s*[^\]]+\]/i.test(turn)) {
     const branch = pushM[1];
     const n = git(`rev-list --no-merges --count --since=midnight ${branch}`, dir);
@@ -114,6 +123,7 @@ function blockMsg(kind) {
     'revert': 'a revert of a pushed ticket commit runs on his order only, never on a question; add [miya-ordered-revert: <his words>] with a CLOSES: line naming the writer that commit closed and why it is no longer one',
     're-merge': 'the same ticket branch goes into an env branch ONCE per test round; a failed round means a new Writers table first, then [miya-ordered-remerge: <his words>]',
     'multi-commit': 'a ticket branch carries ONE non-merge commit per cycle; squash the failed attempts before the push (reset --soft to the master merge, one commit), or [miya-ordered-multi-commit: <his words>]',
+    'wrong-base': 'the ticket branch is cut from origin/mlk/master (close-phase step 2: worktree add -b <branch> origin/mlk/master); rebuild it, or [miya-ordered-base: <his words>]',
   }[kind] || 'this operation can corrupt a shared company branch';
   return [
     `⛔ deploy-guard: '${kind}' on a company etanah branch is BANNED — ${why}.`,

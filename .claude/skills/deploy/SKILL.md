@@ -238,7 +238,7 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 9. `git fetch origin <base>` then re-check ancestry against `origin/<base>` → must be true.
 10. `git checkout <original-branch>` · `git branch -D ruri/<env>merge-<ticket>` · `git stash pop`
 
-**Conflict** → stop, show conflicted paths, never auto-resolve.
+**Conflict** → stop with the merge left in progress in the work clone, show each conflicted file with its hunk, ask みや how to resolve; never auto-resolve, never `merge --abort` and hand him the merge (291091, 2026-11-25: the merge was aborted and handed back; his words: "you're supposed to merge and ask me how to resolve"). A conflict in a file the ticket never touched usually means the ticket branch was cut from the wrong base: deploy-guard refuses to push such a branch (kind `wrong-base`).
 
 ---
 
