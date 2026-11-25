@@ -31,6 +31,8 @@ const cases = [
   { name: 'v2 PASS revert with HIS order token', cmd: 'cd E:\\Dev\\etanah-work\\wt-287811; git revert --no-edit 090156bcd2', turn: '', his: '[miya-ordered-revert: undo it]', expect: false },
   { name: 'v2 BLOCK revert when only the ASSISTANT wrote the token', cmd: 'cd E:\\Dev\\etanah-work\\wt-287811; git revert --no-edit 090156bcd2', turn: '[miya-ordered-revert: undo it]', his: 'ok', expect: true },
   { name: 'v2 PASS origin-rewrite Tool (the one allowed force path)', cmd: 'node lib/origin-rewrite.js --repo E:\\Dev\\etanah-work\\wt-287811 --branch mlk/internal/287811 --lease 090156bcd2', turn: '', his: 'clean it up', expect: false },
+  // v3 (291091, 2026-11-25): a mention of lib/origin-rewrite.js no longer exempts a cherry-pick in the same command
+  { name: 'v3 replay: BLOCK cherry-pick in a command that also reads lib/origin-rewrite.js', cmd: 'Get-Content "$m\\lib\\origin-rewrite.js" -TotalCount 40; git -C E:/Dev/etanah-work/wt-291091 cherry-pick 2d72b92ab0', turn: '', his: 'merge it', expect: true },
   { name: 'v2 BLOCK raw force-with-lease still', cmd: 'git push --force-with-lease origin mlk/internal/287811', turn: '', his: 'clean it up', expect: true },
 ];
 
@@ -52,6 +54,11 @@ const live = [
   { name: 'v2 live BLOCK push of a ticket branch with 3 non-merge commits made today', cmd: 'cd E:\\Dev\\etanah-work\\wt-287811; git push origin mlk/internal/287811', git: gitStub('', '3'), his: 'push it', expect: true, kind: 'multi-commit' },
   { name: 'v2 live PASS push with 1 commit today', cmd: 'cd E:\\Dev\\etanah-work\\wt-287811; git push origin mlk/internal/287811', git: gitStub('', '1'), his: 'push it', expect: false },
   { name: 'v2 live PASS multi-commit push with HIS order token', cmd: 'cd E:\\Dev\\etanah-work\\wt-287811; git push origin mlk/internal/287811', git: gitStub('', '3'), his: '[miya-ordered-multi-commit: keep the two commits]', expect: false },
+  // v3 (291091, 2026-11-25): a pushed ticket branch holds only its own commits on top of origin/mlk/master
+  { name: 'v3 replay: BLOCK push of a ticket branch cut from stag-env', cmd: 'git -C "E:\\Projects\\Melaka\\etanah-pelupusan" push -u origin mlk/esokongan/291091', git: (a) => /^log --no-merges --format=%s origin\/mlk\/master\.\./.test(a) ? 'Ref #291091 - MCL - PYSKN5A - Static Jenis Hakmilik\nRef #282117 - PRBB - something on stag-env\nRef #280110 - PT - another' : '1', his: 'please do so', expect: true, kind: 'wrong-base' },
+  { name: 'v3 PASS push where every commit carries the ticket number (rework + common pin)', cmd: 'git -C E:\\Dev\\etanah-work\\wt-291091 push origin mlk/esokongan/291091v2', git: (a) => /^log --no-merges/.test(a) ? 'Ref #291091 - MCL - fix\nRef #291091 - Up common to 1.15.3-MLK' : '1', his: 'push it', expect: false },
+  { name: 'v3 PASS wrong base with HIS order token', cmd: 'git -C E:\\Dev\\etanah-work\\wt-291091 push origin mlk/esokongan/291091', git: (a) => /^log --no-merges/.test(a) ? 'Ref #282117 - other' : '1', his: '[miya-ordered-base: stack it on 282117]', expect: false },
+  { name: 'v3 PASS when git returns nothing (ref missing)', cmd: 'git -C E:\\Dev\\etanah-work\\wt-291091 push origin mlk/esokongan/291091', git: () => null, his: 'push it', expect: false },
 ];
 for (const c of live) {
   const d = liveDecide(c.cmd, 'E:\\Dev\\etanah-work', c.his, c.git);
