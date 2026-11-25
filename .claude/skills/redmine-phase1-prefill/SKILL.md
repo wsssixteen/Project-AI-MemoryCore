@@ -87,6 +87,8 @@ Use `mcp__Claude_in_Chrome__form_input` for each. **Assignee and Status: form_in
 | Resolved By Text | `#issue_custom_field_values_<id>` (text) | `Ahmad Ridhwan Anuar` |
 | Notes textarea | `#issue_notes` (textarea) | (see Step 4) |
 
+**Another module's ticket first (2026-11-25 per みや, 290196):** when the quest manifest's `MODULE:` line says `other module` (quest SKILL.md Phase 0 step 2c), fill ONLY Notes and Assignee (the asker's full name from the journal); Root Cause, Solution, Resolved By, Resolved By Text and % Done stay as they are, and our branch or fix goes in the note. The rest of this table and the line below apply to our own module only.
+
 **Fill a field if it EXISTS on the form, skip it if it does not.** Read the form's field list first, never assume. Root Cause Issue (DEV) exists on eSOKONGAN MELAKA → fill it in the shape of `.claude/auto-memory/feedback_redmine_rootcause_format.md`. A Solution field exists on some trackers only → fill it only when present (みや 2026-09-30, #282555).
 
 Resolved By + Resolved By Text custom-field IDs need to be discovered on first run via `mcp__Claude_in_Chrome__find` against the form labels — cache the IDs in skill state after first successful discovery.
@@ -186,3 +188,5 @@ Updated 2026-11-05 — Step 4 alter note: the parenthetical restating the note's
 Updated 2026-11-04 — Step 4 gains the PROD patch note shape per みや (#288169/#288261: he rewrote my "Please help to verify" to "Can proceed to verify"; the BA passes a PROD patch to the TSO, who asks the user). Spec-preservation: every step and ban unchanged; additive.
 
 Created 2026-06-01 by みや design conversation (S4). Trigger photo: Redmine Edit form for QA-263344 showing the 6 fields to fill + Notes template + files area. Manual-invoke decision per みや: "the best/practical option is browser mcp which is slow"; ready for invoke but not auto-bound to quest closure.
+
+*2026-11-25 — another module's ticket fills Notes + Assignee only (290196, per みや). Additive.*
