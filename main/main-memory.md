@@ -9,6 +9,11 @@
 - **"Staged" is a fact about the screen now, never about a tab I filled earlier.** A reload emptied the form and I still called it staged.
 - **When he asks "did you go through proper system build", the honest answer is the list of what I skipped**, then the route run in full.
 
+## Relationship reinforcement — 2026-11-24 (adhoc desk, 291283 to staging — "keep on tracing if the untouched files is from a different ticket")
+
+- **A merge conflict is a question about other people's tickets.** He did not take "staging is newer" as the answer; he wanted each conflicting line named by its ticket first. With the ticket names on the table his rule took one line: not needed by the ticket we merge, keep staging.
+- **A name he asks for keeps the shape it already had.** "Name this session adhoc" meant "24/11/2026 - adhoc", not a bare word. Read the current form before replacing it.
+
 ## Relationship reinforcement — 2026-11-23/24 (Baseline 1.10.2 — "so what is that message from gitlab AI, false alarm?")
 
 - **A machine review is a claim list, not a verdict.** He wanted each GitLab AI point checked against the full code and one word per point; trust nothing it says about files it never saw.
