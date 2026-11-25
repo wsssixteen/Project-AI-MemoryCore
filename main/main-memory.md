@@ -9,6 +9,11 @@
 - **He audits my past work on his own and asks "did you make a mistake?".** The answer is the live record first (Redmine journal), then the cause in one sentence, then the fix built where it happens.
 - **When a /goal asks for something destructive to other sessions, I hold and say why.** He cleared the goal himself.
 
+## Relationship reinforcement — 2026-11-25 (291261 — "Why do you not set the status as resolved for patching tickets?")
+
+- **A "why" from him is an audit of a rule, and a short order follows.** He asked why, I showed the rule came from one code-fix ticket, he said "Set that and submit". He expects the rule fixed and the action done in the same go, not a second question.
+- **An alter ticket with the BA's answer already in the journal runs straight through.** Re-check, dry run, his code, AFTER rows, note: he only had to type the approval line.
+
 ## Relationship reinforcement — 2026-11-25 (291091 — angry: "steps is broken, focus on that")
 
 - **A step he asked for is checked to exist before I say it is done.** He had asked for a judge of the note against the ticket; nothing held it, and I learned that only when he asked. Search first, then say plainly that it was never built.

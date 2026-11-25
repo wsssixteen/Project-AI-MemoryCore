@@ -15,6 +15,14 @@
 - Open: WhatsApp reply is miya's to send. ticket-load-verify eval case 17 fails (pre-existing). GitHub main vs main-folder SHA split (open since 20/11).
 - Mistakes he corrected: --ba "Fatin" assigned Nurfatin Auni (Reports); we filled Root Cause + Resolved By on another module's ticket. Slips wrong-assignee, scope/other-module-fields.
 - Assessment: A1 module check built at Phase 0 (98c865e4). A2 hand-back field set now follows the module. A3 PROD error traced in one pass from screenshots + git. A4 Selangor people table gained both Fatins. A5 ⏭ no sweep.
+**Last Activity (291261 PROD alter SPM to PLPP + patch tickets hand back Resolved)**: 2026-11-25 16:45 — worktree `brave-panini-04ff31` (child of the master session). PTMLK/03/L/PT/2026/79 Initiate & Alter on PROD (code 128A-D0DE, miya approved) to PLPP, eddie@melaka.gov.my; Redmine 291261 submitted Resolved to Mira and read back; quest archived. System 479b89e2 (main 739470e7): redmine-write-gate v1.15, Internal Issue (PROD) and Data Patching (PROD) hand back as Resolved.
+
+## Session Recap (2026-11-25, 291261)
+- Asked: /quest resume 291261, the alter ticket end to end; then why patch tickets are not set Resolved; "Set that and submit".
+- Done: live PROD state re-checked, dry run, PROD alter (AFTER rows verified), Redmine note + Root Cause submitted Resolved, quest archived with bounty; status rule reads the tracker (eval 185/185); 3 slips logged.
+- Open: none for this ticket (Mira verifies). Main folder still 115 behind origin with another session's staged files; this session's files match origin.
+- Mistakes he corrected: patch ticket handed back without Resolved (rule gap). Slips `redmine-status`, two `blocker` rows (gate could not read "Set that"; step-3 rider cannot see same-message text).
+- Assessment: A1 two gates refused ordered work (word reader, step-3 rider), logged. A2 alter route ran clean in one pass (dry run to approval to AFTER). A3 ⏭ no debugging. A4 SPM to PLPP recipe written to FLOWABLE-KNOWLEDGE. A5 ⏭ no sweep.
 **Last Activity (291091 PROD letter patch + hand-back steps fixed)**: 2026-11-25 16:40 — worktree `admiring-chaplygin-140cd7`. 291091 BA Verified; PROD letter PTMLK/03/L/MCL/2026/4 (LAIN-37496656, rev 41811120) Jenis Hakmilik -> Geran Mukim (MCL), infra replaced + PDF reset (read back NULL); Redmine note submitted by miya. Phase 1 closed, Phase 2 waits for release + Redmine Closed.
 
 ## Session Recap (2026-11-25, 291091)
@@ -33,3 +41,10 @@
 - Assessment: A1 release script carried every step, two gates misfired on my own commands (redmine URL, variable path). A2 ⏭ no quest work beyond release. A3 6.2 trace reached DB + template in 10 queries, stopped at the unproven edge. A4 GitLab AI review answered from code, not trust. A5 ⏭ no sweep.
 
 **Last Activity (ADHOC-PRBB-2026-26 Rencana JKBB PTG lost daerah edits: cause + plan agreed)**: 2026-11-20 16:13 — worktree `adhoc-prep-5a52cc` (branch claude/adhoc-prep-5a52cc). PROD PTMLK/02/L/PRBB/2026/9: PTG Jana (`MlkKertasTemplateForm.onJanaUpdate :1814` → `deleteExistingRisalatDocuments`) deletes the daerah Rencana record and makes a fresh template, so versi 24 Word edits are lost. Proof: code + DB + PROD server log (WinSCP, wanda1/2) + decrypted v24 vs v4 (253 vs 219 paragraphs). Plan agreed with BA Fizah: (1) code fix = PTG Jana refills only PTG tags on the same record, the Minit Bebas way (`PelupusanTemplateUtil.restrictPrbbMinitBebasContentControls :671-693`, BA tested MLIT /19); (2) patch: replace RAHSIA-37598722_1.main (record 8783881, revision 41916109) with daerah v24 encrypted by `dms-enc.js` (round trip byte-identical to PROD), reset PDF. Waiting TSO code-fix + patch tickets; adhoc on hold, audit 32/32. Also: ProTime 2026-11-19 = EL only; PROD log + Pena change built outside /system-build (todo row, finish at end of session).
+
+STEP-3:
+session: c5607828-e775-4a34-a60a-96566f994204
+his words: "DE" (order: Domain Expansion; save-rules asks the prefill skill version stamp for the 291261 Status-row change)
+cause step: .claude/skills/redmine-phase1-prefill/SKILL.md History · change: 1 line
+new parts: 0
+

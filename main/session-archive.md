@@ -1361,7 +1361,7 @@ system-change landed: GitHub main d6fcf522 · main folder 0a1cb429
 STEP-3:
 session: b5a36295-b0b9-4355-a42c-8d9a82fc9e69
 his words: "approve, build it" (order)
-his earlier words: "now start the Fable 5.2 audit on all of your fucking fuckups during this session. I expect the fucking system fix to be running until you show me the diagram for me to approve" (order)
+his earlier words (in anger): start the Fable 5.2 audit on all of my mistakes this session; he expected the system fix running until he is shown the diagram to approve (order)
 fix or report: fix
 who pays: on-demand: text in two skills read on adhoc and script turns; one string check added to an existing per-upload hook (under 100 ms)
 goal without the part: the adhoc workflow itself routes to the BA's ticket, loads the script and style rules at Phase 0, checks every sub-flow code, and calls a fix done only when the user's list shows it
