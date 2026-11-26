@@ -18,7 +18,8 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-eval-'));
 const bare = path.join(tmp, 'origin', 'etanah-pelupusan.git');
 const work = path.join(tmp, 'etanah-pelupusan');
 const stateDir = path.join(tmp, 'state');
-const env = { ...process.env, RELEASE_MLK_PLP_COMPILE_CMD: JSON.stringify([process.execPath, '-e', 'process.exit(0)']), RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json') }; // fixtures never see the live carry-over list
+const env = { ...process.env, RELEASE_MLK_PLP_COMPILE_CMD: JSON.stringify([process.execPath, '-e', 'process.exit(0)']), RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json'), // fixtures never see the live carry-over list
+  RELEASE_MLK_PLP_STAGING_FLOWABLES: JSON.stringify({ rows: [{ file: 'MLK_PLP_T9.bpmn20.xml', deployed: '2026-11-20' }] }) };   // the staging flowable list is a stub: no DB read from an eval
 
 function sh(cwd, cmd, args) {
   const r = spawnSync(cmd, args, { cwd, encoding: 'utf8' });
@@ -169,6 +170,8 @@ try {
   r = prepNoRepo(['push', '--release', '9.9.9']);
   const onOrigin = git(['ls-remote', '--heads', 'origin', 'mlk/release/9.9.9']) !== '';
   check('T9 push lands on origin', r.status === 0 && onOrigin, 'exit=' + r.status + ' onOrigin=' + onOrigin);
+  // T9b (2026-11-26): the card push prints reads the staging flowable list itself; no --flowable flag was ever typed here
+  check('T9b push card: a staging model no release delivered heads it as NOT READY', /NOT READY — flowable list not proven: MLK_PLP_T9\.bpmn20\.xml was deployed on staging 2026-11-20/.test(r.stdout), r.stdout.slice(-400));
 
   // ---- decoupled branch-out (2026-07-16 per miya: cut the branch while recon still runs) ----
   git(['checkout', 'mlk/master']);

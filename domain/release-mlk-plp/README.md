@@ -53,6 +53,14 @@ Born 2026-07-16 via core/forge.js (nod: miya-2026-07-16-release-mlk-plp-shape-no
 First live target: Pelupusan 1.0.9 (tickets #269802 · #269939 · #270952, stag).
 diagram: domain/release-mlk-plp/diagram.png
 
+## 2026-11-26 — flowable list proven by the script + PROD proof (audit after 1.11.0 reached PROD without its flowable)
+- `push`, `card` and `merge-to-master --ba-approved` read the staging engine's `MLK_PLP_*.bpmn20.xml` deploy dates (DB gateway, MCP named in `system/melaka-env-state.json`, schema `et_flowable17`, read only) and the urusan the release adds to `flowable.config.json`; kept in state `flowableEvidence`. An item is answered by the card's `--flowable` list, by an earlier BA-passed release whose card lists the file with a drop date on or after the staging deploy, or by `--flowable-hold "<file or urusan>=<why>"`. A gap or an unreadable staging list = `NOT READY` on the card and a ✗ row in the final checklist. The release state files are the delivery ledger from 2026-11-01: do not delete them.
+- `flowable-drop --prod-list <json>` checks the PROD Flowable admin deployment list (read in miya's Edge session) for each dropped file, on or after the drop date; kept in state `flowableDrop.prod`. `merge-to-master --check` prints it as NEXT; the next `init` refuses while it is unproven (`--prod-flowable-ack "<reason>"`).
+- An eval run (`RELEASE_MLK_PLP_STATE_DIR` set) no longer copies `servers.local.json` / `redmine.local.json` into a worktree; evals stub the staging list with `RELEASE_MLK_PLP_STAGING_FLOWABLES`.
+- The merge request read-back counts commits from `X-Total` and waits a few seconds for GitLab to fill them (1.10.2 and 1.11.0 read back `commits 0 ✗`).
+- `verify-gates.js` is NOT wired into `verify` (it never was); its header now says so and why it cannot be wired as it is.
+- Rollback: `git revert` the commits of this date. Eval: `eval-merge-request.js` 73/73, `eval.js` 28/28, `eval-stag-catchup.js` 33/33 (was 31/33 since the final checklist landed), `eval-recon.js` 19/19.
+
 ## 2026-11-11 — card print + re-open after push (per みや, "okay build all", Baseline 1.9.3)
 - `push` prints the hand-off card; `card --release <ver> [--domain --db --flowable-date --flowable --sql]` re-prints or fills it; values kept in state `card`; a value never given prints as `<FILL: --x>`.
 - `add-ticket` accepts phase `pushed` while no merge request is recorded; it checks the local branch is at the pushed tip and records `reopened` in state.

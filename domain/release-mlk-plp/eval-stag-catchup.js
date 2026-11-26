@@ -28,6 +28,7 @@ fs.writeFileSync(compileStub, `const fs=require('fs');fs.appendFileSync(${JSON.s
 const gitlabCfg = path.join(tmp, 'servers.local.json');
 fs.writeFileSync(gitlabCfg, JSON.stringify({ gitlab: { web: 'http://gitlab.test/gitlab', project: 'etanah/etanah-pelupusan', reviewers: [{ name: 'Aaron', username: 'aaron' }] } }));
 const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json'), RELEASE_MLK_PLP_CONFIG: gitlabCfg,
+  RELEASE_MLK_PLP_STAGING_FLOWABLES: '{"rows":[]}',   // the staging flowable list is a stub: no DB read from an eval
   STAG_CATCHUP_WORK_ROOT: workRoot, STAG_CATCHUP_LOG: logFile, STAG_CATCHUP_NEXUS_METADATA: nexus,
   STAG_CATCHUP_COMPILE: JSON.stringify([process.execPath, compileStub]) };
 
@@ -170,7 +171,9 @@ try {
   r = prep(['stag-catchup', '--check', '--release', '9.9.11']);
   check('S28 release not in master → uses the release branch, says so', r.status === 3 && /NOT in origin\/mlk\/master yet/.test(all(r)) && /#100005/.test(all(r)), `exit=${r.status} ${all(r)}`);
   fs.mkdirSync(stateDir, { recursive: true });
-  fs.writeFileSync(path.join(stateDir, 'release-9.9.11.json'), JSON.stringify({ release: '9.9.11', branch: 'mlk/release/9.9.11', repo: plp, tickets: [], phase: 'pushed', headSha: relG }));
+  // a filled card: merge-to-master re-proves it as the final release checklist (2026-11-26); S29a and S29 failed without it
+  fs.writeFileSync(path.join(stateDir, 'release-9.9.11.json'), JSON.stringify({ release: '9.9.11', branch: 'mlk/release/9.9.11', repo: plp, tickets: [], phase: 'pushed', headSha: relG,
+    card: { domain: '1.0.20-MLK', db: '1.0.20-MLK', baqa: 'Mira', targetVersion: 'http://host/v', flowable: 'none', sql: 'none' } }));
   sh(plp, ['checkout', '-q', '-B', 'mlk/master', 'origin/mlk/master']);
   // mlk/master is protected (2026-10-29): prepare prints the MR form; the reviewer's merge is simulated by a push here.
   const masterBefore = tip('mlk/master');

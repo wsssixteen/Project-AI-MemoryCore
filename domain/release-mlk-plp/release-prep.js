@@ -18,9 +18,12 @@
  *   push    ONLY when phase=verified AND HEAD unchanged AND branch matches
  *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>, then prints the hand-off card
  *   card    re-prints the card of a pushed release; --domain --db --flowable-date --flowable --sql fill it;
- *           NOT READY lines head it while a flowable is undelivered or the common is not x.y.z-MLK
+ *           NOT READY lines head it while a flowable is undelivered, the common is not x.y.z-MLK, or the flowable
+ *           list disagrees with the evidence the script reads itself (staging engine deployments + flowable.config.json);
+ *           --flowable-hold "<file or urusan>=<why>;..." answers an item that is not in this release
  *   flowable-drop  --from <folder>: uploads the card's flowables via WinSCP (session drop.session, default
- *           MLK-FTP), LISTS the server folder, records sizes; merge-to-master refuses until every one is listed
+ *           MLK-FTP), LISTS the server folder, records sizes; merge-to-master refuses until every one is listed.
+ *           --prod-list <json>: the morning after PROD, proves each one is deployed there (the next init refuses without it)
  *   add-ticket  also after push (no merge request yet): re-opens the release on top of the pushed tip
  *   merge-to-master  Phase F after BA pass. mlk/master is protected (2026-10-29): --ba-approved prints the
  *           GitLab merge-request form spec (never pushes) · --record-mr <url> --reviewer <name> · --abandon-mr ·
@@ -195,6 +198,7 @@ function ensureRepo(repo) {
 // servers.local.json / redmine.local.json live only in the MAIN repo checkout. When this script runs
 // from a claude worktree (<main>/.claude/worktrees/<name>/domain/release-mlk-plp), seed them from main.
 function seedLocalConfigs() {
+  if (process.env.RELEASE_MLK_PLP_STATE_DIR) return;   // an eval run (scratch state) never copies the token file into a worktree
   const m = __dirname.match(/^(.*)[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]domain[\\/]release-mlk-plp$/);
   if (!m) return;
   const mainDir = path.join(m[1], 'domain', 'release-mlk-plp');
@@ -255,6 +259,7 @@ function cmdInit(a) {
       + missing.map(t => `   ${t.ticket} -> ${t.src}`).join('\n'), 2);
   }
   assertStagHoldsMaster(repo, a);   // ── post-baseline catch-up guard: the previous release must be on stag-env ──
+  assertFlowablesOnProd(a);         // ── and every flowable it delivered must be proven deployed on PROD ──
 
   const st = { release, branch, repo, tickets, phase: 'planned', conflict: null, headSha: null, created: new Date().toISOString() };
   takeCardFlags(st, a);   // --baqa / --target-version from the BAQA message, kept for the card
@@ -788,6 +793,8 @@ function cmdPush(a) {
   st.phase = 'pushed';
   takeCardFlags(st, a);
   saveState(st);
+  readFlowableEvidence(st);
+  saveState(st);
   log('push', st.release, 'ok', head);
   console.log(`✅ ${st.branch} pushed to origin (${head.slice(0, 10)}) · phase=pushed · next: BUILD (V4)`);
   printCard(st);
@@ -799,7 +806,7 @@ function cmdPush(a) {
 // --flowable "<a.bpmn20.xml,...>|none" --sql "#<n>, <file>.sql;...|none". A value never given prints as a FILL line.
 // 2026-11-16 per miya (1.10.0): the card's sheet block is his FULL template (BAQA · Version Details · Developer);
 // --baqa and --target-version come from the BAQA message; footer-only lines stay empty for him.
-const CARD_FLAGS = { domain: 'domain', db: 'db', 'flowable-date': 'flowableDate', flowable: 'flowable', sql: 'sql', baqa: 'baqa', 'target-version': 'targetVersion' };
+const CARD_FLAGS = { domain: 'domain', db: 'db', 'flowable-date': 'flowableDate', flowable: 'flowable', 'flowable-hold': 'flowableHold', sql: 'sql', baqa: 'baqa', 'target-version': 'targetVersion' };
 function stagingDbUser() {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'system', 'melaka-env-state.json'), 'utf8')).schema_user || ''; } catch (_) { return ''; }
 }
@@ -817,6 +824,72 @@ function undeliveredFlowables(st) {
   const c = st.card || {}, flow = flowList(c) || [], d = st.flowableDrop || {};
   return flow.filter(f => !(d.date === c.flowableDate && (d.files || []).some(x => x.name === f && x.listedSize === x.size)));
 }
+// The flowable list is proven, not typed (2026-11-26 per miya: `--flowable none` typed wrongly switched every flowable
+// check off). The script reads two sources itself:
+//   staging  every MLK_PLP_*.bpmn20.xml on the ON staging engine with its latest deploy date (DB gateway, read only)
+//   config   urusan this release adds to flowable.config.json (git)
+// Each item must be answered: the card lists it, an earlier BA-passed release delivered it (its card lists the file
+// and its drop date is on or after the staging deploy date), or the card holds it back with a reason
+// (--flowable-hold "<file or urusan>=<why>;..."). An unanswered item, or a staging list that could not be read, is a gap.
+const FLOW_CFG = 'src/main/resources/config/MLK/flowable.config.json';
+const FLOW_SCHEMA = 'et_flowable17';     // the staging engine; deploy_time_ is Kuala Lumpur wall time
+const FLOW_LEDGER_FROM = '2026-11-01';   // cards exist from 1.9.3 (2026-11-11); the PROD list read on 2026-11-26 showed every earlier drop deployed
+const PASSED = ['mr-pending', 'merged-to-master'];
+const GW_POST = "let b='';process.stdin.on('data',d=>b+=d).on('end',()=>fetch(process.argv[1],{method:'POST',headers:{Authorization:'Bearer '+process.env.GW_TOKEN," +
+  "'Content-Type':'application/json',Accept:'application/json, text/event-stream'},body:b,signal:AbortSignal.timeout(30000)}).then(r=>r.text()).then(t=>process.stdout.write(t)).catch(e=>{console.error(e.message);process.exit(1)}))";
+function stagingFlowables() {
+  if (process.env.RELEASE_MLK_PLP_STAGING_FLOWABLES) return JSON.parse(process.env.RELEASE_MLK_PLP_STAGING_FLOWABLES);   // eval: {"rows":[{file,deployed}]} or {"error":"..."}
+  try {
+    const mcp = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'system', 'melaka-env-state.json'), 'utf8')).mcp_server;
+    const token = fs.readFileSync(path.join(require('os').homedir(), '.db-gateway', 'token'), 'utf8').trim();
+    const query = `SELECT b.name_ AS file, to_char(max(d.deploy_time_), 'YYYY-MM-DD') AS deployed FROM ${FLOW_SCHEMA}.act_ge_bytearray b, ${FLOW_SCHEMA}.act_re_deployment d ` +
+      `WHERE d.id_ = b.deployment_id_ AND b.name_ LIKE 'MLK\\_PLP\\_%.bpmn20.xml' GROUP BY b.name_ ORDER BY b.name_`;
+    const r = spawnSync(process.execPath, ['-e', GW_POST, `http://127.0.0.1:7411/${mcp}/mcp`], { encoding: 'utf8', timeout: 45000, windowsHide: true, env: { ...process.env, GW_TOKEN: token },
+      input: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'query_database', arguments: { query, limit: 500 } } }) });
+    if (r.status !== 0) return { error: `DB gateway 127.0.0.1:7411/${mcp}: ${(r.stderr || '').trim().split(/\r?\n/).pop() || 'no answer'}` };
+    const ev = r.stdout.match(/^data: (.*)$/m), j = JSON.parse(ev ? ev[1] : r.stdout);
+    if (j.error || !j.result || j.result.isError) return { error: `${mcp}: ${JSON.stringify(j.error || j.result).slice(0, 200)}` };
+    const rows = [...j.result.content[0].text.matchAll(/^(MLK_PLP_\S+\.bpmn20\.xml)\t(\d{4}-\d{2}-\d{2})\s*$/gm)].map(m => ({ file: m[1], deployed: m[2] }));
+    return rows.length ? { rows } : { error: `${mcp} ${FLOW_SCHEMA} returned no MLK_PLP model` };
+  } catch (e) { return { error: e.message }; }
+}
+const releaseRef = st => git(st.repo, ['rev-parse', '--verify', `origin/${st.branch}`], true).status === 0 ? `origin/${st.branch}` : st.branch;
+function configUrusanAdded(st) {
+  const ref = releaseRef(st);
+  const base = st.mr && st.mr.masterAtPrepare ? st.mr.masterAtPrepare : (git(st.repo, ['merge-base', 'origin/mlk/master', ref], true).stdout || '').trim();
+  const list = r => { try { const j = JSON.parse(git(st.repo, ['show', `${r}:${FLOW_CFG}`], true).stdout); return [...Object.values(j.modules || {}).flatMap(m => m.included_urusan_list || []), ...(j.other_flowable_list || [])].map(String); } catch (_) { return null; } };
+  const now = list(ref), was = (base && list(base)) || [];
+  return now ? now.filter(u => !was.includes(u)) : [];
+}
+// read both sources now; kept in state so the card and the checklist show the same proof
+function readFlowableEvidence(st) {
+  const s = stagingFlowables();
+  st.flowableEvidence = { at: new Date().toISOString(), config: configUrusanAdded(st), staging: s.rows || null, error: s.rows ? null : s.error || 'no rows' };
+}
+function flowHolds(c) {
+  return Object.fromEntries(String(c.flowableHold || '').split(';').map(s => s.split('=')).filter(p => p[0].trim() && p.slice(1).join('=').trim()).map(p => [p[0].trim().toLowerCase(), p.slice(1).join('=').trim()]));
+}
+function otherCards(release) {   // the card of every other release in the state folder
+  let names = []; try { names = fs.readdirSync(STATE_DIR); } catch (_) {}
+  return names.filter(f => /^release-\d+(\.\d+)+\.json$/.test(f)).map(f => { try { return JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), 'utf8')); } catch (_) { return null; } })
+    .filter(o => o && o.release !== release && o.card && typeof o.card.flowable === 'string');
+}
+function flowableGaps(st) {
+  const ev = st.flowableEvidence || {}, c = st.card || {}, listed = (flowList(c) || []).map(f => f.toLowerCase()), held = flowHolds(c);
+  const passed = otherCards(st.release).filter(o => PASSED.includes(o.phase));
+  const delivered = (hit, deployed) => passed.some(o => flowList(o.card).some(f => hit(f.toLowerCase())) && (!deployed || String(o.card.flowableDate || '') >= deployed));
+  const gaps = [];
+  if (!ev.staging) gaps.push(`the staging flowable list was not read (${ev.error || 'never read'}): start the DB gateway (schtasks /run /tn "DB Gateway"), then run card again`);
+  for (const s of ev.staging || []) {
+    const f = s.file.toLowerCase();
+    if (s.deployed >= FLOW_LEDGER_FROM && !listed.includes(f) && !held[f] && !delivered(x => x === f, s.deployed)) gaps.push(`${s.file} was deployed on staging ${s.deployed} and no release has delivered it`);
+  }
+  for (const u of ev.config || []) {
+    const hit = x => x === `${u}.bpmn20.xml`.toLowerCase() || x.endsWith(`_${u}.bpmn20.xml`.toLowerCase());
+    if (!listed.some(hit) && !held[u.toLowerCase()] && !delivered(hit)) gaps.push(`flowable.config.json adds urusan ${u} in this release and no flowable for it is listed`);
+  }
+  return gaps;
+}
 // The card is the release checklist; merge-to-master re-proves each item. One row = [item, ok, proof].
 function releaseChecklist(st) {
   const c = st.card || {}, rows = [];
@@ -829,6 +902,9 @@ function releaseChecklist(st) {
   rows.push(['Flowable list on the card', flow !== null, flow === null ? 'missing: card --flowable "<files>|none"' : flow.length ? flow.join(', ') : 'none']);
   const nd = undeliveredFlowables(st);
   rows.push(['Every flowable listed on the drop server', nd.length === 0, nd.length ? 'NOT on server: ' + nd.join(', ') : (flow && flow.length ? `${st.flowableDrop.date}/Pelupusan: ${st.flowableDrop.files.map(f => `${f.name} ${f.listedSize} bytes`).join(', ')}` : 'none needed')]);
+  const gaps = flowableGaps(st), ev = st.flowableEvidence || {};
+  rows.push(['Flowable list agrees with staging and flowable.config.json', gaps.length === 0, gaps.length ? gaps.join(' · ') :
+    `staging: ${ev.staging.length} model(s), newest ${ev.staging.map(s => `${s.deployed} ${s.file}`).sort().pop() || 'none'}; config adds ${ev.config.join(', ') || 'no urusan'}${c.flowableHold ? `; held back: ${c.flowableHold}` : ''}`]);
   rows.push(['SQL list on the card', c.sql !== undefined, c.sql === undefined ? 'missing: card --sql "#<n>, <file>.sql;...|none"' : c.sql]);
   return rows;
 }
@@ -845,6 +921,7 @@ function printCard(st) {
   const blockers = [];
   if (notDelivered.length) blockers.push(`🚨 NOT READY — flowable NOT on the drop server: ${notDelivered.join(', ')}. Run: node domain/release-mlk-plp/release-prep.js flowable-drop --release ${st.release} --from <folder holding the file>`);
   if (cm && !RELEASABLE_COMMON.test(cm[1].trim())) blockers.push(`🚨 NOT READY — common ${cm[1].trim()} is not a release version (x.y.z-MLK); the release team refuses it. Run bump-common to the plain release.`);
+  for (const g of flowableGaps(st)) blockers.push(`🚨 NOT READY — flowable list not proven: ${g}. List it (card --flowable "<files>") or hold it back with the reason (card --flowable-hold "<file or urusan>=<why>").`);
   if (blockers.length) blockers.push('Do NOT paste the Sheet block until these lines are gone.', '');
   const lines = [
     ...blockers,
@@ -901,6 +978,7 @@ function cmdFlowableDrop(a) {
   const c = st.card || {};
   const flow = flowList(c);
   if (!flow || !flow.length) die(`FLOWABLE-DROP REFUSED — the card has no flowable (give --flowable on card/push first, or "none")`, 2);
+  if ('prod-list' in a) return flowableOnProd(st, flow, a['prod-list']);
   const date = a.date || c.flowableDate;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) die('FLOWABLE-DROP REFUSED — no --flowable-date on the card and no --date', 2);
   const from = a.from;
@@ -929,11 +1007,46 @@ function cmdFlowableDrop(a) {
   if (bad.length) die(`FLOWABLE-DROP FAILED — not on the server at the right size: ${bad.map(f => f.name).join(', ')}\n${out.split(/\r?\n/).slice(-12).join('\n')}`, 2);
   console.log('✅ every flowable is listed on the drop server at its local size');
 }
+// flowable-drop --release <ver> --prod-list <file>: the PROD half, the morning after the release. PROD SQL cannot see the
+// engine (et_read has no USAGE on et_flowable17); the only reader is the Flowable admin list in miya's Edge session.
+// <file> = the JSON that list returns. Each flowable of the card must show a deployment on or after its drop date;
+// the result is kept in state.flowableDrop.prod, and the next baseline's init refuses while one is unproven.
+const PROD_DEPLOYMENTS = 'https://etanah-app.melaka.gov.my/flowable-ui/admin-app/rest/admin/deployments?nameLike=MLK_PLP_%25&sort=deployTime&order=desc&size=40';
+const notOnProd = o => (flowList(o.card || {}) || []).filter(f => !(((o.flowableDrop || {}).prod || {}).files || []).some(x => x.name === f && x.deployedAt));
+function flowableOnProd(st, flow, file) {
+  if (!PASSED.includes(st.phase)) die(`FLOWABLE-DROP REFUSED — phase is ${st.phase}; the PROD list is checked after BA passed and PROD was released`, 2);
+  let rows = null;
+  try { const j = JSON.parse(fs.readFileSync(String(file), 'utf8').replace(/^\uFEFF/, '')); rows = Array.isArray(j) ? j : j.data; } catch (_) {}
+  if (!Array.isArray(rows) || !rows.every(r => r && typeof r.name === 'string' && typeof r.deploymentTime === 'string'))
+    die(`FLOWABLE-DROP REFUSED — --prod-list <file> must hold the JSON of the PROD deployment list (rows with name and deploymentTime). Read it in miya's Edge session:\n  ${PROD_DEPLOYMENTS}`, 2);
+  const since = (st.flowableDrop || {}).date;
+  if (!since || undeliveredFlowables(st).length) die(`FLOWABLE-DROP REFUSED — no drop is recorded for ${undeliveredFlowables(st).join(', ') || 'this release'}; run flowable-drop --from <folder> first`, 2);
+  const files = flow.map(f => ({ name: f, deployedAt: rows.filter(r => r.name === f.replace(/\.bpmn20\.xml$/i, '') && r.deploymentTime.slice(0, 10) >= since).map(r => r.deploymentTime).sort().pop() || null }));
+  st.flowableDrop = { ...(st.flowableDrop || {}), prod: { at: new Date().toISOString(), listed: rows.length, files } };
+  saveState(st);
+  console.log(`PROD deployments on or after ${since} (${rows.length} row(s) read)`);
+  for (const f of files) console.log(`  ${f.deployedAt ? '✓' : '✗'} ${f.name}  ${f.deployedAt ? 'deployed ' + f.deployedAt : 'NOT DEPLOYED on PROD'}`);
+  const bad = files.filter(f => !f.deployedAt);
+  log('flowable-drop', st.release, bad.length ? 'prod-missing' : 'prod-ok', files.map(f => [f.name, f.deployedAt]));
+  if (bad.length) die(`🚨 NOT ON PROD — ${bad.map(f => f.name).join(', ')}: the release went out without it. Tell miya first; the release team deploys it from ${DROP_BASE}/${since}/Pelupusan/, then read the list again.`, 2);
+  console.log('✅ every flowable of this release is deployed on PROD');
+}
+// The next baseline does not start while a delivered flowable was never proven on PROD (1.11.0: BA found it missing the next morning).
+function assertFlowablesOnProd(a) {
+  const open = otherCards(a.release).filter(o => PASSED.includes(o.phase) && o.flowableDrop && notOnProd(o).length);
+  if (!open.length) return;
+  const msg = `INIT REFUSED — PROD deployment of a delivered flowable was never proven: ${open.map(o => `${o.release} ${notOnProd(o).join(', ')}`).join(' · ')}.\n` +
+    `  Read this list in miya's Edge session, save the JSON, then run: release-prep.js flowable-drop --release <that release> --prod-list <file>\n  ${PROD_DEPLOYMENTS}\n` +
+    `  Override only with a reason: --prod-flowable-ack "<reason>".`;
+  if (a['prod-flowable-ack']) { console.log(`⚠️  flowable not proven on PROD (${open.map(o => o.release).join(', ')}) — overridden by --prod-flowable-ack "${a['prod-flowable-ack']}"`); return; }
+  die(msg, 2);
+}
 function cmdCard(a) {
   const st = loadState(a.release);
   if (!['pushed', 'mr-pending', 'merged-to-master'].includes(st.phase)) die(`CARD REFUSED — phase is ${st.phase}; the card is for a pushed release`, 2);
   ensureRepo(st.repo);
   takeCardFlags(st, a);
+  readFlowableEvidence(st);
   saveState(st);
   printCard(st);
 }
@@ -981,6 +1094,8 @@ function mrPrepare(st, a) {
   if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
   // Baseline passed = PROD goes out tonight. FINAL RELEASE CHECKLIST (2026-11-26 per miya, 1.11.0): every item the
   // card handed over (the checklist made at push) is checked again here, with proof, before the merge request.
+  readFlowableEvidence(st);   // read again now: a model published to staging during BA testing must be on the list
+  saveState(st);
   const rows = releaseChecklist(st);
   console.log(`FINAL RELEASE CHECKLIST — ${st.release} (every item of the card, checked again before PROD)`);
   for (const [item, ok, proof] of rows) console.log(`  ${ok ? '✓' : '✗'} ${item} — ${proof}`);
@@ -1086,13 +1201,21 @@ async function mrCreate(st, a) {
   const mr = await api('POST', `/projects/${pid}/merge_requests`, { ...want, reviewer_ids: [users[0].id] });
   // read back from GitLab, field by field, before recording
   const back = await api('GET', `/projects/${pid}/merge_requests/${mr.iid}`);
-  const commits = await api('GET', `/projects/${pid}/merge_requests/${mr.iid}/commits?per_page=100`);
+  // GitLab fills a new MR's commit list a moment after the POST, and one page holds 100 at most (1.11.0: 113 commits,
+  // read back as 0 ✗; 1.10.2 the same). The count is the X-Total header, read again for a few seconds before it is a mismatch.
+  const commitCount = async () => {
+    const r = await fetch(`${base}/projects/${pid}/merge_requests/${mr.iid}/commits?per_page=100`, { headers: { 'PRIVATE-TOKEN': cfg.token } });
+    const j = await r.json().catch(() => null);
+    return Number(r.headers.get('x-total')) || (Array.isArray(j) ? j.length : 0);
+  };
+  let commits = await commitCount();
+  for (let i = 0; i < 5 && commits !== st.mr.expectedCommits; i++) { await new Promise(res => setTimeout(res, 2000)); commits = await commitCount(); }
   const checks = [
     ['source', back.source_branch, want.source_branch], ['target', back.target_branch, want.target_branch],
     ['title', back.title, want.title], ['description', back.description, want.description],
     ['reviewer', (back.reviewers || []).map(u => u.username).join(','), rv.username],
     ['squash', String(!!back.squash), 'false'], ['delete src', String(!!back.force_remove_source_branch), 'false'],
-    ['state', back.state, 'opened'], ['commits', String(commits.length), String(st.mr.expectedCommits)]];
+    ['state', back.state, 'opened'], ['commits', String(commits), String(st.mr.expectedCommits)]];
   const bad = checks.filter(([, got, exp]) => got !== exp);
   console.log(checks.map(([k, got, exp]) => `  ${got === exp ? '✓' : '✗'} ${k.padEnd(11)} ${got}${got === exp ? '' : `  (expected ${exp})`}`).join('\n'));
   st.mr.url = back.web_url; st.mr.iid = back.iid; st.mr.reviewer = { name: rv.name, username: rv.username }; st.mr.recordedAt = new Date().toISOString();
@@ -1112,8 +1235,15 @@ function mrAbandon(st) {
   console.log(`· forgot MR ${was || '(none recorded)'} — prepare again with --ba-approved`);
 }
 
+// What is still unproven on PROD the morning after: the flowable deployment (proof kept by flowable-drop --prod-list)
+// and the release SQL, which infra runs (no generic proof exists: each script's own SELECTs, read on PROD).
+function prodNext(st) {
+  const c = st.card || {};
+  if (notOnProd(st).length) console.log(`🚨 NEXT (mandatory, the morning after PROD): prove ${notOnProd(st).join(', ')} is deployed on PROD — read ${PROD_DEPLOYMENTS} in miya's Edge session, save the JSON, run \`flowable-drop --release ${st.release} --prod-list <file>\` (the next baseline's init refuses until it ran)`);
+  if (c.sql && c.sql.trim().toLowerCase() !== 'none') console.log(`🚨 NEXT (the morning after PROD): run each script's own SELECTs on PROD (read only) and show the after values — ${c.sql}`);
+}
 function mrCheck(st) {
-  if (st.phase === 'merged-to-master') { console.log(`✅ already merged-to-master (${(st.masterSha || '').slice(0, 10)})`); return; }
+  if (st.phase === 'merged-to-master') { console.log(`✅ already merged-to-master (${(st.masterSha || '').slice(0, 10)})`); prodNext(st); return; }
   if (st.phase !== 'mr-pending' || !st.mr) die(`CHECK REFUSED — phase is ${st.phase}, expected mr-pending (run --ba-approved first)`, 2);
   fetchOrigin(st.repo);
   const tip = st.mr.releaseTip;
@@ -1163,6 +1293,7 @@ function mrCheck(st) {
   const m = require('./stag-catchup.js').measure(st.repo, 'mlk/stag-env', 'origin/mlk/master');
   if (m.behind) console.log(`🚨 NEXT (mandatory): origin/mlk/stag-env is ${m.behind} commit(s) behind — run \`stag-catchup --release ${st.release} --push\` in the work clone (the next baseline's init refuses until it ran)`);
   else console.log('✅ origin/mlk/stag-env already holds the release · release COMPLETE');
+  prodNext(st);
 }
 
 // Self-audit (system-design Rule 16): read the state back from disk and check it against the goal.

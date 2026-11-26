@@ -22,6 +22,9 @@ const WEB = 'http://gitlab.test/gitlab', PROJECT = 'etanah/etanah-pelupusan';
 const writeCfg = obj => fs.writeFileSync(cfg, JSON.stringify(obj));
 const goodCfg = { gitlab: { web: WEB, project: PROJECT, reviewers: [{ name: 'Aaron', username: 'aaron' }, { name: 'Alex', username: 'alexk' }] } };
 const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, RELEASE_MLK_PLP_CONFIG: cfg, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json') };
+// the staging flowable list is a stub (no DB read from an eval): {rows:[{file,deployed}]} or {error}
+const staging = v => { env.RELEASE_MLK_PLP_STAGING_FLOWABLES = JSON.stringify(v); };
+staging({ rows: [] });
 
 function sh(cwd, args) {
   const r = spawnSync('git', args, { cwd, encoding: 'utf8' });
@@ -35,6 +38,7 @@ const state = v => JSON.parse(fs.readFileSync(path.join(stateDir, `release-${v}.
 function commitOn(branch, file, text, msg, pushTo) {
   sh(repo, ['fetch', '-q', 'origin']);
   sh(repo, ['checkout', '-q', '-B', 'fx', `origin/${branch}`]);
+  fs.mkdirSync(path.dirname(path.join(repo, file)), { recursive: true });
   fs.writeFileSync(path.join(repo, file), text);
   sh(repo, ['add', '-A']); sh(repo, ['commit', '-q', '-m', msg]);
   sh(repo, ['push', '-q', '-f', 'origin', `HEAD:${pushTo || branch}`]);
@@ -148,12 +152,13 @@ try {
 
   // --create-mr through a mock GitLab API (separate process, so the sync script calls can reach it)
   const mockJs = path.join(tmp, 'mock-gitlab.js'), mockLog = path.join(tmp, 'mock.log'), portFile = path.join(tmp, 'mock.port');
-  fs.writeFileSync(mockJs, `const http=require('http');const fs=require('fs');let mr=null;
+  // /commits: empty on the first read (GitLab fills it a moment after the POST), then ONE row with X-Total: 2 (a page is not the total)
+  fs.writeFileSync(mockJs, `const http=require('http');const fs=require('fs');let mr=null;let cc=0;
 const srv=http.createServer((q,s)=>{let b='';q.on('data',d=>b+=d);q.on('end',()=>{fs.appendFileSync(${JSON.stringify(mockLog)},q.method+' '+q.url+' tok='+q.headers['private-token']+'\\n');
 const j=o=>{s.writeHead(200,{'Content-Type':'application/json'});s.end(JSON.stringify(o));};const u=q.url;
 if(q.method==='POST'){const x=JSON.parse(b);mr={iid:7,web_url:'http://127.0.0.1:'+srv.address().port+'/gitlab/etanah/etanah-pelupusan/-/merge_requests/7',state:'opened',source_branch:x.source_branch,target_branch:x.target_branch,title:x.title,description:x.description,squash:x.squash,force_remove_source_branch:x.remove_source_branch,reviewers:[{username:'aaron'}]};return j(mr);}
 if(u.includes('/users?'))return j([{id:42,username:'aaron'}]);
-if(u.includes('/commits'))return j([{},{}]);
+if(u.includes('/commits')){if(++cc===1)return j([]);s.writeHead(200,{'Content-Type':'application/json','X-Total':'2'});return s.end('[{}]');}
 if(u.includes('merge_requests?'))return j(mr?[mr]:[]);
 if(u.includes('/merge_requests/7'))return j(mr);
 s.writeHead(404);s.end('{}');});});
@@ -175,6 +180,7 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   check('M29 --create-mr without --confirm shows the table and sends nothing', r.status === 0 && /MERGE REQUEST TO CREATE/.test(all(r)) && /nothing sent/.test(all(r)) && posts() === 0 && !fs.existsSync(mockLog), all(r));
   r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
   check('M30 --confirm creates the MR, reads it back, records it', r.status === 0 && posts() === 1 && /MR !7 created and read back/.test(all(r)) && state('9.9.23').mr.url.endsWith('/merge_requests/7') && !/✗/.test(all(r)), all(r));
+  check('M30b commit count: first read empty, then a 1-row page with X-Total 2 → read back as 2, no false ✗ (1.11.0 and 1.10.2 showed "commits 0")', /✓ commits\s+2\b/.test(all(r)), all(r));
   check('M31 the token is sent as a header and never printed', !/glpat-TESTTOKEN/.test(all(r)) && /tok=glpat-TESTTOKEN/.test(fs.readFileSync(mockLog, 'utf8')), all(r));
   r = prep(['merge-to-master', '--release', '9.9.23', '--create-mr', '--reviewer', 'Aaron', '--confirm']);
   check('M32 a second create is refused (MR already recorded)', r.status === 2 && /already recorded/.test(all(r)) && posts() === 1, all(r));
@@ -260,7 +266,75 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   check('M39 add-ticket after push is refused once a merge request is recorded', r.status === 2 && /merge request is recorded/.test(all(r)), all(r));
   sh(repo, ['checkout', '-q', 'mlk/hotfix/1']);
 
-  const logRows = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-40).map(l => { try { return JSON.parse(l); } catch (_) { return {}; } });
+  // The flowable list is proven by evidence the script reads itself, not by the typed flag (2026-11-26 per miya):
+  // staging engine deployments + urusan the release adds to flowable.config.json.
+  const ledger = (ver, phase, card) => fs.writeFileSync(path.join(stateDir, `release-${ver}.json`), JSON.stringify({ release: ver, branch: `mlk/release/${ver}`, repo, tickets: [], phase, card }));
+  const EVROW = /Flowable list agrees with staging and flowable\.config\.json/.source;
+  newRelease('9.9.40', [['e1.txt', 'e1\n']]);   // full card, flowable typed "none"
+  staging({ rows: [{ file: 'MLK_PLP_OLD.bpmn20.xml', deployed: '2026-10-14' }, { file: 'MLK_PLP_NEW.bpmn20.xml', deployed: '2026-11-19' }] });
+  r = prep(['card', '--release', '9.9.40']);
+  check('M51 card typed "none" while staging holds a model no release delivered → NOT READY names it; a deployment before the ledger start is not asked for', r.status === 0 && /^🚨 NOT READY — flowable list not proven: MLK_PLP_NEW\.bpmn20\.xml was deployed on staging 2026-11-19 and no release has delivered it/m.test(all(r)) && !/MLK_PLP_OLD/.test(all(r)) && /NOT READY \(1\)/.test(all(r)), all(r));
+  r = prep(['merge-to-master', '--release', '9.9.40', '--ba-approved']);
+  check('M52 the same card at merge-to-master → checklist ✗ on the evidence row, refused, no MR form', r.status === 2 && new RegExp(`✗ ${EVROW} — MLK_PLP_NEW\\.bpmn20\\.xml was deployed on staging 2026-11-19`).test(all(r)) && !/MERGE REQUEST FORM/.test(all(r)) && state('9.9.40').phase === 'pushed', all(r));
+  r = prep(['card', '--release', '9.9.40', '--flowable-hold', 'MLK_PLP_NEW.bpmn20.xml=ticket 123 is not in this release']);
+  const held = prep(['merge-to-master', '--release', '9.9.40', '--ba-approved']);
+  check('M53 held back with its reason → no NOT READY; the checklist row is ✓ and shows the reason', !/NOT READY/.test(all(r)) && held.status === 0 && new RegExp(`✓ ${EVROW} — staging: 2 model\\(s\\)[^\\n]*held back: MLK_PLP_NEW\\.bpmn20\\.xml=ticket 123 is not in this release`).test(all(held)), all(r) + all(held));
+  r = prep(['card', '--release', '9.9.40', '--flowable-hold', 'MLK_PLP_NEW.bpmn20.xml=']);
+  check('M53b a hold with no reason holds nothing', /flowable list not proven: MLK_PLP_NEW/.test(all(r)), all(r));
+  // delivered = an earlier BA-passed release lists the file and its drop date is on or after the staging deploy date
+  ledger('9.9.38', 'merged-to-master', { flowable: 'MLK_PLP_NEW.bpmn20.xml', flowableDate: '2026-11-20' });
+  newRelease('9.9.41', [['e2.txt', 'e2\n']]);
+  r = prep(['card', '--release', '9.9.41']);
+  check('M54 an earlier BA-passed release delivered the model (drop date on or after the staging deploy) → not asked for again', r.status === 0 && !/NOT READY/.test(all(r)), all(r));
+  staging({ rows: [{ file: 'MLK_PLP_NEW.bpmn20.xml', deployed: '2026-11-21' }] });
+  r = prep(['card', '--release', '9.9.41']);
+  check('M55 the same model published to staging again after that drop → asked for again', /flowable list not proven: MLK_PLP_NEW\.bpmn20\.xml was deployed on staging 2026-11-21/.test(all(r)), all(r));
+  ledger('9.9.39', 'pushed', { flowable: 'MLK_PLP_NEW.bpmn20.xml', flowableDate: '2026-11-22' });
+  check('M56 a release BA has not passed delivers nothing', /flowable list not proven: MLK_PLP_NEW/.test(all(prep(['card', '--release', '9.9.41']))), '');
+  r = prep(['card', '--release', '9.9.41', '--flowable', 'MLK_PLP_NEW.bpmn20.xml', '--flowable-date', '2026-11-26']);
+  check('M57 listed on the card → the evidence gap closes and the drop check takes over', !/flowable list not proven/.test(all(r)) && /NOT READY — flowable NOT on the drop server: MLK_PLP_NEW\.bpmn20\.xml/.test(all(r)), all(r));
+  staging({ error: 'connect ECONNREFUSED 127.0.0.1:7411' });
+  r = prep(['card', '--release', '9.9.41', '--flowable', 'none']);
+  check('M58 staging list could not be read → NOT READY says so, never a silent pass', /NOT READY — flowable list not proven: the staging flowable list was not read \(connect ECONNREFUSED 127\.0\.0\.1:7411\)/.test(all(r)), all(r));
+  r = prep(['merge-to-master', '--release', '9.9.41', '--ba-approved']);
+  check('M59 … and merge-to-master is refused on it', r.status === 2 && new RegExp(`✗ ${EVROW} — the staging flowable list was not read`).test(all(r)) && !/MERGE REQUEST FORM/.test(all(r)), all(r));
+  staging({ rows: [] });
+  newRelease('9.9.42', [['src/main/resources/config/MLK/flowable.config.json', JSON.stringify({ modules: { PLP: { included_urusan_list: ['PT', 'PLBP'] } }, other_flowable_list: [] })]]);
+  sh(repo, ['checkout', '-q', 'mlk/hotfix/1']);
+  r = prep(['card', '--release', '9.9.42']);
+  check('M60 the release adds urusan to flowable.config.json and the card says "none" → NOT READY per urusan', /flowable\.config\.json adds urusan PT in this release/.test(all(r)) && /flowable\.config\.json adds urusan PLBP in this release/.test(all(r)) && /NOT READY \(2\)/.test(all(r)), all(r));
+  r = prep(['card', '--release', '9.9.42', '--flowable', 'MLK_PLP_PLBP.bpmn20.xml', '--flowable-date', '2026-11-25', '--flowable-hold', 'PT=MLK_PLP_PT is on PROD since 2025']);
+  check('M61 each urusan is answered by its file on the card, or by a hold with the reason', !/flowable list not proven/.test(all(r)) && /flowable NOT on the drop server: MLK_PLP_PLBP/.test(all(r)), all(r));
+
+  // The PROD half: the Flowable admin deployment list (only miya's Edge session reads it) proves each delivered flowable.
+  const prodJson = path.join(tmp, 'prod.json');
+  const prod = rows => fs.writeFileSync(prodJson, JSON.stringify({ data: rows, total: rows.length }));
+  r = prep(['init', '--release', '9.9.50', '--repo', repo]);
+  check('M62 next baseline init while a delivered flowable was never proven on PROD → refused; names the release, the file, the list to read', r.status === 2 && /INIT REFUSED — PROD deployment of a delivered flowable was never proven: 9\.9\.35 A\.bpmn20\.xml/.test(all(r)) && /admin-app\/rest\/admin\/deployments\?nameLike=MLK_PLP_%25/.test(all(r)) && !fs.existsSync(path.join(stateDir, 'release-9.9.50.json')), all(r));
+  r = prep(['flowable-drop', '--release', '9.9.32', '--prod-list', prodJson]);
+  check('M63 --prod-list before BA passed → refused', r.status === 2 && /phase is pushed/.test(all(r)), all(r));
+  fs.writeFileSync(prodJson, '<html>login</html>');
+  r = prep(['flowable-drop', '--release', '9.9.35', '--prod-list', prodJson]);
+  check('M64 a file that is not the deployment list (a login page) → refused, nothing recorded', r.status === 2 && /must hold the JSON of the PROD deployment list/.test(all(r)) && !state('9.9.35').flowableDrop.prod, all(r));
+  prod([{ name: 'A', deploymentTime: '2026-11-10T22:00:00.000+08:00' }, { name: 'OTHER', deploymentTime: '2026-11-12T01:00:00.000+08:00' }]);
+  r = prep(['flowable-drop', '--release', '9.9.35', '--prod-list', prodJson]);
+  check('M65 PROD shows only a deployment older than the drop → NOT ON PROD, exit 2, kept as unproven beside the drop record', r.status === 2 && /✗ A\.bpmn20\.xml  NOT DEPLOYED on PROD/.test(all(r)) && /NOT ON PROD — A\.bpmn20\.xml/.test(all(r)) && state('9.9.35').flowableDrop.prod.files[0].deployedAt === null && state('9.9.35').flowableDrop.files[0].listedSize === 4, all(r));
+  // the reviewer merges 9.9.35; staging follows (kept current so init is judged on the PROD proof alone)
+  prep(['card', '--release', '9.9.35', '--sql', '#9, 9.sql']);
+  sh(repo, ['push', '-q', 'origin', `${state('9.9.35').mr.releaseTip}:refs/heads/mlk/master`]);
+  sh(repo, ['push', '-q', '-f', 'origin', `${state('9.9.35').mr.releaseTip}:refs/heads/mlk/stag-env`]);
+  r = prep(['merge-to-master', '--release', '9.9.35', '--check']);
+  check('M66 --check after the merge names what is still unproven on PROD: the flowable (with the proof command) and the SQL', r.status === 0 && /NEXT \(mandatory, the morning after PROD\): prove A\.bpmn20\.xml is deployed on PROD[^\n]*flowable-drop --release 9\.9\.35 --prod-list/.test(all(r)) && /NEXT \(the morning after PROD\): run each script's own SELECTs on PROD[^\n]*#9, 9\.sql/.test(all(r)), all(r));
+  prod([{ name: 'A', deploymentTime: '2026-11-11T23:40:00.000+08:00' }, { name: 'A', deploymentTime: '2026-11-10T22:00:00.000+08:00' }]);
+  fs.writeFileSync(prodJson, String.fromCharCode(0xFEFF) + fs.readFileSync(prodJson, 'utf8'));   // a file saved by PowerShell starts with a byte-order mark
+  r = prep(['flowable-drop', '--release', '9.9.35', '--prod-list', prodJson]);
+  check('M67 a deployment on or after the drop date → proven, time kept in state (a byte-order mark in the file is fine)', r.status === 0 && /every flowable of this release is deployed on PROD/.test(all(r)) && state('9.9.35').flowableDrop.prod.files[0].deployedAt === '2026-11-11T23:40:00.000+08:00', all(r));
+  r = prep(['merge-to-master', '--release', '9.9.35', '--check']);
+  check('M68 once proven, --check no longer asks for the flowable', !/prove A\.bpmn20\.xml/.test(all(r)), all(r));
+  r = prep(['init', '--release', '9.9.50', '--repo', repo]);
+  check('M69 with the PROD proof recorded the next baseline starts', r.status === 0 && /PREFLIGHT PASSED/.test(all(r)), all(r));
+
+  const logRows = fs.readFileSync(path.join(__dirname, 'log.jsonl'), 'utf8').trim().split('\n').slice(-120).map(l => { try { return JSON.parse(l); } catch (_) { return {}; } });
   check('M27 log rows: prepared · recorded · waiting · ok', ['mr-prepared', 'mr-recorded', 'mr-waiting', 'mr-abandoned', 'ok'].every(k => logRows.some(x => x.cmd === 'merge-to-master' && x.result === k)), JSON.stringify(logRows.map(x => x.result)));
 } catch (e) {
   check('FIXTURE setup/run crashed', false, e.message.slice(0, 400));
