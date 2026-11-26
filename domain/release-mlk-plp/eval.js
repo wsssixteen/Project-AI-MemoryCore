@@ -18,7 +18,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-eval-'));
 const bare = path.join(tmp, 'origin', 'etanah-pelupusan.git');
 const work = path.join(tmp, 'etanah-pelupusan');
 const stateDir = path.join(tmp, 'state');
-const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json') }; // fixtures never see the live carry-over list
+const env = { ...process.env, RELEASE_MLK_PLP_COMPILE_CMD: JSON.stringify([process.execPath, '-e', 'process.exit(0)']), RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json') }; // fixtures never see the live carry-over list
 
 function sh(cwd, cmd, args) {
   const r = spawnSync(cmd, args, { cwd, encoding: 'utf8' });
@@ -89,6 +89,8 @@ try {
   r = prepNoRepo(['merge-continue', '--release', '9.9.9']);
   check('T7 merge-continue finishes (phase=merged)', r.status === 0 && /all ticket branches merged/.test(r.stdout), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
 
+  // fixture has no int-env/stag-env: the env-tested gate (2026-09-23) needs its visible override
+  for (const t of ['1001', '1002', '1003']) prepNoRepo(['ack-untested', '--release', '9.9.9', '--ticket', t, '--reason', 'eval fixture: no env branches']);
   // T8: verify — all tickets contained, table emitted
   r = prepNoRepo(['verify', '--release', '9.9.9']);
   check('T8 verify green table', r.status === 0 && /\| #1003 \| mlk\/esokongan\/1003 \| 0 \| ✓ \|/.test(r.stdout), 'exit=' + r.status + ' ' + r.stdout.slice(-200));
@@ -158,6 +160,11 @@ try {
   r = prepNoRepo(['bump-version', '--release', '9.9.9']);
   check('T8f clean single-line bump still passes', r.status === 0 && git(['log', '-1', '--format=%s']) === 'pelupusan version: 9.9.9', 'exit=' + r.status + ' ' + r.stderr.slice(0, 100));
 
+  // T8g (2026-11-26): no green compile of the final tree -> push refused, nothing pushed
+  env.RELEASE_MLK_PLP_COMPILE_CMD = JSON.stringify([process.execPath, '-e', 'process.exit(1)']);
+  r = prepNoRepo(['push', '--release', '9.9.9']);
+  check('T8g push refused without a green compile of the tree', r.status === 2 && /no green compile/.test(r.stderr), 'exit=' + r.status);
+  env.RELEASE_MLK_PLP_COMPILE_CMD = JSON.stringify([process.execPath, '-e', 'process.exit(0)']);
   // T9: push lands the branch on origin
   r = prepNoRepo(['push', '--release', '9.9.9']);
   const onOrigin = git(['ls-remote', '--heads', 'origin', 'mlk/release/9.9.9']) !== '';

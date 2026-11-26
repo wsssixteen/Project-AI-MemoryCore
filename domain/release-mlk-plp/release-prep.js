@@ -778,6 +778,11 @@ function cmdPush(a) {
   if (head !== st.headSha) die(`PUSH REFUSED — HEAD moved since verify (${st.headSha.slice(0, 10)} -> ${head.slice(0, 10)}). Re-run verify.`, 2);
   const pomCommon = (fs.readFileSync(path.join(st.repo, 'pom.xml'), 'utf8').match(/<etanah\.common\.version>([^<]+)</) || [])[1];
   if (pomCommon && !RELEASABLE_COMMON.test(pomCommon.trim())) die(`PUSH REFUSED — common ${pomCommon.trim()} is not a release version (x.y.z-MLK); the release team refuses it (1.11.0, 2026-11-25). Run bump-common to the plain release, then verify.`, 2);
+  // The final tree must have compiled green with nothing edited since (1.9.3, 2026-11-11: pushed without re-compiling).
+  // compile-gate's marker means a tree already compiled is not compiled twice.
+  const cc = process.env.RELEASE_MLK_PLP_COMPILE_CMD ? JSON.parse(process.env.RELEASE_MLK_PLP_COMPILE_CMD) : [process.execPath, path.join(__dirname, '..', 'compile-gate', 'compile-check.js'), 'verify'];
+  const cv = spawnSync(cc[0], [...cc.slice(1), st.repo], { encoding: 'utf8', timeout: 60000 });
+  if (cv.status !== 0) die(`PUSH REFUSED — no green compile of this tree (or a file changed since). Run: node domain/compile-gate/compile-check.js run ${st.repo}\n${((cv.stdout || '') + (cv.stderr || '')).trim().split(/\r?\n/).slice(-3).join('\n')}`, 2);
   git(st.repo, ['push', '-u', 'origin', st.branch]);
   if (!remoteBranchExists(st.repo, st.branch)) die('push reported success but branch not visible on origin — investigate');
   st.phase = 'pushed';
