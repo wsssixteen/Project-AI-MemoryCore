@@ -17,7 +17,10 @@
  *           records HEAD sha (push refuses if HEAD moves after verify)
  *   push    ONLY when phase=verified AND HEAD unchanged AND branch matches
  *           ^mlk/release/\d+\.\d+(\.\d+)?$  -> git push -u origin <branch>, then prints the hand-off card
- *   card    re-prints the card of a pushed release; --domain --db --flowable-date --flowable --sql fill it
+ *   card    re-prints the card of a pushed release; --domain --db --flowable-date --flowable --sql fill it;
+ *           NOT READY lines head it while a flowable is undelivered or the common is not x.y.z-MLK
+ *   flowable-drop  --from <folder>: uploads the card's flowables via WinSCP (session drop.session, default
+ *           MLK-FTP), LISTS the server folder, records sizes; merge-to-master refuses until every one is listed
  *   add-ticket  also after push (no merge request yet): re-opens the release on top of the pushed tip
  *   merge-to-master  Phase F after BA pass. mlk/master is protected (2026-10-29): --ba-approved prints the
  *           GitLab merge-request form spec (never pushes) · --record-mr <url> --reviewer <name> · --abandon-mr ·
@@ -773,6 +776,8 @@ function cmdPush(a) {
   ensureOnBranch(st.repo, st.branch);
   const head = gitOut(st.repo, ['rev-parse', 'HEAD']);
   if (head !== st.headSha) die(`PUSH REFUSED — HEAD moved since verify (${st.headSha.slice(0, 10)} -> ${head.slice(0, 10)}). Re-run verify.`, 2);
+  const pomCommon = (fs.readFileSync(path.join(st.repo, 'pom.xml'), 'utf8').match(/<etanah\.common\.version>([^<]+)</) || [])[1];
+  if (pomCommon && !RELEASABLE_COMMON.test(pomCommon.trim())) die(`PUSH REFUSED — common ${pomCommon.trim()} is not a release version (x.y.z-MLK); the release team refuses it (1.11.0, 2026-11-25). Run bump-common to the plain release, then verify.`, 2);
   git(st.repo, ['push', '-u', 'origin', st.branch]);
   if (!remoteBranchExists(st.repo, st.branch)) die('push reported success but branch not visible on origin — investigate');
   st.phase = 'pushed';
@@ -797,6 +802,16 @@ function takeCardFlags(st, a) {
   st.card = st.card || {};
   for (const [flag, key] of Object.entries(CARD_FLAGS)) if (typeof a[flag] === 'string') st.card[key] = a[flag];
 }
+// Critical steps the card may never claim on a flag alone (2026-11-26 per miya: 1.11.0 reached PROD without
+// MLK_PLP_PLBP.bpmn20.xml; 1.9.3 and 1.7.0 missed the same drop). A flowable counts as delivered only when
+// `flowable-drop` listed it on the server at the right size; the common must be a plain release (x.y.z-MLK):
+// the release team refused 1.15.2-MLK.domain.1.0.17-MLK on 2026-11-25.
+const RELEASABLE_COMMON = /^\d+\.\d+\.\d+-MLK$/;
+function flowList(c) { return c.flowable === undefined ? null : c.flowable.trim().toLowerCase() === 'none' ? [] : c.flowable.split(',').map(s => s.trim()).filter(Boolean); }
+function undeliveredFlowables(st) {
+  const c = st.card || {}, flow = flowList(c) || [], d = st.flowableDrop || {};
+  return flow.filter(f => !(d.date === c.flowableDate && (d.files || []).some(x => x.name === f && x.listedSize === x.size)));
+}
 function printCard(st) {
   const c = st.card || {};
   const fill = flag => `<FILL: --${flag}>`;
@@ -804,9 +819,15 @@ function printCard(st) {
   const pom = git(st.repo, ['show', `${ref}:pom.xml`], true).stdout || '';
   const cm = pom.match(/<etanah\.common\.version>([^<]+)<\/etanah\.common\.version>/);
   const merges = (git(st.repo, ['rev-list', '--merges', '--count', `origin/mlk/master..${ref}`], true).stdout || '').trim() || '?';
-  const flow = c.flowable === undefined ? null : c.flowable.trim().toLowerCase() === 'none' ? [] : c.flowable.split(',').map(s => s.trim()).filter(Boolean);
+  const flow = flowList(c);
   const sql = c.sql === undefined ? null : c.sql.trim().toLowerCase() === 'none' ? [] : c.sql.split(';').map(s => s.trim()).filter(Boolean);
+  const notDelivered = undeliveredFlowables(st);
+  const blockers = [];
+  if (notDelivered.length) blockers.push(`🚨 NOT READY — flowable NOT on the drop server: ${notDelivered.join(', ')}. Run: node domain/release-mlk-plp/release-prep.js flowable-drop --release ${st.release} --from <folder holding the file>`);
+  if (cm && !RELEASABLE_COMMON.test(cm[1].trim())) blockers.push(`🚨 NOT READY — common ${cm[1].trim()} is not a release version (x.y.z-MLK); the release team refuses it. Run bump-common to the plain release.`);
+  if (blockers.length) blockers.push('Do NOT paste the Sheet block until these lines are gone.', '');
   const lines = [
+    ...blockers,
     `Baseline ${st.release} - branch ready, pushed (${String(st.headSha).slice(0, 10)})`, '',
     `B2 - CONFIRM THE MERGES (expect ${merges} lines)`,
     `git -C ${String(st.repo).replace(/\//g, '\\')} log --oneline --merges mlk/master..${st.branch}`, '',
@@ -836,14 +857,57 @@ function printCard(st) {
     `Branch Name: ${st.branch}`,
     'Dependency pendaftaran: (for Tukarganti & Pendaftaran only)',
     `Flowable Diagram: ${flow === null ? fill('flowable') : flow.length ? `/home/ftpuser/files/flowable-diagrams/Melaka/${c.flowableDate || fill('flowable-date')}/Pelupusan/` : ''}`,
-    ...(flow || []),
+    ...(flow || []).map(f => notDelivered.includes(f) ? `<NOT DELIVERED: ${f}>` : f),
     'SQL name with ticket number:',
     ...(sql === null ? [fill('sql')] : sql),
   ];
   console.log('\n----- CARD (paste as the last message) -----');
   console.log(lines.join('\n'));
   const missing = lines.filter(l => l.includes('<FILL:')).length;
-  console.log(`----- END CARD${missing ? ` · ${missing} FILL line(s): re-run \`card --release ${st.release}\` with the missing flags` : ''} -----`);
+  console.log(`----- END CARD${missing ? ` · ${missing} FILL line(s): re-run \`card --release ${st.release}\` with the missing flags` : ''}${blockers.length ? ` · NOT READY (${blockers.length - 2})` : ''} -----`);
+}
+
+// flowable-drop --release <ver> --from <folder> [--date YYYY-MM-DD]: uploads every --flowable file of the card to
+// /home/ftpuser/files/flowable-diagrams/Melaka/<date>/Pelupusan/ through the WinSCP stored session (config
+// drop.session, default MLK-FTP), then LISTS the folder and records name · size · md5 · listed size in state.
+// The card and merge-to-master read this record; a flag alone never counts as delivered.
+const DROP_BASE = '/home/ftpuser/files/flowable-diagrams/Melaka';
+function winscp(commands) {
+  const cmd = process.env.RELEASE_MLK_PLP_WINSCP_CMD ? JSON.parse(process.env.RELEASE_MLK_PLP_WINSCP_CMD) : ['C:\\Program Files (x86)\\WinSCP\\WinSCP.com'];
+  return spawnSync(cmd[0], [...cmd.slice(1), '/command', ...commands, 'exit'], { encoding: 'utf8', timeout: 180000 });
+}
+function cmdFlowableDrop(a) {
+  const st = loadState(a.release);
+  const c = st.card || {};
+  const flow = flowList(c);
+  if (!flow || !flow.length) die(`FLOWABLE-DROP REFUSED — the card has no flowable (give --flowable on card/push first, or "none")`, 2);
+  const date = a.date || c.flowableDate;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) die('FLOWABLE-DROP REFUSED — no --flowable-date on the card and no --date', 2);
+  const from = a.from;
+  if (!from || !fs.existsSync(from)) die(`FLOWABLE-DROP REFUSED — --from <folder holding ${flow.join(', ')}> is required`, 2);
+  const crypto = require('crypto');
+  const local = flow.map(f => {
+    const p = path.join(from, f);
+    if (!fs.existsSync(p)) die(`FLOWABLE-DROP REFUSED — ${p} not found`, 2);
+    const buf = fs.readFileSync(p);
+    return { name: f, size: buf.length, md5: crypto.createHash('md5').update(buf).digest('hex') };
+  });
+  let session = 'MLK-FTP';
+  try { session = (JSON.parse(fs.readFileSync(CONFIG, 'utf8')).drop || {}).session || session; } catch (_) {}
+  const dir = `${DROP_BASE}/${date}`;
+  const r = winscp(['option batch continue', 'option confirm off', `open ${session}`, `mkdir ${dir}`, `mkdir ${dir}/Pelupusan`, 'option batch abort',
+    `cd ${dir}/Pelupusan`, `lcd ${from}`, ...local.map(f => `put -transfer=binary ${f.name}`), 'ls']);
+  const out = (r.stdout || '') + (r.stderr || '');
+  const listed = {};
+  for (const line of out.split(/\r?\n/)) { const m = line.match(/^-\S+\s+\d+\s+\S+\s+\S+\s+(\d+)\s+.*\s(\S+)$/); if (m) listed[m[2]] = Number(m[1]); }
+  st.flowableDrop = { date, session, at: new Date().toISOString(), files: local.map(f => ({ ...f, listedSize: listed[f.name] === undefined ? null : listed[f.name] })) };
+  saveState(st);
+  const bad = st.flowableDrop.files.filter(f => f.listedSize !== f.size);
+  console.log(`DROP ${dir}/Pelupusan/ (session ${session})`);
+  for (const f of st.flowableDrop.files) console.log(`  ${f.listedSize === f.size ? '✓' : '✗'} ${f.name}  local ${f.size} bytes md5 ${f.md5} · server ${f.listedSize === null ? 'NOT LISTED' : f.listedSize + ' bytes'}`);
+  log('flowable-drop', st.release, bad.length ? 'fail' : 'ok', { date, files: st.flowableDrop.files.map(f => [f.name, f.size, f.listedSize]) });
+  if (bad.length) die(`FLOWABLE-DROP FAILED — not on the server at the right size: ${bad.map(f => f.name).join(', ')}\n${out.split(/\r?\n/).slice(-12).join('\n')}`, 2);
+  console.log('✅ every flowable is listed on the drop server at its local size');
 }
 function cmdCard(a) {
   const st = loadState(a.release);
@@ -895,6 +959,9 @@ function mrPrepare(st, a) {
   if (st.phase !== 'pushed' && st.phase !== 'mr-pending') die(`MERGE-TO-MASTER REFUSED — phase is ${st.phase}, expected pushed (the release branch must be on origin first)`, 2);
   // presence-check, not truthiness: parseArgs stores undefined for a bare `--ba-approved`.
   if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
+  // Baseline passed = PROD goes out tonight: the flowable must already be on the drop server (2026-11-26, 1.11.0).
+  const notDelivered = undeliveredFlowables(st);
+  if (notDelivered.length) die(`MERGE-TO-MASTER REFUSED — 🚨 flowable NOT on the drop server: ${notDelivered.join(', ')}. PROD goes out tonight without it. Run first: node domain/release-mlk-plp/release-prep.js flowable-drop --release ${st.release} --from <folder>`, 2);
   const gl = gitlabConfig();
   const project = gitlabProject(st.repo, gl);
   fetchOrigin(st.repo);
@@ -1133,8 +1200,8 @@ const commands = {
   init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'defer-carry': cmdDeferCarry, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
-  push: cmdPush, card: cmdCard, 'merge-to-master': cmdMergeToMaster, 'stag-catchup': cmdStagCatchup, status: cmdStatus,
+  push: cmdPush, card: cmdCard, 'flowable-drop': cmdFlowableDrop, 'merge-to-master': cmdMergeToMaster, 'stag-catchup': cmdStagCatchup, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|card|merge-to-master|stag-catchup|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|card|flowable-drop|merge-to-master|stag-catchup|status> --release <ver> [...]`);
 if (cmd !== 'init' && cmd !== 'stag-catchup' && !a.release) die('--release required');
 commands[cmd](a);

@@ -204,7 +204,40 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   // full BAQA template (2026-11-16): baqa · target-version · domain, db, common in both sections · flowable · sql = 10 FILL lines
   check('M36 card with no values → full BAQA template, each unknown line is a FILL line', r.status === 0 && /Module Version : 9\.9\.30/.test(all(r)) && /BAQA section:[\s\S]*Version Details:[\s\S]*Developer section:/.test(all(r)) && (all(r).match(/<FILL:/g) || []).length === 10 && /FILL line\(s\)/.test(all(r)), all(r));
   r = prep(['card', '--release', '9.9.30', '--domain', '1.0.15-MLK', '--db', '1.0.16-MLK', '--flowable-date', '2026-11-11', '--flowable', 'A.bpmn20.xml,B.bpmn20.xml', '--sql', '#1, 1.sql;#2, 2.sql', '--baqa', 'Mira/Fizah/Anis', '--target-version', 'http://host/versions/1']);
-  check('M37 card with values → folder once, one file per line, one SQL per line, kept in state', r.status === 0 && /Domain Version : 1\.0\.15-MLK/.test(all(r)) && /BAQA Name:  Mira\/Fizah\/Anis/.test(all(r)) && /Link Target Version: \r?\nhttp:\/\/host\/versions\/1/.test(all(r)) && !/<FILL: --(baqa|target-version)>/.test(all(r)) && /Melaka\/2026-11-11\/Pelupusan\/\r?\nA\.bpmn20\.xml\r?\nB\.bpmn20\.xml\r?\n/.test(all(r)) && /#1, 1\.sql\r?\n#2, 2\.sql/.test(all(r)) && state('9.9.30').card.db === '1.0.16-MLK', all(r));
+  // 2026-11-26 (1.11.0 reached PROD without its flowable): before flowable-drop the card is NOT READY and marks each file
+  check('M40 card before flowable-drop → NOT READY head line, each file marked NOT DELIVERED, path never printed bare', r.status === 0 && /^🚨 NOT READY — flowable NOT on the drop server: A\.bpmn20\.xml, B\.bpmn20\.xml/m.test(all(r)) && /<NOT DELIVERED: A\.bpmn20\.xml>\r?\n<NOT DELIVERED: B\.bpmn20\.xml>/.test(all(r)) && /NOT READY \(1\)/.test(all(r)), all(r));
+  // fake WinSCP: lists every put file at its real size, or at FAKE_SIZE when set
+  const fake = path.join(tmp, 'fake-winscp.js');
+  fs.writeFileSync(fake, "const fs=require('fs'),p=require('path');const a=process.argv.slice(2);let lcd='';const out=[];for(const c of a){if(c.startsWith('lcd '))lcd=c.slice(4);if(c.startsWith('put ')){const n=c.split(' ').pop();if(process.env.FAKE_SKIP!==n){const s=process.env.FAKE_SIZE||fs.statSync(p.join(lcd,n)).size;out.push('-rw-rw-r--   1 ftpuser  ftpuser   '+s+' Nov 26 09:39:00 2026 '+n);}}}console.log(out.join('\\n'));");
+  const flowDir = path.join(tmp, 'flow'); fs.mkdirSync(flowDir, { recursive: true });
+  fs.writeFileSync(path.join(flowDir, 'A.bpmn20.xml'), '<a/>'); fs.writeFileSync(path.join(flowDir, 'B.bpmn20.xml'), '<bb/>');
+  env.RELEASE_MLK_PLP_WINSCP_CMD = JSON.stringify([process.execPath, fake]);
+  r = prep(['flowable-drop', '--release', '9.9.30']);
+  check('M41 flowable-drop without --from → refused, nothing recorded', r.status === 2 && /--from/.test(all(r)) && !state('9.9.30').flowableDrop, all(r));
+  env.FAKE_SKIP = 'B.bpmn20.xml';
+  r = prep(['flowable-drop', '--release', '9.9.30', '--from', flowDir]);
+  check('M42 server listing misses one file → FAILED, exit 2, card still NOT READY for that file only', r.status === 2 && /FLOWABLE-DROP FAILED[\s\S]*B\.bpmn20\.xml/.test(all(r)) && /NOT READY — flowable NOT on the drop server: B\.bpmn20\.xml\b/.test(all(prep(['card', '--release', '9.9.30']))), all(r));
+  delete env.FAKE_SKIP; env.FAKE_SIZE = '1';
+  r = prep(['flowable-drop', '--release', '9.9.30', '--from', flowDir]);
+  check('M43 listed at the wrong size → FAILED (a partial upload is not delivered)', r.status === 2 && /server 1 bytes/.test(all(r)), all(r));
+  delete env.FAKE_SIZE;
+  r = prep(['flowable-drop', '--release', '9.9.30', '--from', flowDir]);
+  const dropped = state('9.9.30').flowableDrop;
+  check('M44 both listed at local size → ok, size + md5 + listed size kept in state', r.status === 0 && dropped.files.length === 2 && dropped.files.every(f => f.listedSize === f.size && /^[0-9a-f]{32}$/.test(f.md5)) && dropped.date === '2026-11-11', all(r));
+  r = prep(['card', '--release', '9.9.30']);
+  check('M37 card with values → folder once, one file per line, one SQL per line, kept in state, no NOT READY after the drop', r.status === 0 && /Domain Version : 1\.0\.15-MLK/.test(all(r)) && /BAQA Name:  Mira\/Fizah\/Anis/.test(all(r)) && /Link Target Version: \r?\nhttp:\/\/host\/versions\/1/.test(all(r)) && !/<FILL: --(baqa|target-version)>/.test(all(r)) && /Melaka\/2026-11-11\/Pelupusan\/\r?\nA\.bpmn20\.xml\r?\nB\.bpmn20\.xml\r?\n/.test(all(r)) && /#1, 1\.sql\r?\n#2, 2\.sql/.test(all(r)) && state('9.9.30').card.db === '1.0.16-MLK' && !/NOT READY/.test(all(r)), all(r));
+  prep(['card', '--release', '9.9.30', '--flowable-date', '2026-11-12']);
+  check('M45 flowable date changed after the drop → NOT READY again (dropped into the wrong date folder)', /NOT READY — flowable NOT on the drop server: A\.bpmn20\.xml, B\.bpmn20\.xml/.test(all(prep(['card', '--release', '9.9.30']))), '');
+  prep(['card', '--release', '9.9.30', '--flowable-date', '2026-11-11']);
+  newRelease('9.9.32', [['p.txt', 'p\n']]);
+  prep(['card', '--release', '9.9.32', '--flowable', 'Z.bpmn20.xml', '--flowable-date', '2026-11-25']);
+  r = prep(['merge-to-master', '--release', '9.9.32', '--ba-approved']);
+  check('M46 baseline passed but flowable not dropped → merge-to-master refused before any MR form', r.status === 2 && /flowable NOT on the drop server: Z\.bpmn20\.xml/.test(all(r)) && !/MERGE REQUEST FORM/.test(all(r)), all(r));
+  newRelease('9.9.33', [['pom.xml', '<project><properties><etanah.common.version>1.15.2-MLK.domain.1.0.17-MLK</etanah.common.version></properties></project>\n']]);
+  r = prep(['card', '--release', '9.9.33', '--flowable', 'none']);
+  check('M47 common is not x.y.z-MLK → card NOT READY names it; flowable none adds no flowable line', /NOT READY — common 1\.15\.2-MLK\.domain\.1\.0\.17-MLK is not a release version/.test(all(r)) && !/flowable NOT on the drop server/.test(all(r)), all(r));
+  r = prep(['merge-to-master', '--release', '9.9.33', '--ba-approved']);
+  check('M48 flowable "none" → merge-to-master is not held by the flowable gate', !/flowable NOT on the drop server/.test(all(r)), all(r));
   commitOn('mlk/master', 't555.txt', 't\n', 'Ref #555 - late fix', 'mlk/esokongan/555');
   sh(repo, ['checkout', '-q', '-B', 'mlk/release/9.9.30', 'origin/mlk/release/9.9.30']);
   r = prep(['add-ticket', '--release', '9.9.30', '--ticket', '555', '--branch', 'mlk/esokongan/555']);
