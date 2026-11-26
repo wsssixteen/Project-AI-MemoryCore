@@ -255,6 +255,35 @@ check('C11-10 bypass token still works', r.status === 0, 'exit=' + r.status);
 r = run({ stop_hook_active: true, _testFindings: FINDING });
 check('C10 second stop does not block again', r.status === 0, 'exit=' + r.status);
 
+// C12 (2026-11-26, 289164): an open DE blocker for this session blocks the close, no bypass, second stop too.
+{
+  const fs = require('fs'); const os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'c12-'));
+  const target = path.join(dir, 'SKILL.md'); fs.writeFileSync(target, 'step 6c without the fix');
+  const row = (extra) => Object.assign({ session: 'sess-289164', ticket: '289164', why: 'wrong route.', fix: 'add EXPECTED-COVERAGE.', done_when: { file: target, contains: 'EXPECTED-COVERAGE' } }, extra || {});
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row()] });
+  check('C12-1 REPLAY 289164: open blocker for this session -> BLOCK naming the fix', r.status === 2 && /C12/.test(r.stderr) && /EXPECTED-COVERAGE/.test(r.stderr), 'exit=' + r.status);
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row()], _testEvents: [{ kind: 'text', role: 'assistant', text: AXES }, { kind: 'text', role: 'assistant', text: CLOSE_BANNER + '\n[skip-de-close-gate: busy]' }] });
+  check('C12-2 bypass token does NOT clear C12', r.status === 2 && /C12/.test(r.stderr), 'exit=' + r.status);
+  r = run({ session_id: 'sess-289164-full', stop_hook_active: true, _testBlockers: [row()] });
+  check('C12-3 second stop still blocks', r.status === 2 && /C12/.test(r.stderr), 'exit=' + r.status);
+  r = run({ session_id: 'other-session', _testBlockers: [row()] });
+  check('C12-4 another session is not blocked', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 200));
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row({ session: '*' })] });
+  check('C12-5 "*" row blocks any session', r.status === 2 && /C12/.test(r.stderr), 'exit=' + r.status);
+  fs.writeFileSync(target, 'step 6c ... EXPECTED-COVERAGE table ...');
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row()] });
+  check('C12-6 fix landed in the file -> row clears itself, close passes', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 200));
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row({ done_when: { file: path.join(dir, 'missing.md'), contains: 'X' } })] });
+  check('C12-7 target file missing -> still blocks (fix not landed)', r.status === 2 && /C12/.test(r.stderr), 'exit=' + r.status);
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [{ session: 'sess-289164' }, null, 'junk'] });
+  check('C12-8 malformed rows are ignored', r.status === 0, 'exit=' + r.status);
+  r = run({ session_id: 'sess-289164-full', _testBlockers: [row()], _testEvents: [{ kind: 'text', role: 'assistant', text: 'normal reply, no banner' }] });
+  check('C12-9 not a DE close -> silent even with an open row', r.status === 0, 'exit=' + r.status);
+  r = run({ _testBlockers: [row()] });
+  check('C12-10 no session id on input -> not blocked by a session row', r.status === 0, 'exit=' + r.status);
+}
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nde-close-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');
