@@ -41,11 +41,13 @@ function commitOn(branch, file, text, msg, pushTo) {
   sh(repo, ['checkout', '-q', '--detach']);
   return sh(repo, ['rev-parse', 'HEAD']);
 }
-function newRelease(ver, files) {
+// a filled card = the release checklist merge-to-master re-proves (2026-11-26); pass {} for an empty card
+const FULL_CARD = { domain: '1.0.20-MLK', db: '1.0.20-MLK', baqa: 'Mira', targetVersion: 'http://host/v', flowable: 'none', sql: 'none' };
+function newRelease(ver, files, card = FULL_CARD) {
   let head;
   files.forEach(([f, t], i) => { head = commitOn(i ? `mlk/release/${ver}` : 'mlk/master', f, t, `Ref #10000${i} - ${f}`, `mlk/release/${ver}`); });
   fs.mkdirSync(stateDir, { recursive: true });
-  fs.writeFileSync(path.join(stateDir, `release-${ver}.json`), JSON.stringify({ release: ver, branch: `mlk/release/${ver}`, repo, tickets: [], phase: 'pushed', headSha: head }));
+  fs.writeFileSync(path.join(stateDir, `release-${ver}.json`), JSON.stringify({ release: ver, branch: `mlk/release/${ver}`, repo, tickets: [], phase: 'pushed', headSha: head, card: { ...card } }));
   return head;
 }
 
@@ -199,7 +201,7 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   check('M35 staging caught up from the release first → the later master merge commit is not "behind"', ms.behind === 0, JSON.stringify(ms));
 
   // the hand-off card and the re-open after push (2026-11-11, Baseline 1.9.3)
-  const relC = newRelease('9.9.30', [['c1.txt', 'c1\n']]);
+  const relC = newRelease('9.9.30', [['c1.txt', 'c1\n']], {});
   r = prep(['card', '--release', '9.9.30']);
   // full BAQA template (2026-11-16): baqa · target-version · domain, db, common in both sections · flowable · sql = 10 FILL lines
   check('M36 card with no values → full BAQA template, each unknown line is a FILL line', r.status === 0 && /Module Version : 9\.9\.30/.test(all(r)) && /BAQA section:[\s\S]*Version Details:[\s\S]*Developer section:/.test(all(r)) && (all(r).match(/<FILL:/g) || []).length === 10 && /FILL line\(s\)/.test(all(r)), all(r));
@@ -238,6 +240,14 @@ srv.listen(0,'127.0.0.1',()=>fs.writeFileSync(${JSON.stringify(portFile)},String
   check('M47 common is not x.y.z-MLK → card NOT READY names it; flowable none adds no flowable line', /NOT READY — common 1\.15\.2-MLK\.domain\.1\.0\.17-MLK is not a release version/.test(all(r)) && !/flowable NOT on the drop server/.test(all(r)), all(r));
   r = prep(['merge-to-master', '--release', '9.9.33', '--ba-approved']);
   check('M48 flowable "none" → merge-to-master is not held by the flowable gate', !/flowable NOT on the drop server/.test(all(r)), all(r));
+  // FINAL RELEASE CHECKLIST at merge-to-master (2026-11-26 per miya): each card item re-proved before the MR
+  newRelease('9.9.34', [['q.txt', 'q\n']], { ...FULL_CARD, domain: undefined });
+  r = prep(['merge-to-master', '--release', '9.9.34', '--ba-approved']);
+  check('M49 card missing the Domain version → checklist ✗ names it, refused, no MR form', r.status === 2 && /FINAL RELEASE CHECKLIST/.test(all(r)) && /✗ Domain version on the card/.test(all(r)) && !/MERGE REQUEST FORM/.test(all(r)), all(r));
+  newRelease('9.9.35', [['s.txt', 's\n']], { ...FULL_CARD, flowable: 'A.bpmn20.xml', flowableDate: '2026-11-11' });
+  prep(['flowable-drop', '--release', '9.9.35', '--from', flowDir]);
+  r = prep(['merge-to-master', '--release', '9.9.35', '--ba-approved']);
+  check('M50 full card + flowable listed → every checklist row ✓ with its proof, MR form printed', /FINAL RELEASE CHECKLIST/.test(all(r)) && !/✗ /.test(all(r)) && /✓ Every flowable listed on the drop server — 2026-11-11\/Pelupusan: A\.bpmn20\.xml 4 bytes/.test(all(r)) && /MERGE REQUEST FORM/.test(all(r)), all(r));
   commitOn('mlk/master', 't555.txt', 't\n', 'Ref #555 - late fix', 'mlk/esokongan/555');
   sh(repo, ['checkout', '-q', '-B', 'mlk/release/9.9.30', 'origin/mlk/release/9.9.30']);
   r = prep(['add-ticket', '--release', '9.9.30', '--ticket', '555', '--branch', 'mlk/esokongan/555']);

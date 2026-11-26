@@ -817,6 +817,21 @@ function undeliveredFlowables(st) {
   const c = st.card || {}, flow = flowList(c) || [], d = st.flowableDrop || {};
   return flow.filter(f => !(d.date === c.flowableDate && (d.files || []).some(x => x.name === f && x.listedSize === x.size)));
 }
+// The card is the release checklist; merge-to-master re-proves each item. One row = [item, ok, proof].
+function releaseChecklist(st) {
+  const c = st.card || {}, rows = [];
+  const ref = git(st.repo, ['rev-parse', '--verify', `origin/${st.branch}`], true).status === 0 ? `origin/${st.branch}` : st.branch;
+  const cm = ((git(st.repo, ['show', `${ref}:pom.xml`], true).stdout || '').match(/<etanah\.common\.version>([^<]+)</) || [])[1];
+  rows.push(['Common is a plain release version', !cm || RELEASABLE_COMMON.test(cm.trim()), cm ? cm.trim() : 'no pom common']);
+  for (const [k, label] of [['domain', 'Domain version'], ['db', 'DB version'], ['baqa', 'BAQA names'], ['targetVersion', 'Target version link']])
+    rows.push([`${label} on the card`, !!c[k], c[k] || 'missing: card --' + k.replace('targetVersion', 'target-version')]);
+  const flow = flowList(c);
+  rows.push(['Flowable list on the card', flow !== null, flow === null ? 'missing: card --flowable "<files>|none"' : flow.length ? flow.join(', ') : 'none']);
+  const nd = undeliveredFlowables(st);
+  rows.push(['Every flowable listed on the drop server', nd.length === 0, nd.length ? 'NOT on server: ' + nd.join(', ') : (flow && flow.length ? `${st.flowableDrop.date}/Pelupusan: ${st.flowableDrop.files.map(f => `${f.name} ${f.listedSize} bytes`).join(', ')}` : 'none needed')]);
+  rows.push(['SQL list on the card', c.sql !== undefined, c.sql === undefined ? 'missing: card --sql "#<n>, <file>.sql;...|none"' : c.sql]);
+  return rows;
+}
 function printCard(st) {
   const c = st.card || {};
   const fill = flag => `<FILL: --${flag}>`;
@@ -964,9 +979,15 @@ function mrPrepare(st, a) {
   if (st.phase !== 'pushed' && st.phase !== 'mr-pending') die(`MERGE-TO-MASTER REFUSED — phase is ${st.phase}, expected pushed (the release branch must be on origin first)`, 2);
   // presence-check, not truthiness: parseArgs stores undefined for a bare `--ba-approved`.
   if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
-  // Baseline passed = PROD goes out tonight: the flowable must already be on the drop server (2026-11-26, 1.11.0).
-  const notDelivered = undeliveredFlowables(st);
-  if (notDelivered.length) die(`MERGE-TO-MASTER REFUSED — 🚨 flowable NOT on the drop server: ${notDelivered.join(', ')}. PROD goes out tonight without it. Run first: node domain/release-mlk-plp/release-prep.js flowable-drop --release ${st.release} --from <folder>`, 2);
+  // Baseline passed = PROD goes out tonight. FINAL RELEASE CHECKLIST (2026-11-26 per miya, 1.11.0): every item the
+  // card handed over (the checklist made at push) is checked again here, with proof, before the merge request.
+  const rows = releaseChecklist(st);
+  console.log(`FINAL RELEASE CHECKLIST — ${st.release} (every item of the card, checked again before PROD)`);
+  for (const [item, ok, proof] of rows) console.log(`  ${ok ? '✓' : '✗'} ${item} — ${proof}`);
+  const failed = rows.filter(r => !r[1]);
+  log('merge-to-master', st.release, failed.length ? 'checklist-fail' : 'checklist-ok', rows.map(r => [r[0], r[1]]));
+  if (failed.length) die(`MERGE-TO-MASTER REFUSED — ${failed.length} checklist item(s) not proven: ${failed.map(r => r[0]).join(' · ')}` +
+    (undeliveredFlowables(st).length ? `\n🚨 flowable NOT on the drop server: ${undeliveredFlowables(st).join(', ')}. PROD goes out tonight without it. Run first: node domain/release-mlk-plp/release-prep.js flowable-drop --release ${st.release} --from <folder>` : ''), 2);
   const gl = gitlabConfig();
   const project = gitlabProject(st.repo, gl);
   fetchOrigin(st.repo);
