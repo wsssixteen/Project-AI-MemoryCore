@@ -262,6 +262,19 @@ function checkC11(events) {
   return { pass: missing.length === 0, missing };
 }
 
+// C12 — OPEN DE BLOCKER (2026-11-26 per miya, 289164: "a hook to check for this session to not run DE until you've fixed
+// this into our quest workflow"). A row of domain/de-close-gate/de-blockers.json for this session (or "*") whose fix text is not
+// yet in its file blocks the close. No bypass token and the second stop blocks too: the row clears itself once the file carries the text.
+const DE_BLOCKERS = process.env.DE_BLOCKERS_FILE || path.join(__dirname, 'de-blockers.json');
+function fixLanded(b) { try { return fs.readFileSync(path.resolve(ROOT, b.done_when.file), 'utf8').includes(b.done_when.contains); } catch (_) { return false; } }
+function checkC12(sessionId, rows) {
+  let list = rows;
+  if (!Array.isArray(list)) { try { list = JSON.parse(fs.readFileSync(DE_BLOCKERS, 'utf8')); } catch (_) { list = []; } }
+  const open = (Array.isArray(list) ? list : []).filter(b => b && b.done_when && b.done_when.file && b.done_when.contains
+    && (b.session === '*' || (sessionId && String(sessionId).startsWith(String(b.session)))) && !fixLanded(b));
+  return { pass: open.length === 0, open };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -361,6 +374,15 @@ if (require.main === module) {
     if (Array.isArray(data._testFindings)) disk.findings = data._testFindings;
     else if (DE_CLOSE.test(lastAssistantText(events)) && data.transcript_path) { try { disk.findings = require(path.join(ROOT, 'lib', 'session-audit.js')).auditTranscript(data.transcript_path); } catch (_) { disk.findings = []; } }
 
+    if (DE_CLOSE.test(lastAssistantText(events))) {
+      const c12 = checkC12(data.session_id, data._testBlockers);
+      if (!c12.pass) {
+        logFire('blocked-c12', c12.open.map(b => (b.ticket || '-') + ':' + b.done_when.contains).join(' '));
+        return { fired: true, blocked: true, blockReason: ['⛔ de-close-gate C12: Domain Expansion is BLOCKED for this session, a fix みや ordered is not in place yet:']
+          .concat(c12.open.map(b => '   - ' + (b.ticket ? b.ticket + ': ' : '') + b.why + ' Fix: ' + b.fix + ' Done when ' + b.done_when.file + ' contains "' + b.done_when.contains + '".'))
+          .concat(['   Do the fix through /system-build, then close again. No bypass: the block clears by itself once the file carries the text.']).join('\n') };
+      }
+    }
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
@@ -373,4 +395,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, checkC10, checkC11, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, checkC9, checkC10, checkC11, checkC12, editedSystemFiles };

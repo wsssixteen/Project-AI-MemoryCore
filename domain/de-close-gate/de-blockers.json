@@ -1,0 +1,11 @@
+[
+  {
+    "session": "d31fcd06-233c-4ee8-989b-0580be8f2c43",
+    "ticket": "289164",
+    "added": "2026-11-26",
+    "his_words": "a hook to check for this session to not run DE until you've fixed this into our quest workflow",
+    "why": "On a patch ticket, route A (alter to MWP) was recommended without checking it against each Expected line; it adds 3 tugasan per ID where Expected 2 says Tamatkan tugasan.",
+    "fix": "Quest SKILL.md step 6c gains an EXPECTED-COVERAGE table: before any route on a patch or alter ticket is recommended, each route is checked against every Expected line verbatim; a route that adds tugasan or user steps where the ask is to end them fails; only a route covering every line is recommended.",
+    "done_when": { "file": ".claude/skills/quest/SKILL.md", "contains": "EXPECTED-COVERAGE" }
+  }
+]
