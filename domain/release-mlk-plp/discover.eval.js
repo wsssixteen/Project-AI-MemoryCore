@@ -145,7 +145,9 @@ try {
         const missing = truth.filter(sha => !rr.commits.some(c => c.sha === sha));
         if (missing.length) { supersetOk = false; detail.push(`${n}: ${missing.length} missing`); }
       }
-      if (s === '274094') check('D2 REAL: fab13ed2 surfaced as orphan tip for #274094', rr.orphanTips.some(x => x.startsWith('fab13ed2')), rr.orphanTips.join(','));
+      // fab13ed2 was an orphan in Aug 2026; once it reaches origin/mlk/master it is correctly NOT an orphan any more (2026-11-26)
+      const fabOnMaster = spawnSync('git', ['merge-base', '--is-ancestor', 'fab13ed2', 'origin/mlk/master'], { cwd: REAL }).status === 0;
+      if (s === '274094') check(fabOnMaster ? 'D2 REAL: fab13ed2 is on mlk/master now, so not reported as an orphan' : 'D2 REAL: fab13ed2 surfaced as orphan tip for #274094', fabOnMaster ? !rr.orphanTips.some(x => x.startsWith('fab13ed2')) : rr.orphanTips.some(x => x.startsWith('fab13ed2')), rr.orphanTips.join(','));
       if (s === '277309') check('D3 REAL: e17c497870 (int-env pom pin) classified POM-PIN, 633f922cb2 PATCH-EQUIVALENT', rr.excluded.some(e => e.sha.startsWith('e17c497870') && e.kind === 'POM-PIN') && rr.excluded.some(e => e.sha.startsWith('633f922cb2') && e.kind === 'PATCH-EQUIVALENT'), JSON.stringify(rr.excluded.map(e => e.short + ':' + e.kind)));
     }
     check('D1 REAL: discovery ⊇ git-log ground truth for every 1.4.1 ticket number', supersetOk, detail.join('; ') || 'all covered');
