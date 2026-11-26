@@ -1,7 +1,12 @@
 // verify-gates.js — the release completeness gates as a PURE module (2026-08-24, /goal hardening
-// after the #275539 v2 miss). Used by release-prep.js `verify` (during) + `postcheck` (after)
-// AND by eval-merge-scenarios.js against synthetic fixture repos — the same code that gates the
-// real release is what the eval exercises; there is no eval-only copy to drift.
+// after the #275539 v2 miss).
+// 🚨 NOT WIRED (audit 2026-11-26): release-prep.js never calls runGates and has no `postcheck`; no commit ever
+// wired it (this file arrived alone in the 2026-09-04 worktree salvage). Only eval-merge-scenarios.js and
+// sibling-sweep.test.js run it, so a real release gets none of these gates from here. Do not wire it as it is:
+// on release 1.11.0 (5 stacked ticket branches) it took 456 s and printed 38 drop-scan FAILs. None was a real drop:
+// 62 of the 68 winner/loser pairs were stacked branches, 6 came from a branch merged into another, 3 files were
+// deleted on purpose; a line audit of that release (6,854 added lines) found every ticket's logic present.
+// drop-scan must compare lines and know a stacked branch before it can block a release.
 //
 // runGates({ repo, headRef, masterRef, remote, tickets, commonBumpedTo, release })
 //   → { ok, table: [{ticket, src, missing, ok}], findings: [{gate, level: 'fail'|'warn', msg}] }
