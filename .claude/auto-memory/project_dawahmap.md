@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: be5b16b4-6a21-45ba-abb5-f619d46b57d4
-  modified: 2026-10-15T15:32:59.778Z
+  modified: 2026-11-28T07:44:24.755Z
 ---
 
 **DawahMap** = みや's personal project (started 2026-10-10): a yes/no decision map, street-dawah style, that walks a person from basic rational questions to Islam in six stages. The published page is **Reason to Islam**: https://claude.ai/artifact/22CRAptuNqGqRUonHDfe28 ([[artifact-registry]]).
@@ -24,4 +24,6 @@ metadata:
 **Why:** he watched a scholar's street discussions and wants a methodical path of sound questions, rational first, then other religions, then the Quran and the Prophet ﷺ. Version 0.1 and 0.2 were built by me as a neutral academic survey (my prompts told the agents to use the Western academic literature, build up every objection and rate steps "contested"); he rejected that outright.
 **How to apply:** any DawahMap work → read `PROJECT.md`, then `PROOFS.md` section 1 before writing or briefing an agent. An agent brief for this project quotes his words above.
 
-**Read first, every start and after every auto-compact (his ruling 2026-10-15):** `DawahMap\SPEC.md`, the signed spec, "almost like your own CLAUDE.MD file". Until it exists and is signed: `DawahMap\wayfinder\map.md` (the agreement map, worked with the wayfinder skill, one ticket per session) and the corrections ledger `app\review\feedback.json` (rule 1o). PROJECT.md section 5 step -1 says the same.
+**Read first, every start and after every auto-compact:** `DawahMap\START.md` (shape 2 since 2026-10-18; it names the next file), then `DECISIONS.md`. His ruling of 2026-10-15 names `DawahMap\SPEC.md`, the signed spec, "almost like your own CLAUDE.MD file": it exists since 2026-11-27 and is NOT signed yet; his marks come through the spec page ([[artifact-registry]], "Walk by Reason Spec"). Also every session: the corrections ledger `app\review\feedback.json` (rule 1o).
+
+**v2 (2026-11-27 to 28):** he was ill and delegated the build (DECISIONS row 62: "you create a v2 and build it until the end"). v2 draft 1 is published private on its own link; version 54 stays the published page until he rules. Every pick made for him: `v2\PLAN.md`; what waits for his ruling: `v2\LEFT-OUT.md`. Never present v2 as agreed or as ready (rule 8).

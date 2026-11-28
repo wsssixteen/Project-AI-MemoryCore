@@ -5,13 +5,16 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: fed5aaa2-35e9-43a4-8258-a1916ec3c80e
-  modified: 2026-10-19T14:26:33.485Z
+  modified: 2026-11-28T07:44:20.326Z
 ---
 
 Every artifact published under miya's claude.ai account, newest first. Snapshot of the live list on 2026-10-04 (`Artifact` tool, action `list`, scope `all`: 16 rows).
 
 | Artifact | Link | Updated | About |
 |---|---|---|---|
+| A walk by reason (v2 draft) | https://claude.ai/artifact/6XT6szUHGBp3ugeuHJLfQf | 2026-11-28 | DawahMap version 2 as a PRIVATE DRAFT on its own link (draft 1); the published page stays "Reason to Islam" version 54, untouched until he rules. Same title in the gallery as version 54: tell them apart by the date. Publish `app\dist\reason-to-islam.html` with this link as `url`, `capabilities` left out (the publish warns of `claude.use("sample")`: the own-words code, switched off). Since 2026-11-28 the DawahMap `app\` folder on disk IS v2; version 54's source is `history\app-v1-2026-11-27.zip`. What v2 is: the project's `v2\PLAN.md`; state: `START.md` |
+| Walk by Reason Spec | https://claude.ai/artifact/6f6gKNVXJHbqvsUEjBsMwP | 2026-11-28 | DawahMap: the page he signs (wayfinder ticket 11): the 73 rules v2 was built by and 13 points where the plan and his earlier words differ, each with Agreed / Change and a note. Capability `db`: his marks are in the page's store, collection `marks`, one document per rule id (`{mark, note, at}`); read them with the ArtifactData tool, action `list`. Built by `app\spec-page.js` from `SPEC.md` → `app\dist\spec.html`; republish that file to this link and leave `capabilities` out to keep `db` |
+| Why MCL Is Geran Mukim | https://claude.ai/artifact/VELMqu6XXLaYMhKhgU36nU | 2026-11-25 | etanah MCL business logic for ticket 291091: why an approved MCL letter names the title Geran Mukim (forever = Geran, district = Mukim), with the rjk_jns_hkmlk evidence and what is checked vs general knowledge |
 | Evidence Page Prototype | https://claude.ai/artifact/7KpKCcuh6WYPmaq7BPZZsy | 2026-10-19 | DawahMap phase 2 ticket 04: three versions of the evidence page on the real walk (A numbered notes · B claim then fold-outs · C one section at a time), switched by the bar or #A/#B/#C. Built by `app\prototype-evidence-page.js` → `app\dist\prototype-evidence-page.html`; throwaway once he picks |
 | Connected Line Prototype | https://claude.ai/artifact/CCR2n3WVxyQaaTm4pF7cYP | 2026-10-19 | DawahMap phase 2 ticket 08: three ways to draw the walk as one line with no jump (A rails across the tree · B two roads that merge · C a spine through the cards). Built by `app\prototype-connected-line.js` → `app\dist\prototype-connected-line.html`; throwaway once he picks |
 | Walk by Reason Wording | https://claude.ai/artifact/NbhHvp4wm2WQ5S9rUvjFMq | 2026-10-15 | DawahMap: Muhammed Ali's kinds of reply from the talks, and the first stages of the walk today beside his way. Built by `app\wording.js` from `app\review\wording.json` |
